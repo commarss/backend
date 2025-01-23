@@ -1,19 +1,23 @@
 ---
 name: Issue Template
 about: 이슈 생성 시 이 템플릿 사용하시면 됩니다.
-title: 'Feat: '
+title: ''
 labels: ''
-assignees: ''
+assignees: whqtker, seobin-moon, junghyun13, shjk0531, suuny0321
 
 ---
 
-<!--제목: Feat: 로그인 구현-->
-## 설명
-이슈 설명을 작성해주세요.
+### 📄 Describe
 
-## To do
-[] 할 일 1
-[] 할 일 2
+### ✅ Tasks
 
-## 기타
-참고할 만한 내용, 이슈 추가 이유 등을 설명해주세요.
+- [ ]  
+    
+    에러가 발생한 로직의 memberId or tripId를 저장할 테이블 생성
+    
+    에러 발생 시 테이블에 데이터 삽입 기능 구현
+    
+    스케줄링 처리할 기능 구현
+    
+
+### 🙋🏻 More
