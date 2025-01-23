@@ -3,7 +3,7 @@ name: Issue Template
 about: 이슈 생성 시 이 템플릿 사용하시면 됩니다.
 title: ''
 labels: ''
-assignees: whqtker, seobin-moon, junghyun13, shjk0531, suuny0321
+assignees: junghyun13, seobin-moon, shjk0531, suuny0321, whqtker
 
 ---
 
