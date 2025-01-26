@@ -17,11 +17,6 @@ public interface ReviewsDocRepository extends ElasticsearchRepository<ReviewsDoc
                         "match": {
                             "content": "?0"
                         }
-                    },
-                    {
-                        "match": {
-                            "rate": "?0"
-                        }
                     }
                 ]
             }
