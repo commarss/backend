@@ -18,13 +18,13 @@ public class ApiV1ReviewsDocController {
 
     @PostMapping("/write")
     public RsData<ReviewsDoc> write(
-            @RequestBody @Valid PostDocWriteRequest request
+            @RequestBody @Valid ReviewsDocWriteRequest request
     ){
         ReviewsDoc reviewsDoc = reviewsDocService.write(request.content, request.rate);
         return new RsData<>("201", "리뷰 작성 성공", reviewsDoc);
     }
 
-    record PostDocWriteRequest(
+    record ReviewsDocWriteRequest(
             @NotBlank String content,
             @NotBlank Integer rate
     ) {}
