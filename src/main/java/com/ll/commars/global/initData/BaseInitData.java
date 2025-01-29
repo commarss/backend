@@ -1,5 +1,6 @@
 package com.ll.commars.global.initData;
 
+import com.ll.commars.domain.restaurants.restaurants.service.RestaurantsService;
 import com.ll.commars.domain.restaurants.restaurantsDoc.service.RestaurantsDocService;
 import com.ll.commars.domain.reviews.reviewsDoc.service.ReviewsDocService;
 import lombok.RequiredArgsConstructor;
@@ -14,12 +15,13 @@ import java.util.stream.IntStream;
 public class BaseInitData {
     private final ReviewsDocService reviewsDocService;
     private final RestaurantsDocService restaurantsDocService;
+    private final RestaurantsService restaurantsService;
 
     @Bean
     public ApplicationRunner baseInitDataApplicationRunner() {
         return args -> {
-            work1();
-            work2();
+//            work1();
+//            work2();
             work3();
             work4();
         };
@@ -60,5 +62,11 @@ public class BaseInitData {
 
     // Restaurants 데이터 초기화
     private void work4() {
+        restaurantsService.truncate();
+
+        restaurantsService.write("마녀 커피", "마녀 커피는 커피 전문점으로, 커피의 맛이 좋아요.", 4.5);
+        restaurantsService.write("피자 알볼로", "피자 알볼로는 피자 전문점으로, 피자의 맛이 좋아요.", 4.0);
+        restaurantsService.write("진짜 치킨", "진짜 치킨은 치킨 전문점으로, 치킨의 맛이 좋아요.", 4.0);
+        restaurantsService.write("매운 떡볶이", "매운 떡볶이는 떡볶이 전문점으로, 떡볶이의 맛이 좋아요.", 3.0);
     }
 }

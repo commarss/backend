@@ -7,11 +7,6 @@ spring:
   profiles:
     active: dev
     include: secret
-  datasource:
-    url: jdbc:h2:file:./db_dev;MODE=MySQL
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
   jpa:
     open-in-view: false
     hibernate:
