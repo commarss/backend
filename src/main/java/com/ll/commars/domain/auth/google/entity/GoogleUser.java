@@ -1,11 +1,10 @@
 package com.ll.commars.domain.auth.google.entity;
 
+import com.ll.commars.global.jpa.BaseEntity;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+
 
 @Entity
 @Getter
@@ -14,12 +13,8 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class AuthGoogle {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class GoogleUser extends BaseEntity {
     private String email;
     private String name;
-    private String picture;
+    private String profileImageUrl;
 }
