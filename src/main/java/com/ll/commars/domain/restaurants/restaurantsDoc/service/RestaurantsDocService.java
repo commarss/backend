@@ -31,4 +31,8 @@ public class RestaurantsDocService {
     public List<RestaurantsDoc> searchByKeyword(String keyword) {
         return restaurantsDocRepository.searchByKeyword(keyword);
     }
+
+    public List<RestaurantsDoc> showSortByRate() {
+        return restaurantsDocRepository.findAllByOrderByAverageRateDesc();
+    }
 }

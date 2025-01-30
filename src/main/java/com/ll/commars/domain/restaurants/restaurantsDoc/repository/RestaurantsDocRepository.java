@@ -28,4 +28,6 @@ public interface RestaurantsDocRepository extends ElasticsearchRepository<Restau
         }
     """)
     List<RestaurantsDoc> searchByKeyword(String keyword);
+
+    List<RestaurantsDoc> findAllByOrderByAverageRateDesc();
 }

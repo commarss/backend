@@ -37,4 +37,9 @@ public class ApiV1RestaurantsDocController {
     public List<RestaurantsDoc> search(@RequestParam("keyword") String keyword) {
         return restaurantsDocService.searchByKeyword(keyword);
     }
+
+    @GetMapping("/show/sortByRate")
+    public List<RestaurantsDoc> showSortByRate() {
+        return restaurantsDocService.showSortByRate();
+    }
 }

@@ -22,6 +22,6 @@ public class RestaurantsDoc {
     @Field(type = FieldType.Text)
     private String details;
 
-    @Field(type = FieldType.Double)
+    @Field(name = "average_rate", type = FieldType.Double)
     private Double averageRate;
 }
