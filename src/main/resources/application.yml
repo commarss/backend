@@ -43,3 +43,5 @@ custom:
     cookieDomain: "${custom.dev.cookieDomain}"
     frontUrl: "${custom.dev.frontUrl}"
     backUrl: "${custom.dev.backUrl}"
+jwt:
+  secret-key: "957E935369342F492F5375561A6FD24VB0897RT"

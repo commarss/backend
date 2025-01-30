@@ -1,10 +1,12 @@
 package com.ll.commars.domain.auth.google.controller;
 
+import com.ll.commars.domain.auth.auth.service.JwtTokenProvider;
 import com.ll.commars.domain.auth.google.entity.GoogleAuthResponse;
 import com.ll.commars.domain.auth.google.entity.GoogleUser;
 import com.ll.commars.domain.auth.google.service.GoogleOAuthService;
-import com.ll.commars.domain.auth.jwt.util.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -21,6 +23,8 @@ public class ApiV1AuthGoogleController {
     @PostMapping("/google")
     public ResponseEntity<?> verifyGoogleIdToken(@RequestBody Map<String, String> body) {
         String idToken = body.get("idToken");
+        System.out.println("idToken = " + idToken);
+
 
         String verificationUrl = "https://oauth2.googleapis.com/tokeninfo?id_token=" + idToken;
         RestTemplate restTemplate = new RestTemplate();
@@ -46,20 +50,26 @@ public class ApiV1AuthGoogleController {
                 return ResponseEntity.badRequest().body("Token has expired.");
             }
 
-            // 4. JWT가 유효하면 서버 측의 JWT 토큰 발급 (Optional)
-            String jwtToken = generateServerSideJwt(email);
+//            // 4. JWT가 유효하면 서버 측의 JWT 토큰 발급 (Optional)
+            String accessJwtToken = jwtTokenProvider.createToken(email, name, picture);
+            String refreshToken = jwtTokenProvider.createRefreshToken(email, name, picture);
 
-            return ResponseEntity.ok(Map.of("token", jwtToken, "email", email, "name", name, "picture", picture));
+            ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", refreshToken)
+                    .httpOnly(true)
+                    .secure(true)
+                    .path("/")
+                    .maxAge(7 * 24 * 60 * 60)  // 7일
+                    .sameSite("Strict")
+                    .build();
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
+                    .body(Map.of( "email", email, "name", name, "picture", picture));
 
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().body("Invalid token or error in validation.");
         }
-    }
-
-    // 서버 측의 JWT 토큰 생성 메서드 (예제용)
-    private String generateServerSideJwt(String email) {
-        // JWT 생성 로직 (e.g., JWT 생성 라이브러리 사용)
-        return "server-side-jwt-for-" + email;
     }
 
 
@@ -68,7 +78,7 @@ public class ApiV1AuthGoogleController {
         GoogleUser user = googleOAuthService.getGoogleUserInfo(code);
 
         // JWT 토큰 생성
-        String jwtToken = jwtTokenProvider.createToken(user.getEmail(), user.getName());
+        String jwtToken = jwtTokenProvider.createToken(user.getEmail(), user.getName(), user.getProfileImageUrl());
 
         return ResponseEntity.ok(new GoogleAuthResponse(jwtToken, user));
     }
