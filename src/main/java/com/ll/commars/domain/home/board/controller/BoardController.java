@@ -210,5 +210,11 @@ public class BoardController {
     }
 
 
+    private final BoardRepository boardRepository;
+    @GetMapping("/count")
+    public ResponseEntity<?> getUserPostCount(@RequestParam String email) {
+        int postCount = boardRepository.countPostsByEmail(email);
+        return ResponseEntity.ok(Map.of("count", postCount));
+    }
 
 }

@@ -4,6 +4,7 @@ package com.ll.commars.domain.home.TodayRandom.repository;
 import com.ll.commars.domain.home.TodayRandom.entity.Mypage;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,6 +17,12 @@ public interface MypageRepository extends JpaRepository<Mypage, Long> {
     List<Object[]> findTopReviewersFromMypage();
 
     List<Mypage> findByUserEmail(String email);
+
+    @Query("SELECT AVG(m.score) FROM Mypage m WHERE m.user.userId = :userId")
+    Double findAverageScoreByUserId(@Param("userId") int userId);
+
+    @Query("SELECT m FROM Mypage m WHERE m.user.userId = :userId")
+    List<Mypage> findByUserId(@Param("userId") int userId);
 }
 
 

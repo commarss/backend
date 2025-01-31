@@ -4,6 +4,8 @@ import com.ll.commars.domain.home.board.entity.Board;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -16,4 +18,7 @@ public interface BoardRepository extends JpaRepository<Board, Integer> {
 
     // 제목으로 검색한 게시글 수
     long countByTitleContaining(String keyword);
+
+    @Query("SELECT COUNT(b) FROM Board b WHERE b.user.email = :email")
+    int countPostsByEmail(@Param("email") String email);
 }
