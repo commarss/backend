@@ -14,13 +14,13 @@ public interface RestaurantsDocRepository extends ElasticsearchRepository<Restau
             "bool": {
                 "should": [
                     {
-                        "match": {
-                            "name": "?0"
+                        "wildcard": {
+                            "name": "*?0*"
                         }
                     },
                     {
-                        "match": {
-                            "details": "?0"
+                        "wildcard": {
+                            "details": "*?0*"
                         }
                     }
                 ]

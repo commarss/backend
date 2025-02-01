@@ -14,8 +14,8 @@ public interface ReviewsDocRepository extends ElasticsearchRepository<ReviewsDoc
             "bool": {
                 "should": [
                     {
-                        "match": {
-                            "content": "?0"
+                        "wildcard": {
+                            "content": "*?0*"
                         }
                     }
                 ]
