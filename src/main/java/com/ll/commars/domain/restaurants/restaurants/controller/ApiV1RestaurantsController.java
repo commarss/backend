@@ -2,16 +2,11 @@ package com.ll.commars.domain.restaurants.restaurants.controller;
 
 import com.ll.commars.domain.restaurants.restaurants.entity.Restaurants;
 import com.ll.commars.domain.restaurants.restaurants.service.RestaurantsService;
-import com.ll.commars.domain.restaurants.restaurantsDoc.controller.ApiV1RestaurantsDocController;
-import com.ll.commars.domain.restaurants.restaurantsDoc.document.RestaurantsDoc;
 import com.ll.commars.global.rsData.RsData;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,4 +26,9 @@ public class ApiV1RestaurantsController {
             @NotBlank String details,
             Double averageRate
     ) {}
+
+    @GetMapping("/detail")
+    public String getRestaurantDetail(@RequestParam String name) {
+        return restaurantsService.getRestaurantDetail(name);
+    }
 }

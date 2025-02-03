@@ -2,7 +2,6 @@ package com.ll.commars.domain.restaurants.restaurants.service;
 
 import com.ll.commars.domain.restaurants.restaurants.entity.Restaurants;
 import com.ll.commars.domain.restaurants.restaurants.repository.RestaurantsRepository;
-import com.ll.commars.domain.restaurants.restaurantsDoc.document.RestaurantsDoc;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,5 +22,10 @@ public class RestaurantsService {
 
     public void truncate() {
         restaurantsRepository.deleteAll();
+    }
+
+    public String getRestaurantDetail(String name) {
+        Restaurants restaurants = restaurantsRepository.findByName(name);
+        return restaurants.getDetails();
     }
 }
