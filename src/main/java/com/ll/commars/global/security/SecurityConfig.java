@@ -18,7 +18,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // ✅ CORS 설정 추가
                 .csrf(csrf -> csrf.disable()) // CSRF 비활성화 (API 요청을 위해 필요)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/public/**", "/api/auth/google").permitAll() // Google 로그인 API 허용
+                        .requestMatchers("/", "/public/**", "/api/auth/google", "/api/**").permitAll() // Google 로그인 API 허용
                         .requestMatchers("/login-success").permitAll()
                         .anyRequest().authenticated()
                 )
@@ -33,7 +33,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173", "https://accounts.google.com")); // React 프론트엔드 URL 허용
+        configuration.setAllowedOrigins(List.of("http://localhost:5173","http://localhost:5174", "https://accounts.google.com")); // React 프론트엔드 URL 허용
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true); // 인증정보 포함 허용

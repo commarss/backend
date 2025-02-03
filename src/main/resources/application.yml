@@ -6,12 +6,28 @@ spring:
       enabled: ALWAYS
   profiles:
     active: dev
-    include: secret
+    include: secret, oauth
   datasource:
     url: jdbc:h2:file:./db_dev;MODE=MySQL
     username: sa
     password:
     driver-class-name: org.h2.Driver
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 360427694540-i4i2593i1u708vfhc15uts2hpri1r467.apps.googleusercontent.com
+            client-secret: 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
+            redirect-uri: "{baseUrl}/login/oauth2/code/google"
+            scope:
+              - email
+              - profile
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
   jpa:
     open-in-view: false
     hibernate:
@@ -44,4 +60,6 @@ custom:
     frontUrl: "${custom.dev.frontUrl}"
     backUrl: "${custom.dev.backUrl}"
 jwt:
-  secret-key: "957E935369342F492F5375561A6FD24VB0897RT"
+  secret-key: "itSPqeI2VV2ThZq0r40MIzwTze2rXR9Uy5s46wNSga/s7bn1yHLUmP/7B4h/YvQvgE+YTtiHbZLy1wETqG4stw=="
+google:
+  client-id: "${spring.security.oauth2.client.registration.google.client-id}"

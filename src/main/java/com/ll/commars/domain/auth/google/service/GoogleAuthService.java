@@ -1,0 +1,90 @@
+package com.ll.commars.domain.auth.google.service;
+
+import com.ll.commars.domain.auth.google.entity.GoogleAuth;
+import com.ll.commars.domain.auth.google.repository.GoogleAuthRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.Map;
+import java.util.Optional;
+
+@Service
+@RequiredArgsConstructor
+public class GoogleAuthService {
+    private final GoogleAuthRepository googleAuthRepository;
+
+    @Value("${google.client-id}")
+    private String clientId;
+
+    public void saveGoogleAuth(String email, String name, String profileImageUrl) {
+        googleAuthRepository.save(
+                com.ll.commars.domain.auth.google.entity.GoogleAuth.builder()
+                        .email(email)
+                        .name(name)
+                        .profileImageUrl(profileImageUrl)
+                        .build()
+        );
+    }
+
+    public boolean accessionCheck(String email, String name) {
+        Optional<GoogleAuth> googleAuth = googleAuthRepository.findByEmail(email);
+        return googleAuth.isPresent() && googleAuth.get().getName().equals(name);
+    }
+
+    public Optional<GoogleAuth> loginForGoogle(String idToken) {
+        System.out.println("idToken = " + idToken);
+
+        String verificationUrl = "https://oauth2.googleapis.com/tokeninfo?id_token=" + idToken;
+        RestTemplate restTemplate = new RestTemplate();
+
+        try {
+            // Google의 Token 검증 API 호출
+            Map<String, Object> response = restTemplate.getForObject(verificationUrl, Map.class);
+
+            // 1. 토큰이 유효하면 사용자 정보 가져오기
+            String email = (String) response.get("email");
+            String name = (String) response.get("name");
+            String picture = (String) response.get("picture");
+
+            // 2. audience(Client ID) 검증
+            String clientId = (String) response.get("aud");
+            if (!clientId.equals(clientId)) {
+                return Optional.empty();
+            }
+
+            // 3. 만료 시간 검증 (Optional - 이미 Google에서 해줌)
+            Long exp = Long.parseLong((String) response.get("exp"));
+            if (System.currentTimeMillis() / 1000 > exp) {
+                return Optional.empty();
+            }
+
+//            if (!accessionCheck(email, name)) {
+//                saveGoogleAuth(email, name, picture);
+//            }
+//
+//            GoogleAuth googleAuth = googleAuthRepository.findByEmail(email).get();
+//
+//            return Optional.of(GoogleAuth.builder()
+//                    .id(googleAuth.getId())
+//                    .email(googleAuth.getEmail())
+//                    .name(googleAuth.getName())
+//                    .profileImageUrl(googleAuth.getProfileImageUrl())
+//                    .build());
+
+            return Optional.of(GoogleAuth.builder()
+                            .id(1L)
+                    .email(email)
+                    .name(name)
+                    .profileImageUrl(picture)
+                    .build());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Optional.empty();
+        }
+    }
+}
