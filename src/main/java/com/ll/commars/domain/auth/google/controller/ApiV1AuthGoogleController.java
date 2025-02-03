@@ -23,6 +23,7 @@ public class ApiV1AuthGoogleController {
     @PostMapping("/google")
     public ResponseEntity<?> verifyGoogleIdToken(@RequestBody Map<String, String> body) {
         String idToken = body.get("idToken");
+        System.out.println("idToken = " + idToken);
 
         Optional<GoogleAuth> googleAuth = googleAuthService.loginForGoogle(idToken);
 
