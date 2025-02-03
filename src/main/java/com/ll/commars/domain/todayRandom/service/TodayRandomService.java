@@ -1,8 +1,5 @@
 package com.ll.commars.domain.todayRandom.service;
 
-import com.ll.commars.domain.todayRandom.entity.Mypage;
-import com.ll.commars.domain.todayRandom.entity.Restaurant;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
