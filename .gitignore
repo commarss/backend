@@ -38,3 +38,4 @@ out/
 
 
 application-secret.yml
+/logstash/pipeline/logstash.conf
