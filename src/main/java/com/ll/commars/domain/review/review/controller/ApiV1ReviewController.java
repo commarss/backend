@@ -26,7 +26,8 @@ public class ApiV1ReviewController {
 
     record ReviewsWriteRequest(
             @NotBlank String name,
-            @NotBlank String body,
+            String body,
             Integer rate
+
     ) {}
 }
