@@ -6,7 +6,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -20,15 +19,15 @@ public class JwtProvider {
     @Value("${jwt.secret-key}")
     private String secretKey;
 
-    private final long accessTokenValidity = 24 * 60 * 60 * 1000L;
-    private final long refreshTokenValidity = 7 * 24 * 60 * 60 * 1000L;
+    public final long ACCESS_TOKEN_VALIDITY = 24 * 60 * 60 * 1000L;
+    public final long REFRESH_TOKEN_VALIDITY = 7 * 24 * 60 * 60 * 1000L;
 
     public String generateAccessToken(long id, String email, String name, String profileImageUrl) {
-        return createToken(id, email, name, profileImageUrl, accessTokenValidity);
+        return createToken(id, email, name, profileImageUrl, ACCESS_TOKEN_VALIDITY);
     }
 
     public String generateRefreshToken(long id, String email, String name, String profileImageUrl) {
-        return createToken(id, email, name, profileImageUrl, refreshTokenValidity);
+        return createToken(id, email, name, profileImageUrl, REFRESH_TOKEN_VALIDITY);
     }
 
     private String createToken(long id, String email, String name, String profileImageUrl, long validityInMilliseconds) {

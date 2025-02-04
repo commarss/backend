@@ -1,6 +1,6 @@
 package com.ll.commars.global.security;
 
-import com.ll.commars.global.filter.JwtAuthenticationFilter;
+import com.ll.commars.global.jwt.filter.JwtAuthenticationFilter;
 import com.ll.commars.global.jwt.component.JwtProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -55,6 +55,7 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(List.of("http://localhost:5173","http://localhost:5174", "http://localhost:5175", "https://accounts.google.com")); // React 프론트엔드 URL 허용
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
+        configuration.setExposedHeaders(List.of("Authorization", "Content-Type", "refreshToken", "accessToken"));
         configuration.setAllowCredentials(true); // 인증정보 포함 허용
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

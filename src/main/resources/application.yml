@@ -45,5 +45,14 @@ custom:
     backUrl: "${custom.dev.backUrl}"
 jwt:
   secret-key: "itSPqeI2VV2ThZq0r40MIzwTze2rXR9Uy5s46wNSga/s7bn1yHLUmP/7B4h/YvQvgE+YTtiHbZLy1wETqG4stw=="
+  excluded-urls:
+    /api/auth/google,
+    /api/auth/google/callback,
+    /api/auth/google/refresh,
+    /api/refresh
+  excluded-base-urls:
+    /api/public,
+    /login-success,
+    /api/auth,
 google:
   client-id: "${spring.security.oauth2.client.registration.google.client-id}"

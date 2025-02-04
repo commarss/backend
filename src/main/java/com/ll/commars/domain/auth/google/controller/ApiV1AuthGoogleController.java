@@ -38,7 +38,7 @@ public class ApiV1AuthGoogleController {
                 .httpOnly(true)
                 .secure(true)
                 .path("/")
-                .maxAge(7 * 24 * 60 * 60)  // 7일
+                .maxAge(jwtProvider.REFRESH_TOKEN_VALIDITY)
                 .sameSite("Strict")
                 .build();
 
