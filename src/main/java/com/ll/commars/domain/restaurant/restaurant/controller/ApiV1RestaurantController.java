@@ -11,6 +11,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/restaurant")
@@ -37,8 +39,9 @@ public class ApiV1RestaurantController {
         return new RsData<>("201", "메뉴 등록 성공", response);
     }
     // 모든 식당 조회
-//    @GetMapping("/")
-//    public RsData<List<RestaurantDto.RestaurantResponse>> getRestaurants() {
-//        return new RsData<>("200", "모든 식당 조회 성공", restaurantService.getRestaurants());
-//    }
+    @GetMapping("/")
+    public RsData<RestaurantDto.RestaurantShowAllResponse> getRestaurants() {
+        RestaurantDto.RestaurantShowAllResponse response = restaurantService.getRestaurants();
+        return new RsData<>("200", "모든 식당 조회 성공", response);
+    }
 }

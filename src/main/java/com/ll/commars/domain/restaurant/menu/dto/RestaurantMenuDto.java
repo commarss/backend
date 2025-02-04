@@ -21,4 +21,12 @@ public class RestaurantMenuDto {
         private String name;
         private Integer price;
     }
+
+    @Getter
+    @Builder
+    public static class MenuInfo {
+        private String name;
+        private Integer price;
+        private String imageUrl;
+    }
 }
