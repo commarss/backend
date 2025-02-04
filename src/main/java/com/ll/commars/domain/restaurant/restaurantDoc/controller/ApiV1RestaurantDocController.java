@@ -1,7 +1,7 @@
-package com.ll.commars.domain.restaurants.restaurantsDoc.controller;
+package com.ll.commars.domain.restaurant.restaurantDoc.controller;
 
-import com.ll.commars.domain.restaurants.restaurantsDoc.document.RestaurantsDoc;
-import com.ll.commars.domain.restaurants.restaurantsDoc.service.RestaurantsDocService;
+import com.ll.commars.domain.restaurant.restaurantDoc.document.RestaurantDoc;
+import com.ll.commars.domain.restaurant.restaurantDoc.service.RestaurantDocService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,8 +10,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/restaurantsDocs")
 @RequiredArgsConstructor
-public class ApiV1RestaurantsDocController {
-    private final RestaurantsDocService restaurantsDocService;
+public class ApiV1RestaurantDocController {
+    private final RestaurantDocService restaurantDocService;
 
     // 사실상 ES에 데이터를 쓸 일은 없음
 //    @PostMapping("/write")
@@ -29,13 +29,13 @@ public class ApiV1RestaurantsDocController {
 //    ) {}
 
     @GetMapping("/search")
-    public List<RestaurantsDoc> search(@RequestParam("keyword") String keyword) {
-        return restaurantsDocService.searchByKeyword(keyword);
+    public List<RestaurantDoc> search(@RequestParam("keyword") String keyword) {
+        return restaurantDocService.searchByKeyword(keyword);
     }
 
     // 추후 rename
     @GetMapping("/show/sortByRate")
-    public List<RestaurantsDoc> showSortByRate() {
-        return restaurantsDocService.showSortByRate();
+    public List<RestaurantDoc> showSortByRate() {
+        return restaurantDocService.showSortByRate();
     }
 }

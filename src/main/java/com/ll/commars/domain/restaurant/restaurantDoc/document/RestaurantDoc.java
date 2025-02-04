@@ -1,4 +1,4 @@
-package com.ll.commars.domain.restaurants.restaurantsDoc.document;
+package com.ll.commars.domain.restaurant.restaurantDoc.document;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
@@ -12,7 +12,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RestaurantsDoc {
+public class RestaurantDoc {
     @Id
     private String id;
 

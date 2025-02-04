@@ -1,6 +1,6 @@
-package com.ll.commars.domain.restaurants.restaurantsDoc.repository;
+package com.ll.commars.domain.restaurant.restaurantDoc.repository;
 
-import com.ll.commars.domain.restaurants.restaurantsDoc.document.RestaurantsDoc;
+import com.ll.commars.domain.restaurant.restaurantDoc.document.RestaurantDoc;
 import org.springframework.data.elasticsearch.annotations.Query;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.stereotype.Repository;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface RestaurantsDocRepository extends ElasticsearchRepository<RestaurantsDoc, String> {
+public interface RestaurantDocRepository extends ElasticsearchRepository<RestaurantDoc, String> {
     @Query("""
         {
             "bool": {
@@ -27,7 +27,7 @@ public interface RestaurantsDocRepository extends ElasticsearchRepository<Restau
             }
         }
     """)
-    List<RestaurantsDoc> searchByKeyword(String keyword);
+    List<RestaurantDoc> searchByKeyword(String keyword);
 
-    List<RestaurantsDoc> findAllByOrderByAverageRateDesc();
+    List<RestaurantDoc> findAllByOrderByAverageRateDesc();
 }

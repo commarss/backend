@@ -1,7 +1,5 @@
 package com.ll.commars.domain.reviews.reviews.controller;
 
-import com.ll.commars.domain.restaurants.restaurants.entity.Restaurants;
-import com.ll.commars.domain.restaurants.restaurants.service.RestaurantsService;
 import com.ll.commars.domain.reviews.reviews.entity.Reviews;
 import com.ll.commars.domain.reviews.reviews.service.ReviewsService;
 import com.ll.commars.global.rsData.RsData;

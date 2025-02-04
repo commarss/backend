@@ -1,7 +1,5 @@
 package com.ll.commars.domain.reviews.reviews.service;
 
-import com.ll.commars.domain.restaurants.restaurants.entity.Restaurants;
-import com.ll.commars.domain.restaurants.restaurants.repository.RestaurantsRepository;
 import com.ll.commars.domain.reviews.reviews.entity.Reviews;
 import com.ll.commars.domain.reviews.reviews.repository.ReviewsRepository;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,6 @@
 package com.ll.commars.domain.user.favorite.entity;
 
-import com.ll.commars.domain.restaurants.restaurants.entity.Restaurants;
+import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
 import com.ll.commars.domain.user.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -18,7 +18,7 @@ public class Favorite {
 
     @ManyToOne
     @JoinColumn(name = "restaurant_id", nullable = false)
-    private Restaurants restaurants;  // 식당과 연결
+    private Restaurant restaurant;  // 식당과 연결
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
