@@ -1,6 +1,7 @@
 package com.ll.commars.domain.restaurant.category.entity;
 
 import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
+import com.ll.commars.global.baseEntity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,7 +12,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RestaurantCategory {
+public class RestaurantCategory extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
