@@ -10,10 +10,10 @@ import org.springframework.stereotype.Service;
 public class ReviewService {
     private final ReviewRepository reviewRepository;
 
-    public Review write(String name, String content, Integer rate) {
+    public Review write(String name, String body, Integer rate) {
         Review review = Review.builder()
                 .name(name)
-                .content(content)
+                .body(body)
                 .rate(rate)
                 .build();
 

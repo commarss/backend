@@ -20,13 +20,13 @@ public class ApiV1ReviewController {
     public RsData<Review> write(
             @RequestBody @Valid ReviewsWriteRequest request
     ){
-        Review review = reviewService.write(request.name, request.content, request.rate);
+        Review review = reviewService.write(request.name, request.body, request.rate);
         return new RsData<>("201", "리뷰 등록 성공", review);
     }
 
     record ReviewsWriteRequest(
             @NotBlank String name,
-            @NotBlank String content,
+            @NotBlank String body,
             Integer rate
     ) {}
 }

@@ -1,11 +1,13 @@
 package com.ll.commars.domain.user.user.entity;
 
+import com.ll.commars.domain.review.review.entity.Review;
 import com.ll.commars.global.baseEntity.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -45,4 +47,8 @@ public class User extends BaseEntity {
     // 1: 남성, 2: 여성
     @Column(name = "gender")
     private Integer gender;
+
+    // User와 Review: 일대다
+    @OneToMany(mappedBy = "user")
+    private List<Review> reviews;
 }
