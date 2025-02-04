@@ -4,9 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.ll.commars.domain.community.comment.entity.Comment;
 import com.ll.commars.domain.community.boardHashTag.entity.HashTag;
 import com.ll.commars.domain.user.user.entity.User;
+import com.ll.commars.global.baseEntity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -15,50 +16,44 @@ import java.util.List;
 
 // Board 엔티티 수정
 @Entity
+@Table(name = "boards")
 @Getter
 @Setter
-@Table(name = "board")
-public class Board {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class Board extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int boardId;
+    private int id;
 
+    @NotNull
     @Column(nullable = false)
     private String title;
 
+    @NotNull
     @Column(nullable = false)
     private String content;
 
+    // 게시글 조회수
+    @NotNull
     @Column(nullable = false)
-    private int likes = 0;  // 좋아요 수 추가
+    private Integer views;
 
-    public void increaseLikes() {
-        this.likes++;
-    }
+    // 게시글 이미지
+    @Column(name = "image_url")
+    private String imageUrl;
 
-    @CreationTimestamp
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime regdate;
+//    public void increaseLikes() {
+//        this.likes++;
+//    }
 
-    @Column(nullable = false)
-    private int viewCnt;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = true) // 물리적 컬럼 이름은 그대로 유지
+    // Board와 User: 다대일
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<HashTag> hashTags = new ArrayList<>();
-
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnoreProperties("board")  // 순환 참조 방지
-    private List<Comment> comments = new ArrayList<>();
-
-    // 태그 목록
-    @Transient
-    private List<String> tags;
-
-    public void addHashTags(List<HashTag> tags) {
-        this.hashTags.addAll(tags);
-    }
+//    public void addHashTags(List<HashTag> tags) {
+//        this.hashTags.addAll(tags);
+//    }
 }

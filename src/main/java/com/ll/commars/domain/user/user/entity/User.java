@@ -1,5 +1,6 @@
 package com.ll.commars.domain.user.user.entity;
 
+import com.ll.commars.domain.community.board.entity.Board;
 import com.ll.commars.domain.review.review.entity.Review;
 import com.ll.commars.domain.user.favorite.entity.Favorite;
 import com.ll.commars.global.baseEntity.BaseEntity;
@@ -56,4 +57,8 @@ public class User extends BaseEntity {
     // User와 Favorite: 일대다
     @OneToMany(mappedBy = "user")
     private List<Favorite> favorites;
+
+    // User와 Board: 일대다
+    @OneToMany(mappedBy = "user")
+    private List<Board> boards;
 }
