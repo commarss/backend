@@ -4,30 +4,32 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ll.commars.domain.community.board.entity.Board;
 import com.ll.commars.domain.user.user.entity.User;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Data
 @Entity
+@Table(name = "comments")
 @Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "content")
     private String content;
-    private LocalDateTime createdDate;
 
+    // Comment와 User: 다대일
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_Id")
-    @JsonIgnore  // 댓글에서 게시글을 참조하는 부분에서 순환을 끊습니다.
-    private Board board;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_Id")
+    @JoinColumn(name = "user_id")
     private User user;
 
-
+    // Comment와 Board: 다대일
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "board_id")
+    private Board board;
 }

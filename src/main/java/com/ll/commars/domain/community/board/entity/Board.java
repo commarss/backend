@@ -56,4 +56,8 @@ public class Board extends BaseEntity {
 //    public void addHashTags(List<HashTag> tags) {
 //        this.hashTags.addAll(tags);
 //    }
+
+    // Board와 Comment: 일대다
+    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
+    private List<Comment> comments = new ArrayList<>();
 }
