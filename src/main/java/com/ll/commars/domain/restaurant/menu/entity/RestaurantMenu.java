@@ -31,7 +31,7 @@ public class RestaurantMenu extends BaseEntity {
     @Column(name = "image_url")
     private String imageUrl;
 
-    // menus와 restaurants: 다대일
+    // RestaurantMenu와 Restaurant: 다대일
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
