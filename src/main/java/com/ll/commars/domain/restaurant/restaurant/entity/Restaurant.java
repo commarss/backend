@@ -1,9 +1,12 @@
 package com.ll.commars.domain.restaurant.restaurant.entity;
 
+import com.ll.commars.domain.restaurant.menu.entity.Menu;
 import com.ll.commars.global.baseEntity.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "restaurants")
@@ -56,4 +59,8 @@ public class Restaurant extends BaseEntity {
     // 요약 리뷰
     @Column(name = "summarized_review")
     private String summarizedReview;
+
+    // restaurant와 menus: 일대다
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Menu> menus;
 }
