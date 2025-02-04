@@ -1,5 +1,6 @@
 package com.ll.commars.global.initData;
 
+import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantDto;
 import com.ll.commars.domain.restaurant.restaurant.service.RestaurantService;
 import com.ll.commars.domain.restaurant.restaurantDoc.service.RestaurantDocService;
 import com.ll.commars.domain.review.review.service.ReviewService;
@@ -8,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.Random;
+import java.util.stream.IntStream;
 
 @Configuration
 @RequiredArgsConstructor
@@ -68,60 +72,34 @@ public class BaseInitData {
         reviewService.write("whqtker", "독서 기록 - 나미야 잡화점의 기적", 5);
     }
 
-    // Restaurants 데이터 초기화
+    // Restaurant 데이터 초기화
     private void work4() {
         restaurantService.truncate();
 
-//        restaurantService.write(
-//                "이탈리안 레스토랑",
-//                "Authentic Italian cuisine with a cozy atmosphere.",
-//                4.5,
-//                "https://example.com/images/italian-restaurant.jpg",
-//                "010-1234-5678",
-//                "서울특별시 강남구 테헤란로 123",
-//                37.123456,
-//                127.123456,
-//                true,
-//                "Great food and excellent service."
-//        );
-//
-//        restaurantService.write(
-//                "프랑스 레스토랑",
-//                "Authentic French cuisine with a romantic atmosphere.",
-//                4.0,
-//                "https://example.com/images/french-restaurant.jpg",
-//                "010-2345-6789",
-//                "서울특별시 강남구 테헤란로 456",
-//                37.234567,
-//                127.234567,
-//                true,
-//                "Great food and excellent service."
-//        );
-//
-//        restaurantService.write(
-//                "일식 레스토랑",
-//                "Authentic Japanese cuisine with a traditional atmosphere.",
-//                4.0,
-//                "https://example.com/images/japanese-restaurant.jpg",
-//                "010-3456-7890",
-//                "서울특별시 강남구 테헤란로 789",
-//                37.345678,
-//                127.345678,
-//                true,
-//                "Great food and excellent service."
-//        );
-//
-//        restaurantService.write(
-//                "중식 레스토랑",
-//                "Authentic Chinese cuisine with a modern atmosphere.",
-//                3.0,
-//                "https://example.com/images/chinese-restaurant.jpg",
-//                "010-4567-8901",
-//                "서울특별시 강남구 테헤란로 012",
-//                37.456789,
-//                127.456789,
-//                true,
-//                "Great food and excellent service."
-//        );
+        String[] names = {"마녀커피", "피자알볼로", "스타벅스", "버거킹", "맘스터치", "서브웨이", "홍콩반점", "교촌치킨"};
+        String[] details = {"분위기 좋은 카페", "맛있는 피자집", "글로벌 커피 체인", "햄버거 전문점", "치킨 버거 전문점",
+                "샌드위치 전문점", "중국 음식점", "치킨 전문점"};
+        String[] addresses = {"서울시 강남구", "서울시 서초구", "서울시 송파구", "서울시 마포구", "서울시 종로구"};
+        String[] summarizedReviews = {"맛있고 분위기가 좋아요", "가성비가 좋아요", "서비스가 친절해요",
+                "음식이 빨리 나와요", "재방문 의사 있어요"};
+
+        Random random = new Random();
+
+        IntStream.range(0, 10).forEach(i -> {
+            RestaurantDto.RestaurantWriteRequest restaurant = RestaurantDto.RestaurantWriteRequest.builder()
+                    .name(names[random.nextInt(names.length)])
+                    .details(details[random.nextInt(details.length)])
+                    .averageRate(3.0 + random.nextDouble() * 2.0) // 3.0-5.0 사이 랜덤 점수
+                    .imageUrl(String.format("http://example.com/restaurant%d.jpg", i))
+                    .contact(String.format("02-%d-%d", 1000 + random.nextInt(9000), 1000 + random.nextInt(9000)))
+                    .address(addresses[random.nextInt(addresses.length)])
+                    .lat(37.4967 + (random.nextDouble() - 0.5) * 0.1) // 37.4467-37.5467 사이
+                    .lng(127.0498 + (random.nextDouble() - 0.5) * 0.1) // 126.9998-127.0998 사이
+                    .runningState(random.nextBoolean())
+                    .summarizedReview(summarizedReviews[random.nextInt(summarizedReviews.length)])
+                    .build();
+
+            restaurantService.write(restaurant);
+        });
     }
 }
