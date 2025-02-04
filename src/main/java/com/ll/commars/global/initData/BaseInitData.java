@@ -1,7 +1,7 @@
 package com.ll.commars.global.initData;
 
-import com.ll.commars.domain.restaurants.restaurants.service.RestaurantsService;
-import com.ll.commars.domain.restaurants.restaurantsDoc.service.RestaurantsDocService;
+import com.ll.commars.domain.restaurant.restaurant.service.RestaurantService;
+import com.ll.commars.domain.restaurant.restaurantDoc.service.RestaurantDocService;
 import com.ll.commars.domain.reviews.reviews.service.ReviewsService;
 import com.ll.commars.domain.reviews.reviewsDoc.service.ReviewsDocService;
 import lombok.RequiredArgsConstructor;
@@ -9,16 +9,14 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.stream.IntStream;
-
 @Configuration
 @RequiredArgsConstructor
 public class BaseInitData {
     private final ReviewsDocService reviewsDocService;
     private final ReviewsService reviewsService;
 
-    private final RestaurantsDocService restaurantsDocService;
-    private final RestaurantsService restaurantsService;
+    private final RestaurantDocService restaurantDocService;
+    private final RestaurantService restaurantService;
 
     @Bean
     public ApplicationRunner baseInitDataApplicationRunner() {
@@ -51,7 +49,7 @@ public class BaseInitData {
 
     // RestaurantsDoc 데이터 초기화
     private void work2() {
-        restaurantsDocService.truncate();
+        restaurantDocService.truncate();
 
 //        restaurantsDocService.write("마녀 커피", "마녀 커피는 커피 전문점으로, 커피의 맛이 좋아요.", 4.5);
 //        restaurantsDocService.write("피자 알볼로", "피자 알볼로는 피자 전문점으로, 피자의 맛이 좋아요.", 4.0);
@@ -72,11 +70,11 @@ public class BaseInitData {
 
     // Restaurants 데이터 초기화
     private void work4() {
-        restaurantsService.truncate();
+        restaurantService.truncate();
 
-        restaurantsService.write("마녀 커피", "마녀 커피는 커피 전문점으로, 커피의 맛이 좋아요.", 4.5);
-        restaurantsService.write("피자 알볼로", "피자 알볼로는 피자 전문점으로, 피자의 맛이 좋아요.", 4.0);
-        restaurantsService.write("진짜 치킨", "진짜 치킨은 치킨 전문점으로, 치킨의 맛이 좋아요.", 4.0);
-        restaurantsService.write("매운 떡볶이", "매운 떡볶이는 떡볶이 전문점으로, 떡볶이의 맛이 좋아요.", 3.0);
+        restaurantService.write("마녀 커피", "마녀 커피는 커피 전문점으로, 커피의 맛이 좋아요.", 4.5);
+        restaurantService.write("피자 알볼로", "피자 알볼로는 피자 전문점으로, 피자의 맛이 좋아요.", 4.0);
+        restaurantService.write("진짜 치킨", "진짜 치킨은 치킨 전문점으로, 치킨의 맛이 좋아요.", 4.0);
+        restaurantService.write("매운 떡볶이", "매운 떡볶이는 떡볶이 전문점으로, 떡볶이의 맛이 좋아요.", 3.0);
     }
 }
