@@ -28,7 +28,7 @@ public class BaseInitData {
 //            work1();
             work2();
 //            work3();
-            work4();
+            restaurantInit();
         };
     }
 
@@ -73,7 +73,7 @@ public class BaseInitData {
     }
 
     // Restaurant 데이터 초기화
-    private void work4() {
+    private void restaurantInit() {
         restaurantService.truncate();
 
         String[] names = {"마녀커피", "피자알볼로", "스타벅스", "버거킹", "맘스터치", "서브웨이", "홍콩반점", "교촌치킨"};
