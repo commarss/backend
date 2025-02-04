@@ -4,6 +4,7 @@ import com.ll.commars.domain.restaurant.businessHour.entity.RestaurantBusinessHo
 import com.ll.commars.domain.restaurant.category.entity.RestaurantCategory;
 import com.ll.commars.domain.restaurant.menu.entity.RestaurantMenu;
 import com.ll.commars.domain.review.review.entity.Review;
+import com.ll.commars.domain.user.favoriteRestaurant.entity.FavoriteRestaurant;
 import com.ll.commars.global.baseEntity.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -78,4 +79,8 @@ public class Restaurant extends BaseEntity {
     // Restaurant와 Review: 일대다
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews;
+
+    // Restaurant와 FavoriteRestaurant: 일대다
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FavoriteRestaurant> favoriteRestaurants;
 }

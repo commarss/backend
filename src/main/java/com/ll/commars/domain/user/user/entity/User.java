@@ -1,6 +1,7 @@
 package com.ll.commars.domain.user.user.entity;
 
 import com.ll.commars.domain.review.review.entity.Review;
+import com.ll.commars.domain.user.favorite.entity.Favorite;
 import com.ll.commars.global.baseEntity.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -51,4 +52,8 @@ public class User extends BaseEntity {
     // User와 Review: 일대다
     @OneToMany(mappedBy = "user")
     private List<Review> reviews;
+
+    // User와 Favorite: 일대다
+    @OneToMany(mappedBy = "user")
+    private List<Favorite> favorites;
 }

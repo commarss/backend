@@ -1,26 +1,40 @@
 package com.ll.commars.domain.user.favorite.entity;
 
 import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
+import com.ll.commars.domain.user.favoriteRestaurant.entity.FavoriteRestaurant;
 import com.ll.commars.domain.user.user.entity.User;
+import com.ll.commars.global.baseEntity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+
+import java.util.List;
 
 @Entity
-@Table(name = "myfavorite") //찜테이블
+@Table(name = "favorites")
 @Getter
 @Setter
-public class Favorite {
-
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class Favorite extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "restaurant_id", nullable = false)
-    private Restaurant restaurant;  // 식당과 연결
+    // 찜 리스트 이름
+    @Column(name = "name")
+    private String name;
 
+    // 찜 리스트 공개 여부
+    @Column(name = "is_public")
+    private Boolean isPublic;
+
+    // Favorite과 User: 다대일
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;  // User 엔티티와 연결 (email을 외래키로 사용)
+    private User user;
+
+    // Favorite과 FavoriteRestaurant: 일대다
+    @OneToMany(mappedBy = "favorite", fetch = FetchType.LAZY)
+    private List<FavoriteRestaurant> favoriteRestaurants;
 }
