@@ -1,6 +1,6 @@
 package com.ll.commars.domain.restaurant.menu.service;
 
-import com.ll.commars.domain.restaurant.menu.dto.RestaurantMenuDTO;
+import com.ll.commars.domain.restaurant.menu.dto.RestaurantMenuDto;
 import com.ll.commars.domain.restaurant.menu.entity.RestaurantMenu;
 import com.ll.commars.domain.restaurant.menu.repository.RestaurantMenuRepository;
 import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
@@ -16,19 +16,24 @@ public class RestaurantMenuService {
     private final RestaurantMenuRepository restaurantMenuRepository;
 
     @Transactional
-    public RestaurantMenuDTO write(String name, Integer price, String imageUrl, String restaurantName) {
-        Restaurant restaurant = restaurantRepository.findByName(restaurantName)
+    public RestaurantMenuDto.RestaurantMenuWriteResponse write(
+            RestaurantMenuDto.RestaurantMenuWriteRequest request) {
+        Restaurant restaurant = restaurantRepository.findByName(request.getRestaurantName())
                 .orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
 
         RestaurantMenu restaurantMenu = RestaurantMenu.builder()
-                .name(name)
-                .price(price)
-                .imageUrl(imageUrl)
                 .restaurant(restaurant)
+                .name(request.getName())
+                .price(request.getPrice())
+                .imageUrl(request.getImageUrl())
                 .build();
 
         restaurantMenuRepository.save(restaurantMenu);
 
-        return RestaurantMenuDTO.from(restaurantMenu);
+        return RestaurantMenuDto.RestaurantMenuWriteResponse.builder()
+                .restaurantName(restaurant.getName())
+                .name(restaurantMenu.getName())
+                .price(restaurantMenu.getPrice())
+                .build();
     }
 }

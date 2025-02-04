@@ -72,56 +72,56 @@ public class BaseInitData {
     private void work4() {
         restaurantService.truncate();
 
-        restaurantService.write(
-                "이탈리안 레스토랑",
-                "Authentic Italian cuisine with a cozy atmosphere.",
-                4.5,
-                "https://example.com/images/italian-restaurant.jpg",
-                "010-1234-5678",
-                "서울특별시 강남구 테헤란로 123",
-                37.123456,
-                127.123456,
-                true,
-                "Great food and excellent service."
-        );
-
-        restaurantService.write(
-                "프랑스 레스토랑",
-                "Authentic French cuisine with a romantic atmosphere.",
-                4.0,
-                "https://example.com/images/french-restaurant.jpg",
-                "010-2345-6789",
-                "서울특별시 강남구 테헤란로 456",
-                37.234567,
-                127.234567,
-                true,
-                "Great food and excellent service."
-        );
-
-        restaurantService.write(
-                "일식 레스토랑",
-                "Authentic Japanese cuisine with a traditional atmosphere.",
-                4.0,
-                "https://example.com/images/japanese-restaurant.jpg",
-                "010-3456-7890",
-                "서울특별시 강남구 테헤란로 789",
-                37.345678,
-                127.345678,
-                true,
-                "Great food and excellent service."
-        );
-
-        restaurantService.write(
-                "중식 레스토랑",
-                "Authentic Chinese cuisine with a modern atmosphere.",
-                3.0,
-                "https://example.com/images/chinese-restaurant.jpg",
-                "010-4567-8901",
-                "서울특별시 강남구 테헤란로 012",
-                37.456789,
-                127.456789,
-                true,
-                "Great food and excellent service."
-        );
+//        restaurantService.write(
+//                "이탈리안 레스토랑",
+//                "Authentic Italian cuisine with a cozy atmosphere.",
+//                4.5,
+//                "https://example.com/images/italian-restaurant.jpg",
+//                "010-1234-5678",
+//                "서울특별시 강남구 테헤란로 123",
+//                37.123456,
+//                127.123456,
+//                true,
+//                "Great food and excellent service."
+//        );
+//
+//        restaurantService.write(
+//                "프랑스 레스토랑",
+//                "Authentic French cuisine with a romantic atmosphere.",
+//                4.0,
+//                "https://example.com/images/french-restaurant.jpg",
+//                "010-2345-6789",
+//                "서울특별시 강남구 테헤란로 456",
+//                37.234567,
+//                127.234567,
+//                true,
+//                "Great food and excellent service."
+//        );
+//
+//        restaurantService.write(
+//                "일식 레스토랑",
+//                "Authentic Japanese cuisine with a traditional atmosphere.",
+//                4.0,
+//                "https://example.com/images/japanese-restaurant.jpg",
+//                "010-3456-7890",
+//                "서울특별시 강남구 테헤란로 789",
+//                37.345678,
+//                127.345678,
+//                true,
+//                "Great food and excellent service."
+//        );
+//
+//        restaurantService.write(
+//                "중식 레스토랑",
+//                "Authentic Chinese cuisine with a modern atmosphere.",
+//                3.0,
+//                "https://example.com/images/chinese-restaurant.jpg",
+//                "010-4567-8901",
+//                "서울특별시 강남구 테헤란로 012",
+//                37.456789,
+//                127.456789,
+//                true,
+//                "Great food and excellent service."
+//        );
     }
 }

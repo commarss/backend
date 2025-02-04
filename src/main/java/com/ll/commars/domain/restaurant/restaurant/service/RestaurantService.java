@@ -1,51 +1,46 @@
 package com.ll.commars.domain.restaurant.restaurant.service;
 
+import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantDto;
 import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
 import com.ll.commars.domain.restaurant.restaurant.repository.RestaurantRepository;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
 
-    public Restaurant write(
-            String name,
-            String details,
-            Double averageRate,
-            String imageUrl,
-            String contact,
-            String address,
-            Double lat,
-            Double lng,
-            Boolean runningState,
-            String summarizedReview
+    public RestaurantDto.RestaurantWriteResponse write(
+            RestaurantDto.RestaurantWriteRequest request
     ) {
         Restaurant restaurant = Restaurant.builder()
-                .name(name)
-                .details(details)
-                .averageRate(averageRate)
-                .imageUrl(imageUrl)
-                .contact(contact)
-                .address(address)
-                .lat(lat)
-                .lng(lng)
-                .runningState(runningState)
-                .summarizedReview(summarizedReview)
+                .name(request.getName())
+                .details(request.getDetails())
+                .averageRate(request.getAverageRate())
+                .imageUrl(request.getImageUrl())
+                .contact(request.getContact())
+                .address(request.getAddress())
+                .lat(request.getLat())
+                .lng(request.getLng())
+                .runningState(request.getRunningState())
+                .summarizedReview(request.getSummarizedReview())
                 .build();
 
-        return restaurantRepository.save(restaurant);
+        restaurantRepository.save(restaurant);
+
+        return RestaurantDto.RestaurantWriteResponse.builder()
+                .name(request.getName())
+                .build();
     }
 
     public void truncate() {
         restaurantRepository.deleteAll();
     }
 
-//    public String getRestaurantDetail(String name) {
-//        Restaurant restaurant = restaurantRepository.findByName(name);
-//        return restaurant.getDetails();
-//    }
+    public List<Restaurant> getRestaurants() {
+        return restaurantRepository.findAll();
+    }
 }
