@@ -1,5 +1,8 @@
 package com.ll.commars.domain.restaurant.restaurant.controller;
 
+import com.ll.commars.domain.restaurant.menu.dto.RestaurantMenuDTO;
+import com.ll.commars.domain.restaurant.menu.entity.RestaurantMenu;
+import com.ll.commars.domain.restaurant.menu.service.RestaurantMenuService;
 import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
 import com.ll.commars.domain.restaurant.restaurant.service.RestaurantService;
 import com.ll.commars.global.rsData.RsData;
@@ -14,7 +17,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/restaurants")
 public class ApiV1RestaurantController {
     private final RestaurantService restaurantService;
-    @PostMapping("/write")
+    private final RestaurantMenuService restaurantMenuService;
+
+    // 식당 정보 등록
+    @PostMapping("/")
     public RsData<Restaurant> write(
             @RequestBody @Valid RestaurantsWriteRequest request
     ){
@@ -46,8 +52,30 @@ public class ApiV1RestaurantController {
             String summarizedReview
     ) {}
 
-    @GetMapping("/detail")
-    public String getRestaurantDetail(@RequestParam String name) {
-        return restaurantService.getRestaurantDetail(name);
+//    @GetMapping("/detail")
+//    public String getRestaurantDetail(@RequestParam String name) {
+//        return restaurantService.getRestaurantDetail(name);
+//    }
+
+    // 식당 메뉴 등록
+    @PostMapping("/menu")
+    public RsData<RestaurantMenuDTO> writeMenu(
+            @RequestBody @Valid RestaurantMenuWriteRequest request
+    ){
+        RestaurantMenuDTO menuDto = restaurantMenuService.write(
+                request.name,
+                request.price,
+                request.imageUrl,
+                request.restaurantName
+        );
+
+        return new RsData<>("201", "메뉴 등록 성공", menuDto);
     }
+
+    record RestaurantMenuWriteRequest(
+            @NotBlank String name,
+            @NotNull Integer price,
+            String imageUrl,
+            String restaurantName
+    ) {}
 }

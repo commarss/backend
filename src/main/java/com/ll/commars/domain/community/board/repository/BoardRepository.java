@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
     // 게시글 목록 페이징
-    Page<Board> findAllByOrderByBoardIdDesc(Pageable pageable);
+    Page<Board> findAllByOrderByIdDesc(Pageable pageable);
 
     // 제목으로 검색
     Page<Board> findByTitleContaining(String keyword, Pageable pageable);

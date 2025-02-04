@@ -44,8 +44,8 @@ public class RestaurantService {
         restaurantRepository.deleteAll();
     }
 
-    public String getRestaurantDetail(String name) {
-        Restaurant restaurant = restaurantRepository.findByName(name);
-        return restaurant.getDetails();
-    }
+//    public String getRestaurantDetail(String name) {
+//        Restaurant restaurant = restaurantRepository.findByName(name);
+//        return restaurant.getDetails();
+//    }
 }

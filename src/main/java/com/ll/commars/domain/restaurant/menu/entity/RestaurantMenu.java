@@ -25,7 +25,7 @@ public class RestaurantMenu extends BaseEntity {
 
     @NotNull
     @Column(name = "price", nullable = false)
-    private String price;
+    private Integer price;
 
     // 메뉴 사진
     @Column(name = "image_url")

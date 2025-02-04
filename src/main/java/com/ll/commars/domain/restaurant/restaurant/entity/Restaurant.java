@@ -17,6 +17,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
+@ToString(exclude = {"restaurantMenus", "restaurantCategories", "restaurantBusinessHours", "reviews", "favoriteRestaurants"})
 @NoArgsConstructor
 @AllArgsConstructor
 public class Restaurant extends BaseEntity {
@@ -65,7 +66,7 @@ public class Restaurant extends BaseEntity {
     private String summarizedReview;
 
     // Restaurant와 RestaurantMenu: 일대다
-    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<RestaurantMenu> restaurantMenus;
 
     // Restaurant와 RestaurantCategory: 일대다
@@ -83,4 +84,9 @@ public class Restaurant extends BaseEntity {
     // Restaurant와 FavoriteRestaurant: 일대다
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FavoriteRestaurant> favoriteRestaurants;
+
+    public void addMenu(RestaurantMenu menu) {
+        this.restaurantMenus.add(menu);
+        menu.setRestaurant(this);
+    }
 }

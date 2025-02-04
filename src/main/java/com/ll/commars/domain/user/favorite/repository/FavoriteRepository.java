@@ -16,7 +16,7 @@ public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
     List<Favorite> findByUserEmail(String email);
 
     // 특정 리뷰어와 식당에 대한 찜이 이미 존재하는지 체크
-    Optional<Favorite> findByUserEmailAndRestaurantId(String email, Long restaurantId);
+    Optional<Favorite> findByUserEmailAndId(String email, Long restaurantId);
 
     @Query("SELECT COUNT(f) FROM Favorite f WHERE f.user.email = :email")
     int countByUserEmail(@Param("email") String email);
