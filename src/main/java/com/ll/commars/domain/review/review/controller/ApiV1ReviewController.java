@@ -1,7 +1,7 @@
-package com.ll.commars.domain.reviews.reviews.controller;
+package com.ll.commars.domain.review.review.controller;
 
-import com.ll.commars.domain.reviews.reviews.entity.Reviews;
-import com.ll.commars.domain.reviews.reviews.service.ReviewsService;
+import com.ll.commars.domain.review.review.entity.Review;
+import com.ll.commars.domain.review.review.service.ReviewService;
 import com.ll.commars.global.rsData.RsData;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/reviews")
-public class ApiV1ReviewsController {
-    private final ReviewsService reviewsService;
+public class ApiV1ReviewController {
+    private final ReviewService reviewService;
     @PostMapping("/write")
-    public RsData<Reviews> write(
+    public RsData<Review> write(
             @RequestBody @Valid ReviewsWriteRequest request
     ){
-        Reviews reviews = reviewsService.write(request.name, request.content, request.rate);
-        return new RsData<>("201", "리뷰 등록 성공", reviews);
+        Review review = reviewService.write(request.name, request.content, request.rate);
+        return new RsData<>("201", "리뷰 등록 성공", review);
     }
 
     record ReviewsWriteRequest(

@@ -2,8 +2,8 @@ package com.ll.commars.global.initData;
 
 import com.ll.commars.domain.restaurant.restaurant.service.RestaurantService;
 import com.ll.commars.domain.restaurant.restaurantDoc.service.RestaurantDocService;
-import com.ll.commars.domain.reviews.reviews.service.ReviewsService;
-import com.ll.commars.domain.reviews.reviewsDoc.service.ReviewsDocService;
+import com.ll.commars.domain.review.review.service.ReviewService;
+import com.ll.commars.domain.review.reviewDoc.service.ReviewDocService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
@@ -12,8 +12,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @RequiredArgsConstructor
 public class BaseInitData {
-    private final ReviewsDocService reviewsDocService;
-    private final ReviewsService reviewsService;
+    private final ReviewDocService reviewDocService;
+    private final ReviewService reviewService;
 
     private final RestaurantDocService restaurantDocService;
     private final RestaurantService restaurantService;
@@ -30,7 +30,7 @@ public class BaseInitData {
 
     // ReviewsDoc 데이터 초기화
     private void work1() {
-        reviewsDocService.truncate();
+        reviewDocService.truncate();
 
 //        reviewsDocService.write("하루 일과 정리", 2);
 //        reviewsDocService.write("코딩의 즐거움", 5);
@@ -59,13 +59,13 @@ public class BaseInitData {
 
     // Reviews 데이터 초기화
     private void work3() {
-        reviewsService.truncate();
+        reviewService.truncate();
 
-        reviewsService.write("whqtker", "코딩의 즐거움", 5);
-        reviewsService.write("test", "겨울 여행 계획", 4);
-        reviewsService.write("hello", "운동 루틴 기록", 1);
-        reviewsService.write("1q2w3e4r", "영화 리뷰 - 인터스텔라", 4);
-        reviewsService.write("whqtker", "독서 기록 - 나미야 잡화점의 기적", 5);
+        reviewService.write("whqtker", "코딩의 즐거움", 5);
+        reviewService.write("test", "겨울 여행 계획", 4);
+        reviewService.write("hello", "운동 루틴 기록", 1);
+        reviewService.write("1q2w3e4r", "영화 리뷰 - 인터스텔라", 4);
+        reviewService.write("whqtker", "독서 기록 - 나미야 잡화점의 기적", 5);
     }
 
     // Restaurants 데이터 초기화

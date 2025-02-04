@@ -1,4 +1,4 @@
-package com.ll.commars.domain.reviews.reviewsDoc.document;
+package com.ll.commars.domain.review.reviewDoc.document;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
@@ -12,7 +12,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReviewsDoc {
+public class ReviewDoc {
     @Id
     private String id;
 
