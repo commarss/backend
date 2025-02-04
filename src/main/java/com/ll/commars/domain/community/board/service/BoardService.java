@@ -24,27 +24,26 @@ public class BoardService {
     private final UserRepository userRepository;
 
     // 게시글 추가
-    public void addBoard(int userId, String title, String content, List<String> tags) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
+    public void addBoard(Long id, String title, String content, List<String> tags) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + id));
         Board board = new Board();
         board.setUser(user);
         board.setTitle(title);
         board.setContent(content);
-        board.setRegdate(LocalDateTime.now());
-        board.setViewCnt(0);
+        board.setViews(0);
         boardRepository.save(board);
 
         // 해시태그 저장
-        List<HashTag> hashTags = tags.stream()
-                .map(tag -> {
-                    HashTag hashTag = new HashTag();
-                    hashTag.setTag(tag);
-                    hashTag.setBoard(board);
-                    return hashTag;
-                }).collect(Collectors.toList());
-        hashTagRepository.saveAll(hashTags);
-        board.setHashTags(hashTags);  // Board 객체에 태그 추가
+//        List<HashTag> hashTags = tags.stream()
+//                .map(tag -> {
+//                    HashTag hashTag = new HashTag();
+//                    hashTag.setTag(tag);
+//                    hashTag.setBoard(board);
+//                    return hashTag;
+//                }).collect(Collectors.toList());
+//        hashTagRepository.saveAll(hashTags);
+//        board.setHashTags(hashTags);  // Board 객체에 태그 추가
     }
 
     public List<Board> getAllBoards() {
@@ -54,26 +53,26 @@ public class BoardService {
 
     // 게시글 상세 조회 (조회수 증가 포함)
     @Transactional
-    public Board getBoard(int boardId) {
+    public Board getBoard(Long boardId) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
 
         // 조회수 증가
-        board.setViewCnt(board.getViewCnt() + 1);
+        board.setViews(board.getViews() + 1);
         boardRepository.save(board);
 
         // 태그 목록 변환
-        List<String> tags = board.getHashTags().stream()
-                .map(HashTag::getTag)
-                .collect(Collectors.toList());
-        board.setTags(tags);
+//        List<String> tags = board.getHashTags().stream()
+//                .map(HashTag::getTag)
+//                .collect(Collectors.toList());
+//        board.setTags(tags);
 
         return board;
     }
 
     // 게시글 수정
     @Transactional
-    public void updateBoard(int postId, String title, String content, List<String> tags) {
+    public void updateBoard(Long postId, String title, String content, List<String> tags) {
         Board board = boardRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
         board.setTitle(title);
@@ -94,7 +93,7 @@ public class BoardService {
     }
 
     // 게시글 삭제
-    public void deleteBoard(int boardId) {
+    public void deleteBoard(Long boardId) {
         boardRepository.deleteById(boardId);
     }
 
@@ -108,13 +107,11 @@ public class BoardService {
     }
 
     // 좋아요 증가
-    public int incrementLikes(int postId) {
-        Board board = boardRepository.findById(postId)
-                .orElseThrow(() -> new NoSuchElementException("게시글을 찾을 수 없습니다."));
-        board.increaseLikes();
-        boardRepository.save(board);
-        return board.getLikes();  // 업데이트된 좋아요 수 반환
-    }
-
-
+//    public int incrementLikes(int postId) {
+//        Board board = boardRepository.findById(postId)
+//                .orElseThrow(() -> new NoSuchElementException("게시글을 찾을 수 없습니다."));
+//        board.increaseLikes();
+//        boardRepository.save(board);
+//        return board.getLikes();  // 업데이트된 좋아요 수 반환
+//    }
 }

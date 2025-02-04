@@ -22,7 +22,7 @@ public class CommentService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void addComment(int postId, int userId, String content) {
+    public void addComment(Long postId, Long userId, String content) {
         // 예시 구현
         Board board = boardRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid postId: " + postId));
@@ -33,12 +33,11 @@ public class CommentService {
         comment.setBoard(board);
         comment.setUser(user);
         comment.setContent(content);
-        comment.setCreatedDate(LocalDateTime.now());
 
         commentRepository.save(comment);
     }
 
-    public List<Comment> getCommentsByBoardId(int boardId) {
+    public List<Comment> getCommentsByBoardId(Long boardId) {
         return commentRepository.findByBoard_BoardId(boardId);
     }
 }

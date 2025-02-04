@@ -8,6 +8,7 @@ import com.ll.commars.domain.user.user.service.UserService;
 import com.ll.commars.domain.user.user.dto.userDTO;
 import com.ll.commars.domain.auth.authUserInfo.repository.AuthUserInfoRepository;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 
 @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/auth")
 public class AuthController {
 
@@ -23,16 +25,12 @@ public class AuthController {
     private UserRepository userRepository;
     private AuthUserInfoRepository authUserInfoRepository;
 
-    public AuthController(UserService userService) {
-        this.userService = userService;
-    }
-
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody userDTO userDTO, HttpSession session) {
         try {
             User user = userService.findByEmail(userDTO.getEmail());
             if (user != null && user.getPassword().equals(userDTO.getPassword())) {
-                AuthUserInfo authUserInfo = new AuthUserInfo(user.getUserId(), user.getEmail(), user.getName());
+                AuthUserInfo authUserInfo = new AuthUserInfo(user.getId(), user.getEmail(), user.getName());
                 authUserInfo.setLoginTime(LocalDateTime.now());
 
                 // 로그인 기록을 DB에 저장

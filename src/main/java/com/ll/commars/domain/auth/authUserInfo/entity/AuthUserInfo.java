@@ -20,18 +20,15 @@ public class AuthUserInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private int userId;
     private String email;
     private String name;
     private List<String> roles = new ArrayList<>();
 
-    public AuthUserInfo(int userId, String email, String name) {
-        this.userId = userId;
+    public AuthUserInfo(Long id, String email, String name) {
+        this.id = id;
         this.email = email;
         this.name = name;
     }
-
-
 
     public void addRole(String roleName){
         roles.add(roleName);
