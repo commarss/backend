@@ -1,5 +1,6 @@
 package com.ll.commars.domain.restaurant.restaurant.entity;
 
+import com.ll.commars.domain.restaurant.businessHour.entity.RestaurantBusinessHour;
 import com.ll.commars.domain.restaurant.category.entity.RestaurantCategory;
 import com.ll.commars.domain.restaurant.menu.entity.RestaurantMenu;
 import com.ll.commars.global.baseEntity.BaseEntity;
@@ -68,4 +69,8 @@ public class Restaurant extends BaseEntity {
     // Restaurant와 RestaurantCategory: 일대다
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RestaurantCategory> restaurantCategories;
+
+    // Restaurant와 RestaurantBusinessHours: 일대다
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RestaurantBusinessHour> restaurantBusinessHours;
 }
