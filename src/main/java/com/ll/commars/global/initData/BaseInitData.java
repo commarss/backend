@@ -21,10 +21,10 @@ public class BaseInitData {
     @Bean
     public ApplicationRunner baseInitDataApplicationRunner() {
         return args -> {
-            work1();
-            work2();
-            work3();
-            work4();
+//            work1();
+//            work2();
+//            work3();
+//            work4();
         };
     }
 
@@ -72,9 +72,56 @@ public class BaseInitData {
     private void work4() {
         restaurantService.truncate();
 
-        restaurantService.write("마녀 커피", "마녀 커피는 커피 전문점으로, 커피의 맛이 좋아요.", 4.5);
-        restaurantService.write("피자 알볼로", "피자 알볼로는 피자 전문점으로, 피자의 맛이 좋아요.", 4.0);
-        restaurantService.write("진짜 치킨", "진짜 치킨은 치킨 전문점으로, 치킨의 맛이 좋아요.", 4.0);
-        restaurantService.write("매운 떡볶이", "매운 떡볶이는 떡볶이 전문점으로, 떡볶이의 맛이 좋아요.", 3.0);
+        restaurantService.write(
+                "이탈리안 레스토랑",
+                "Authentic Italian cuisine with a cozy atmosphere.",
+                4.5,
+                "https://example.com/images/italian-restaurant.jpg",
+                "010-1234-5678",
+                "서울특별시 강남구 테헤란로 123",
+                37.123456,
+                127.123456,
+                true,
+                "Great food and excellent service."
+        );
+
+        restaurantService.write(
+                "프랑스 레스토랑",
+                "Authentic French cuisine with a romantic atmosphere.",
+                4.0,
+                "https://example.com/images/french-restaurant.jpg",
+                "010-2345-6789",
+                "서울특별시 강남구 테헤란로 456",
+                37.234567,
+                127.234567,
+                true,
+                "Great food and excellent service."
+        );
+
+        restaurantService.write(
+                "일식 레스토랑",
+                "Authentic Japanese cuisine with a traditional atmosphere.",
+                4.0,
+                "https://example.com/images/japanese-restaurant.jpg",
+                "010-3456-7890",
+                "서울특별시 강남구 테헤란로 789",
+                37.345678,
+                127.345678,
+                true,
+                "Great food and excellent service."
+        );
+
+        restaurantService.write(
+                "중식 레스토랑",
+                "Authentic Chinese cuisine with a modern atmosphere.",
+                3.0,
+                "https://example.com/images/chinese-restaurant.jpg",
+                "010-4567-8901",
+                "서울특별시 강남구 테헤란로 012",
+                37.456789,
+                127.456789,
+                true,
+                "Great food and excellent service."
+        );
     }
 }
