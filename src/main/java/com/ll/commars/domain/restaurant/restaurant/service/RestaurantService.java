@@ -127,6 +127,7 @@ public class RestaurantService {
                 .build();
     }
 
+    @Transactional(readOnly = true)
     public RestaurantDto.RestaurantShowAllReviewsResponse getReviews(Long restaurantId) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
