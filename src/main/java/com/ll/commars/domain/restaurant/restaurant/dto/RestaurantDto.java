@@ -63,7 +63,13 @@ public class RestaurantDto {
 
     @Getter
     @Builder
-    public  static class RestaurantShowAllReviewsResponse {
+    public static class RestaurantShowAllReviewsResponse {
         private List<ReviewDto.ReviewInfo> reviews;
+    }
+
+    @Getter
+    @Builder
+    public static class RestaurantShowAllMenusResponse {
+        private List<RestaurantMenuDto.MenuInfo> menus;
     }
 }

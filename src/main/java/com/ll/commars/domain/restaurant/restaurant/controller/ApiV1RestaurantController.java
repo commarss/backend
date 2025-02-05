@@ -38,7 +38,7 @@ public class ApiV1RestaurantController {
         return new RsData<>("200", "모든 식당 조회 성공", response);
     }
 
-    // 식당 메뉴 등록
+    // 식당 메뉴 등록(완료)
     @PostMapping("{restaurant_id}/menu")
     public RsData<RestaurantMenuDto.RestaurantMenuWriteResponse> writeMenu(
             @PathVariable("restaurant_id") @NotNull Long restaurantId,
@@ -50,6 +50,13 @@ public class ApiV1RestaurantController {
     }
 
     // 식당 메뉴 조회
+    @GetMapping("/{restaurant_id}/menu")
+    public RsData<RestaurantDto.RestaurantShowAllMenusResponse> getMenus(
+            @PathVariable("restaurant_id") @NotNull Long restaurantId
+    ){
+        RestaurantDto.RestaurantShowAllMenusResponse response = restaurantService.getMenus(restaurantId);
+        return new RsData<>("200", "메뉴 조회 성공", response);
+    }
 
     // 식당 메뉴 수정
 

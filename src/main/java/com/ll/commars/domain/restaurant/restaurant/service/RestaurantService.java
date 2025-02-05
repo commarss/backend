@@ -132,4 +132,22 @@ public class RestaurantService {
                 .reviews(reviewInfos)
                 .build();
     }
+
+    @Transactional
+    public RestaurantDto.RestaurantShowAllMenusResponse getMenus(Long restaurantId) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
+
+        List<RestaurantMenuDto.MenuInfo> menuInfos = restaurant.getRestaurantMenus().stream()
+                .map(menu -> RestaurantMenuDto.MenuInfo.builder()
+                        .name(menu.getName())
+                        .price(menu.getPrice())
+                        .imageUrl(menu.getImageUrl())
+                        .build())
+                .collect(Collectors.toList());
+
+        return RestaurantDto.RestaurantShowAllMenusResponse.builder()
+                .menus(menuInfos)
+                .build();
+    }
 }
