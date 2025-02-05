@@ -49,6 +49,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-data-elasticsearch")
     developmentOnly("org.springframework.boot:spring-boot-docker-compose")
+
+    // Swagger
+    implementation ("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
 }
 
 tasks.withType<Test> {
