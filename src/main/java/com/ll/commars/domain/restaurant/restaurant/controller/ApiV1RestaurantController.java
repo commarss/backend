@@ -96,7 +96,7 @@ public class ApiV1RestaurantController {
         return new RsData<>("201", "리뷰 등록 성공", response);
     }
 
-    // 식당 리뷰 조회
+    // 식당 리뷰 조회(완료)
     @GetMapping("/{restaurant_id}/review")
     public RsData<RestaurantDto.RestaurantShowAllReviewsResponse> getReviews(
             @PathVariable("restaurant_id") @NotNull Long restaurantId
@@ -104,8 +104,4 @@ public class ApiV1RestaurantController {
         RestaurantDto.RestaurantShowAllReviewsResponse response = restaurantService.getReviews(restaurantId);
         return new RsData<>("200", "리뷰 조회 성공", response);
     }
-
-    // 식당 리뷰 삭제
-
-    // 식당 리뷰 수정
 }

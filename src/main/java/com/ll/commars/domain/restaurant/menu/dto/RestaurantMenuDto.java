@@ -28,8 +28,9 @@ public class RestaurantMenuDto {
     @Getter
     @Builder
     public static class RestaurantMenuModifyResponse{
-        private String reviewName;
-        private String body;
-        private Integer rate;
+        private String restaurantName;
+        private String menuName;
+        private Integer price;
+        private String imageUrl;
     }
 }

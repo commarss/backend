@@ -37,4 +37,21 @@ public class RestaurantMenuService {
                 .price(restaurantMenu.getPrice())
                 .build();
     }
+
+    @Transactional
+    public RestaurantMenuDto.RestaurantMenuModifyResponse modifyMenu(Long menuId, RestaurantMenuDto.MenuInfo request) {
+        RestaurantMenu restaurantMenu = restaurantMenuRepository.findById(menuId)
+                .orElseThrow(() -> new IllegalArgumentException("Menu not found"));
+
+        restaurantMenu.setName(request.getName());
+        restaurantMenu.setPrice(request.getPrice());
+        restaurantMenu.setImageUrl(request.getImageUrl());
+
+        return RestaurantMenuDto.RestaurantMenuModifyResponse.builder()
+                .restaurantName(restaurantMenu.getRestaurant().getName())
+                .menuName(restaurantMenu.getName())
+                .price(restaurantMenu.getPrice())
+                .imageUrl(restaurantMenu.getImageUrl())
+                .build();
+    }
 }

@@ -21,4 +21,8 @@ public class ApiV1ReviewController {
         ReviewDto.ReviewShowAllResponse response = reviewService.getReviews();
         return new RsData<>("200", "모든 리뷰 조회 성공", response);
     }
+
+    // 특정 리뷰 삭제
+
+    // 특정 리뷰 수정
 }
