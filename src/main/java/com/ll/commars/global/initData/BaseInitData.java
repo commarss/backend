@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import com.ll.commars.domain.reviewerRank.service.ReviewrService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,6 +38,11 @@ public class BaseInitData {
     @Bean
     public ApplicationRunner baseInitDataApplicationRunner() {
         return args -> {
+            //work5(); // 유저 데이터 초기화
+            //work6(); // 게시글 및 댓글 데이터 초기화
+            //work7(); // 리뷰 데이터 초기화
+
+
             //restaurantInit();
         };
     }
@@ -171,5 +177,72 @@ public class BaseInitData {
         commentService.addComment(board2Id, user1.getId(), "두 번째 게시글에 대한 첫 번째 댓글입니다.");
         commentService.addComment(board3Id, user2.getId(), "세 번째 게시글에 대한 첫 번째 댓글입니다.");
     }
+
+    public final ReviewrService reviewrService;
+
+    // ✅ 10명의 유저가 리뷰를 작성하도록 초기 데이터 설정
+    private void work7() {
+        System.out.println("🌟 리뷰 초기 데이터 생성 시작!");
+
+        // ✅ 기존 데이터 삭제
+        //reviewrService.truncate();
+        //userService.truncate();
+        //restaurantService.truncate();
+
+        System.out.println("🔹 모든 데이터 삭제 완료!");
+
+        // ✅ 10명의 유저 생성
+        IntStream.rangeClosed(1, 10).forEach(i -> {
+            String email = "user" + i + "@example.com";
+            String name = "유저" + i;
+            int provider = (i % 2 == 0) ? 1 : 3;
+            String phone = "010-1234-" + (1000 + i);
+
+            userService.createUser(email, name, provider, "password123", phone, "profile" + i + ".jpg", LocalDateTime.now(), (i % 2) + 1);
+        });
+
+        // ✅ 유저 확인
+        List<User> users = userService.findAllUsers();
+        System.out.println("🔹 생성된 유저 수: " + users.size());
+
+        // ✅ 5개의 음식점 추가
+        String[] restaurantNames = {"맛있는 식당", "고기 맛집", "해산물 전문점", "이탈리안 레스토랑", "한식 밥집"};
+        Random random = new Random();
+        IntStream.rangeClosed(1, 5).forEach(i -> {
+            Restaurant restaurant = Restaurant.builder()
+                    .name(restaurantNames[i - 1])
+                    .details("훌륭한 요리를 제공하는 레스토랑입니다.")
+                    .averageRate(4.0 + (i % 2))
+                    .address("서울시 강남구")
+                    .lat(37.5665 + (random.nextDouble() - 0.5) * 0.01) // 서울 근처 랜덤 위도
+                    .lng(126.9780 + (random.nextDouble() - 0.5) * 0.01) // 서울 근처 랜덤 경도
+                    .build();
+            restaurantService.save(restaurant);
+        });
+
+        // ✅ 레스토랑 확인
+        List<Restaurant> restaurants = restaurantService.findAllRestaurants();
+        System.out.println("🔹 생성된 레스토랑 수: " + restaurants.size());
+
+
+        users.forEach(user -> {
+            int reviewCount = random.nextInt(10) + 1; // 유저당 1~10개 리뷰 작성
+            for (int i = 0; i < reviewCount; i++) {
+                Restaurant randomRestaurant = restaurants.get(random.nextInt(restaurants.size()));
+
+                ReviewDto.ReviewWriteRequest review = ReviewDto.ReviewWriteRequest.builder()
+                        .reviewName("리뷰 제목 " + i)
+                        .body("이곳은 정말 좋습니다! " + (i + 1))
+                        .rate(random.nextInt(5) + 1)
+                        .build();
+
+                reviewrService.writeReview(randomRestaurant.getId(), review, user.getEmail());
+            }
+        });
+
+        System.out.println("✅ 리뷰 데이터 초기화 완료!");
+    }
+
+
 
 }

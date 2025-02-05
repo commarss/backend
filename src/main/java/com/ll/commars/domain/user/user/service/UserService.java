@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -72,6 +73,11 @@ public class UserService {
 
     public void truncate() {
         userRepository.deleteAll();
+    }
+
+    // ✅ 모든 유저 조회 메서드 추가
+    public List<User> findAllUsers() {
+        return userRepository.findAll();
     }
 
 

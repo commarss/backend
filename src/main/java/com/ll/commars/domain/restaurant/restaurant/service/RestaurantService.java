@@ -48,11 +48,7 @@ public class RestaurantService {
                 .build();
     }
 
-    // 모든 식당 삭제
-    @Transactional
-    public void truncate() {
-        restaurantRepository.deleteAll();
-    }
+
 
     // 모든 식당 조회
     @Transactional(readOnly = true)
@@ -233,5 +229,23 @@ public class RestaurantService {
         return RestaurantDto.RestaurantWriteResponse.builder()
                 .name(request.getName())
                 .build();
+    }
+
+
+    @Transactional
+    public void truncate() {
+        restaurantRepository.deleteAll();
+    }
+
+    // ✅ 레스토랑 저장 메서드 추가
+    @Transactional
+    public Restaurant save(Restaurant restaurant) {
+        return restaurantRepository.save(restaurant);
+    }
+
+    // ✅ 모든 레스토랑 조회
+    @Transactional(readOnly = true)
+    public List<Restaurant> findAllRestaurants() {
+        return restaurantRepository.findAll();
     }
 }
