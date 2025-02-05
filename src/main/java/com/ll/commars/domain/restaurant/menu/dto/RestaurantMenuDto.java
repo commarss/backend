@@ -24,4 +24,12 @@ public class RestaurantMenuDto {
         private String name;
         private Integer price;
     }
+
+    @Getter
+    @Builder
+    public static class RestaurantMenuModifyResponse{
+        private String reviewName;
+        private String body;
+        private Integer rate;
+    }
 }

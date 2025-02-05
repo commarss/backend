@@ -150,4 +150,33 @@ public class RestaurantService {
                 .menus(menuInfos)
                 .build();
     }
+
+    @Transactional(readOnly = true)
+    public RestaurantDto.RestaurantInfo getRestaurant(Long restaurantId) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
+
+        List<RestaurantMenuDto.MenuInfo> menuInfos = restaurant.getRestaurantMenus().stream()
+                .map(menu -> RestaurantMenuDto.MenuInfo.builder()
+                        .name(menu.getName())
+                        .price(menu.getPrice())
+                        .imageUrl(menu.getImageUrl())
+                        .build())
+                .collect(Collectors.toList());
+
+        return RestaurantDto.RestaurantInfo.builder()
+                .id(restaurant.getId())
+                .name(restaurant.getName())
+                .details(restaurant.getDetails())
+                .averageRate(restaurant.getAverageRate())
+                .imageUrl(restaurant.getImageUrl())
+                .contact(restaurant.getContact())
+                .address(restaurant.getAddress())
+                .lat(restaurant.getLat())
+                .lng(restaurant.getLng())
+                .runningState(restaurant.getRunningState())
+                .summarizedReview(restaurant.getSummarizedReview())
+                .restaurantMenus(menuInfos)
+                .build();
+    }
 }
