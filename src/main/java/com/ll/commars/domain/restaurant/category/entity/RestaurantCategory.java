@@ -26,4 +26,14 @@ public class RestaurantCategory extends BaseEntity {
     // RestaurantCategory와 Restaurant: 일대다
     @OneToMany(mappedBy = "restaurantCategory", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Restaurant> restaurants;
+
+    public void addRestaurant(Restaurant restaurant) {
+        this.restaurants.add(restaurant);
+        restaurant.setRestaurantCategory(this);
+    }
+
+    public void removeRestaurant(Restaurant restaurant) {
+        this.restaurants.remove(restaurant);
+        restaurant.setRestaurantCategory(null);
+    }
 }

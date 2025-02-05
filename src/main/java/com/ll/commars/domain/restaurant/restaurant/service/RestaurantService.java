@@ -33,6 +33,10 @@ public class RestaurantService {
     public RestaurantDto.RestaurantWriteResponse write(
             RestaurantDto.RestaurantWriteRequest request
     ) {
+        // 카테고리가 존재하지 않을 경우 예외 처리
+        RestaurantCategory category = restaurantCategoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+
         Restaurant restaurant = Restaurant.builder()
                 .name(request.getName())
                 .details(request.getDetails())
@@ -45,6 +49,9 @@ public class RestaurantService {
                 .runningState(request.getRunningState())
                 .summarizedReview(request.getSummarizedReview())
                 .build();
+
+        restaurant.setCategory(category);
+        category.addRestaurant(restaurant);
 
         restaurantRepository.save(restaurant);
 
@@ -96,6 +103,7 @@ public class RestaurantService {
                             .lng(restaurant.getLng())
                             .runningState(restaurant.getRunningState())
                             .summarizedReview(restaurant.getSummarizedReview())
+                            .categoryId(restaurant.getRestaurantCategory().getId())
                             .restaurantMenus(menuInfos)
                             .reviews(reviewInfos)
                             .build();
@@ -248,9 +256,9 @@ public class RestaurantService {
         RestaurantCategory category = restaurantCategoryRepository.findById(request.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Category not found"));
 
-        restaurant.setRestaurantCategory(category);
+        restaurant.setCategory(category);
 
-        category.getRestaurants().add(restaurant);
+        restaurantRepository.save(restaurant);
 
         return RestaurantDto.RestaurantCategoryWriteResponse.builder()
                 .restaurantName(restaurant.getName())

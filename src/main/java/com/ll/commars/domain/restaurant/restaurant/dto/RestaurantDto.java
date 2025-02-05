@@ -27,6 +27,7 @@ public class RestaurantDto {
         private Double lng;
         private Boolean runningState;
         private String summarizedReview;
+        private Long categoryId;
         private List<RestaurantMenuDto.MenuInfo> restaurantMenus;
         private List<ReviewDto.ReviewInfo> reviews;
 
@@ -47,6 +48,7 @@ public class RestaurantDto {
         private Double lng;
         private Boolean runningState;
         private String summarizedReview;
+        private Long categoryId;
     }
 
     @Getter
