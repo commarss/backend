@@ -6,7 +6,12 @@ spring:
       enabled: ALWAYS
   profiles:
     active: dev
-    include: secret
+    include: secret, oauth
+  datasource:
+    url: jdbc:h2:file:./db_dev;MODE=MySQL
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
   jpa:
     open-in-view: false
     hibernate:
@@ -38,3 +43,19 @@ custom:
     cookieDomain: "${custom.dev.cookieDomain}"
     frontUrl: "${custom.dev.frontUrl}"
     backUrl: "${custom.dev.backUrl}"
+jwt:
+  secret-key: "itSPqeI2VV2ThZq0r40MIzwTze2rXR9Uy5s46wNSga/s7bn1yHLUmP/7B4h/YvQvgE+YTtiHbZLy1wETqG4stw=="
+  excluded-urls:
+    /api/refresh,
+    /api/user/register/email,
+    /api/user/profile,
+    /api/user/delete,
+    /api/user/post,
+    /api/user/locations
+  excluded-base-urls:
+    /api/public,
+    /login-success,
+    /api/auth/login,
+    /api/user/reset-password
+google:
+  client-id: "${spring.security.oauth2.client.registration.google.client-id}"
