@@ -38,7 +38,7 @@ public class ApiV1RestaurantController {
         return new RsData<>("200", "모든 식당 조회 성공", response);
     }
 
-    // 특정 식당 조회
+    // 특정 식당 조회(완료)
     @GetMapping("/{restaurant_id}")
     public RsData<RestaurantDto.RestaurantInfo> getRestaurant(
             @PathVariable("restaurant_id") @NotNull Long restaurantId
@@ -47,9 +47,17 @@ public class ApiV1RestaurantController {
         return new RsData<>("200", "특정 식당 조회 성공", response);
     }
 
-    // 특정 식당 정보 수정
+    // 특정 식당 정보 수정(완료)
+    @PatchMapping("/{restaurant_id}")
+    public RsData<RestaurantDto.RestaurantWriteResponse> modifyRestaurant(
+            @PathVariable("restaurant_id") @NotNull Long restaurantId,
+            @RequestBody @Valid RestaurantDto.RestaurantWriteRequest request
+    ){
+        RestaurantDto.RestaurantWriteResponse response = restaurantService.modifyRestaurant(restaurantId, request);
+        return new RsData<>("200", "식당 수정 성공", response);
+    }
 
-    // 특정 식당 삭제
+    // 특정 식당 삭제(완료)
     @DeleteMapping("/{restaurant_id}")
     public RsData<String> deleteRestaurant(
             @PathVariable("restaurant_id") @NotNull Long restaurantId

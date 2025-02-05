@@ -186,4 +186,25 @@ public class RestaurantService {
 
         restaurantRepository.deleteById(restaurantId);
     }
+
+    @Transactional
+    public RestaurantDto.RestaurantWriteResponse modifyRestaurant(Long restaurantId, RestaurantDto.RestaurantWriteRequest request) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
+
+        restaurant.setName(request.getName());
+        restaurant.setDetails(request.getDetails());
+        restaurant.setAverageRate(request.getAverageRate());
+        restaurant.setImageUrl(request.getImageUrl());
+        restaurant.setContact(request.getContact());
+        restaurant.setAddress(request.getAddress());
+        restaurant.setLat(request.getLat());
+        restaurant.setLng(request.getLng());
+        restaurant.setRunningState(request.getRunningState());
+        restaurant.setSummarizedReview(request.getSummarizedReview());
+
+        return RestaurantDto.RestaurantWriteResponse.builder()
+                .name(request.getName())
+                .build();
+    }
 }
