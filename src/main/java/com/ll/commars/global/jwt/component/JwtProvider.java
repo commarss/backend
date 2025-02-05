@@ -1,6 +1,6 @@
 package com.ll.commars.global.jwt.component;
 
-import com.ll.commars.domain.member.member.entity.Member;
+import com.ll.commars.domain.user.user.entity.User;
 import com.ll.commars.global.jwt.entity.JwtToken;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -23,21 +23,21 @@ public class JwtProvider {
     public final long ACCESS_TOKEN_VALIDITY = 24 * 60 * 60 * 1000L;
     public final long REFRESH_TOKEN_VALIDITY = 7 * 24 * 60 * 60 * 1000L;
 
-    public String generateAccessToken(Member member) {
-        return createToken(member, ACCESS_TOKEN_VALIDITY);
+    public String generateAccessToken(User user) {
+        return createToken(user, ACCESS_TOKEN_VALIDITY);
     }
 
-    public String generateRefreshToken(Member member) {
-        return createToken(member, REFRESH_TOKEN_VALIDITY);
+    public String generateRefreshToken(User user) {
+        return createToken(user, REFRESH_TOKEN_VALIDITY);
     }
 
-    private String createToken(Member member, long validityInMilliseconds) {
+    private String createToken(User user, long validityInMilliseconds) {
         Date ext = new Date();
         ext.setTime(ext.getTime() + validityInMilliseconds);
 
         Map<String, Object> payload = new HashMap<>();
-        payload.put("id", member.getId());
-        payload.put("email", member.getEmail());
+        payload.put("id", user.getId());
+        payload.put("email", user.getEmail());
 
         return Jwts.builder()
                 .claims(payload)

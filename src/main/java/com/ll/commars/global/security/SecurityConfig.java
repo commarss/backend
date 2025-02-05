@@ -1,6 +1,6 @@
 package com.ll.commars.global.security;
 
-import com.ll.commars.domain.member.member.service.MemberService;
+import com.ll.commars.domain.user.user.service.UserService;
 import com.ll.commars.global.jwt.filter.JwtAuthenticationFilter;
 import com.ll.commars.global.jwt.component.JwtProvider;
 import org.springframework.context.annotation.Bean;
@@ -21,16 +21,16 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
     private final JwtProvider jwtProvider;
-    private final MemberService memberService;
+    private final UserService userService;
 
-    public SecurityConfig(JwtProvider jwtProvider, MemberService memberService) {
+    public SecurityConfig(JwtProvider jwtProvider, UserService userService) {
         this.jwtProvider = jwtProvider;
-        this.memberService = memberService;
+        this.userService = userService;
     }
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(jwtProvider, memberService);
+        return new JwtAuthenticationFilter(jwtProvider, userService);
     }
 
     @Bean

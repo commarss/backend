@@ -1,45 +1,29 @@
 package com.ll.commars.domain.auth.naver.controller;
 
 
+import com.ll.commars.domain.auth.auth.service.AuthService;
 import com.ll.commars.domain.auth.naver.service.NaverService;
-import com.ll.commars.domain.member.member.entity.Member;
-import com.ll.commars.global.jwt.component.JwtProvider;
+import com.ll.commars.domain.user.user.entity.User;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class ApiV1NaverController {
-    @Value("${spring.security.oauth2.client.registration.naver.client-id}")
-    private String clientId;
-
-    @Value("${spring.security.oauth2.client.registration.naver.client-secret}")
-    private String clientSecret;
-
-    @Value("${spring.security.oauth2.client.registration.naver.redirect-uri}")
-    private String redirectUri;
-
     private final String state = UUID.randomUUID().toString();
 
-    private final JwtProvider jwtProvider;
     private final NaverService naverservice;
-
+    private final AuthService authService;
 
 
     @PostMapping("/login/naver")
@@ -57,35 +41,9 @@ public class ApiV1NaverController {
 
         System.out.println("naver userProfile = " + userProfile);
 
-//        Member naverMember = naverservice.loginForNaver(userProfile);
+        User naverUser = naverservice.loginForNaver(userProfile);
 
-//        String accessToken = jwtProvider.generateAccessToken(naverMember.getId());
-//        String refreshToken = jwtProvider.generateRefreshToken(naverMember.getId());
-
-        Long id = 2L;
-
-        Optional<Member> naverMember = Optional.ofNullable(Member.builder()
-                .id(id)
-                .email((String) userProfile.get("email"))
-                .name((String) userProfile.get("name"))
-                .profile((String) userProfile.get("profile_image"))
-                .build());
-
-        String accessToken = jwtProvider.generateAccessToken(naverMember.get());
-        String refreshToken = jwtProvider.generateRefreshToken(naverMember.get());
-
-        ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", refreshToken)
-                .httpOnly(true)
-                .secure(true)
-                .path("/")
-                .maxAge(jwtProvider.REFRESH_TOKEN_VALIDITY)
-                .sameSite("Strict")
-                .build();
-
-        return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-                .body(Map.of("naverUser", naverMember.get(), "accessToken", accessToken));
+       return authService.login(naverUser);
     }
 
 //    @GetMapping("/login/naver/callback")

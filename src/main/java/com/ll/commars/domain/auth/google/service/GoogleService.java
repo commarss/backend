@@ -1,8 +1,8 @@
 package com.ll.commars.domain.auth.google.service;
 
-import com.ll.commars.domain.member.member.entity.Member;
+import com.ll.commars.domain.user.user.entity.User;
+import com.ll.commars.domain.user.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -13,7 +13,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class GoogleService {
 
-    public Optional<Member> loginForGoogle(String idToken) {
+    private final UserService userService;
+
+    public Optional<User> loginForGoogle(String idToken) {
         System.out.println("idToken = " + idToken);
 
         String verificationUrl = "https://oauth2.googleapis.com/tokeninfo?id_token=" + idToken;
@@ -23,10 +25,13 @@ public class GoogleService {
             // Google의 Token 검증 API 호출
             Map<String, Object> response = restTemplate.getForObject(verificationUrl, Map.class);
 
-            // 1. 토큰이 유효하면 사용자 정보 가져오기
-            String email = (String) response.get("email");
-            String name = (String) response.get("name");
-            String picture = (String) response.get("picture");
+            User requestUser = User.builder()
+                    .socialProvider(3)
+                    .phoneNumber("00000000000")
+                    .email((String) response.get("email"))
+                    .name((String) response.get("name"))
+                    .profileImageUrl((String) response.get("picture"))
+                    .build();
 
             // 2. audience(Client ID) 검증
             String clientId = (String) response.get("aud");
@@ -40,28 +45,12 @@ public class GoogleService {
                 return Optional.empty();
             }
 
-//            if (!accessionCheck(email, name)) {
-//                saveGoogleAuth(email, name, picture);
-//            }
-//
-//            GoogleAuth googleAuth = googleAuthRepository.findByEmail(email).get();
-//
-//            return Optional.of(GoogleAuth.builder()
-//                    .id(googleAuth.getId())
-//                    .email(googleAuth.getEmail())
-//                    .name(googleAuth.getName())
-//                    .profileImageUrl(googleAuth.getProfileImageUrl())
-//                    .build());
+            return Optional.ofNullable(userService.accessionCheck(requestUser));
 
-            return Optional.of(Member.builder()
-                            .id(1L)
-                    .email(email)
-                    .name(name)
-                    .profile(picture)
-                    .build());
         } catch (Exception e) {
             e.printStackTrace();
             return Optional.empty();
         }
     }
+
 }

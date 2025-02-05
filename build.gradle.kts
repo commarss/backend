@@ -25,17 +25,20 @@ repositories {
 
 dependencies {
 
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")
+    testImplementation("org.springframework.security:spring-security-test")
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
 
     // Webflux
-    //implementation("org.springframework.boot:spring-boot-starter-webflux")
+//    implementation("org.springframework.boot:spring-boot-starter-webflux")
 
     // Thymeleaf
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
     implementation("com.google.api-client:google-api-client:1.33.0")
@@ -60,6 +63,8 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt-api:0.12.6")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.6")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.6")
+
+    implementation("org.springdoc:springdoc-openapi-ui:1.8.0")
 
 }
 

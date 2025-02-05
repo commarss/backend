@@ -1,7 +1,7 @@
 package com.ll.commars.domain.auth.naver.service;
 
-import com.ll.commars.domain.member.member.entity.Member;
-import com.ll.commars.domain.member.member.service.MemberService;
+import com.ll.commars.domain.user.user.entity.User;
+import com.ll.commars.domain.user.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -13,24 +13,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class NaverService {
-    private final MemberService memberService;
+    private final UserService userService;
 
     @Value("${spring.security.oauth2.client.registration.naver.client-id}")
     private String clientId;
 
     @Value("${spring.security.oauth2.client.registration.naver.client-secret}")
     private String clientSecret;
-
-    @Value("${spring.security.oauth2.client.registration.naver.redirect-uri}")
-    private String redirectUri;
-
-    private final String state = UUID.randomUUID().toString();
 
     public String getAccessToken(String code, String state) {
         String tokenUrl = "https://nid.naver.com/oauth2.0/token?grant_type=authorization_code"
@@ -69,22 +62,16 @@ public class NaverService {
         return (Map<String, Object>) response.getBody().get("response");
     }
 
-    public Member loginForNaver(Map<String, Object> userProfile) {
-        String email = (String) userProfile.get("email");
-        String name = (String) userProfile.get("name");
-        String profile = (String) userProfile.get("profile_image");
-
-        if (email == null || name == null || profile == null) {
-            return null;
-        }
-
-        Member naverMember = new Member().builder()
-                .email(email)
-                .name(name)
-                .profile(profile)
+    public User loginForNaver(Map<String, Object> userProfile) {
+        User naverUser = User.builder()
+                .socialProvider(2)
+                .phoneNumber((String) userProfile.get("mobile"))
+                .email((String) userProfile.get("email"))
+                .name((String) userProfile.get("name"))
+                .profileImageUrl((String) userProfile.get("profile_image"))
                 .build();
 
-        return memberService.accessionCheck(naverMember);
+        return userService.accessionCheck(naverUser);
     }
 
     public String logout(String accessToken) {

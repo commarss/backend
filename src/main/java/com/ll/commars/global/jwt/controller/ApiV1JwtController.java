@@ -1,8 +1,8 @@
 package com.ll.commars.global.jwt.controller;
 
 
-import com.ll.commars.domain.member.member.entity.Member;
-import com.ll.commars.domain.member.member.service.MemberService;
+import com.ll.commars.domain.user.user.entity.User;
+import com.ll.commars.domain.user.user.service.UserService;
 import com.ll.commars.global.jwt.component.JwtProvider;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,11 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 
@@ -26,7 +24,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ApiV1JwtController {
     private final JwtProvider jwtProvider;
-    private final MemberService memberService;
+    private final UserService userService;
 
     @GetMapping("/refresh")
     public ResponseEntity<?> refresh(@AuthenticationPrincipal UserDetails userDetails, HttpServletRequest request) {
@@ -37,16 +35,13 @@ public class ApiV1JwtController {
             return ResponseEntity.badRequest().body("Refresh Token이 존재하지 않습니다.");
         }
 
-//        Optional<Member> member = memberService.findById(Long.parseLong(userDetails.getUsername()));
+        Optional<User> user = userService.findById(Long.parseLong(userDetails.getUsername()));
 
-        Member member = Member.builder()
-                .id(1L)
-                .email("email")
-                .name("name")
-                .build();
+        if (user.isEmpty()) {
+            return ResponseEntity.badRequest().body("사용자 정보가 존재하지 않습니다.");
+        }
 
-        String accessToken = jwtProvider.generateAccessToken(member);
-        String refreshToken = jwtProvider.generateRefreshToken(member);
+        String refreshToken = jwtProvider.generateRefreshToken(user.get());
 
         ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
@@ -58,7 +53,6 @@ public class ApiV1JwtController {
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
-                .header("Authorization", "Bearer " + accessToken)
                 .body(Map.of("server", "refresh ok"));
     }
 

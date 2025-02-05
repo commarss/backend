@@ -1,7 +1,7 @@
 package com.ll.commars.global.jwt.filter;
 
-import com.ll.commars.domain.member.member.entity.Member;
-import com.ll.commars.domain.member.member.service.MemberService;
+import com.ll.commars.domain.user.user.entity.User;
+import com.ll.commars.domain.user.user.service.UserService;
 import com.ll.commars.global.jwt.component.JwtProvider;
 import com.ll.commars.global.jwt.entity.JwtAuthenticationToken;
 import com.ll.commars.global.jwt.entity.JwtToken;
@@ -21,7 +21,7 @@ import java.util.Optional;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtProvider jwtProvider;
-    private final MemberService memberService;
+    private final UserService userService;
 
     @Value("${jwt.excluded-urls}")
     private String excludeUrls;
@@ -30,9 +30,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private String excludeBaseUrls;
 
 
-    public JwtAuthenticationFilter(JwtProvider jwtProvider, MemberService memberService) {
+    public JwtAuthenticationFilter(JwtProvider jwtProvider, UserService userService) {
         this.jwtProvider = jwtProvider;
-        this.memberService = memberService;
+        this.userService = userService;
     }
 
     @Override
@@ -66,10 +66,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             try {
                 if (jwtProvider.validateToken(accessToken)) {
                     JwtToken jwtToken = jwtProvider.extractJwtToken(accessToken);
-                    Optional<Member> member = memberService.findByIdAndEmail(jwtToken.getId(), jwtToken.getEmail());
+                    Optional<User> user = userService.findByIdAndEmail(jwtToken.getId(), jwtToken.getEmail());
 
-                    if (member.isPresent() && SecurityContextHolder.getContext().getAuthentication() == null) {
-                        UserDetails userDetails = org.springframework.security.core.userdetails.User.withUsername(String.valueOf(member.get().getId())).password("").authorities("USER").build();
+                    if (user.isPresent() && SecurityContextHolder.getContext().getAuthentication() == null) {
+                        UserDetails userDetails = org.springframework.security.core.userdetails.User.withUsername(String.valueOf(user.get().getId())).password("").authorities("USER").build();
                         JwtAuthenticationToken jwtAuthenticationToken = new JwtAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                         jwtAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                         SecurityContextHolder.getContext().setAuthentication(jwtAuthenticationToken);

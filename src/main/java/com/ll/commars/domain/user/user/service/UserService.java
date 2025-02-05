@@ -6,14 +6,16 @@ package com.ll.commars.domain.user.user.service;
 import com.ll.commars.domain.user.user.entity.User;
 import com.ll.commars.domain.user.user.repository.UserRepository;
 import com.ll.commars.domain.user.user.controller.UserController;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
-
+@RequiredArgsConstructor
 public class UserService {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
@@ -39,10 +41,6 @@ public class UserService {
         user.setName(name);
         user.setPassword(password); // 평문 비밀번호 저장
         return userRepository.save(user);
-    }
-
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
     }
 
     public User findByEmail(String email) {
@@ -77,5 +75,16 @@ public class UserService {
     }
 
 
+    public User accessionCheck(User user) {
+        Optional<User> findUser = userRepository.findByEmailAndName(user.getEmail(), user.getName());
+        return findUser.orElseGet(() -> userRepository.save(user));
+    }
 
+    public Optional<User> findByIdAndEmail(Long id, String email) {
+        return userRepository.findByIdAndEmail(id, email);
+    }
+
+    public Optional<User> findById(long l) {
+        return userRepository.findById(l);
+    }
 }
