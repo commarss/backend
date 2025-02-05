@@ -84,9 +84,4 @@ public class Restaurant extends BaseEntity {
     // Restaurant와 FavoriteRestaurant: 일대다
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FavoriteRestaurant> favoriteRestaurants;
-
-    public void addMenu(RestaurantMenu menu) {
-        this.restaurantMenus.add(menu);
-        menu.setRestaurant(this);
-    }
 }

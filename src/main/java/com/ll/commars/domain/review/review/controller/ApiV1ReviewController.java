@@ -1,33 +1,24 @@
 package com.ll.commars.domain.review.review.controller;
 
+import com.ll.commars.domain.review.review.dto.ReviewDto;
 import com.ll.commars.domain.review.review.entity.Review;
 import com.ll.commars.domain.review.review.service.ReviewService;
 import com.ll.commars.global.rsData.RsData;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/reviews")
+@RequestMapping("/api/v1/review")
 public class ApiV1ReviewController {
     private final ReviewService reviewService;
-    @PostMapping("/write")
-    public RsData<Review> write(
-            @RequestBody @Valid ReviewsWriteRequest request
-    ){
-        Review review = reviewService.write(request.name, request.body, request.rate);
-        return new RsData<>("201", "리뷰 등록 성공", review);
+
+    // 모든 리뷰 조회
+    @GetMapping("/")
+    public RsData<ReviewDto.ReviewShowAllResponse> getReviews() {
+        ReviewDto.ReviewShowAllResponse response = reviewService.getReviews();
+        return new RsData<>("200", "모든 리뷰 조회 성공", response);
     }
-
-    record ReviewsWriteRequest(
-            @NotBlank String name,
-            String body,
-            Integer rate
-
-    ) {}
 }

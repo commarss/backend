@@ -17,8 +17,9 @@ public class RestaurantMenuService {
 
     @Transactional
     public RestaurantMenuDto.RestaurantMenuWriteResponse write(
-            RestaurantMenuDto.RestaurantMenuWriteRequest request) {
-        Restaurant restaurant = restaurantRepository.findByName(request.getRestaurantName())
+            Long restaurantId,
+            RestaurantMenuDto.MenuInfo request) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
 
         RestaurantMenu restaurantMenu = RestaurantMenu.builder()

@@ -1,8 +1,10 @@
 package com.ll.commars.global.initData;
 
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantDto;
+import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
 import com.ll.commars.domain.restaurant.restaurant.service.RestaurantService;
 import com.ll.commars.domain.restaurant.restaurantDoc.service.RestaurantDocService;
+import com.ll.commars.domain.review.review.dto.ReviewDto;
 import com.ll.commars.domain.review.review.service.ReviewService;
 import com.ll.commars.domain.review.reviewDoc.service.ReviewDocService;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +12,9 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Configuration
@@ -61,17 +65,6 @@ public class BaseInitData {
 //        restaurantsDocService.write("매운 떡볶이", "매운 떡볶이는 떡볶이 전문점으로, 떡볶이의 맛이 좋아요.", 3.0);
     }
 
-    // Reviews 데이터 초기화
-    private void work3() {
-        reviewService.truncate();
-
-        reviewService.write("whqtker", "코딩의 즐거움", 5);
-        reviewService.write("test", "겨울 여행 계획", 4);
-        reviewService.write("hello", "운동 루틴 기록", 1);
-        reviewService.write("1q2w3e4r", "영화 리뷰 - 인터스텔라", 4);
-        reviewService.write("whqtker", "독서 기록 - 나미야 잡화점의 기적", 5);
-    }
-
     // Restaurant 데이터 초기화
     private void restaurantInit() {
         restaurantService.truncate();
@@ -100,6 +93,33 @@ public class BaseInitData {
                     .build();
 
             restaurantService.write(restaurant);
+        });
+    }
+
+    // Reviews 데이터 초기화
+    private void reviewsInit() {
+        reviewService.truncate();
+
+        String[] names = {"맛있네요", "좋아요", "괜찮아요", "별로에요", "맛없어요"};
+        String[] bodies = {"맛있어요", "서비스가 좋아요", "가격이 착해요", "재방문 의사 있어요", "별로에요"};
+
+        RestaurantDto.RestaurantShowAllResponse restaurants = restaurantService.getRestaurants();
+        List<Long> restaurantIds = restaurants.getRestaurants().stream()
+                .map(RestaurantDto.RestaurantInfo::getId)
+                .toList();
+
+        Random random = new Random();
+
+        IntStream.range(0, 20).forEach(i -> {
+            Long randomRestaurantId = restaurantIds.get(random.nextInt(restaurantIds.size()));
+
+            ReviewDto.ReviewWriteRequest review = ReviewDto.ReviewWriteRequest.builder()
+                    .reviewName(names[random.nextInt(names.length)])
+                    .body(bodies[random.nextInt(bodies.length)])
+                    .rate(1 + random.nextInt(5)) // 1-5 사이 랜덤 점수
+                    .build();
+
+            restaurantService.writeReview(randomRestaurantId, review);
         });
     }
 }

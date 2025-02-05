@@ -1,14 +1,17 @@
 package com.ll.commars.domain.restaurant.menu.dto;
 
 import com.ll.commars.domain.restaurant.menu.entity.RestaurantMenu;
+import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.List;
+
 public class RestaurantMenuDto {
+    // 메뉴 정보
     @Getter
     @Builder
-    public static class RestaurantMenuWriteRequest{
-        private String restaurantName;
+    public static class MenuInfo {
         private String name;
         private Integer price;
         private String imageUrl;
@@ -20,13 +23,5 @@ public class RestaurantMenuDto {
         private String restaurantName;
         private String name;
         private Integer price;
-    }
-
-    @Getter
-    @Builder
-    public static class MenuInfo {
-        private String name;
-        private Integer price;
-        private String imageUrl;
     }
 }
