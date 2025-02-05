@@ -80,4 +80,10 @@ public class RestaurantDto {
         private String restaurantName;
         private String categoryName;
     }
+
+    @Getter
+    @Builder
+    public static class RestaurantShowCategoryResponse{
+        private String categoryName;
+    }
 }

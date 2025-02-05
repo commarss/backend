@@ -257,4 +257,16 @@ public class RestaurantService {
                 .categoryName(category.getName())
                 .build();
     }
+
+    @Transactional(readOnly = true)
+    public RestaurantDto.RestaurantShowCategoryResponse getCategories(Long restaurantId) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
+
+        RestaurantCategory category = restaurant.getRestaurantCategory();
+
+        return RestaurantDto.RestaurantShowCategoryResponse.builder()
+                .categoryName(category.getName())
+                .build();
+    }
 }

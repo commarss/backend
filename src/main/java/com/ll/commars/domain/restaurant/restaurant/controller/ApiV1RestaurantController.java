@@ -120,4 +120,13 @@ public class ApiV1RestaurantController {
         RestaurantDto.RestaurantCategoryWriteResponse response = restaurantService.writeCategory(restaurantId, request);
         return new RsData<>("201", "카테고리 등록 성공", response);
     }
+
+    @GetMapping("/{restaurant_id}/category")
+    @Operation(summary = "식당 카테고리 조회")
+    public RsData<RestaurantDto.RestaurantShowCategoryResponse> getCategories(
+            @PathVariable("restaurant_id") @NotNull Long restaurantId
+    ){
+        RestaurantDto.RestaurantShowCategoryResponse response = restaurantService.getCategories(restaurantId);
+        return new RsData<>("200", "카테고리 조회 성공", response);
+    }
 }
