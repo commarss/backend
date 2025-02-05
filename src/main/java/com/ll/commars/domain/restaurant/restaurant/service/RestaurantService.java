@@ -346,4 +346,34 @@ public class RestaurantService {
                         .collect(Collectors.toList()))
                 .build();
     }
+
+    @Transactional
+    public BusinessHourDto.BusinessHourWriteResponse modifyBusinessHours(Long restaurantId, BusinessHourDto.BusinessHourWriteRequest request) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
+
+        List<BusinessHour> businessHours = request.getBusinessHours().stream()
+                .map(businessHour -> BusinessHour.builder()
+                        .dayOfWeek(businessHour.getDayOfWeek())
+                        .openTime(businessHour.getOpenTime())
+                        .closeTime(businessHour.getCloseTime())
+                        .restaurant(restaurant)
+                        .build())
+                .collect(Collectors.toList());
+
+        restaurant.setBusinessHours(businessHours);
+        Restaurant savedRestaurant = restaurantRepository.save(restaurant);
+
+        return BusinessHourDto.BusinessHourWriteResponse.builder()
+                .restaurantName(savedRestaurant.getName())
+                .businessHours(savedRestaurant.getBusinessHours().stream()
+                        .map(businessHour -> BusinessHourDto.BusinessHourInfo.builder()
+                                .id(businessHour.getId())
+                                .dayOfWeek(businessHour.getDayOfWeek())
+                                .openTime(businessHour.getOpenTime())
+                                .closeTime(businessHour.getCloseTime())
+                                .build())
+                        .collect(Collectors.toList()))
+                .build();
+    }
 }

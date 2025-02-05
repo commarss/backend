@@ -146,4 +146,14 @@ public class ApiV1RestaurantController {
         BusinessHourDto.BusinessHourWriteResponse response = restaurantService.writeBusinessHours(restaurantId, request);
         return new RsData<>("201", "영업시간 등록 성공", response);
     }
+
+    @PatchMapping("/{restaurant_id}/business-hour")
+    @Operation(summary = "식당 영업시간 수정")
+    public RsData<BusinessHourDto.BusinessHourWriteResponse> modifyBusinessHours(
+            @PathVariable("restaurant_id") @NotNull Long restaurantId,
+            @RequestBody @Valid BusinessHourDto.BusinessHourWriteRequest request
+    ){
+        BusinessHourDto.BusinessHourWriteResponse response = restaurantService.modifyBusinessHours(restaurantId, request);
+        return new RsData<>("200", "영업시간 수정 성공", response);
+    }
 }
