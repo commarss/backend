@@ -9,6 +9,7 @@ import com.ll.commars.domain.user.user.entity.User;
 import com.ll.commars.domain.user.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,5 +41,13 @@ public class ReviewService {
         return ReviewDto.ReviewShowAllResponse.builder()
                 .reviews(reviewInfos)
                 .build();
+    }
+
+    @Transactional
+    public void deleteReview(Long reviewId) {
+        reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new IllegalArgumentException("Review not found"));
+
+        reviewRepository.deleteById(reviewId);
     }
 }

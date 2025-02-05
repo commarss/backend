@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 public class ApiV1RestaurantMenuController {
     private final RestaurantMenuService restaurantMenuService;
 
-    // 식당 메뉴 수정
+    // 식당 메뉴 수정(완료)
     @PatchMapping("/{menu_id}")
     public RsData<RestaurantMenuDto.RestaurantMenuModifyResponse> modifyMenu(
             @PathVariable("menu_id") @NotNull Long menuId,
@@ -24,7 +24,7 @@ public class ApiV1RestaurantMenuController {
         return new RsData<>("200", "식당 메뉴 수정 성공", response);
     }
 
-    // 식당 메뉴 삭제
+    // 식당 메뉴 삭제(완료)
     @DeleteMapping("/{menu_id}")
     public RsData<String> deleteMenu(
             @PathVariable("menu_id") @NotNull Long menuId
