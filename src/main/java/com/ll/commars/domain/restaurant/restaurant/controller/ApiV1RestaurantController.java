@@ -129,4 +129,14 @@ public class ApiV1RestaurantController {
         RestaurantDto.RestaurantShowCategoryResponse response = restaurantService.getCategories(restaurantId);
         return new RsData<>("200", "카테고리 조회 성공", response);
     }
+
+    @PatchMapping("/{restaurant_id}/category")
+    @Operation(summary = "식당 카테고리 수정")
+    public RsData<RestaurantDto.RestaurantCategoryWriteResponse> modifyCategory(
+            @PathVariable("restaurant_id") @NotNull Long restaurantId,
+            @RequestBody @Valid RestaurantCategoryDto.RestaurantCategoryWriteRequest request
+    ){
+        RestaurantDto.RestaurantCategoryWriteResponse response = restaurantService.modifyCategory(restaurantId, request);
+        return new RsData<>("200", "카테고리 수정 성공", response);
+    }
 }

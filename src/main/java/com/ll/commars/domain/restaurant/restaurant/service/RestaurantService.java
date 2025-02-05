@@ -269,4 +269,20 @@ public class RestaurantService {
                 .categoryName(category.getName())
                 .build();
     }
+
+    @Transactional
+    public RestaurantDto.RestaurantCategoryWriteResponse modifyCategory(Long restaurantId, RestaurantCategoryDto.RestaurantCategoryWriteRequest request) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
+
+        RestaurantCategory category = restaurantCategoryRepository.findById(request.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+
+        restaurant.setRestaurantCategory(category);
+
+        return RestaurantDto.RestaurantCategoryWriteResponse.builder()
+                .restaurantName(restaurant.getName())
+                .categoryName(category.getName())
+                .build();
+    }
 }
