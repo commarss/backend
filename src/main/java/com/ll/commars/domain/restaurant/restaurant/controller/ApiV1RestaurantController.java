@@ -86,7 +86,7 @@ public class ApiV1RestaurantController {
         return new RsData<>("200", "메뉴 조회 성공", response);
     }
 
-    // 식당 리뷰 등록
+    // 식당 리뷰 등록(완료)
     @PostMapping("/{restaurant_id}/review")
     public RsData<ReviewDto.ReviewWriteResponse> writeReview(
             @PathVariable("restaurant_id") @NotNull Long restaurantId,

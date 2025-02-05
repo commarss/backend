@@ -69,6 +69,16 @@ public class RestaurantService {
                                     .build())
                             .collect(Collectors.toList());
 
+                    List<ReviewDto.ReviewInfo> reviewInfos = restaurant.getReviews().stream()
+                            .map(review -> ReviewDto.ReviewInfo.builder()
+                                    .userName(review.getUser().getName())
+                                    .restaurantName(review.getRestaurant().getName())
+                                    .reviewName(review.getName())
+                                    .body(review.getBody())
+                                    .rate(review.getRate())
+                                    .build())
+                            .collect(Collectors.toList());
+
                     return RestaurantDto.RestaurantInfo.builder()
                             .id(restaurant.getId())
                             .name(restaurant.getName())
@@ -82,6 +92,7 @@ public class RestaurantService {
                             .runningState(restaurant.getRunningState())
                             .summarizedReview(restaurant.getSummarizedReview())
                             .restaurantMenus(menuInfos)
+                            .reviews(reviewInfos)
                             .build();
                 })
                 .collect(Collectors.toList());
@@ -124,7 +135,7 @@ public class RestaurantService {
 
         List<ReviewDto.ReviewInfo> reviewInfos = reviews.stream()
                 .map(review -> ReviewDto.ReviewInfo.builder()
-                        .userEmail(review.getUser().getEmail())
+                        .userName(review.getUser().getName())
                         .restaurantName(review.getRestaurant().getName())
                         .reviewName(review.getName())
                         .body(review.getBody())
@@ -168,6 +179,16 @@ public class RestaurantService {
                         .build())
                 .collect(Collectors.toList());
 
+        List<ReviewDto.ReviewInfo> reviewInfos = restaurant.getReviews().stream()
+                .map(review -> ReviewDto.ReviewInfo.builder()
+                        .userName(review.getUser().getName())
+                        .restaurantName(review.getRestaurant().getName())
+                        .reviewName(review.getName())
+                        .body(review.getBody())
+                        .rate(review.getRate())
+                        .build())
+                .collect(Collectors.toList());
+
         return RestaurantDto.RestaurantInfo.builder()
                 .id(restaurant.getId())
                 .name(restaurant.getName())
@@ -181,6 +202,7 @@ public class RestaurantService {
                 .runningState(restaurant.getRunningState())
                 .summarizedReview(restaurant.getSummarizedReview())
                 .restaurantMenus(menuInfos)
+                .reviews(reviewInfos)
                 .build();
     }
 

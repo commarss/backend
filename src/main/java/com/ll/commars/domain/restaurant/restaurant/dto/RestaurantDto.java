@@ -28,6 +28,7 @@ public class RestaurantDto {
         private Boolean runningState;
         private String summarizedReview;
         private List<RestaurantMenuDto.MenuInfo> restaurantMenus;
+        private List<ReviewDto.ReviewInfo> reviews;
 
         // 나머지 연관 관계도 추가해야 함...
     }

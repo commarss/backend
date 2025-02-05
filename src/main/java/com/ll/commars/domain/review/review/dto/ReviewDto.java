@@ -9,7 +9,7 @@ public class ReviewDto {
     @Getter
     @Builder
     public static class ReviewInfo{
-        private String userEmail;
+        private String userName;
         private String restaurantName;
         private String reviewName;
         private String body;

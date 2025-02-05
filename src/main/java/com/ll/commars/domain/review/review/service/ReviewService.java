@@ -29,7 +29,7 @@ public class ReviewService {
 
         List<ReviewDto.ReviewInfo> reviewInfos = reviews.stream()
                 .map(review -> ReviewDto.ReviewInfo.builder()
-                        .userEmail(review.getUser().getEmail())
+                        .userName(review.getUser().getName())
                         .restaurantName(review.getRestaurant().getName())
                         .reviewName(review.getName())
                         .body(review.getBody())
