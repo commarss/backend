@@ -1,5 +1,6 @@
 package com.ll.commars.domain.user.user.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ll.commars.domain.community.board.entity.Board;
 import com.ll.commars.domain.community.comment.entity.Comment;
 import com.ll.commars.domain.review.review.entity.Review;
@@ -38,7 +39,10 @@ public class User extends BaseEntity {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "phone_number")
+    @Column(name = "login_id", nullable = true) // null 허용
+    private String loginId;
+
+    @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 
     @Column(name = "profile_image_url")
@@ -52,18 +56,22 @@ public class User extends BaseEntity {
     private Integer gender;
 
     // User와 Review: 일대다
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @JsonIgnore
     private List<Review> reviews;
 
     // User와 Favorite: 일대다
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Favorite> favorites;
 
     // User와 Board: 일대다
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Board> boards;
 
     // User와 Comment: 일대다
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Comment> comments;
 }
