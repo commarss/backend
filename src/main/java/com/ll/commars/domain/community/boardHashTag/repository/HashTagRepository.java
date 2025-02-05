@@ -1,5 +1,5 @@
 package com.ll.commars.domain.community.boardHashTag.repository;
-
+/*
 import com.ll.commars.domain.community.board.entity.Board;
 import com.ll.commars.domain.community.boardHashTag.entity.HashTag;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,3 +18,4 @@ public interface HashTagRepository extends JpaRepository<HashTag, Long> {
 
 
 }
+*/

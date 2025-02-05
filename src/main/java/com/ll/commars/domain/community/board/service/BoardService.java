@@ -1,50 +1,157 @@
 package com.ll.commars.domain.community.board.service;
 
 import com.ll.commars.domain.community.board.entity.Board;
-import com.ll.commars.domain.community.boardHashTag.entity.HashTag;
+
+import com.ll.commars.domain.community.comment.entity.Comment;
+import com.ll.commars.domain.community.comment.repository.CommentRepository;
 import com.ll.commars.domain.user.user.entity.User;
 import com.ll.commars.domain.community.board.repository.BoardRepository;
-import com.ll.commars.domain.community.boardHashTag.repository.HashTagRepository;
+
 import com.ll.commars.domain.user.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
+ // Lombok 어노테이션
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
-
+@Slf4j // Lombok 어노테이션
 @Service
 @RequiredArgsConstructor
 public class BoardService {
 
     private final BoardRepository boardRepository;
-    private final HashTagRepository hashTagRepository;
+    private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
+
+    // 게시글 추가
+    @Transactional
+    public Long addBoard(Long userId, String title, String content, List<String> tags) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
+
+        // ✅ List<String> → String 변환 (","로 구분)
+        String tagsString = String.join(",", tags);
+
+        // ✅ 변환된 String을 저장
+        Board board = Board.builder()
+                .user(user)
+                .title(title)
+                .content(content)
+                .views(0)
+                .hashTags(tagsString)  // 🚀 String 값으로 전달
+                .build();
+
+        board = boardRepository.save(board);
+        boardRepository.flush();  // 🔥 즉시 DB에 반영 (flush)
+
+        log.info("savedBoardId: {}", board.getId()); // 로그 출력
+        System.out.println("boardId: " + board.getId()); // 콘솔 출력
+        return board.getId();
+    }
+
+
+    public List<Board> getAllBoards() {
+        return boardRepository.findAll();
+    }
+
+    // 게시글 상세 조회 (조회수 증가 포함)
+    @Transactional
+    public Board getBoard(Long postId) {
+        Board board = boardRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
+
+        // 조회수 증가
+        board.setViews(board.getViews() + 1);
+        boardRepository.save(board);
+        boardRepository.flush();  // 🔥 즉시 DB에 반영
+
+        return board;
+    }
+
+    // 게시글 수정
+    @Transactional
+    public void updateBoard(Long postId, String title, String content, List<String> tags) {
+        Board board = boardRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
+        board.setTitle(title);
+        board.setContent(content);
+        board.setHashTags(tags);
+
+        boardRepository.save(board);
+    }
+
+    // 게시글 삭제
+    public void deleteBoard(Long boardId) {
+        boardRepository.deleteById(boardId);
+    }
+
+    // 게시글 총 개수 조회
+    // ✅ 조회수 증가 (별도 메서드로 분리)
+    @Transactional
+    public void incrementViewCount(Long boardId) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
+        board.setViews(board.getViews() + 1);
+        boardRepository.save(board);
+    }
+
+    public int getTotalCount(String keyword) {
+        if (keyword == null || keyword.isEmpty()) {
+            return (int) boardRepository.count();
+        } else {
+            return (int) boardRepository.countByTitleContaining(keyword);
+        }
+    }
+
+    @Transactional
+    public void truncate() {
+
+        commentRepository.deleteAll();
+        boardRepository.deleteAll();
+    }
+}
+
+/*
+@Service
+@RequiredArgsConstructor
+public class BoardService {
+
+    private final BoardRepository boardRepository;
+
     private final UserRepository userRepository;
 
     // 게시글 추가
-    public void addBoard(Long id, String title, String content, List<String> tags) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + id));
-        Board board = new Board();
-        board.setUser(user);
-        board.setTitle(title);
-        board.setContent(content);
-        board.setViews(0);
-        boardRepository.save(board);
+    @Transactional
+    public Long addBoard(Long userId, String title, String content, List<String> tags) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
 
-        // 해시태그 저장
-//        List<HashTag> hashTags = tags.stream()
-//                .map(tag -> {
-//                    HashTag hashTag = new HashTag();
-//                    hashTag.setTag(tag);
-//                    hashTag.setBoard(board);
-//                    return hashTag;
-//                }).collect(Collectors.toList());
-//        hashTagRepository.saveAll(hashTags);
-//        board.setHashTags(hashTags);  // Board 객체에 태그 추가
+        // ✅ HashTag를 Board 내부에 저장
+        Board board = Board.builder()
+                .user(user)
+                .title(title)
+                .content(content)
+                .views(0)
+                .hashTags(tags)  // 리스트 그대로 전달 가능
+                .build();
+
+        board = boardRepository.save(board);
+
+        return board.getId();
     }
+
+
+
+
+
+
 
     public List<Board> getAllBoards() {
         return boardRepository.findAll();  // 게시글을 모두 가져옴
@@ -106,6 +213,10 @@ public class BoardService {
         }
     }
 
+    public void truncate() {
+        boardRepository.deleteAll();
+    }
+
     // 좋아요 증가
 //    public int incrementLikes(int postId) {
 //        Board board = boardRepository.findById(postId)
@@ -115,3 +226,5 @@ public class BoardService {
 //        return board.getLikes();  // 업데이트된 좋아요 수 반환
 //    }
 }
+
+ */
