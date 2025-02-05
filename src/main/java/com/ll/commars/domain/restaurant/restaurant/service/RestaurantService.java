@@ -70,6 +70,7 @@ public class RestaurantService {
                             .collect(Collectors.toList());
 
                     return RestaurantDto.RestaurantInfo.builder()
+                            .id(restaurant.getId())
                             .name(restaurant.getName())
                             .details(restaurant.getDetails())
                             .averageRate(restaurant.getAverageRate())
