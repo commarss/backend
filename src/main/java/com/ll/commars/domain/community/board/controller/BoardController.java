@@ -10,6 +10,8 @@ import com.ll.commars.domain.community.comment.service.CommentService;
 import com.ll.commars.domain.user.user.service.UserService;
 import com.ll.commars.domain.community.board.repository.BoardRepository;
 import com.ll.commars.domain.user.user.controller.UserController;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -17,13 +19,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import java.util.*;
 import java.util.stream.Collectors;
 @RestController
-@RequestMapping("/api/posts")
+
+@RequestMapping(value = "/api/posts", produces = APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")// CORS 모든 도메인 허용 (Postman 사용 가능)
+@Tag(name = "BoardController", description = "커뮤니티 CRUD API")
 public class BoardController {
     private static final Logger logger = LoggerFactory.getLogger(BoardController.class);
     private final BoardService boardService;
@@ -33,6 +37,7 @@ public class BoardController {
 
     // ✅ 1. 모든 게시글 조회 (GET /api/posts)
     @GetMapping
+    @Operation(summary = "모든 게시글 조회")
     public ResponseEntity<?> getPosts() {
         try {
             List<Board> posts = boardService.getAllBoards();
@@ -56,6 +61,7 @@ public class BoardController {
 
     // ✅ 2. 특정 게시글 상세 조회 (GET /api/posts/{postId})
     @GetMapping("/{postId}")
+    @Operation(summary = "특정 게시글 상세 조회")
     public ResponseEntity<?> getPostDetail(@PathVariable("postId") Long postId) {
         try {
             Board board = boardService.getBoard(postId);
@@ -83,7 +89,8 @@ public class BoardController {
     }
 
     // ✅ 3. 게시글 작성 (POST /api/posts)
-    @PostMapping
+    @PostMapping(consumes = APPLICATION_JSON_VALUE)
+    @Operation(summary = "게시글 작성 ")
     public ResponseEntity<?> createPost(@RequestBody Map<String, Object> request, HttpSession session) {
         try {
             User user = (User) session.getAttribute("user");
@@ -103,7 +110,8 @@ public class BoardController {
     }
 
     // ✅ 4. 게시글 수정 (PUT /api/posts/{postId})
-    @PutMapping("/{postId}")
+    @PutMapping(value = "/{postId}",consumes = APPLICATION_JSON_VALUE)
+    @Operation(summary = "게시글 수정")
     public ResponseEntity<?> updatePost(@PathVariable("postId") Long postId,
                                         @RequestBody Map<String, Object> request,
                                         HttpSession session) {
@@ -126,6 +134,7 @@ public class BoardController {
 
     // ✅ 5. 게시글 삭제 (DELETE /api/posts/{postId})
     @DeleteMapping("/{postId}")
+    @Operation(summary = "게시글 삭제")
     public ResponseEntity<?> deletePost(@PathVariable("postId") Long postId, HttpSession session) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
@@ -141,7 +150,8 @@ public class BoardController {
     }
 
     // ✅ 6. 댓글 추가 (POST /api/posts/{postId}/comments)
-    @PostMapping("/{postId}/comments")
+    @PostMapping(value = "/{postId}/comments", consumes = APPLICATION_JSON_VALUE)
+    @Operation(summary = "댓글 추가")
     public ResponseEntity<?> addComment(@PathVariable("postId") Long postId,
                                         @RequestBody Map<String, String> request,
                                         HttpSession session) {
@@ -161,6 +171,7 @@ public class BoardController {
 
     // ✅ 7. 특정 사용자의 게시글 개수 조회 (GET /api/posts/count?email=이메일)
     @GetMapping("/count")
+    @Operation(summary = "특정 사용자의 게시글 개수 조회")
     public ResponseEntity<?> getUserPostCount(@RequestParam("email") String email) {
         int postCount = boardRepository.countPostsByEmail(email);
         return ResponseEntity.ok(Map.of("count", postCount));
@@ -168,6 +179,7 @@ public class BoardController {
 
     // ✅ 특정 게시글의 댓글 조회 API (GET /api/posts/{postId}/comments)
     @GetMapping("/{postId}/comments")
+    @Operation(summary = "특정 게시글의 댓글 조회")
     public ResponseEntity<?> getCommentsByPostId(@PathVariable("postId") Long postId) {
         try {
             List<Comment> comments = commentService.getCommentsByBoardId(postId);
@@ -203,7 +215,8 @@ public class BoardController {
 
 
     // ✅ 7. 댓글 수정 (PUT /api/posts/{postId}/comments/{commentId})
-    @PutMapping("/{postId}/comments/{commentId}")
+    @PutMapping(value = "/{postId}/comments/{commentId}", consumes = APPLICATION_JSON_VALUE)
+    @Operation(summary = "댓글 수정")
     public ResponseEntity<?> updateComment(@PathVariable Long postId,
                                            @PathVariable Long commentId,
                                            @RequestBody Map<String, String> request,
@@ -220,6 +233,7 @@ public class BoardController {
 
     // ✅ 8. 댓글 삭제 (DELETE /api/posts/{postId}/comments/{commentId})
     @DeleteMapping("/{postId}/comments/{commentId}")
+    @Operation(summary = "댓글 삭제")
     public ResponseEntity<?> deleteComment(@PathVariable Long postId,
                                            @PathVariable Long commentId,
                                            HttpSession session) {
@@ -233,7 +247,8 @@ public class BoardController {
     }
 
     // ✅ 9. 대댓글 추가 (POST /api/posts/{postId}/comments/{commentId}/replies)
-    @PostMapping("/{postId}/comments/{commentId}/replies")
+    @PostMapping(value = "/{postId}/comments/{commentId}/replies", consumes = APPLICATION_JSON_VALUE)
+    @Operation(summary = "대댓글 추가")
     public ResponseEntity<?> addReply(@PathVariable Long postId,
                                       @PathVariable Long commentId,
                                       @RequestBody Map<String, String> request,
@@ -251,6 +266,7 @@ public class BoardController {
 
     // ✅ 9. 게시글 좋아요 ON/OFF (POST /api/posts/{postId}/reaction)
     @PostMapping("/{postId}/reaction")
+    @Operation(summary = "게시글 좋아요 ON/OFF")
     public ResponseEntity<?> toggleReaction(@PathVariable Long postId, HttpSession session) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
@@ -263,6 +279,7 @@ public class BoardController {
 
     // ✅ 10. 좋아요/싫어요 개수 조회 (GET /api/posts/{postId}/reactions)
     @GetMapping("/{postId}/reactions")
+    @Operation(summary = "좋아요/싫어요 개수 조회")
     public ResponseEntity<?> getReactions(@PathVariable Long postId) {
         Map<String, Integer> reactions = reactionService.getReactions(postId);
         return ResponseEntity.ok(reactions);

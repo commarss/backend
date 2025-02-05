@@ -1,5 +1,6 @@
 package com.ll.commars.domain.user.user.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,9 +15,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
-@RequestMapping("/api/users")
+
+@RequestMapping(value = "/api/users", produces = APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 public class UserController {
@@ -24,6 +27,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/signup")
+    @Operation(summary = "회원가입")
     public ResponseEntity<String> signup(@RequestBody User request) {
         if (userService.isEmailTaken(request.getEmail())) {
             return ResponseEntity.badRequest().body("이미 사용 중인 이메일입니다.");
@@ -40,6 +44,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
+    @Operation(summary = "로그인")
     public ResponseEntity<?> login(@RequestBody User user, HttpSession session) {
         logger.info("Login attempt for email: {}", user.getEmail());
         User authenticatedUser = userService.authenticate(user.getEmail(), user.getPassword());
@@ -65,6 +70,7 @@ public class UserController {
     }
 
     @GetMapping("/current-user")
+    @Operation(summary = "사용자의 현재 로그인상태여부")
     public ResponseEntity<?> getCurrentUser(HttpSession session) {
         User user = (User) session.getAttribute("user");
         if (user != null) {
@@ -79,6 +85,7 @@ public class UserController {
 
 
     @PostMapping("/logout")
+    @Operation(summary = "로그아웃")
     public ResponseEntity<String> logout(HttpSession session) {
         session.invalidate();
         return ResponseEntity.ok("로그아웃되었습니다.");
