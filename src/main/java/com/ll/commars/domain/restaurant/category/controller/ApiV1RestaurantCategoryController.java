@@ -22,7 +22,7 @@ public class ApiV1RestaurantCategoryController {
     @PostMapping(value = "/", consumes = APPLICATION_JSON_VALUE)
     @Operation(summary = "식당 카테고리 등록")
     public RsData<RestaurantCategoryDto.RestaurantCategoryInfo> writeCategory(
-            @RequestBody @Valid RestaurantCategoryDto.RestaurantCategoryWriteRequest request
+            @RequestBody @Valid RestaurantCategoryDto.RestaurantCategoryEnrollRequest request
     ) {
         RestaurantCategoryDto.RestaurantCategoryInfo response = restaurantCategoryService.writeCategory(request);
         return new RsData<>("201", "식당 카테고리 등록 성공", response);

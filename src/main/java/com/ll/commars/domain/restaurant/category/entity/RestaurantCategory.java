@@ -1,9 +1,12 @@
 package com.ll.commars.domain.restaurant.category.entity;
 
+import com.ll.commars.domain.restaurant.businessHour.entity.RestaurantBusinessHour;
 import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
 import com.ll.commars.global.baseEntity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "restaurant_categories")
@@ -20,8 +23,7 @@ public class RestaurantCategory extends BaseEntity {
     @Column(name = "name")
     private String name;
 
-    // RestaurantCategory와 Restaurant: 다대일
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id")
-    private Restaurant restaurant;
+    // RestaurantCategory와 Restaurant: 일대다
+    @OneToMany(mappedBy = "restaurantCategory", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Restaurant> restaurants;
 }

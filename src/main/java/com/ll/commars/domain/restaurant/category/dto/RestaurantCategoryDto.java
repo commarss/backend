@@ -13,7 +13,13 @@ public class RestaurantCategoryDto {
 
     @Getter
     @Builder
-    public static class RestaurantCategoryWriteRequest {
+    public static class RestaurantCategoryEnrollRequest {
         private String name;
+    }
+
+    @Getter
+    @Builder
+    public static class RestaurantCategoryWriteRequest {
+        private Long id;
     }
 }

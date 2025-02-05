@@ -69,9 +69,10 @@ public class Restaurant extends BaseEntity {
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<RestaurantMenu> restaurantMenus;
 
-    // Restaurant와 RestaurantCategory: 일대다
-    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RestaurantCategory> restaurantCategories;
+    // Restaurant와 RestaurantCategory: 다대일
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "restaurant_category_id")
+    private RestaurantCategory restaurantCategory;
 
     // Restaurant와 RestaurantBusinessHours: 일대다
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)

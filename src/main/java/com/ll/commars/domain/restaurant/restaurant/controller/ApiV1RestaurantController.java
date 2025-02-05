@@ -1,5 +1,6 @@
 package com.ll.commars.domain.restaurant.restaurant.controller;
 
+import com.ll.commars.domain.restaurant.category.dto.RestaurantCategoryDto;
 import com.ll.commars.domain.restaurant.menu.dto.RestaurantMenuDto;
 import com.ll.commars.domain.restaurant.menu.service.RestaurantMenuService;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantDto;
@@ -108,5 +109,15 @@ public class ApiV1RestaurantController {
     ){
         RestaurantDto.RestaurantShowAllReviewsResponse response = restaurantService.getReviews(restaurantId);
         return new RsData<>("200", "리뷰 조회 성공", response);
+    }
+
+    @PostMapping("/{restaurant_id}/category")
+    @Operation(summary = "식당 카테고리 등록")
+    public RsData<RestaurantDto.RestaurantCategoryWriteResponse> writeCategory(
+            @PathVariable("restaurant_id") @NotNull Long restaurantId,
+            @RequestBody @Valid RestaurantCategoryDto.RestaurantCategoryWriteRequest request
+    ){
+        RestaurantDto.RestaurantCategoryWriteResponse response = restaurantService.writeCategory(restaurantId, request);
+        return new RsData<>("201", "카테고리 등록 성공", response);
     }
 }

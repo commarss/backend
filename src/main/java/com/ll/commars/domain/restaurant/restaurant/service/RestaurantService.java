@@ -1,5 +1,9 @@
 package com.ll.commars.domain.restaurant.restaurant.service;
 
+import com.ll.commars.domain.restaurant.category.dto.RestaurantCategoryDto;
+import com.ll.commars.domain.restaurant.category.entity.RestaurantCategory;
+import com.ll.commars.domain.restaurant.category.repository.RestaurantCategoryRepository;
+import com.ll.commars.domain.restaurant.category.service.RestaurantCategoryService;
 import com.ll.commars.domain.restaurant.menu.dto.RestaurantMenuDto;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantDto;
 import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
@@ -22,6 +26,7 @@ public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
+    private final RestaurantCategoryRepository restaurantCategoryRepository;
 
     // 식당 정보 등록
     @Transactional
@@ -232,6 +237,24 @@ public class RestaurantService {
 
         return RestaurantDto.RestaurantWriteResponse.builder()
                 .name(request.getName())
+                .build();
+    }
+
+    @Transactional
+    public RestaurantDto.RestaurantCategoryWriteResponse writeCategory(Long restaurantId, RestaurantCategoryDto.RestaurantCategoryWriteRequest request) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
+
+        RestaurantCategory category = restaurantCategoryRepository.findById(request.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+
+        restaurant.setRestaurantCategory(category);
+
+        category.getRestaurants().add(restaurant);
+
+        return RestaurantDto.RestaurantCategoryWriteResponse.builder()
+                .restaurantName(restaurant.getName())
+                .categoryName(category.getName())
                 .build();
     }
 }

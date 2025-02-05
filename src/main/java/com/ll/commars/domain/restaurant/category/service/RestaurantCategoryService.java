@@ -12,7 +12,7 @@ public class RestaurantCategoryService {
     private final RestaurantCategoryRepository restaurantCategoryRepository;
 
     public RestaurantCategoryDto.RestaurantCategoryInfo writeCategory(
-            RestaurantCategoryDto.RestaurantCategoryWriteRequest request
+            RestaurantCategoryDto.RestaurantCategoryEnrollRequest request
     ) {
         RestaurantCategory restaurantCategory = RestaurantCategory.builder()
                 .name(request.getName())
@@ -21,7 +21,6 @@ public class RestaurantCategoryService {
         restaurantCategoryRepository.save(restaurantCategory);
 
         return RestaurantCategoryDto.RestaurantCategoryInfo.builder()
-                .id(restaurantCategory.getId())
                 .name(restaurantCategory.getName())
                 .build();
     }

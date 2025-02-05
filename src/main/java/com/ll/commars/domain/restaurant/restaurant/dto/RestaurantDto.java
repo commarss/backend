@@ -73,4 +73,11 @@ public class RestaurantDto {
     public static class RestaurantShowAllMenusResponse {
         private List<RestaurantMenuDto.MenuInfo> menus;
     }
+
+    @Getter
+    @Builder
+    public static class RestaurantCategoryWriteResponse{
+        private String restaurantName;
+        private String categoryName;
+    }
 }
