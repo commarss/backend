@@ -25,5 +25,11 @@ public class ApiV1RestaurantMenuController {
     }
 
     // 식당 메뉴 삭제
-//    @DeleteMapping("/{menu_id}")
+    @DeleteMapping("/{menu_id}")
+    public RsData<String> deleteMenu(
+            @PathVariable("menu_id") @NotNull Long menuId
+    ){
+        restaurantMenuService.deleteMenu(menuId);
+        return new RsData<>("200", "식당 메뉴 삭제 성공", "메뉴 삭제 성공!");
+    }
 }

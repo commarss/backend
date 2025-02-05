@@ -54,4 +54,12 @@ public class RestaurantMenuService {
                 .imageUrl(restaurantMenu.getImageUrl())
                 .build();
     }
+
+    @Transactional
+    public void deleteMenu(Long menuId) {
+        restaurantMenuRepository.findById(menuId)
+                .orElseThrow(() -> new IllegalArgumentException("Menu not found"));
+
+        restaurantMenuRepository.deleteById(menuId);
+    }
 }
