@@ -22,7 +22,7 @@ public class ApiV1RestaurantController {
     private final RestaurantService restaurantService;
     private final RestaurantMenuService restaurantMenuService;
 
-    // 식당 정보 등록
+    // 식당 정보 등록(완료)
     @PostMapping("/")
     public RsData<RestaurantDto.RestaurantWriteResponse> write(
             @RequestBody @Valid RestaurantDto.RestaurantWriteRequest request
@@ -31,7 +31,7 @@ public class ApiV1RestaurantController {
         return new RsData<>("201", "식당 등록 성공", response);
     }
 
-    // 모든 식당 조회
+    // 모든 식당 조회(완료)
     @GetMapping("/")
     public RsData<RestaurantDto.RestaurantShowAllResponse> getRestaurants() {
         RestaurantDto.RestaurantShowAllResponse response = restaurantService.getRestaurants();
