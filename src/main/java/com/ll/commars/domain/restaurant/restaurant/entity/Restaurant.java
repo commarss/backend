@@ -1,6 +1,6 @@
 package com.ll.commars.domain.restaurant.restaurant.entity;
 
-import com.ll.commars.domain.restaurant.businessHour.entity.RestaurantBusinessHour;
+import com.ll.commars.domain.restaurant.businessHour.entity.BusinessHour;
 import com.ll.commars.domain.restaurant.category.entity.RestaurantCategory;
 import com.ll.commars.domain.restaurant.menu.entity.RestaurantMenu;
 import com.ll.commars.domain.review.review.entity.Review;
@@ -10,6 +10,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -75,8 +76,9 @@ public class Restaurant extends BaseEntity {
     private RestaurantCategory restaurantCategory;
 
     // Restaurant와 RestaurantBusinessHours: 일대다
+    @Builder.Default
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RestaurantBusinessHour> restaurantBusinessHours;
+    private List<BusinessHour> businessHours = new ArrayList<>();
 
     // Restaurant와 Review: 일대다
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -93,6 +95,14 @@ public class Restaurant extends BaseEntity {
         this.restaurantCategory = category;
         if (category != null) {
             category.getRestaurants().add(this);
+        }
+    }
+
+    public void setBusinessHours(List<BusinessHour> businessHours) {
+        this.businessHours.clear();
+        if (businessHours != null) {
+            this.businessHours.addAll(businessHours);
+            businessHours.forEach(hour -> hour.setRestaurant(this));
         }
     }
 }

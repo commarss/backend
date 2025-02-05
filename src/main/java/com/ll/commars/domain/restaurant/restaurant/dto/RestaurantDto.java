@@ -1,5 +1,6 @@
 package com.ll.commars.domain.restaurant.restaurant.dto;
 
+import com.ll.commars.domain.restaurant.businessHour.dto.BusinessHourDto;
 import com.ll.commars.domain.restaurant.menu.dto.RestaurantMenuDto;
 import com.ll.commars.domain.restaurant.menu.entity.RestaurantMenu;
 import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
@@ -30,6 +31,7 @@ public class RestaurantDto {
         private Long categoryId;
         private List<RestaurantMenuDto.MenuInfo> restaurantMenus;
         private List<ReviewDto.ReviewInfo> reviews;
+        private List<BusinessHourDto.BusinessHourInfo> businessHours;
 
         // 나머지 연관 관계도 추가해야 함...
     }

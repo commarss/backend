@@ -1,5 +1,6 @@
 package com.ll.commars.domain.restaurant.restaurant.controller;
 
+import com.ll.commars.domain.restaurant.businessHour.dto.BusinessHourDto;
 import com.ll.commars.domain.restaurant.category.dto.RestaurantCategoryDto;
 import com.ll.commars.domain.restaurant.menu.dto.RestaurantMenuDto;
 import com.ll.commars.domain.restaurant.menu.service.RestaurantMenuService;
@@ -134,5 +135,15 @@ public class ApiV1RestaurantController {
     ){
         RestaurantDto.RestaurantCategoryWriteResponse response = restaurantService.modifyCategory(restaurantId, request);
         return new RsData<>("200", "카테고리 수정 성공", response);
+    }
+
+    @PostMapping("/{restaurant_id}/business-hour")
+    @Operation(summary = "식당 영업시간 등록")
+    public RsData<BusinessHourDto.BusinessHourWriteResponse> writeBusinessHours(
+            @PathVariable("restaurant_id") @NotNull Long restaurantId,
+            @RequestBody @Valid BusinessHourDto.BusinessHourWriteRequest request
+    ){
+        BusinessHourDto.BusinessHourWriteResponse response = restaurantService.writeBusinessHours(restaurantId, request);
+        return new RsData<>("201", "영업시간 등록 성공", response);
     }
 }

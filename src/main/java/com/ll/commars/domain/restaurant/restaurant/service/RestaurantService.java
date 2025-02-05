@@ -1,5 +1,8 @@
 package com.ll.commars.domain.restaurant.restaurant.service;
 
+import com.ll.commars.domain.restaurant.businessHour.dto.BusinessHourDto;
+import com.ll.commars.domain.restaurant.businessHour.entity.BusinessHour;
+import com.ll.commars.domain.restaurant.businessHour.repository.BusinessHourRepository;
 import com.ll.commars.domain.restaurant.category.dto.RestaurantCategoryDto;
 import com.ll.commars.domain.restaurant.category.entity.RestaurantCategory;
 import com.ll.commars.domain.restaurant.category.repository.RestaurantCategoryRepository;
@@ -26,6 +29,7 @@ public class RestaurantService {
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
     private final RestaurantCategoryRepository restaurantCategoryRepository;
+    private final BusinessHourRepository businessHourRepository;
 
     // 식당 정보 등록
     @Transactional
@@ -90,6 +94,15 @@ public class RestaurantService {
                                     .build())
                             .collect(Collectors.toList());
 
+                    List<BusinessHourDto.BusinessHourInfo> businessHourInfos = restaurant.getBusinessHours().stream()
+                            .map(businessHour -> BusinessHourDto.BusinessHourInfo.builder()
+                                    .id(businessHour.getId())
+                                    .dayOfWeek(businessHour.getDayOfWeek())
+                                    .openTime(businessHour.getOpenTime())
+                                    .closeTime(businessHour.getCloseTime())
+                                    .build())
+                            .toList();
+
                     return RestaurantDto.RestaurantInfo.builder()
                             .id(restaurant.getId())
                             .name(restaurant.getName())
@@ -105,6 +118,7 @@ public class RestaurantService {
                             .categoryId(restaurant.getRestaurantCategory().getId())
                             .restaurantMenus(menuInfos)
                             .reviews(reviewInfos)
+                            .businessHours(businessHourInfos)
                             .build();
                 })
                 .collect(Collectors.toList());
@@ -200,6 +214,15 @@ public class RestaurantService {
                         .build())
                 .collect(Collectors.toList());
 
+        List<BusinessHourDto.BusinessHourInfo> businessHourInfos = restaurant.getBusinessHours().stream()
+                .map(businessHour -> BusinessHourDto.BusinessHourInfo.builder()
+                        .id(businessHour.getId())
+                        .dayOfWeek(businessHour.getDayOfWeek())
+                        .openTime(businessHour.getOpenTime())
+                        .closeTime(businessHour.getCloseTime())
+                        .build())
+                .toList();
+
         return RestaurantDto.RestaurantInfo.builder()
                 .id(restaurant.getId())
                 .name(restaurant.getName())
@@ -214,6 +237,7 @@ public class RestaurantService {
                 .summarizedReview(restaurant.getSummarizedReview())
                 .restaurantMenus(menuInfos)
                 .reviews(reviewInfos)
+                .businessHours(businessHourInfos)
                 .build();
     }
 
@@ -288,6 +312,38 @@ public class RestaurantService {
         return RestaurantDto.RestaurantCategoryWriteResponse.builder()
                 .restaurantName(restaurant.getName())
                 .categoryName(category.getName())
+                .build();
+    }
+
+    @Transactional
+    public BusinessHourDto.BusinessHourWriteResponse writeBusinessHours(
+            Long restaurantId,
+            BusinessHourDto.BusinessHourWriteRequest request) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
+
+        List<BusinessHour> businessHours = request.getBusinessHours().stream()
+                .map(businessHour -> BusinessHour.builder()
+                        .dayOfWeek(businessHour.getDayOfWeek())
+                        .openTime(businessHour.getOpenTime())
+                        .closeTime(businessHour.getCloseTime())
+                        .restaurant(restaurant)
+                        .build())
+                .collect(Collectors.toList());
+
+        restaurant.setBusinessHours(businessHours);
+        Restaurant savedRestaurant = restaurantRepository.save(restaurant);
+
+        return BusinessHourDto.BusinessHourWriteResponse.builder()
+                .restaurantName(savedRestaurant.getName())
+                .businessHours(savedRestaurant.getBusinessHours().stream()
+                        .map(businessHour -> BusinessHourDto.BusinessHourInfo.builder()
+                                .id(businessHour.getId())
+                                .dayOfWeek(businessHour.getDayOfWeek())
+                                .openTime(businessHour.getOpenTime())
+                                .closeTime(businessHour.getCloseTime())
+                                .build())
+                        .collect(Collectors.toList()))
                 .build();
     }
 }

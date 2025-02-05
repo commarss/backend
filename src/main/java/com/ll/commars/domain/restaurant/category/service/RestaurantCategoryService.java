@@ -1,5 +1,6 @@
 package com.ll.commars.domain.restaurant.category.service;
 
+import com.ll.commars.domain.restaurant.businessHour.dto.BusinessHourDto;
 import com.ll.commars.domain.restaurant.category.dto.RestaurantCategoryDto;
 import com.ll.commars.domain.restaurant.category.entity.RestaurantCategory;
 import com.ll.commars.domain.restaurant.category.repository.RestaurantCategoryRepository;
@@ -82,6 +83,13 @@ public class RestaurantCategoryService {
                                         .userName(review.getUser().getName())
                                         .body(review.getBody())
                                         .rate(review.getRate())
+                                        .build())
+                                .toList())
+                        .businessHours(restaurant.getBusinessHours().stream()
+                                .map(businessHour -> BusinessHourDto.BusinessHourInfo.builder()
+                                        .dayOfWeek(businessHour.getDayOfWeek())
+                                        .openTime(businessHour.getOpenTime())
+                                        .closeTime(businessHour.getCloseTime())
                                         .build())
                                 .toList())
                         .build())
