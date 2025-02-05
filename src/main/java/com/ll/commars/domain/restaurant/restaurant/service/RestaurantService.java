@@ -179,4 +179,11 @@ public class RestaurantService {
                 .restaurantMenus(menuInfos)
                 .build();
     }
+
+    public void deleteRestaurant(Long restaurantId) {
+        restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
+
+        restaurantRepository.deleteById(restaurantId);
+    }
 }

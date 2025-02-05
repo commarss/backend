@@ -47,7 +47,16 @@ public class ApiV1RestaurantController {
         return new RsData<>("200", "특정 식당 조회 성공", response);
     }
 
+    // 특정 식당 정보 수정
+
     // 특정 식당 삭제
+    @DeleteMapping("/{restaurant_id}")
+    public RsData<String> deleteRestaurant(
+            @PathVariable("restaurant_id") @NotNull Long restaurantId
+    ){
+        restaurantService.deleteRestaurant(restaurantId);
+        return new RsData<>("204", "식당 삭제 성공", "식당 삭제 성공");
+    }
 
     // 식당 메뉴 등록(완료)
     @PostMapping("{restaurant_id}/menu")
