@@ -21,13 +21,13 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/api/v1/restaurant", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/v1/restaurant", produces = APPLICATION_JSON_VALUE)
 @Tag(name = "ApiV1RestaurantController", description = "식당 CRUD API")
 public class ApiV1RestaurantController {
     private final RestaurantService restaurantService;
     private final RestaurantMenuService restaurantMenuService;
 
-    @PostMapping("/")
+    @PostMapping(value = "/", consumes = APPLICATION_JSON_VALUE)
     @Operation(summary = "식당 정보 등록")
     public RsData<RestaurantDto.RestaurantWriteResponse> write(
             @RequestBody @Valid RestaurantDto.RestaurantWriteRequest request
@@ -52,7 +52,7 @@ public class ApiV1RestaurantController {
         return new RsData<>("200", "특정 식당 조회 성공", response);
     }
 
-    @PatchMapping("/{restaurant_id}")
+    @PatchMapping(value = "/{restaurant_id}", consumes = APPLICATION_JSON_VALUE)
     @Operation(summary = "특정 식당 수정")
     public RsData<RestaurantDto.RestaurantWriteResponse> modifyRestaurant(
             @PathVariable("restaurant_id") @NotNull Long restaurantId,
@@ -71,7 +71,7 @@ public class ApiV1RestaurantController {
         return new RsData<>("204", "식당 삭제 성공", "식당 삭제 성공");
     }
 
-    @PostMapping("{restaurant_id}/menu")
+    @PostMapping(value = "{restaurant_id}/menu", consumes = APPLICATION_JSON_VALUE)
     @Operation(summary = "식당 메뉴 등록")
     public RsData<RestaurantMenuDto.RestaurantMenuWriteResponse> writeMenu(
             @PathVariable("restaurant_id") @NotNull Long restaurantId,
@@ -91,7 +91,7 @@ public class ApiV1RestaurantController {
         return new RsData<>("200", "메뉴 조회 성공", response);
     }
 
-    @PostMapping("/{restaurant_id}/review")
+    @PostMapping(value = "/{restaurant_id}/review", consumes = APPLICATION_JSON_VALUE)
     @Operation(summary = "식당 리뷰 등록")
     public RsData<ReviewDto.ReviewWriteResponse> writeReview(
             @PathVariable("restaurant_id") @NotNull Long restaurantId,

@@ -13,12 +13,12 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/api/v1/menu", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/v1/menu", produces = APPLICATION_JSON_VALUE)
 @Tag(name = "ApiV1RestaurantMenuController", description = "식당 메뉴 API")
 public class ApiV1RestaurantMenuController {
     private final RestaurantMenuService restaurantMenuService;
 
-    @PatchMapping("/{menu_id}")
+    @PatchMapping(value = "/{menu_id}", consumes = APPLICATION_JSON_VALUE)
     @Operation(summary = "식당 메뉴 수정")
     public RsData<RestaurantMenuDto.RestaurantMenuModifyResponse> modifyMenu(
             @PathVariable("menu_id") @NotNull Long menuId,

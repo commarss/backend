@@ -15,7 +15,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/api/v1/review", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/v1/review", produces = APPLICATION_JSON_VALUE)
 @Tag(name = "ApiV1ReviewController", description = "리뷰 CRUD API")
 public class ApiV1ReviewController {
     private final ReviewService reviewService;
@@ -36,7 +36,7 @@ public class ApiV1ReviewController {
         return new RsData<>("200", "리뷰 삭제 성공", "리뷰 삭제 성공!");
     }
 
-    @PatchMapping("/{review_id}")
+    @PatchMapping(value = "/{review_id}", consumes = APPLICATION_JSON_VALUE)
     @Operation(summary = "리뷰 수정")
     public RsData<ReviewDto.ReviewWriteResponse> modifyReview(
             @PathVariable("review_id") @NotNull Long reviewId,
