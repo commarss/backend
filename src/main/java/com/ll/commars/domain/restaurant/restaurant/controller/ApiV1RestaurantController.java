@@ -6,17 +6,13 @@ import com.ll.commars.domain.restaurant.menu.service.RestaurantMenuService;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantDto;
 import com.ll.commars.domain.restaurant.restaurant.service.RestaurantService;
 import com.ll.commars.domain.review.review.dto.ReviewDto;
-import com.ll.commars.domain.review.review.entity.Review;
 import com.ll.commars.global.rsData.RsData;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -74,21 +70,21 @@ public class ApiV1RestaurantController {
 
     @PostMapping(value = "{restaurant_id}/menu", consumes = APPLICATION_JSON_VALUE)
     @Operation(summary = "식당 메뉴 등록")
-    public RsData<RestaurantMenuDto.RestaurantMenuWriteResponse> writeMenu(
+    public RsData<RestaurantMenuDto.MenuWriteResponse> writeMenu(
             @PathVariable("restaurant_id") @NotNull Long restaurantId,
             @RequestBody @Valid RestaurantMenuDto.MenuInfo request
     ){
-        RestaurantMenuDto.RestaurantMenuWriteResponse response = restaurantMenuService.write(restaurantId, request);
+        RestaurantMenuDto.MenuWriteResponse response = restaurantMenuService.write(restaurantId, request);
 
         return new RsData<>("201", "메뉴 등록 성공", response);
     }
 
     @GetMapping("/{restaurant_id}/menu")
     @Operation(summary = "식당 메뉴 조회")
-    public RsData<RestaurantDto.RestaurantShowAllMenusResponse> getMenus(
+    public RsData<RestaurantMenuDto.ShowAllMenusResponse> getMenus(
             @PathVariable("restaurant_id") @NotNull Long restaurantId
     ){
-        RestaurantDto.RestaurantShowAllMenusResponse response = restaurantService.getMenus(restaurantId);
+        RestaurantMenuDto.ShowAllMenusResponse response = restaurantService.getMenus(restaurantId);
         return new RsData<>("200", "메뉴 조회 성공", response);
     }
 
@@ -104,10 +100,10 @@ public class ApiV1RestaurantController {
 
     @GetMapping("/{restaurant_id}/review")
     @Operation(summary = "식당 리뷰 조회")
-    public RsData<RestaurantDto.RestaurantShowAllReviewsResponse> getReviews(
+    public RsData<ReviewDto.ShowAllReviewsResponse> getReviews(
             @PathVariable("restaurant_id") @NotNull Long restaurantId
     ){
-        RestaurantDto.RestaurantShowAllReviewsResponse response = restaurantService.getReviews(restaurantId);
+        ReviewDto.ShowAllReviewsResponse response = restaurantService.getReviews(restaurantId);
         return new RsData<>("200", "리뷰 조회 성공", response);
     }
 
@@ -123,10 +119,10 @@ public class ApiV1RestaurantController {
 
     @GetMapping("/{restaurant_id}/category")
     @Operation(summary = "식당 카테고리 조회")
-    public RsData<RestaurantDto.RestaurantShowCategoryResponse> getCategories(
+    public RsData<RestaurantCategoryDto.ShowCategoryNameResponse> getCategories(
             @PathVariable("restaurant_id") @NotNull Long restaurantId
     ){
-        RestaurantDto.RestaurantShowCategoryResponse response = restaurantService.getCategories(restaurantId);
+        RestaurantCategoryDto.ShowCategoryNameResponse response = restaurantService.getCategories(restaurantId);
         return new RsData<>("200", "카테고리 조회 성공", response);
     }
 

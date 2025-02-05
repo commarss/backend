@@ -34,7 +34,7 @@ public class RestaurantDto {
         // 나머지 연관 관계도 추가해야 함...
     }
 
-    // 식당 등록에 필요한 정보
+    // 식당 등록 및 수정에 필요한 정보
     @Getter
     @Builder
     public static class RestaurantWriteRequest{
@@ -51,9 +51,11 @@ public class RestaurantDto {
         private Long categoryId;
     }
 
+    // 식당 등록 및 수정 응답
     @Getter
     @Builder
     public static class RestaurantWriteResponse{
+        private Long id;
         private String name;
     }
 
@@ -64,28 +66,11 @@ public class RestaurantDto {
         private List<RestaurantInfo> restaurants;
     }
 
-    @Getter
-    @Builder
-    public static class RestaurantShowAllReviewsResponse {
-        private List<ReviewDto.ReviewInfo> reviews;
-    }
-
-    @Getter
-    @Builder
-    public static class RestaurantShowAllMenusResponse {
-        private List<RestaurantMenuDto.MenuInfo> menus;
-    }
-
+    // 식당 카테고리 등록 및 수정 시의 응답
     @Getter
     @Builder
     public static class RestaurantCategoryWriteResponse{
         private String restaurantName;
-        private String categoryName;
-    }
-
-    @Getter
-    @Builder
-    public static class RestaurantShowCategoryResponse{
         private String categoryName;
     }
 }

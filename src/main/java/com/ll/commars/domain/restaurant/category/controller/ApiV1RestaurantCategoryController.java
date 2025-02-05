@@ -34,10 +34,10 @@ public class ApiV1RestaurantCategoryController {
 
     @GetMapping("/{category_id}")
     @Operation(summary = "특정 카테고리에 속한 식당 조회")
-    public RsData<RestaurantCategoryDto.ShowAllRestaurantsResponse> getRestaurantByCategory(
+    public RsData<RestaurantCategoryDto.ShowAllRestaurantsByCategoryResponse> getRestaurantByCategory(
             @PathVariable("category_id") Long categoryId
     ) {
-        RestaurantCategoryDto.ShowAllRestaurantsResponse response = restaurantCategoryService.getRestaurantByCategory(categoryId);
+        RestaurantCategoryDto.ShowAllRestaurantsByCategoryResponse response = restaurantCategoryService.getRestaurantByCategory(categoryId);
         return new RsData<>("200", "특정 카테고리에 속한 식당 조회 성공", response);
     }
 }

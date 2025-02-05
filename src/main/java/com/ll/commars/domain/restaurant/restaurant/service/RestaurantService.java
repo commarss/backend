@@ -3,7 +3,6 @@ package com.ll.commars.domain.restaurant.restaurant.service;
 import com.ll.commars.domain.restaurant.category.dto.RestaurantCategoryDto;
 import com.ll.commars.domain.restaurant.category.entity.RestaurantCategory;
 import com.ll.commars.domain.restaurant.category.repository.RestaurantCategoryRepository;
-import com.ll.commars.domain.restaurant.category.service.RestaurantCategoryService;
 import com.ll.commars.domain.restaurant.menu.dto.RestaurantMenuDto;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantDto;
 import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
@@ -141,13 +140,11 @@ public class RestaurantService {
     }
 
     @Transactional(readOnly = true)
-    public RestaurantDto.RestaurantShowAllReviewsResponse getReviews(Long restaurantId) {
+    public ReviewDto.ShowAllReviewsResponse getReviews(Long restaurantId) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
 
-        List<Review> reviews = reviewRepository.findByRestaurant(restaurant);
-
-        List<ReviewDto.ReviewInfo> reviewInfos = reviews.stream()
+        List<ReviewDto.ReviewInfo> reviewInfos = restaurant.getReviews().stream()
                 .map(review -> ReviewDto.ReviewInfo.builder()
                         .userName(review.getUser().getName())
                         .restaurantName(review.getRestaurant().getName())
@@ -157,13 +154,13 @@ public class RestaurantService {
                         .build())
                 .collect(Collectors.toList());
 
-        return RestaurantDto.RestaurantShowAllReviewsResponse.builder()
+        return ReviewDto.ShowAllReviewsResponse.builder()
                 .reviews(reviewInfos)
                 .build();
     }
 
     @Transactional
-    public RestaurantDto.RestaurantShowAllMenusResponse getMenus(Long restaurantId) {
+    public RestaurantMenuDto.ShowAllMenusResponse getMenus(Long restaurantId) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
 
@@ -175,7 +172,7 @@ public class RestaurantService {
                         .build())
                 .collect(Collectors.toList());
 
-        return RestaurantDto.RestaurantShowAllMenusResponse.builder()
+        return RestaurantMenuDto.ShowAllMenusResponse.builder()
                 .menus(menuInfos)
                 .build();
     }
@@ -267,13 +264,13 @@ public class RestaurantService {
     }
 
     @Transactional(readOnly = true)
-    public RestaurantDto.RestaurantShowCategoryResponse getCategories(Long restaurantId) {
+    public RestaurantCategoryDto.ShowCategoryNameResponse getCategories(Long restaurantId) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
 
         RestaurantCategory category = restaurant.getRestaurantCategory();
 
-        return RestaurantDto.RestaurantShowCategoryResponse.builder()
+        return RestaurantCategoryDto.ShowCategoryNameResponse.builder()
                 .categoryName(category.getName())
                 .build();
     }

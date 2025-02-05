@@ -20,11 +20,11 @@ public class ApiV1RestaurantMenuController {
 
     @PatchMapping(value = "/{menu_id}", consumes = APPLICATION_JSON_VALUE)
     @Operation(summary = "식당 메뉴 수정")
-    public RsData<RestaurantMenuDto.RestaurantMenuModifyResponse> modifyMenu(
+    public RsData<RestaurantMenuDto.MenuWriteResponse> modifyMenu(
             @PathVariable("menu_id") @NotNull Long menuId,
             @RequestBody @Valid RestaurantMenuDto.MenuInfo request
     ){
-        RestaurantMenuDto.RestaurantMenuModifyResponse response = restaurantMenuService.modifyMenu(menuId, request);
+        RestaurantMenuDto.MenuWriteResponse response = restaurantMenuService.modifyMenu(menuId, request);
         return new RsData<>("200", "식당 메뉴 수정 성공", response);
     }
 

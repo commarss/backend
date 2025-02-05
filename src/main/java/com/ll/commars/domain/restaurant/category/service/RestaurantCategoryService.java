@@ -6,7 +6,6 @@ import com.ll.commars.domain.restaurant.category.repository.RestaurantCategoryRe
 import com.ll.commars.domain.restaurant.menu.dto.RestaurantMenuDto;
 import com.ll.commars.domain.restaurant.menu.repository.RestaurantMenuRepository;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantDto;
-import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
 import com.ll.commars.domain.restaurant.restaurant.repository.RestaurantRepository;
 import com.ll.commars.domain.review.review.dto.ReviewDto;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +49,7 @@ public class RestaurantCategoryService {
     }
 
     @Transactional
-    public RestaurantCategoryDto.ShowAllRestaurantsResponse getRestaurantByCategory(Long categoryId) {
+    public RestaurantCategoryDto.ShowAllRestaurantsByCategoryResponse getRestaurantByCategory(Long categoryId) {
         // 카테고리 ID로 카테고리 찾기
         RestaurantCategory restaurantCategory = restaurantCategoryRepository.findById(categoryId)
                 .orElseThrow(() -> new IllegalArgumentException("Category not found"));
@@ -88,7 +87,7 @@ public class RestaurantCategoryService {
                         .build())
                 .toList();
 
-        return RestaurantCategoryDto.ShowAllRestaurantsResponse.builder()
+        return RestaurantCategoryDto.ShowAllRestaurantsByCategoryResponse.builder()
                 .id(restaurantCategory.getId())
                 .categoryName(restaurantCategory.getName())
                 .restaurants(restaurants)

@@ -16,7 +16,7 @@ public class RestaurantMenuService {
     private final RestaurantMenuRepository restaurantMenuRepository;
 
     @Transactional
-    public RestaurantMenuDto.RestaurantMenuWriteResponse write(
+    public RestaurantMenuDto.MenuWriteResponse write(
             Long restaurantId,
             RestaurantMenuDto.MenuInfo request) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
@@ -31,7 +31,7 @@ public class RestaurantMenuService {
 
         restaurantMenuRepository.save(restaurantMenu);
 
-        return RestaurantMenuDto.RestaurantMenuWriteResponse.builder()
+        return RestaurantMenuDto.MenuWriteResponse.builder()
                 .restaurantName(restaurant.getName())
                 .name(restaurantMenu.getName())
                 .price(restaurantMenu.getPrice())
@@ -39,7 +39,7 @@ public class RestaurantMenuService {
     }
 
     @Transactional
-    public RestaurantMenuDto.RestaurantMenuModifyResponse modifyMenu(Long menuId, RestaurantMenuDto.MenuInfo request) {
+    public RestaurantMenuDto.MenuWriteResponse modifyMenu(Long menuId, RestaurantMenuDto.MenuInfo request) {
         RestaurantMenu restaurantMenu = restaurantMenuRepository.findById(menuId)
                 .orElseThrow(() -> new IllegalArgumentException("Menu not found"));
 
@@ -47,11 +47,10 @@ public class RestaurantMenuService {
         restaurantMenu.setPrice(request.getPrice());
         restaurantMenu.setImageUrl(request.getImageUrl());
 
-        return RestaurantMenuDto.RestaurantMenuModifyResponse.builder()
+        return RestaurantMenuDto.MenuWriteResponse.builder()
                 .restaurantName(restaurantMenu.getRestaurant().getName())
-                .menuName(restaurantMenu.getName())
+                .name(restaurantMenu.getName())
                 .price(restaurantMenu.getPrice())
-                .imageUrl(restaurantMenu.getImageUrl())
                 .build();
     }
 

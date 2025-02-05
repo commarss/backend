@@ -6,6 +6,7 @@ import lombok.Getter;
 import java.util.List;
 
 public class ReviewDto {
+    // 리뷰 정보
     @Getter
     @Builder
     public static class ReviewInfo{
@@ -16,6 +17,7 @@ public class ReviewDto {
         private Integer rate;
     }
 
+    // 리뷰 작성 및 수정 시 요청
     @Getter
     @Builder
     public static class ReviewWriteRequest{
@@ -25,6 +27,7 @@ public class ReviewDto {
         private Integer rate;
     }
 
+    // 리뷰 작성 및 수정 시 응답
     @Getter
     @Builder
     public static class ReviewWriteResponse{
@@ -35,9 +38,10 @@ public class ReviewDto {
         private Integer rate;
     }
 
+    // 모든 리뷰 조회 시 응답
     @Getter
     @Builder
-    public static class ReviewShowAllResponse{
+    public static class ShowAllReviewsResponse {
         List<ReviewInfo> reviews;
     }
 }

@@ -1,13 +1,11 @@
 package com.ll.commars.domain.review.review.controller;
 
 import com.ll.commars.domain.review.review.dto.ReviewDto;
-import com.ll.commars.domain.review.review.entity.Review;
 import com.ll.commars.domain.review.review.service.ReviewService;
 import com.ll.commars.global.rsData.RsData;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +20,8 @@ public class ApiV1ReviewController {
 
     @GetMapping("/")
     @Operation(summary = "리뷰 전체 조회")
-    public RsData<ReviewDto.ReviewShowAllResponse> getReviews() {
-        ReviewDto.ReviewShowAllResponse response = reviewService.getReviews();
+    public RsData<ReviewDto.ShowAllReviewsResponse> getReviews() {
+        ReviewDto.ShowAllReviewsResponse response = reviewService.getReviews();
         return new RsData<>("200", "모든 리뷰 조회 성공", response);
     }
 
