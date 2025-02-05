@@ -1,5 +1,6 @@
 package com.ll.commars.global.jwt.component;
 
+import com.ll.commars.domain.member.member.entity.Member;
 import com.ll.commars.global.jwt.entity.JwtToken;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -22,23 +23,21 @@ public class JwtProvider {
     public final long ACCESS_TOKEN_VALIDITY = 24 * 60 * 60 * 1000L;
     public final long REFRESH_TOKEN_VALIDITY = 7 * 24 * 60 * 60 * 1000L;
 
-    public String generateAccessToken(long id, String email, String name, String profileImageUrl) {
-        return createToken(id, email, name, profileImageUrl, ACCESS_TOKEN_VALIDITY);
+    public String generateAccessToken(Member member) {
+        return createToken(member, ACCESS_TOKEN_VALIDITY);
     }
 
-    public String generateRefreshToken(long id, String email, String name, String profileImageUrl) {
-        return createToken(id, email, name, profileImageUrl, REFRESH_TOKEN_VALIDITY);
+    public String generateRefreshToken(Member member) {
+        return createToken(member, REFRESH_TOKEN_VALIDITY);
     }
 
-    private String createToken(long id, String email, String name, String profileImageUrl, long validityInMilliseconds) {
+    private String createToken(Member member, long validityInMilliseconds) {
         Date ext = new Date();
         ext.setTime(ext.getTime() + validityInMilliseconds);
 
         Map<String, Object> payload = new HashMap<>();
-        payload.put("id", id);
-        payload.put("email", email);
-        payload.put("name", name);
-        payload.put("profileImageUrl", profileImageUrl);
+        payload.put("id", member.getId());
+        payload.put("email", member.getEmail());
 
         return Jwts.builder()
                 .claims(payload)
@@ -56,15 +55,13 @@ public class JwtProvider {
         }
     }
 
-    public JwtToken getJwtToken(String token) {
+    public JwtToken extractJwtToken(String token) {
         Claims claims = getClaims(token);
 
         return JwtToken.builder()
                 .token(token)
                 .id(claims.get("id", Long.class))
                 .email(claims.get("email", String.class))
-                .name(claims.get("name", String.class))
-                .profileImageUrl(claims.get("profileImageUrl", String.class))
                 .build();
     }
 

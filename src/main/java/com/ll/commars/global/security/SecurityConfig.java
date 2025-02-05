@@ -1,5 +1,6 @@
 package com.ll.commars.global.security;
 
+import com.ll.commars.domain.member.member.service.MemberService;
 import com.ll.commars.global.jwt.filter.JwtAuthenticationFilter;
 import com.ll.commars.global.jwt.component.JwtProvider;
 import org.springframework.context.annotation.Bean;
@@ -20,14 +21,16 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
     private final JwtProvider jwtProvider;
+    private final MemberService memberService;
 
-    public SecurityConfig(JwtProvider jwtProvider) {
+    public SecurityConfig(JwtProvider jwtProvider, MemberService memberService) {
         this.jwtProvider = jwtProvider;
+        this.memberService = memberService;
     }
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(jwtProvider);
+        return new JwtAuthenticationFilter(jwtProvider, memberService);
     }
 
     @Bean
@@ -52,7 +55,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173","http://localhost:5174", "http://localhost:5175", "https://accounts.google.com")); // React 프론트엔드 URL 허용
+        configuration.setAllowedOrigins(List.of("http://localhost:5173","http://localhost:5174", "http://localhost:5175", "https://accounts.google.com", "https://nid.naver.com")); // React 프론트엔드 URL 허용
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setExposedHeaders(List.of("Authorization", "Content-Type", "refreshToken", "accessToken"));
@@ -69,7 +72,7 @@ public class SecurityConfig {
             @Override
             public void addCorsMappings(org.springframework.web.servlet.config.annotation.CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:5173", "http://localhost:5174", "http://localhost:5175", "https://accounts.google.com")
+                        .allowedOrigins("http://localhost:5173", "http://localhost:5174", "http://localhost:5175", "https://accounts.google.com", "https://nid.naver.com")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);

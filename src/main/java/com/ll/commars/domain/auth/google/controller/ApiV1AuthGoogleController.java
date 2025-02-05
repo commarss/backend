@@ -1,14 +1,13 @@
 package com.ll.commars.domain.auth.google.controller;
 
-import com.ll.commars.domain.auth.google.entity.GoogleAuth;
-import com.ll.commars.domain.auth.google.service.GoogleAuthService;
+import com.ll.commars.domain.auth.google.service.GoogleService;
+import com.ll.commars.domain.member.member.entity.Member;
 import com.ll.commars.global.jwt.component.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 import java.util.Optional;
@@ -18,21 +17,21 @@ import java.util.Optional;
 @RequestMapping("/api/auth")
 public class ApiV1AuthGoogleController {
     private final JwtProvider jwtProvider;
-    private final GoogleAuthService googleAuthService;
+    private final GoogleService googleService;
 
-    @PostMapping("/google")
+    @PostMapping("/login/google")
     public ResponseEntity<?> verifyGoogleIdToken(@RequestBody Map<String, String> body) {
         String idToken = body.get("idToken");
         System.out.println("idToken = " + idToken);
 
-        Optional<GoogleAuth> googleAuth = googleAuthService.loginForGoogle(idToken);
+        Optional<Member> googleAuth = googleService.loginForGoogle(idToken);
 
         if (googleAuth.isEmpty()) {
             return ResponseEntity.badRequest().body("Google ID Token 검증 실패");
         }
 
-        String accessToken = jwtProvider.generateAccessToken(googleAuth.get().getId(), googleAuth.get().getEmail(), googleAuth.get().getName(), googleAuth.get().getProfileImageUrl());
-        String refreshToken = jwtProvider.generateRefreshToken(googleAuth.get().getId(), googleAuth.get().getEmail(), googleAuth.get().getName(), googleAuth.get().getProfileImageUrl());
+        String accessToken = jwtProvider.generateAccessToken(googleAuth.get());
+        String refreshToken = jwtProvider.generateRefreshToken(googleAuth.get());
 
         ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
@@ -44,8 +43,8 @@ public class ApiV1AuthGoogleController {
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
-                .header("Authorization", "Bearer " + accessToken)
-                .body(Map.of( "googleAuth", googleAuth.get(), "accessToken", accessToken));
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .body(Map.of( "googleUser", googleAuth.get(), "accessToken", accessToken));
 
     }
 

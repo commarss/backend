@@ -1,12 +1,8 @@
 package com.ll.commars.domain.auth.google.service;
 
-import com.ll.commars.domain.auth.google.entity.GoogleAuth;
-import com.ll.commars.domain.auth.google.repository.GoogleAuthRepository;
+import com.ll.commars.domain.member.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -15,28 +11,9 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class GoogleAuthService {
-    private final GoogleAuthRepository googleAuthRepository;
+public class GoogleService {
 
-    @Value("${google.client-id}")
-    private String clientId;
-
-    public void saveGoogleAuth(String email, String name, String profileImageUrl) {
-        googleAuthRepository.save(
-                com.ll.commars.domain.auth.google.entity.GoogleAuth.builder()
-                        .email(email)
-                        .name(name)
-                        .profileImageUrl(profileImageUrl)
-                        .build()
-        );
-    }
-
-    public boolean accessionCheck(String email, String name) {
-        Optional<GoogleAuth> googleAuth = googleAuthRepository.findByEmail(email);
-        return googleAuth.isPresent() && googleAuth.get().getName().equals(name);
-    }
-
-    public Optional<GoogleAuth> loginForGoogle(String idToken) {
+    public Optional<Member> loginForGoogle(String idToken) {
         System.out.println("idToken = " + idToken);
 
         String verificationUrl = "https://oauth2.googleapis.com/tokeninfo?id_token=" + idToken;
@@ -76,11 +53,11 @@ public class GoogleAuthService {
 //                    .profileImageUrl(googleAuth.getProfileImageUrl())
 //                    .build());
 
-            return Optional.of(GoogleAuth.builder()
+            return Optional.of(Member.builder()
                             .id(1L)
                     .email(email)
                     .name(name)
-                    .profileImageUrl(picture)
+                    .profile(picture)
                     .build());
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,5 +1,7 @@
 package com.ll.commars.global.jwt.filter;
 
+import com.ll.commars.domain.member.member.entity.Member;
+import com.ll.commars.domain.member.member.service.MemberService;
 import com.ll.commars.global.jwt.component.JwtProvider;
 import com.ll.commars.global.jwt.entity.JwtAuthenticationToken;
 import com.ll.commars.global.jwt.entity.JwtToken;
@@ -15,11 +17,11 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Optional;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtProvider jwtProvider;
+    private final MemberService memberService;
 
     @Value("${jwt.excluded-urls}")
     private String excludeUrls;
@@ -27,8 +29,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Value(("${jwt.excluded-base-urls}"))
     private String excludeBaseUrls;
 
-    public JwtAuthenticationFilter(JwtProvider jwtProvider) {
+
+    public JwtAuthenticationFilter(JwtProvider jwtProvider, MemberService memberService) {
         this.jwtProvider = jwtProvider;
+        this.memberService = memberService;
     }
 
     @Override
@@ -55,22 +59,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         System.out.println("🔒 토큰 검증 필터 실행 URL :" + requestURI);
 
-        if (requestURI.startsWith("/api/public/") || requestURI.startsWith("/api/auth/google") || requestURI.startsWith("/api/auth/")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String accessToken = authHeader.substring("Bearer ".length());
             try {
                 if (jwtProvider.validateToken(accessToken)) {
-                    JwtToken jwtToken = jwtProvider.getJwtToken(accessToken);
-                    String email = jwtToken.getEmail();
+                    JwtToken jwtToken = jwtProvider.extractJwtToken(accessToken);
+                    Optional<Member> member = memberService.findByIdAndEmail(jwtToken.getId(), jwtToken.getEmail());
 
-                    if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                        UserDetails userDetails = org.springframework.security.core.userdetails.User.withUsername(email).password("").authorities("USER").build();
+                    if (member.isPresent() && SecurityContextHolder.getContext().getAuthentication() == null) {
+                        UserDetails userDetails = org.springframework.security.core.userdetails.User.withUsername(String.valueOf(member.get().getId())).password("").authorities("USER").build();
                         JwtAuthenticationToken jwtAuthenticationToken = new JwtAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                         jwtAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                         SecurityContextHolder.getContext().setAuthentication(jwtAuthenticationToken);
