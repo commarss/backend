@@ -2,6 +2,8 @@ package com.ll.commars.global.initData;
 
 import com.ll.commars.domain.community.board.service.BoardService;
 import com.ll.commars.domain.community.comment.service.CommentService;
+import com.ll.commars.domain.restaurant.category.dto.RestaurantCategoryDto;
+import com.ll.commars.domain.restaurant.category.service.RestaurantCategoryService;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantDto;
 import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
 import com.ll.commars.domain.restaurant.restaurant.service.RestaurantService;
@@ -35,45 +37,27 @@ public class BaseInitData {
     private final BoardService boardService;
     private final CommentService commentService;
 
+    private final RestaurantCategoryService restaurantCategoryService;
+
     @Bean
     public ApplicationRunner baseInitDataApplicationRunner() {
         return args -> {
-            //work5(); // 유저 데이터 초기화
-            //work6(); // 게시글 및 댓글 데이터 초기화
-            //work7(); // 리뷰 데이터 초기화
+            // ES 초기화
+            reviewsDocInit();
+            restaurantDocInit();
 
-
-            //restaurantInit();
+            restaurantInit();
         };
     }
 
     // ReviewsDoc 데이터 초기화
-    private void work1() {
+    private void reviewsDocInit() {
         reviewDocService.truncate();
-
-//        reviewsDocService.write("하루 일과 정리", 2);
-//        reviewsDocService.write("코딩의 즐거움", 5);
-//        reviewsDocService.write("겨울 여행 계획", 4);
-//        reviewsDocService.write("첫 직장 출근기", 1);
-//        reviewsDocService.write("커피 원두 추천", 2);
-//        reviewsDocService.write("운동 루틴 기록", 4);
-//        reviewsDocService.write("영화 리뷰 - 인터스텔라", 4);
-//        reviewsDocService.write("맛집 탐방기", 3);
-//        reviewsDocService.write("독서 기록 - 나미야 잡화점의 기적", 5);
-//        reviewsDocService.write("코딩 팁 공유", 3);
-//        reviewsDocService.write("취미로 배우는 기타", 1);
-//        reviewsDocService.write("반려견과의 산책", 5);
-//        reviewsDocService.write("다음 프로젝트 아이디어", 5);
     }
 
     // RestaurantsDoc 데이터 초기화
-    private void work2() {
+    private void restaurantDocInit() {
         restaurantDocService.truncate();
-
-//        restaurantsDocService.write("마녀 커피", "마녀 커피는 커피 전문점으로, 커피의 맛이 좋아요.", 4.5);
-//        restaurantsDocService.write("피자 알볼로", "피자 알볼로는 피자 전문점으로, 피자의 맛이 좋아요.", 4.0);
-//        restaurantsDocService.write("진짜 치킨", "진짜 치킨은 치킨 전문점으로, 치킨의 맛이 좋아요.", 4.0);
-//        restaurantsDocService.write("매운 떡볶이", "매운 떡볶이는 떡볶이 전문점으로, 떡볶이의 맛이 좋아요.", 3.0);
     }
 
     // Restaurant 데이터 초기화
@@ -86,6 +70,11 @@ public class BaseInitData {
         String[] addresses = {"서울시 강남구", "서울시 서초구", "서울시 송파구", "서울시 마포구", "서울시 종로구"};
         String[] summarizedReviews = {"맛있고 분위기가 좋아요", "가성비가 좋아요", "서비스가 친절해요",
                 "음식이 빨리 나와요", "재방문 의사 있어요"};
+
+        RestaurantCategoryDto.ShowAllCategoriesResponse categories = restaurantCategoryService.getCategories();
+        List<Long> categoriesId = categories.getCategories().stream()
+                .map(RestaurantCategoryDto.RestaurantCategoryInfo::getId)
+                .toList();
 
         Random random = new Random();
 
@@ -101,6 +90,7 @@ public class BaseInitData {
                     .lng(127.0498 + (random.nextDouble() - 0.5) * 0.1) // 126.9998-127.0998 사이
                     .runningState(random.nextBoolean())
                     .summarizedReview(summarizedReviews[random.nextInt(summarizedReviews.length)])
+                    .categoryId(categoriesId.get(random.nextInt(categoriesId.size())))
                     .build();
 
             restaurantService.write(restaurant);
@@ -134,7 +124,7 @@ public class BaseInitData {
         });
     }
 
-    private void work5(){
+    private void UserInit(){
         userService.truncate();
         // 카카오 유저 5명 생성
         userService.createUser("kakao1@example.com", "카카오유저1", 1, "password123", "010-1111-1111", "profile_image_url1", LocalDateTime.now(), 1);
@@ -153,7 +143,7 @@ public class BaseInitData {
 
     }
 
-    private void work6() {
+    private void CommunityInit() {
         // 기존 데이터 삭제
         commentService.truncate();
         boardService.truncate();
@@ -181,68 +171,65 @@ public class BaseInitData {
     public final ReviewrService reviewrService;
 
     // ✅ 10명의 유저가 리뷰를 작성하도록 초기 데이터 설정
-    private void work7() {
-        System.out.println("🌟 리뷰 초기 데이터 생성 시작!");
-
-        // ✅ 기존 데이터 삭제
-        //reviewrService.truncate();
-        //userService.truncate();
-        //restaurantService.truncate();
-
-        System.out.println("🔹 모든 데이터 삭제 완료!");
-
-        // ✅ 10명의 유저 생성
-        IntStream.rangeClosed(1, 10).forEach(i -> {
-            String email = "user" + i + "@example.com";
-            String name = "유저" + i;
-            int provider = (i % 2 == 0) ? 1 : 3;
-            String phone = "010-1234-" + (1000 + i);
-
-            userService.createUser(email, name, provider, "password123", phone, "profile" + i + ".jpg", LocalDateTime.now(), (i % 2) + 1);
-        });
-
-        // ✅ 유저 확인
-        List<User> users = userService.findAllUsers();
-        System.out.println("🔹 생성된 유저 수: " + users.size());
-
-        // ✅ 5개의 음식점 추가
-        String[] restaurantNames = {"맛있는 식당", "고기 맛집", "해산물 전문점", "이탈리안 레스토랑", "한식 밥집"};
-        Random random = new Random();
-        IntStream.rangeClosed(1, 5).forEach(i -> {
-            Restaurant restaurant = Restaurant.builder()
-                    .name(restaurantNames[i - 1])
-                    .details("훌륭한 요리를 제공하는 레스토랑입니다.")
-                    .averageRate(4.0 + (i % 2))
-                    .address("서울시 강남구")
-                    .lat(37.5665 + (random.nextDouble() - 0.5) * 0.01) // 서울 근처 랜덤 위도
-                    .lng(126.9780 + (random.nextDouble() - 0.5) * 0.01) // 서울 근처 랜덤 경도
-                    .build();
-            restaurantService.save(restaurant);
-        });
-
-        // ✅ 레스토랑 확인
-        List<Restaurant> restaurants = restaurantService.findAllRestaurants();
-        System.out.println("🔹 생성된 레스토랑 수: " + restaurants.size());
-
-
-        users.forEach(user -> {
-            int reviewCount = random.nextInt(10) + 1; // 유저당 1~10개 리뷰 작성
-            for (int i = 0; i < reviewCount; i++) {
-                Restaurant randomRestaurant = restaurants.get(random.nextInt(restaurants.size()));
-
-                ReviewDto.ReviewWriteRequest review = ReviewDto.ReviewWriteRequest.builder()
-                        .reviewName("리뷰 제목 " + i)
-                        .body("이곳은 정말 좋습니다! " + (i + 1))
-                        .rate(random.nextInt(5) + 1)
-                        .build();
-
-                reviewrService.writeReview(randomRestaurant.getId(), review, user.getEmail());
-            }
-        });
-
-        System.out.println("✅ 리뷰 데이터 초기화 완료!");
-    }
-
-
-
+//    private void work7() {
+//        System.out.println("🌟 리뷰 초기 데이터 생성 시작!");
+//
+//        // ✅ 기존 데이터 삭제
+//        //reviewrService.truncate();
+//        //userService.truncate();
+//        //restaurantService.truncate();
+//
+//        System.out.println("🔹 모든 데이터 삭제 완료!");
+//
+//        // ✅ 10명의 유저 생성
+//        IntStream.rangeClosed(1, 10).forEach(i -> {
+//            String email = "user" + i + "@example.com";
+//            String name = "유저" + i;
+//            int provider = (i % 2 == 0) ? 1 : 3;
+//            String phone = "010-1234-" + (1000 + i);
+//
+//            userService.createUser(email, name, provider, "password123", phone, "profile" + i + ".jpg", LocalDateTime.now(), (i % 2) + 1);
+//        });
+//
+//        // ✅ 유저 확인
+//        List<User> users = userService.findAllUsers();
+//        System.out.println("🔹 생성된 유저 수: " + users.size());
+//
+//        // ✅ 5개의 음식점 추가
+//        String[] restaurantNames = {"맛있는 식당", "고기 맛집", "해산물 전문점", "이탈리안 레스토랑", "한식 밥집"};
+//        Random random = new Random();
+//        IntStream.rangeClosed(1, 5).forEach(i -> {
+//            Restaurant restaurant = Restaurant.builder()
+//                    .name(restaurantNames[i - 1])
+//                    .details("훌륭한 요리를 제공하는 레스토랑입니다.")
+//                    .averageRate(4.0 + (i % 2))
+//                    .address("서울시 강남구")
+//                    .lat(37.5665 + (random.nextDouble() - 0.5) * 0.01) // 서울 근처 랜덤 위도
+//                    .lng(126.9780 + (random.nextDouble() - 0.5) * 0.01) // 서울 근처 랜덤 경도
+//                    .build();
+//            restaurantService.save(restaurant);
+//        });
+//
+//        // ✅ 레스토랑 확인
+//        List<Restaurant> restaurants = restaurantService.findAllRestaurants();
+//        System.out.println("🔹 생성된 레스토랑 수: " + restaurants.size());
+//
+//
+//        users.forEach(user -> {
+//            int reviewCount = random.nextInt(10) + 1; // 유저당 1~10개 리뷰 작성
+//            for (int i = 0; i < reviewCount; i++) {
+//                Restaurant randomRestaurant = restaurants.get(random.nextInt(restaurants.size()));
+//
+//                ReviewDto.ReviewWriteRequest review = ReviewDto.ReviewWriteRequest.builder()
+//                        .reviewName("리뷰 제목 " + i)
+//                        .body("이곳은 정말 좋습니다! " + (i + 1))
+//                        .rate(random.nextInt(5) + 1)
+//                        .build();
+//
+//                reviewrService.writeReview(randomRestaurant.getId(), review, user.getEmail());
+//            }
+//        });
+//
+//        System.out.println("✅ 리뷰 데이터 초기화 완료!");
+//    }
 }

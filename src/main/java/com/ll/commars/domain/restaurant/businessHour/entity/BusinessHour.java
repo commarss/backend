@@ -1,6 +1,5 @@
 package com.ll.commars.domain.restaurant.businessHour.entity;
 
-import co.elastic.clients.util.DateTime;
 import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
 import com.ll.commars.global.baseEntity.BaseEntity;
 import jakarta.persistence.*;
@@ -15,7 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RestaurantBusinessHour extends BaseEntity {
+public class BusinessHour extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

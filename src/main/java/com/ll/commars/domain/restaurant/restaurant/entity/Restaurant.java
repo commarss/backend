@@ -1,6 +1,6 @@
 package com.ll.commars.domain.restaurant.restaurant.entity;
 
-import com.ll.commars.domain.restaurant.businessHour.entity.RestaurantBusinessHour;
+import com.ll.commars.domain.restaurant.businessHour.entity.BusinessHour;
 import com.ll.commars.domain.restaurant.category.entity.RestaurantCategory;
 import com.ll.commars.domain.restaurant.menu.entity.RestaurantMenu;
 import com.ll.commars.domain.review.review.entity.Review;
@@ -10,6 +10,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -69,13 +70,15 @@ public class Restaurant extends BaseEntity {
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<RestaurantMenu> restaurantMenus;
 
-    // Restaurant와 RestaurantCategory: 일대다
-    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RestaurantCategory> restaurantCategories;
+    // Restaurant와 RestaurantCategory: 다대일
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "restaurant_category_id")
+    private RestaurantCategory restaurantCategory;
 
     // Restaurant와 RestaurantBusinessHours: 일대다
+    @Builder.Default
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RestaurantBusinessHour> restaurantBusinessHours;
+    private List<BusinessHour> businessHours = new ArrayList<>();
 
     // Restaurant와 Review: 일대다
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -84,4 +87,22 @@ public class Restaurant extends BaseEntity {
     // Restaurant와 FavoriteRestaurant: 일대다
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FavoriteRestaurant> favoriteRestaurants;
+
+    public void setCategory(RestaurantCategory category) {
+        if (this.restaurantCategory != null) {
+            this.restaurantCategory.getRestaurants().remove(this);
+        }
+        this.restaurantCategory = category;
+        if (category != null) {
+            category.getRestaurants().add(this);
+        }
+    }
+
+    public void setBusinessHours(List<BusinessHour> businessHours) {
+        this.businessHours.clear();
+        if (businessHours != null) {
+            this.businessHours.addAll(businessHours);
+            businessHours.forEach(hour -> hour.setRestaurant(this));
+        }
+    }
 }

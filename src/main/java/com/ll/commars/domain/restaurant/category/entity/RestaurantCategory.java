@@ -5,6 +5,8 @@ import com.ll.commars.global.baseEntity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "restaurant_categories")
 @Getter
@@ -20,8 +22,17 @@ public class RestaurantCategory extends BaseEntity {
     @Column(name = "name")
     private String name;
 
-    // RestaurantCategory와 Restaurant: 다대일
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id")
-    private Restaurant restaurant;
+    // RestaurantCategory와 Restaurant: 일대다
+    @OneToMany(mappedBy = "restaurantCategory", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Restaurant> restaurants;
+
+    public void addRestaurant(Restaurant restaurant) {
+        this.restaurants.add(restaurant);
+        restaurant.setRestaurantCategory(this);
+    }
+
+    public void removeRestaurant(Restaurant restaurant) {
+        this.restaurants.remove(restaurant);
+        restaurant.setRestaurantCategory(null);
+    }
 }

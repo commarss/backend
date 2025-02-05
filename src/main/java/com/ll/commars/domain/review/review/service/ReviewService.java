@@ -1,11 +1,9 @@
 package com.ll.commars.domain.review.review.service;
 
-import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
 import com.ll.commars.domain.restaurant.restaurant.repository.RestaurantRepository;
 import com.ll.commars.domain.review.review.dto.ReviewDto;
 import com.ll.commars.domain.review.review.entity.Review;
 import com.ll.commars.domain.review.review.repository.ReviewRepository;
-import com.ll.commars.domain.user.user.entity.User;
 import com.ll.commars.domain.user.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,7 +23,7 @@ public class ReviewService {
         reviewRepository.deleteAll();
     }
 
-    public ReviewDto.ReviewShowAllResponse getReviews() {
+    public ReviewDto.ShowAllReviewsResponse getReviews() {
         List<Review> reviews = reviewRepository.findAll();
 
         List<ReviewDto.ReviewInfo> reviewInfos = reviews.stream()
@@ -38,7 +36,7 @@ public class ReviewService {
                         .build())
                 .collect(Collectors.toList());
 
-        return ReviewDto.ReviewShowAllResponse.builder()
+        return ReviewDto.ShowAllReviewsResponse.builder()
                 .reviews(reviewInfos)
                 .build();
     }
