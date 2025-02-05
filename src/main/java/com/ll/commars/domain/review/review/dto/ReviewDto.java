@@ -19,7 +19,7 @@ public class ReviewDto {
     @Getter
     @Builder
     public static class ReviewWriteRequest{
-        private String userEmail;
+        private Long userId;
         private String reviewName;
         private String body;
         private Integer rate;

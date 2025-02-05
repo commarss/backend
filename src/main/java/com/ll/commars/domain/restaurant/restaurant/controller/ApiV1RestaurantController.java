@@ -77,7 +77,7 @@ public class ApiV1RestaurantController {
         return new RsData<>("201", "메뉴 등록 성공", response);
     }
 
-    // 식당 메뉴 조회
+    // 식당 메뉴 조회(완료)
     @GetMapping("/{restaurant_id}/menu")
     public RsData<RestaurantDto.RestaurantShowAllMenusResponse> getMenus(
             @PathVariable("restaurant_id") @NotNull Long restaurantId
@@ -89,7 +89,7 @@ public class ApiV1RestaurantController {
     // 식당 리뷰 등록
     @PostMapping("/{restaurant_id}/review")
     public RsData<ReviewDto.ReviewWriteResponse> writeReview(
-            @PathVariable("restaurant_id") @NotBlank Long restaurantId,
+            @PathVariable("restaurant_id") @NotNull Long restaurantId,
             @RequestBody @Valid ReviewDto.ReviewWriteRequest request
     ){
         ReviewDto.ReviewWriteResponse response = restaurantService.writeReview(restaurantId, request);

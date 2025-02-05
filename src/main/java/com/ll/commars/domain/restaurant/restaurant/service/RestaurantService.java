@@ -96,7 +96,7 @@ public class RestaurantService {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
 
-        User writer = userRepository.findByEmail(request.getUserEmail())
+        User writer = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         reviewRepository.save(Review.builder()
@@ -108,7 +108,11 @@ public class RestaurantService {
                 .build());
 
         return ReviewDto.ReviewWriteResponse.builder()
+                .userName(writer.getName())
+                .reviewName(request.getReviewName())
                 .restaurantName(restaurant.getName())
+                .body(request.getBody())
+                .rate(request.getRate())
                 .build();
     }
 

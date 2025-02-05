@@ -29,10 +29,7 @@ public class BaseInitData {
     @Bean
     public ApplicationRunner baseInitDataApplicationRunner() {
         return args -> {
-//            work1();
-            work2();
-//            work3();
-            restaurantInit();
+            //restaurantInit();
         };
     }
 
