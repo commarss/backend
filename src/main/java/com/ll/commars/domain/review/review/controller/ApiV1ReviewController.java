@@ -23,7 +23,7 @@ public class ApiV1ReviewController {
         return new RsData<>("200", "모든 리뷰 조회 성공", response);
     }
 
-    // 특정 리뷰 삭제
+    // 특정 리뷰 삭제(완료)
     @DeleteMapping("/{review_id}")
     public RsData<String> deleteReview(
             @PathVariable("review_id") @NotNull Long reviewId
@@ -33,4 +33,12 @@ public class ApiV1ReviewController {
     }
 
     // 특정 리뷰 수정
+    @PatchMapping("/{review_id}")
+    public RsData<ReviewDto.ReviewWriteResponse> modifyReview(
+            @PathVariable("review_id") @NotNull Long reviewId,
+            @RequestBody @Valid ReviewDto.ReviewWriteRequest request
+    ){
+        ReviewDto.ReviewWriteResponse response = reviewService.modifyReview(reviewId, request);
+        return new RsData<>("200", "리뷰 수정 성공", response);
+    }
 }

@@ -50,4 +50,27 @@ public class ReviewService {
 
         reviewRepository.deleteById(reviewId);
     }
+
+    @Transactional
+    public ReviewDto.ReviewWriteResponse modifyReview(Long reviewId, ReviewDto.ReviewWriteRequest request) {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new IllegalArgumentException("Review not found"));
+
+        // 매개변수의 reviewId와 request의 userId가 일치하지 않으면 예외를 발생시킨다.
+        if (!review.getUser().getId().equals(request.getUserId())) {
+            throw new IllegalArgumentException("User not matched");
+        }
+
+        review.setName(request.getReviewName());
+        review.setBody(request.getBody());
+        review.setRate(request.getRate());
+
+        return ReviewDto.ReviewWriteResponse.builder()
+                .userName(review.getUser().getName())
+                .restaurantName(review.getRestaurant().getName())
+                .reviewName(review.getName())
+                .body(review.getBody())
+                .rate(review.getRate())
+                .build();
+    }
 }
