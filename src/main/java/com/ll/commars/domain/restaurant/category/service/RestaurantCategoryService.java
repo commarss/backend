@@ -101,4 +101,8 @@ public class RestaurantCategoryService {
                 .restaurants(restaurants)
                 .build();
     }
+
+    public void truncate() {
+        restaurantCategoryRepository.deleteAll();
+    }
 }
