@@ -2,7 +2,8 @@ package com.ll.commars.domain.community.board.controller;
 
 import com.ll.commars.domain.community.board.entity.Board;
 import com.ll.commars.domain.community.comment.entity.Comment;
-import com.ll.commars.domain.community.boardHashTag.entity.HashTag;
+
+import com.ll.commars.domain.community.reaction.service.ReactionService;
 import com.ll.commars.domain.user.user.entity.User;
 import com.ll.commars.domain.community.board.service.BoardService;
 import com.ll.commars.domain.community.comment.service.CommentService;
@@ -19,50 +20,71 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
-
-
 @RestController
 @RequestMapping("/api/posts")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
+@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")// CORS 모든 도메인 허용 (Postman 사용 가능)
 public class BoardController {
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+    private static final Logger logger = LoggerFactory.getLogger(BoardController.class);
     private final BoardService boardService;
     private final CommentService commentService;
     private final UserService userService;
+    private final BoardRepository boardRepository;
 
+    // ✅ 1. 모든 게시글 조회 (GET /api/posts)
     @GetMapping
     public ResponseEntity<?> getPosts() {
         try {
-            // 모든 게시글을 가져오기
-            var posts = boardService.getAllBoards();
-            Map<String, Object> response = new HashMap<>();
-            response.put("posts", posts.stream().map(board -> {
+            List<Board> posts = boardService.getAllBoards();
+            List<Map<String, Object>> postList = posts.stream().map(board -> {
                 Map<String, Object> postMap = new HashMap<>();
                 postMap.put("boardId", board.getId());
                 postMap.put("title", board.getTitle());
-
-                // Board 객체에서 HashTag 리스트를 가져와서 tags만 추출
-//                List<String> tags = board.getHashTags().stream()
-//                        .map(HashTag::getTag)
-//                        .collect(Collectors.toList());
-//                postMap.put("tags", tags);
+                postMap.put("hashTags", board.getHashTags());
                 return postMap;
-            }).collect(Collectors.toList()));
+            }).collect(Collectors.toList());
 
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(Map.of("posts", postList));
         } catch (Exception e) {
-            e.printStackTrace();
             return ResponseEntity.status(500).body("게시글 조회 중 오류 발생: " + e.getMessage());
         }
     }
 
 
 
-    // 게시글 작성
+
+
+    // ✅ 2. 특정 게시글 상세 조회 (GET /api/posts/{postId})
+    @GetMapping("/{postId}")
+    public ResponseEntity<?> getPostDetail(@PathVariable("postId") Long postId) {
+        try {
+            Board board = boardService.getBoard(postId);
+            System.out.println("게시글 조회 성공: " + board.getTitle()); // 콘솔에 출력
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("boardId", board.getId());
+            response.put("title", board.getTitle());
+            response.put("content", board.getContent());
+            response.put("viewCnt", board.getViews());
+            response.put("hashTags", board.getHashTags());
+
+            Map<String, Object> userMap = new HashMap<>();
+            userMap.put("userId", board.getUser().getId());
+            userMap.put("email", board.getUser().getEmail());
+            userMap.put("name", board.getUser().getName());
+            response.put("user", userMap);
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            System.out.println("게시글 조회 실패! 오류 메시지: " + e.getMessage()); // 오류 출력
+            e.printStackTrace(); // 전체 오류 로그 출력
+            return ResponseEntity.status(404).body("게시글을 찾을 수 없습니다.");
+        }
+    }
+
+    // ✅ 3. 게시글 작성 (POST /api/posts)
     @PostMapping
     public ResponseEntity<?> createPost(@RequestBody Map<String, Object> request, HttpSession session) {
-
         try {
             User user = (User) session.getAttribute("user");
             if (user == null) {
@@ -73,65 +95,19 @@ public class BoardController {
             String content = (String) request.get("content");
             List<String> tags = (List<String>) request.get("tags");
 
-            logger.info("게시글 작성 - 사용자 ID: {}", user.getId());
             boardService.addBoard(user.getId(), title, content, tags);
             return ResponseEntity.status(201).body("게시글이 등록되었습니다.");
         } catch (Exception e) {
-            e.printStackTrace();
             return ResponseEntity.status(500).body("게시글 등록 중 오류 발생: " + e.getMessage());
         }
     }
 
-
-    // 게시글 상세 조회
-    @GetMapping("/{postId}")
-    public ResponseEntity<?> getPostDetail(@PathVariable("postId") Long postId) {
-        System.out.println("postId " + postId);
-        try {
-            Board board = boardService.getBoard(postId);
-            List<Comment> comments = commentService.getCommentsByBoardId(postId);
-
-            Map<String, Object> response = new HashMap<>();
-            Map<String, Object> boardMap = new HashMap<>();
-
-            // 필요한 정보만 반환하도록 수정
-            boardMap.put("boardId", board.getId());
-            boardMap.put("title", board.getTitle());
-            boardMap.put("content", board.getContent());
-            boardMap.put("viewCnt", board.getViews());
-
-            // User 객체에서 필요한 정보만 반환
-            Map<String, Object> userMap = new HashMap<>();
-            userMap.put("userId", board.getUser().getId());
-            userMap.put("email", board.getUser().getEmail());
-            userMap.put("name", board.getUser().getName());
-            boardMap.put("user", userMap);
-
-            // HashTags에서 tag만 추출하여 리스트로 반환
-//            List<String> hashTags = new ArrayList<>();
-//            for (HashTag tag : board.getHashTags()) {
-//                hashTags.add(tag.getTag());  // tag 값만 추가
-//            }
-//            boardMap.put("hashTags", hashTags);
-
-            // board 객체에 대한 세부 정보 설정
-            response.put("board", boardMap);
-            response.put("comments", comments);
-
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return ResponseEntity.status(404).body("게시글을 찾을 수 없습니다.");
-        }
-    }
-
-    // 게시글 수정
+    // ✅ 4. 게시글 수정 (PUT /api/posts/{postId})
     @PutMapping("/{postId}")
-    public ResponseEntity<?> updatePost(
-            @PathVariable("postId") Long postId,
-            @RequestBody Map<String, Object> request,
-            HttpSession session
-    ) {
-        User user = (User) session.getAttribute("user"); // LoginInfo가 아니라 User 객체를 가져옴
+    public ResponseEntity<?> updatePost(@PathVariable("postId") Long postId,
+                                        @RequestBody Map<String, Object> request,
+                                        HttpSession session) {
+        User user = (User) session.getAttribute("user");
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
         }
@@ -148,8 +124,7 @@ public class BoardController {
         }
     }
 
-
-    // 게시글 삭제
+    // ✅ 5. 게시글 삭제 (DELETE /api/posts/{postId})
     @DeleteMapping("/{postId}")
     public ResponseEntity<?> deletePost(@PathVariable("postId") Long postId, HttpSession session) {
         User user = (User) session.getAttribute("user");
@@ -165,53 +140,132 @@ public class BoardController {
         }
     }
 
-
-    // 댓글 추가
-    // 댓글 추가
+    // ✅ 6. 댓글 추가 (POST /api/posts/{postId}/comments)
     @PostMapping("/{postId}/comments")
-    public ResponseEntity<?> addComment(
-            @PathVariable("postId") Long postId,
-            @RequestBody Map<String, String> request,
-            HttpSession session
-    ) {
-        // 세션에서 'user' 객체 가져오기 (LoginInfo가 아니라 User 객체일 경우)
+    public ResponseEntity<?> addComment(@PathVariable("postId") Long postId,
+                                        @RequestBody Map<String, String> request,
+                                        HttpSession session) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "로그인이 필요합니다."));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
         }
 
         String content = request.get("content");
         try {
-            commentService.addComment(postId, user.getId(), content); // 로그인한 user의 ID 사용
+            commentService.addComment(postId, user.getId(), content);
             return ResponseEntity.ok(Map.of("message", "댓글이 추가되었습니다."));
         } catch (Exception e) {
             return ResponseEntity.status(500).body(Map.of("message", "댓글 추가 중 오류 발생: " + e.getMessage()));
         }
     }
 
-    // 좋아요 증가 API
-//    @PostMapping("/{postId}/like")
-//    public ResponseEntity<?> likePost(@PathVariable("postId") int postId, HttpSession session) {
-//        User user = (User) session.getAttribute("user");
-//        if (user == null) {
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
-//        }
-//
-//        try {
-//            int updatedLikes = boardService.incrementLikes(postId);
-//            return ResponseEntity.ok(Map.of("message", "좋아요가 추가되었습니다.", "likes", updatedLikes));
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                    .body(Map.of("message", "좋아요 추가 중 오류 발생", "error", e.getMessage()));
-//        }
-//    }
-
-
-    private final BoardRepository boardRepository;
+    // ✅ 7. 특정 사용자의 게시글 개수 조회 (GET /api/posts/count?email=이메일)
     @GetMapping("/count")
-    public ResponseEntity<?> getUserPostCount(@RequestParam String email) {
+    public ResponseEntity<?> getUserPostCount(@RequestParam("email") String email) {
         int postCount = boardRepository.countPostsByEmail(email);
         return ResponseEntity.ok(Map.of("count", postCount));
+    }
+
+    // ✅ 특정 게시글의 댓글 조회 API (GET /api/posts/{postId}/comments)
+    @GetMapping("/{postId}/comments")
+    public ResponseEntity<?> getCommentsByPostId(@PathVariable("postId") Long postId) {
+        try {
+            List<Comment> comments = commentService.getCommentsByBoardId(postId);
+
+            List<Map<String, Object>> commentList = comments.stream().map(comment -> {
+                Map<String, Object> commentMap = new HashMap<>();
+                commentMap.put("commentId", comment.getId());
+                commentMap.put("content", comment.getContent());
+
+                if (comment.getUser() != null) {
+                    Map<String, Object> userMap = new HashMap<>();
+                    userMap.put("userId", comment.getUser().getId());
+                    userMap.put("email", comment.getUser().getEmail());
+                    userMap.put("name", comment.getUser().getName());
+                    commentMap.put("user", userMap);
+                } else {
+                    commentMap.put("user", null);
+                }
+
+                return commentMap;
+            }).collect(Collectors.toList());
+
+            return ResponseEntity.ok(Map.of("postId", postId, "comments", commentList));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("댓글 조회 중 오류 발생: " + e.getMessage());
+        }
+    }
+
+
+
+
+    //추가기능
+
+
+    // ✅ 7. 댓글 수정 (PUT /api/posts/{postId}/comments/{commentId})
+    @PutMapping("/{postId}/comments/{commentId}")
+    public ResponseEntity<?> updateComment(@PathVariable Long postId,
+                                           @PathVariable Long commentId,
+                                           @RequestBody Map<String, String> request,
+                                           HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+        }
+
+        String content = request.get("content");
+        commentService.updateComment(commentId, user.getId(), content);
+        return ResponseEntity.ok("댓글이 수정되었습니다.");
+    }
+
+    // ✅ 8. 댓글 삭제 (DELETE /api/posts/{postId}/comments/{commentId})
+    @DeleteMapping("/{postId}/comments/{commentId}")
+    public ResponseEntity<?> deleteComment(@PathVariable Long postId,
+                                           @PathVariable Long commentId,
+                                           HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+        }
+
+        commentService.deleteComment(commentId, user.getId());
+        return ResponseEntity.ok("댓글이 삭제되었습니다.");
+    }
+
+    // ✅ 9. 대댓글 추가 (POST /api/posts/{postId}/comments/{commentId}/replies)
+    @PostMapping("/{postId}/comments/{commentId}/replies")
+    public ResponseEntity<?> addReply(@PathVariable Long postId,
+                                      @PathVariable Long commentId,
+                                      @RequestBody Map<String, String> request,
+                                      HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+        }
+
+        String content = request.get("content");
+        commentService.addReply(postId, commentId, user.getId(), content);
+        return ResponseEntity.ok("대댓글이 추가되었습니다.");
+    }
+    public final ReactionService reactionService;
+
+    // ✅ 9. 게시글 좋아요 ON/OFF (POST /api/posts/{postId}/reaction)
+    @PostMapping("/{postId}/reaction")
+    public ResponseEntity<?> toggleReaction(@PathVariable Long postId, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+        }
+
+        boolean isLiked = reactionService.toggleReaction(postId, user.getId());
+        return ResponseEntity.ok(Map.of("liked", isLiked));
+    }
+
+    // ✅ 10. 좋아요/싫어요 개수 조회 (GET /api/posts/{postId}/reactions)
+    @GetMapping("/{postId}/reactions")
+    public ResponseEntity<?> getReactions(@PathVariable Long postId) {
+        Map<String, Integer> reactions = reactionService.getReactions(postId);
+        return ResponseEntity.ok(reactions);
     }
 
 }

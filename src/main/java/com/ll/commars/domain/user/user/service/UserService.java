@@ -10,12 +10,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 
 public class UserService {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private final UserRepository userRepository;
+
+    public User createUser(String email, String name, Integer socialProvider, String password, String phoneNumber, String profileImageUrl, LocalDateTime birthDate,Integer gender) {
+        User user = new User();
+        user.setEmail(email);
+        user.setName(name);
+        user.setSocialProvider(socialProvider);
+        user.setPassword(password);
+        user.setPhoneNumber(phoneNumber);
+        user.setProfileImageUrl(profileImageUrl);
+        user.setBirthDate(birthDate);
+        user.setGender(gender);
+        // ... 기타 필드 설정 ...
+        return userRepository.save(user);
+    }
 
     public User addUser(String email, String name, String password) {
         User user = new User();
@@ -56,6 +72,9 @@ public class UserService {
                 .orElse(null);
     }
 
+    public void truncate() {
+        userRepository.deleteAll();
+    }
 
 
 
