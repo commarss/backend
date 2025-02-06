@@ -2,6 +2,7 @@ package com.ll.commars.global.initData;
 
 import com.ll.commars.domain.community.board.service.BoardService;
 import com.ll.commars.domain.community.comment.service.CommentService;
+import com.ll.commars.domain.restaurant.businessHour.dto.BusinessHourDto;
 import com.ll.commars.domain.restaurant.businessHour.service.BusinessHourService;
 import com.ll.commars.domain.restaurant.category.dto.RestaurantCategoryDto;
 import com.ll.commars.domain.restaurant.category.service.RestaurantCategoryService;
@@ -167,8 +168,45 @@ public class BaseInitData {
         });
     }
 
-    private void businessHourInit(){
+    private void businessHourInit() {
+        businessHourService.truncate();
 
+        // 모든 음식점 가져오기
+        RestaurantDto.RestaurantShowAllResponse restaurants = restaurantService.getRestaurants();
+        List<Long> restaurantIds = restaurants.getRestaurants().stream()
+                .map(RestaurantDto.RestaurantInfo::getId)
+                .toList();
+
+        Random random = new Random();
+
+        // 각 레스토랑에 대해 영업시간 설정
+        restaurantIds.forEach(restaurantId -> {
+            List<BusinessHourDto.BusinessHourWriteInfo> businessHours = IntStream.range(1, 8) // 1(월요일) ~ 7(일요일)
+                    .mapToObj(dayOfWeek -> {
+                        // 랜덤 영업시간 생성 (9-11시 사이 오픈, 20-22시 사이 마감)
+                        int openHour = 9 + random.nextInt(3);
+                        int closeHour = 20 + random.nextInt(3);
+
+                        return BusinessHourDto.BusinessHourWriteInfo.builder()
+                                .dayOfWeek(dayOfWeek)
+                                .openTime(LocalDateTime.now()
+                                        .withHour(openHour)
+                                        .withMinute(0)
+                                        .withSecond(0))
+                                .closeTime(LocalDateTime.now()
+                                        .withHour(closeHour)
+                                        .withMinute(0)
+                                        .withSecond(0))
+                                .build();
+                    })
+                    .collect(Collectors.toList());
+
+            BusinessHourDto.BusinessHourWriteRequest request = BusinessHourDto.BusinessHourWriteRequest.builder()
+                    .businessHours(businessHours)
+                    .build();
+
+            restaurantService.writeBusinessHours(restaurantId, request);
+        });
     }
 
     // Reviews 데이터 초기화
