@@ -13,7 +13,7 @@ import lombok.Getter;
 import java.util.List;
 
 public class RestaurantDto {
-    // 식당 정보
+    // 식당 전체 정보
     @Getter
     @Builder
     public static class RestaurantInfo {
@@ -36,7 +36,8 @@ public class RestaurantDto {
         // 나머지 연관 관계도 추가해야 함...
     }
 
-    // 식당 등록 및 수정에 필요한 정보
+    // 식당 등록 및 수정에 필요한 기본 정보
+    // 메뉴, 영업시간 등은 따로 추가
     @Getter
     @Builder
     public static class RestaurantWriteRequest{

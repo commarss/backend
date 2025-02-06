@@ -61,4 +61,8 @@ public class RestaurantMenuService {
 
         restaurantMenuRepository.deleteById(menuId);
     }
+
+    public void truncate() {
+        restaurantMenuRepository.deleteAll();
+    }
 }

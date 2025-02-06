@@ -40,6 +40,7 @@ public class RestaurantService {
         RestaurantCategory category = restaurantCategoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new IllegalArgumentException("Category not found"));
 
+        // request로 받은 정보로 식당 객체 생성
         Restaurant restaurant = Restaurant.builder()
                 .name(request.getName())
                 .details(request.getDetails())
