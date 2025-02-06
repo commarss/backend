@@ -91,4 +91,8 @@ public class FavoriteService {
         // 업데이트된 찜 목록 정보 반환
         return toFavoriteInfo(favorite);
     }
+
+    public void deleteFavorite(Long favoriteId) {
+        favoriteRepository.deleteById(favoriteId);
+    }
 }

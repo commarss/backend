@@ -30,7 +30,6 @@ public class ApiV1FavoriteController {
         return ResponseEntity.ok(response);
     }
 
-    // 특정 찜 목록 조회
     @GetMapping("/{favorite_id}")
     @Operation(summary = "찜 목록에 존재하는 식당 조회")
     public RsData<FavoriteDto.FavoriteInfo> getFavorite(@PathVariable Long favoriteId) {
@@ -38,7 +37,13 @@ public class ApiV1FavoriteController {
         return new RsData<>("200", "찜 목록 조회 성공", response);
     }
 
-    // 특정 찜 목록에 식당 추가
+    @DeleteMapping("/{favorite_id}/")
+    @Operation(summary = "찜 목록 삭제")
+    public RsData<String> deleteFavorite(@PathVariable("favorite_id") Long favoriteId) {
+        favoriteService.deleteFavorite(favoriteId);
+        return new RsData<>("200", "찜 목록 삭제 성공", "찜 목록이 삭제되었습니다.");
+    }
+
     @PostMapping("/{favorite_id}/restaurant")
     @Operation(summary = "찜 목록에 식당 추가")
     public RsData<FavoriteDto.FavoriteInfo> addRestaurantToFavorite(
