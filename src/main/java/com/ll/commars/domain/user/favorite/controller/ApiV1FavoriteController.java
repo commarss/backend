@@ -38,5 +38,14 @@ public class ApiV1FavoriteController {
         return new RsData<>("200", "찜 목록 조회 성공", response);
     }
 
-    // 찜 목록 추가
+    // 특정 찜 목록에 식당 추가
+    @PostMapping("/{favorite_id}/restaurant")
+    @Operation(summary = "찜 목록에 식당 추가")
+    public RsData<FavoriteDto.FavoriteInfo> addRestaurantToFavorite(
+            @PathVariable("favorite_id") Long favoriteId,
+            @RequestBody FavoriteDto.AddRestaurantRequest request
+    ) {
+        FavoriteDto.FavoriteInfo response = favoriteService.addRestaurantToFavorite(favoriteId, request.getRestaurantId());
+        return new RsData<>("201", "식당 추가 성공", response);
+    }
 }

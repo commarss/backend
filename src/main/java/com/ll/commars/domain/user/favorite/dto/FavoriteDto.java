@@ -33,4 +33,11 @@ public class FavoriteDto {
         private String name;
         private Boolean isPublic;
     }
+
+    // 찜 리스트에 식당 추가 시 요청
+    @Getter
+    @Builder
+    public static class AddRestaurantRequest {
+        private Long restaurantId;
+    }
 }
