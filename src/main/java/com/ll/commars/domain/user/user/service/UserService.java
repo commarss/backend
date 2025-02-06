@@ -33,8 +33,6 @@ public class UserService {
         user.setEmail(email);
         user.setName(name);
         user.setSocialProvider(socialProvider);
-        user.setPassword(password);
-        user.setPhoneNumber(phoneNumber);
         user.setProfileImageUrl(profileImageUrl);
         user.setBirthDate(birthDate);
         user.setGender(gender);
@@ -46,7 +44,6 @@ public class UserService {
         User user = new User();
         user.setEmail(email);
         user.setName(name);
-        user.setPassword(password); // 평문 비밀번호 저장
         return userRepository.save(user);
     }
 
@@ -59,8 +56,6 @@ public class UserService {
             throw new RuntimeException("이미 등록된 이메일입니다.");
         }
 
-        // 비밀번호 해싱 (Spring Security 사용 고려)
-        user.setPassword(user.getPassword());
 
         userRepository.save(user);
     }
@@ -70,11 +65,9 @@ public class UserService {
         return userRepository.findByEmail(email).isPresent();
     }
 
-    public User authenticate(String email, String password) {
+    public User authenticate(String email) {
         logger.info("Authenticating user with email: {}", email);
-        return userRepository.findByEmail(email)
-                .filter(user -> user.getPassword().equals(password))
-                .orElse(null);
+        return userRepository.findByEmail(email).orElse(null);
     }
 
     public void truncate() {
@@ -89,8 +82,6 @@ public class UserService {
                         .socialProvider(user.getSocialProvider())
                         .email(user.getEmail())
                         .name(user.getName())
-                        .password(user.getPassword())
-                        .loginId(user.getLoginId())
                         .phoneNumber(user.getPhoneNumber())
                         .profileImageUrl(user.getProfileImageUrl())
                         .birthDate(user.getBirthDate())

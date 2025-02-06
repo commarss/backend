@@ -36,13 +36,13 @@ public class User extends BaseEntity {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "password")
-    private String password;
+//    @Column(name = "password")
+//    private String password;
 
-    @Column(name = "login_id", nullable = true) // null 허용
-    private String loginId;
+//    @Column(name = "login_id", nullable = true) // null 허용
+//    private String loginId;
 
-    @Column(name = "phone_number", nullable = false)
+    @Column(name = "phone_number")
     private String phoneNumber;
 
     @Column(name = "profile_image_url")

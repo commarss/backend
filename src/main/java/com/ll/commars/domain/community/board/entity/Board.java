@@ -9,6 +9,7 @@ import com.ll.commars.global.baseEntity.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -26,7 +27,7 @@ import java.util.List;
 public class Board extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;  // int → Long 변경
+    private Long id;
 
     @NotNull
     @Column(nullable = false)
@@ -38,7 +39,8 @@ public class Board extends BaseEntity {
 
     @NotNull
     @Column(nullable = false)
-    private Integer views= 0;;
+    @ColumnDefault("0") // 객체 생성 시점이 아닌(Builder.Default) 테이블 생성 시점에 views의 기본 값 세팅
+    private Integer views;
 
     @Column(name = "image_url")
     private String imageUrl;
@@ -48,11 +50,13 @@ public class Board extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
+    // Board와 Comment: 일대다 관계
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<Comment> comments = new ArrayList<>();
 
-
     // ✅ HashTags를 ','로 구분된 문자열로 저장
+    // 태그 CRUD가 복잡하므로 추후 테이블로 분리해야 함.
     @Column(name = "hash_tags", length = 1000)
     private String hashTags;
 
@@ -64,17 +68,17 @@ public class Board extends BaseEntity {
         return hashTags != null ? List.of(hashTags.split("\\s*,\\s*")) : List.of();
     }
 
-
-    //추가
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<Reaction> reactions = new ArrayList<>();
-    @Builder.Default
-    @Column(nullable = false)
-    private Integer likeCount = 0;
-    @Builder.Default
-    @Column(nullable = false)
-    private Integer dislikeCount = 0;
 
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private Integer likeCount;
+
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private Integer dislikeCount;
 
     // ✅ 좋아요 추가
     public void incrementLikes() {
@@ -100,53 +104,3 @@ public class Board extends BaseEntity {
         }
     }
 }
-
-
-/*
-// Board 엔티티 수정
-@Entity
-@Table(name = "boards")
-@Getter
-@Setter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class Board extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
-    @NotNull
-    @Column(nullable = false)
-    private String title;
-
-    @NotNull
-    @Column(nullable = false)
-    private String content;
-
-    // 게시글 조회수
-    @NotNull
-    @Column(nullable = false)
-    private Integer views;
-
-    // 게시글 이미지
-    @Column(name = "image_url")
-    private String imageUrl;
-
-//    public void increaseLikes() {
-//        this.likes++;
-//    }
-
-    // Board와 User: 다대일
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
-
-//    public void addHashTags(List<HashTag> tags) {
-//        this.hashTags.addAll(tags);
-//    }
-
-    // Board와 Comment: 일대다
-    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
-    private List<Comment> comments = new ArrayList<>();
-}*/

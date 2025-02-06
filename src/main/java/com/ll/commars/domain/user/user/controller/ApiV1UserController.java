@@ -38,7 +38,6 @@ public class ApiV1UserController {
 
         User newUser = new User();
         newUser.setEmail(request.getEmail());
-        newUser.setPassword(request.getPassword());
         newUser.setName(request.getName());
         newUser.setGender(request.getGender());
 
@@ -50,7 +49,7 @@ public class ApiV1UserController {
     @Operation(summary = "로그인")
     public ResponseEntity<?> login(@RequestBody User user, HttpSession session) {
         logger.info("Login attempt for email: {}", user.getEmail());
-        User authenticatedUser = userService.authenticate(user.getEmail(), user.getPassword());
+        User authenticatedUser = userService.authenticate(user.getEmail());
 
         if (authenticatedUser != null) {
             logger.info("Login successful for email: {}", user.getEmail());
