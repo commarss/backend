@@ -14,7 +14,7 @@ public class ReviewDocService {
 
     public ReviewDoc write(String content, Integer rate) {
         ReviewDoc reviewDoc = ReviewDoc.builder()
-                .content(content)
+                .name(content)
                 .rate(rate)
                 .build();
 

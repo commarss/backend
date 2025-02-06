@@ -54,9 +54,9 @@ public class BaseInitData {
     @Bean
     public ApplicationRunner baseInitDataApplicationRunner() {
         return args -> {
-            //truncateAll();
-
-            // 테이블 연관관계 순서대로
+//            truncateAll();
+//
+//            // 테이블 연관관계 순서대로
 //            userInit();
 //            restaurantCategoryInit();
 //

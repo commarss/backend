@@ -17,7 +17,10 @@ public class ReviewDoc {
     private String id;
 
     @Field(type = FieldType.Text)
-    private String content;
+    private String name;
+
+    @Field(type = FieldType.Text)
+    private String body;
 
     @Field(type = FieldType.Integer)
     private Integer rate;
