@@ -14,6 +14,7 @@ import java.util.List;
 @Getter
 @Entity
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor // 모든 필드에 대한 생성자가 자동으로 만들어진다.
 public class AuthUserInfo {
@@ -23,15 +24,4 @@ public class AuthUserInfo {
     private String email;
     private String name;
     private List<String> roles = new ArrayList<>();
-
-    public AuthUserInfo(Long id, String email, String name) {
-        this.id = id;
-        this.email = email;
-        this.name = name;
-    }
-
-    public void addRole(String roleName){
-        roles.add(roleName);
-    }
-    private LocalDateTime loginTime;
 }

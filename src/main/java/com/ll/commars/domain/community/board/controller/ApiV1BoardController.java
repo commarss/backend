@@ -23,7 +23,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import java.util.*;
 import java.util.stream.Collectors;
 @RestController
-
 @RequestMapping(value = "/api/posts", produces = APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Tag(name = "ApiV1BoardController", description = "게시글 관련 API")
@@ -33,8 +32,8 @@ public class ApiV1BoardController {
     private final CommentService commentService;
     private final UserService userService;
     private final BoardRepository boardRepository;
+    public final ReactionService reactionService;
 
-    // ✅ 1. 모든 게시글 조회 (GET /api/posts)
     @GetMapping
     @Operation(summary = "모든 게시글 조회")
     public ResponseEntity<?> getPosts() {
@@ -54,11 +53,6 @@ public class ApiV1BoardController {
         }
     }
 
-
-
-
-
-    // ✅ 2. 특정 게시글 상세 조회 (GET /api/posts/{postId})
     @GetMapping("/{postId}")
     @Operation(summary = "특정 게시글 상세 조회")
     public ResponseEntity<?> getPostDetail(@PathVariable("postId") Long postId) {
@@ -87,7 +81,6 @@ public class ApiV1BoardController {
         }
     }
 
-    // ✅ 3. 게시글 작성 (POST /api/posts)
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
     @Operation(summary = "게시글 작성 ")
     public ResponseEntity<?> createPost(@RequestBody Map<String, Object> request, HttpSession session) {
@@ -110,7 +103,6 @@ public class ApiV1BoardController {
         }
     }
 
-    // ✅ 4. 게시글 수정 (PUT /api/posts/{postId})
     @PutMapping(value = "/{postId}",consumes = APPLICATION_JSON_VALUE)
     @Operation(summary = "게시글 수정")
     public ResponseEntity<?> updatePost(@PathVariable("postId") Long postId,
@@ -133,7 +125,6 @@ public class ApiV1BoardController {
         }
     }
 
-    // ✅ 5. 게시글 삭제 (DELETE /api/posts/{postId})
     @DeleteMapping("/{postId}")
     @Operation(summary = "게시글 삭제")
     public ResponseEntity<?> deletePost(@PathVariable("postId") Long postId, HttpSession session) {
@@ -150,7 +141,6 @@ public class ApiV1BoardController {
         }
     }
 
-    // ✅ 6. 댓글 추가 (POST /api/posts/{postId}/comments)
     @PostMapping(value = "/{postId}/comments", consumes = APPLICATION_JSON_VALUE)
     @Operation(summary = "댓글 추가")
     public ResponseEntity<?> addComment(@PathVariable("postId") Long postId,
@@ -170,7 +160,6 @@ public class ApiV1BoardController {
         }
     }
 
-    // ✅ 7. 특정 사용자의 게시글 개수 조회 (GET /api/posts/count?email=이메일)
     @GetMapping("/count")
     @Operation(summary = "특정 사용자의 게시글 개수 조회")
     public ResponseEntity<?> getUserPostCount(@RequestParam("email") String email) {
@@ -178,7 +167,6 @@ public class ApiV1BoardController {
         return ResponseEntity.ok(Map.of("count", postCount));
     }
 
-    // ✅ 특정 게시글의 댓글 조회 API (GET /api/posts/{postId}/comments)
     @GetMapping("/{postId}/comments")
     @Operation(summary = "특정 게시글의 댓글 조회")
     public ResponseEntity<?> getCommentsByPostId(@PathVariable("postId") Long postId) {
@@ -209,13 +197,6 @@ public class ApiV1BoardController {
         }
     }
 
-
-
-
-    //추가기능
-
-
-    // ✅ 7. 댓글 수정 (PUT /api/posts/{postId}/comments/{commentId})
     @PutMapping(value = "/{postId}/comments/{commentId}", consumes = APPLICATION_JSON_VALUE)
     @Operation(summary = "댓글 수정")
     public ResponseEntity<?> updateComment(@PathVariable Long postId,
@@ -232,7 +213,6 @@ public class ApiV1BoardController {
         return ResponseEntity.ok("댓글이 수정되었습니다.");
     }
 
-    // ✅ 8. 댓글 삭제 (DELETE /api/posts/{postId}/comments/{commentId})
     @DeleteMapping("/{postId}/comments/{commentId}")
     @Operation(summary = "댓글 삭제")
     public ResponseEntity<?> deleteComment(@PathVariable Long postId,
@@ -247,25 +227,22 @@ public class ApiV1BoardController {
         return ResponseEntity.ok("댓글이 삭제되었습니다.");
     }
 
-    // ✅ 9. 대댓글 추가 (POST /api/posts/{postId}/comments/{commentId}/replies)
-    @PostMapping(value = "/{postId}/comments/{commentId}/replies", consumes = APPLICATION_JSON_VALUE)
-    @Operation(summary = "대댓글 추가")
-    public ResponseEntity<?> addReply(@PathVariable Long postId,
-                                      @PathVariable Long commentId,
-                                      @RequestBody Map<String, String> request,
-                                      HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
-        }
+//    @PostMapping(value = "/{postId}/comments/{commentId}/replies", consumes = APPLICATION_JSON_VALUE)
+//    @Operation(summary = "대댓글 추가")
+//    public ResponseEntity<?> addReply(@PathVariable Long postId,
+//                                      @PathVariable Long commentId,
+//                                      @RequestBody Map<String, String> request,
+//                                      HttpSession session) {
+//        User user = (User) session.getAttribute("user");
+//        if (user == null) {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+//        }
+//
+//        String content = request.get("content");
+//        commentService.addReply(postId, commentId, user.getId(), content);
+//        return ResponseEntity.ok("대댓글이 추가되었습니다.");
+//    }
 
-        String content = request.get("content");
-        commentService.addReply(postId, commentId, user.getId(), content);
-        return ResponseEntity.ok("대댓글이 추가되었습니다.");
-    }
-    public final ReactionService reactionService;
-
-    // ✅ 9. 게시글 좋아요 ON/OFF (POST /api/posts/{postId}/reaction)
     @PostMapping("/{postId}/reaction")
     @Operation(summary = "게시글 좋아요 ON/OFF")
     public ResponseEntity<?> toggleReaction(@PathVariable Long postId, HttpSession session) {
@@ -278,7 +255,6 @@ public class ApiV1BoardController {
         return ResponseEntity.ok(Map.of("liked", isLiked));
     }
 
-    // ✅ 10. 좋아요/싫어요 개수 조회 (GET /api/posts/{postId}/reactions)
     @GetMapping("/{postId}/reactions")
     @Operation(summary = "좋아요/싫어요 개수 조회")
     public ResponseEntity<?> getReactions(@PathVariable Long postId) {

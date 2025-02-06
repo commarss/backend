@@ -17,14 +17,12 @@ import java.util.List;
 @RequiredArgsConstructor
 @Tag(name = "ApiV1ReviewerRank", description = "리뷰어 랭킹 조회 API")
 public class ApiV1ReviewerRank {
+    private final ReviewerService reviewerService;
 
-    private final ReviewerService reviewService;
-
-    // ✅ 상위 10명의 리뷰어 조회 (GET /api/reviews/top10)
     @GetMapping("/top10")
     @Operation(summary = "리뷰를 가장 많이 작성한 상위 10명의 유저 조회")
     public ResponseEntity<List<ReviewerRank>> getTopReviewers() {
-        List<ReviewerRank> topReviewers = reviewService.getTopReviewers();
+        List<ReviewerRank> topReviewers = reviewerService.getTopReviewers();
         return ResponseEntity.ok(topReviewers);
     }
 }
