@@ -49,4 +49,9 @@ public class FavoriteService {
 
         favoriteRepository.save(favorite);
     }
+
+    public FavoriteDto.FavoriteInfo getFavorite(Long favoriteId) {
+        Favorite favorite = favoriteRepository.findById(favoriteId).orElseThrow(() -> new RuntimeException("찜 목록을 찾을 수 없습니다."));
+        return toFavoriteInfo(favorite);
+    }
 }

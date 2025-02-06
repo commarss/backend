@@ -4,6 +4,7 @@ import com.ll.commars.domain.user.favorite.dto.FavoriteDto;
 import com.ll.commars.domain.user.user.dto.UserDto;
 import com.ll.commars.global.rsData.RsData;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +23,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
 @RequestMapping(value = "/api/users", produces = APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
+@Tag(name = "UserController", description = "사용자 API")
 public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
