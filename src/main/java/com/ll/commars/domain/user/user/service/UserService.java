@@ -3,6 +3,7 @@ package com.ll.commars.domain.user.user.service;
 // 트랜잭션 단위로 실행될 메소드를 선언하고 있는 클래스
 // 스프링이 관리하는 Bean
 
+import com.ll.commars.domain.review.review.dto.ReviewDto;
 import com.ll.commars.domain.user.favorite.dto.FavoriteDto;
 import com.ll.commars.domain.user.favorite.service.FavoriteService;
 import com.ll.commars.domain.user.user.dto.UserDto;
@@ -122,5 +123,24 @@ public class UserService {
 
         // 찜 리스트 저장
         favoriteService.saveFavoriteList(user, createFavoriteListRequest);
+    }
+
+    public ReviewDto.ShowAllReviewsResponse getReviews(Long userId) {
+        List<ReviewDto.ReviewInfo> reviews = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"))
+                .getReviews()
+                .stream()
+                .map(review -> ReviewDto.ReviewInfo.builder()
+                        .userName(review.getUser().getName())
+                        .restaurantName(review.getRestaurant().getName())
+                        .reviewName(review.getName())
+                        .body(review.getBody())
+                        .rate(review.getRate())
+                        .build())
+                .collect(Collectors.toList());
+
+        return ReviewDto.ShowAllReviewsResponse.builder()
+                .reviews(reviews)
+                .build();
     }
 }

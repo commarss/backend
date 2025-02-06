@@ -1,5 +1,6 @@
 package com.ll.commars.domain.user.user.controller;
 
+import com.ll.commars.domain.review.review.dto.ReviewDto;
 import com.ll.commars.domain.user.favorite.dto.FavoriteDto;
 import com.ll.commars.domain.user.user.dto.UserDto;
 import com.ll.commars.global.rsData.RsData;
@@ -119,5 +120,18 @@ public class UserController {
 
         userService.createFavoriteList(user, request);
         return new RsData<>("201", "찜 추가 성공", "찜 리스트 생성 성공");
+    }
+
+    @GetMapping("/reviews")
+    @Operation(summary = "회원이 작성한 리뷰 전체 조회")
+    public RsData<ReviewDto.ShowAllReviewsResponse> getReviews(HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return new RsData<>("401", "로그인이 필요합니다.", null);
+        }
+
+        ReviewDto.ShowAllReviewsResponse response = userService.getReviews(user.getId());
+
+        return new RsData<>("200", "모든 리뷰 조회 성공", response);
     }
 }

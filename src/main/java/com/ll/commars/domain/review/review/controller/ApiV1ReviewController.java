@@ -18,13 +18,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class ApiV1ReviewController {
     private final ReviewService reviewService;
 
-    @GetMapping("/")
-    @Operation(summary = "리뷰 전체 조회")
-    public RsData<ReviewDto.ShowAllReviewsResponse> getReviews() {
-        ReviewDto.ShowAllReviewsResponse response = reviewService.getReviews();
-        return new RsData<>("200", "모든 리뷰 조회 성공", response);
-    }
-
     @DeleteMapping("/{review_id}")
     @Operation(summary = "리뷰 삭제")
     public RsData<String> deleteReview(
