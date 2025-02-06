@@ -23,24 +23,6 @@ public class ReviewService {
         reviewRepository.deleteAll();
     }
 
-    public ReviewDto.ShowAllReviewsResponse getReviews() {
-        List<Review> reviews = reviewRepository.findAll();
-
-        List<ReviewDto.ReviewInfo> reviewInfos = reviews.stream()
-                .map(review -> ReviewDto.ReviewInfo.builder()
-                        .userName(review.getUser().getName())
-                        .restaurantName(review.getRestaurant().getName())
-                        .reviewName(review.getName())
-                        .body(review.getBody())
-                        .rate(review.getRate())
-                        .build())
-                .collect(Collectors.toList());
-
-        return ReviewDto.ShowAllReviewsResponse.builder()
-                .reviews(reviewInfos)
-                .build();
-    }
-
     @Transactional
     public void deleteReview(Long reviewId) {
         reviewRepository.findById(reviewId)

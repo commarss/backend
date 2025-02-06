@@ -3,9 +3,13 @@ package com.ll.commars.domain.user.user.service;
 // 트랜잭션 단위로 실행될 메소드를 선언하고 있는 클래스
 // 스프링이 관리하는 Bean
 
+import com.ll.commars.domain.review.review.dto.ReviewDto;
+import com.ll.commars.domain.user.favorite.dto.FavoriteDto;
+import com.ll.commars.domain.user.favorite.service.FavoriteService;
+import com.ll.commars.domain.user.user.dto.UserDto;
 import com.ll.commars.domain.user.user.entity.User;
 import com.ll.commars.domain.user.user.repository.UserRepository;
-import com.ll.commars.domain.user.user.controller.UserController;
+import com.ll.commars.domain.user.user.controller.ApiV1UserController;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,13 +18,15 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ApiV1UserController.class);
 
     private final UserRepository userRepository;
+    private final FavoriteService favoriteService;
 
     public User createUser(String email, String name, Integer socialProvider, String password, String phoneNumber, String profileImageUrl, LocalDateTime birthDate,Integer gender) {
         User user = new User();
@@ -75,9 +81,21 @@ public class UserService {
         userRepository.deleteAll();
     }
 
-    // ✅ 모든 유저 조회 메서드 추가
-    public List<User> findAllUsers() {
-        return userRepository.findAll();
+    public List<UserDto.UserInfo> findAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(user -> UserDto.UserInfo.builder()
+                        .id(user.getId())
+                        .socialProvider(user.getSocialProvider())
+                        .email(user.getEmail())
+                        .name(user.getName())
+                        .password(user.getPassword())
+                        .loginId(user.getLoginId())
+                        .phoneNumber(user.getPhoneNumber())
+                        .profileImageUrl(user.getProfileImageUrl())
+                        .birthDate(user.getBirthDate())
+                        .build())
+                .collect(Collectors.toList());
     }
 
 
@@ -92,5 +110,49 @@ public class UserService {
 
     public Optional<User> findById(long l) {
         return userRepository.findById(l);
+    }
+
+    public UserDto.UserFavoriteListsResponse getFavoriteLists(User user) {
+        List<FavoriteDto.FavoriteInfo> favorites = favoriteService.getFavoritesByUser(user)
+                .stream()
+                .map(favoriteService::toFavoriteInfo)
+                .collect(Collectors.toList());
+
+        return UserDto.UserFavoriteListsResponse.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .favoriteLists(favorites)
+                .build();
+    }
+
+    // 찜 리스트 생성(식당 추가 X)
+    public void createFavoriteList(User user, FavoriteDto.CreateFavoriteListRequest request) {
+        // 찜 리스트 생성
+        FavoriteDto.CreateFavoriteListRequest createFavoriteListRequest = FavoriteDto.CreateFavoriteListRequest.builder()
+                .name(request.getName())
+                .isPublic(request.getIsPublic())
+                .build();
+
+        // 찜 리스트 저장
+        favoriteService.saveFavoriteList(user, createFavoriteListRequest);
+    }
+
+    public ReviewDto.ShowAllReviewsResponse getReviews(Long userId) {
+        List<ReviewDto.ReviewInfo> reviews = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"))
+                .getReviews()
+                .stream()
+                .map(review -> ReviewDto.ReviewInfo.builder()
+                        .userName(review.getUser().getName())
+                        .restaurantName(review.getRestaurant().getName())
+                        .reviewName(review.getName())
+                        .body(review.getBody())
+                        .rate(review.getRate())
+                        .build())
+                .collect(Collectors.toList());
+
+        return ReviewDto.ShowAllReviewsResponse.builder()
+                .reviews(reviews)
+                .build();
     }
 }

@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 @Service
 @RequiredArgsConstructor
-public class ReviewrService {
+public class ReviewerService {
     public final UserRepository userRepository;
     public final RestaurantRepository restaurantRepository;
     private final ReviewRepository reviewRepository;

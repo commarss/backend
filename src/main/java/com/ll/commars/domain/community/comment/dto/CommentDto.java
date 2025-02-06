@@ -1,7 +1,7 @@
 package com.ll.commars.domain.community.comment.dto;
 
 // 댓글 DTO (최소한의 정보만 반환)
-public class CommentDTO {
+public class CommentDto {
     private int id;
     private String content;
     private String createdDate;

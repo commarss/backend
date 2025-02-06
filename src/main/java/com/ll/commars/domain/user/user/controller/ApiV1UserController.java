@@ -1,6 +1,11 @@
 package com.ll.commars.domain.user.user.controller;
 
+import com.ll.commars.domain.review.review.dto.ReviewDto;
+import com.ll.commars.domain.user.favorite.dto.FavoriteDto;
+import com.ll.commars.domain.user.user.dto.UserDto;
+import com.ll.commars.global.rsData.RsData;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,18 +17,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
-
 @RequestMapping(value = "/api/users", produces = APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
-public class UserController {
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+@Tag(name = "ApiV1UserController", description = "사용자 API")
+public class ApiV1UserController {
+    private static final Logger logger = LoggerFactory.getLogger(ApiV1UserController.class);
     private final UserService userService;
 
     @PostMapping("/signup")
@@ -92,4 +95,43 @@ public class UserController {
     }
 
     // 내 위치 기반 식당 찾기
+
+    @GetMapping("/favorites")
+    @Operation(summary = "회원의 모든 찜 리스트 조회")
+    public RsData<UserDto.UserFavoriteListsResponse> getFavoriteLists(HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return new RsData<>("401", "로그인이 필요합니다.", null);
+        }
+
+        UserDto.UserFavoriteListsResponse response = userService.getFavoriteLists(user);
+        return new RsData<>("200", "찜 리스트 조회 성공", response);
+    }
+
+    @PostMapping("/favorite")
+    @Operation(summary = "찜 리스트 생성")
+    public RsData<String> addFavorite(
+            @RequestBody FavoriteDto.CreateFavoriteListRequest request,
+            HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return new RsData<>("401", "로그인이 필요합니다.", null);
+        }
+
+        userService.createFavoriteList(user, request);
+        return new RsData<>("201", "찜 추가 성공", "찜 리스트 생성 성공");
+    }
+
+    @GetMapping("/reviews")
+    @Operation(summary = "회원이 작성한 리뷰 전체 조회")
+    public RsData<ReviewDto.ShowAllReviewsResponse> getReviews(HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return new RsData<>("401", "로그인이 필요합니다.", null);
+        }
+
+        ReviewDto.ShowAllReviewsResponse response = userService.getReviews(user.getId());
+
+        return new RsData<>("200", "모든 리뷰 조회 성공", response);
+    }
 }

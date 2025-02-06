@@ -32,7 +32,7 @@ public class BoardService {
 
     // 게시글 추가
     @Transactional
-    public Long addBoard(Long userId, String title, String content, List<String> tags) {
+    public Long addBoard(Long userId, String title, String content, List<String> tags, String imageUrl) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
 
@@ -45,14 +45,12 @@ public class BoardService {
                 .title(title)
                 .content(content)
                 .views(0)
+                .imageUrl(imageUrl)
                 .hashTags(tagsString)  // 🚀 String 값으로 전달
                 .build();
 
         board = boardRepository.save(board);
         boardRepository.flush();  // 🔥 즉시 DB에 반영 (flush)
-
-        log.info("savedBoardId: {}", board.getId()); // 로그 출력
-        System.out.println("boardId: " + board.getId()); // 콘솔 출력
         return board.getId();
     }
 

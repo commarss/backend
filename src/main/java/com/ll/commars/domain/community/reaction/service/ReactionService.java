@@ -49,4 +49,8 @@ public class ReactionService {
         int dislikes = reactionRepository.countByBoardIdAndLiked(postId, false);
         return Map.of("likes", likes, "dislikes", dislikes);
     }
+
+    public void truncate(){
+        reactionRepository.deleteAll();
+    }
 }

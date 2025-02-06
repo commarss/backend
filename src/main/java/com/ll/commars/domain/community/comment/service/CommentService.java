@@ -84,7 +84,7 @@ public class CommentService {
         reply.setBoard(parentComment.getBoard());
         reply.setUser(userRepository.findById(userId).orElseThrow());
         reply.setContent(content);
-        reply.setParentComment(parentComment);
+//        reply.setParentComment(parentComment);
 
         commentRepository.save(reply);
     }

@@ -40,6 +40,7 @@ public class RestaurantService {
         RestaurantCategory category = restaurantCategoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new IllegalArgumentException("Category not found"));
 
+        // request로 받은 정보로 식당 객체 생성
         Restaurant restaurant = Restaurant.builder()
                 .name(request.getName())
                 .details(request.getDetails())
@@ -59,6 +60,7 @@ public class RestaurantService {
         restaurantRepository.save(restaurant);
 
         return RestaurantDto.RestaurantWriteResponse.builder()
+                .id(restaurant.getId())
                 .name(request.getName())
                 .build();
     }
@@ -235,6 +237,7 @@ public class RestaurantService {
                 .lng(restaurant.getLng())
                 .runningState(restaurant.getRunningState())
                 .summarizedReview(restaurant.getSummarizedReview())
+                .categoryId(restaurant.getRestaurantCategory().getId())
                 .restaurantMenus(menuInfos)
                 .reviews(reviewInfos)
                 .businessHours(businessHourInfos)
@@ -263,8 +266,11 @@ public class RestaurantService {
         restaurant.setLng(request.getLng());
         restaurant.setRunningState(request.getRunningState());
         restaurant.setSummarizedReview(request.getSummarizedReview());
+        restaurant.setRestaurantCategory(restaurantCategoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() -> new IllegalArgumentException("Category not found")));
 
         return RestaurantDto.RestaurantWriteResponse.builder()
+                .id(restaurant.getId())
                 .name(request.getName())
                 .build();
     }

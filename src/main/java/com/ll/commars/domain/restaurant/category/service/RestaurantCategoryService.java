@@ -32,6 +32,7 @@ public class RestaurantCategoryService {
         restaurantCategoryRepository.save(restaurantCategory);
 
         return RestaurantCategoryDto.RestaurantCategoryInfo.builder()
+                .id(restaurantCategory.getId())
                 .name(restaurantCategory.getName())
                 .build();
     }
@@ -81,12 +82,14 @@ public class RestaurantCategoryService {
                                 .map(review -> ReviewDto.ReviewInfo.builder()
                                         .restaurantName(review.getRestaurant().getName())
                                         .userName(review.getUser().getName())
+                                        .reviewName(review.getName())
                                         .body(review.getBody())
                                         .rate(review.getRate())
                                         .build())
                                 .toList())
                         .businessHours(restaurant.getBusinessHours().stream()
                                 .map(businessHour -> BusinessHourDto.BusinessHourInfo.builder()
+                                        .id(businessHour.getId())
                                         .dayOfWeek(businessHour.getDayOfWeek())
                                         .openTime(businessHour.getOpenTime())
                                         .closeTime(businessHour.getCloseTime())

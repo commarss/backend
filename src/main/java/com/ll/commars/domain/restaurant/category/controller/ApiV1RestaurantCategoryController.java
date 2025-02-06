@@ -4,6 +4,7 @@ import com.ll.commars.domain.restaurant.category.dto.RestaurantCategoryDto;
 import com.ll.commars.domain.restaurant.category.service.RestaurantCategoryService;
 import com.ll.commars.global.rsData.RsData;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/api/v1/restaurant-category", produces = APPLICATION_JSON_VALUE)
+@Tag(name = "ApiV1RestaurantCategoryController", description = "식당 카테고리 API")
 public class ApiV1RestaurantCategoryController {
     private final RestaurantCategoryService restaurantCategoryService;
 

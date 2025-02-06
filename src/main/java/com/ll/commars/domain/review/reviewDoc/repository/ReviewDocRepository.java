@@ -15,7 +15,12 @@ public interface ReviewDocRepository extends ElasticsearchRepository<ReviewDoc, 
                 "should": [
                     {
                         "wildcard": {
-                            "content": "*?0*"
+                            "body": "*?0*"
+                        }
+                    },
+                                        {
+                        "wildcard": {
+                            "name": "*?0*"
                         }
                     }
                 ]
