@@ -9,7 +9,6 @@ import com.ll.commars.domain.community.board.service.BoardService;
 import com.ll.commars.domain.community.comment.service.CommentService;
 import com.ll.commars.domain.user.user.service.UserService;
 import com.ll.commars.domain.community.board.repository.BoardRepository;
-import com.ll.commars.domain.user.user.controller.UserController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpSession;
@@ -27,9 +26,9 @@ import java.util.stream.Collectors;
 
 @RequestMapping(value = "/api/posts", produces = APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-@Tag(name = "BoardController", description = "커뮤니티 CRUD API")
-public class BoardController {
-    private static final Logger logger = LoggerFactory.getLogger(BoardController.class);
+@Tag(name = "ApiV1BoardController", description = "게시글 관련 API")
+public class ApiV1BoardController {
+    private static final Logger logger = LoggerFactory.getLogger(ApiV1BoardController.class);
     private final BoardService boardService;
     private final CommentService commentService;
     private final UserService userService;

@@ -10,7 +10,6 @@ import com.ll.commars.domain.restaurant.category.service.RestaurantCategoryServi
 import com.ll.commars.domain.restaurant.menu.dto.RestaurantMenuDto;
 import com.ll.commars.domain.restaurant.menu.service.RestaurantMenuService;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantDto;
-import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
 import com.ll.commars.domain.restaurant.restaurant.service.RestaurantService;
 import com.ll.commars.domain.restaurant.restaurantDoc.service.RestaurantDocService;
 import com.ll.commars.domain.review.review.dto.ReviewDto;
@@ -27,7 +26,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.ll.commars.domain.reviewerRank.service.ReviewrService;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

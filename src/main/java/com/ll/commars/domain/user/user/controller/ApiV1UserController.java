@@ -24,9 +24,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
 @RequestMapping(value = "/api/users", produces = APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-@Tag(name = "UserController", description = "사용자 API")
-public class UserController {
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+@Tag(name = "ApiV1UserController", description = "사용자 API")
+public class ApiV1UserController {
+    private static final Logger logger = LoggerFactory.getLogger(ApiV1UserController.class);
     private final UserService userService;
 
     @PostMapping("/signup")

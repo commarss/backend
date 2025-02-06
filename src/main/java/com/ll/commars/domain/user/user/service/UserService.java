@@ -9,7 +9,7 @@ import com.ll.commars.domain.user.favorite.service.FavoriteService;
 import com.ll.commars.domain.user.user.dto.UserDto;
 import com.ll.commars.domain.user.user.entity.User;
 import com.ll.commars.domain.user.user.repository.UserRepository;
-import com.ll.commars.domain.user.user.controller.UserController;
+import com.ll.commars.domain.user.user.controller.ApiV1UserController;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ApiV1UserController.class);
 
     private final UserRepository userRepository;
     private final FavoriteService favoriteService;

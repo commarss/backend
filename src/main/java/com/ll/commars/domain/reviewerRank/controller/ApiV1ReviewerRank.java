@@ -1,7 +1,7 @@
 package com.ll.commars.domain.reviewerRank.controller;
 
 import com.ll.commars.domain.reviewerRank.dto.ReviewerRank;
-import com.ll.commars.domain.reviewerRank.service.ReviewrService;
+import com.ll.commars.domain.reviewerRank.service.ReviewerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/reviews")
+@RequestMapping("/api/reviewer-rank")
 @RequiredArgsConstructor
-@Tag(name = "ReviewController", description = "리뷰 관련 API")
+@Tag(name = "ApiV1ReviewerRank", description = "리뷰어 랭킹 조회 API")
 public class ApiV1ReviewerRank {
 
-    private final ReviewrService reviewService;
+    private final ReviewerService reviewService;
 
     // ✅ 상위 10명의 리뷰어 조회 (GET /api/reviews/top10)
     @GetMapping("/top10")
