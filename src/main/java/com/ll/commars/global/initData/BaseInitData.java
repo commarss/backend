@@ -47,11 +47,11 @@ public class BaseInitData {
             restaurantDocInit();
 
             // 테이블 연관관계 순서대로
-            userInit();
-            restaurantCategoryInit();
-
-            communityInit();
-            restaurantInit();
+//            userInit();
+//            restaurantCategoryInit();
+//
+//            communityInit();
+//            restaurantInit();
         };
     }
 

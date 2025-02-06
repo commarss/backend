@@ -1,5 +1,6 @@
 package com.ll.commars.domain.user.user.controller;
 
+import com.ll.commars.global.rsData.RsData;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +19,6 @@ import java.util.stream.Collectors;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
-
 @RequestMapping(value = "/api/users", produces = APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
@@ -92,4 +92,29 @@ public class UserController {
     }
 
     // 내 위치 기반 식당 찾기
+
+    @GetMapping("/favorite")
+    @Operation(summary = "찜 리스트 조회")
+    public RsData<List<Map<String, Object>>> getFavoriteLists(HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return ResponseEntity.status(401).body(null);
+        }
+
+        List<Map<String, Object>> favoriteList = userService.getFavoriteList(user.getEmail()).stream()
+                .map(restaurant -> {
+                    Map<String, Object> response = new HashMap<>();
+                    response.put("id", restaurant.getId());
+                    response.put("name", restaurant.getName());
+                    response.put("address", restaurant.getAddress());
+                    response.put("phoneNumber", restaurant.getPhoneNumber());
+                    response.put("category", restaurant.getCategory());
+                    response.put("reviewCount", restaurant.getReviewCount());
+                    response.put("averageRating", restaurant.getAverageRating());
+                    return response;
+                })
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(favoriteList);
+    }
 }
