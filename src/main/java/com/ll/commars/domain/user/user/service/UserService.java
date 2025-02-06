@@ -111,4 +111,16 @@ public class UserService {
                 .favoriteLists(favorites)
                 .build();
     }
+
+    // 찜 리스트 생성(식당 추가 X)
+    public void createFavoriteList(User user, FavoriteDto.CreateFavoriteListRequest request) {
+        // 찜 리스트 생성
+        FavoriteDto.CreateFavoriteListRequest createFavoriteListRequest = FavoriteDto.CreateFavoriteListRequest.builder()
+                .name(request.getName())
+                .isPublic(request.getIsPublic())
+                .build();
+
+        // 찜 리스트 저장
+        favoriteService.saveFavoriteList(user, createFavoriteListRequest);
+    }
 }

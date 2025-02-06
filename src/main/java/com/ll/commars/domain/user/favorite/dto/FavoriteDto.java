@@ -25,4 +25,12 @@ public class FavoriteDto {
     public static class FavoriteResponse {
         private List<RestaurantDto.RestaurantInfo> favoriteRestaurants;
     }
+
+    // 찜 리스트 생성 시 요청 (식당 추가 X)
+    @Getter
+    @Builder
+    public static class CreateFavoriteListRequest{
+        private String name;
+        private Boolean isPublic;
+    }
 }

@@ -39,4 +39,14 @@ public class FavoriteService {
                 .restaurantLists(restaurants)
                 .build();
     }
+
+    public void saveFavoriteList(User user, FavoriteDto.CreateFavoriteListRequest createFavoriteListRequest) {
+        Favorite favorite = Favorite.builder()
+                .name(createFavoriteListRequest.getName())
+                .isPublic(createFavoriteListRequest.getIsPublic())
+                .user(user)
+                .build();
+
+        favoriteRepository.save(favorite);
+    }
 }
