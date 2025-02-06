@@ -45,8 +45,9 @@ public class BoardService {
                 .title(title)
                 .content(content)
                 .views(0)
-                .imageUrl(imageUrl)
                 .hashTags(tagsString)  // 🚀 String 값으로 전달
+                .dislikeCount(0)  // 🚀 기본값 0 추가
+                .likeCount(0)     // 👍 같이 기본값 추가하는 것이 좋음
                 .build();
 
         board = boardRepository.save(board);
@@ -60,7 +61,12 @@ public class BoardService {
     }
 
     // 게시글 상세 조회 (조회수 증가 포함)
-    @Transactional
+    // ✅ 조회수 증가 로직 제거
+    public Board getBoard(Long postId) {
+        return boardRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
+    }
+    /*@Transactional
     public Board getBoard(Long postId) {
         Board board = boardRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
@@ -71,7 +77,7 @@ public class BoardService {
         boardRepository.flush();  // 🔥 즉시 DB에 반영
 
         return board;
-    }
+    }*/
 
     // 게시글 수정
     @Transactional
@@ -91,11 +97,12 @@ public class BoardService {
     }
 
     // 게시글 총 개수 조회
-    // ✅ 조회수 증가 (별도 메서드로 분리)
+    // ✅ 조회수 증가 메서드 분리
     @Transactional
-    public void incrementViewCount(Long boardId) {
-        Board board = boardRepository.findById(boardId)
+    public void incrementViews(Long postId) {
+        Board board = boardRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
+
         board.setViews(board.getViews() + 1);
         boardRepository.save(board);
     }

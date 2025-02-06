@@ -47,9 +47,9 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User findByEmail(String email) {
+    /*public User findByEmail(String email) {
         return userRepository.findByEmail(email).orElse(null);
-    }
+    }*/
 
     public void saveUser(User user) {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
@@ -146,4 +146,13 @@ public class UserService {
                 .reviews(reviews)
                 .build();
     }
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);  // ✅ 중복 제거 + Optional 감싸지 않음
+    }
+
+    public User findByEmailOrNull(String email) {
+        return userRepository.findByEmail(email).orElse(null);  // ✅ Optional을 벗긴 버전
+    }
+
+
 }
