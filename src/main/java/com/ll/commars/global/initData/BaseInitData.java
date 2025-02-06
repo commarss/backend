@@ -2,6 +2,7 @@ package com.ll.commars.global.initData;
 
 import com.ll.commars.domain.community.board.service.BoardService;
 import com.ll.commars.domain.community.comment.service.CommentService;
+import com.ll.commars.domain.community.reaction.service.ReactionService;
 import com.ll.commars.domain.restaurant.businessHour.dto.BusinessHourDto;
 import com.ll.commars.domain.restaurant.businessHour.service.BusinessHourService;
 import com.ll.commars.domain.restaurant.category.dto.RestaurantCategoryDto;
@@ -18,6 +19,7 @@ import com.ll.commars.domain.review.reviewDoc.service.ReviewDocService;
 import com.ll.commars.domain.user.favorite.dto.FavoriteDto;
 import com.ll.commars.domain.user.favorite.entity.Favorite;
 import com.ll.commars.domain.user.favorite.service.FavoriteService;
+import com.ll.commars.domain.user.favoriteRestaurant.service.FavoriteRestaurantService;
 import com.ll.commars.domain.user.user.dto.UserDto;
 import com.ll.commars.domain.user.user.entity.User;
 import com.ll.commars.domain.user.user.service.UserService;
@@ -48,13 +50,13 @@ public class BaseInitData {
     private final RestaurantMenuService restaurantMenuService;
     private final BusinessHourService businessHourService;
     private final FavoriteService favoriteService;
+    private final FavoriteRestaurantService favoriteRestaurantService;
+    private final ReactionService reactionService;
 
     @Bean
     public ApplicationRunner baseInitDataApplicationRunner() {
         return args -> {
-            // ES 초기화
-            reviewsDocInit();
-            restaurantDocInit();
+            truncateAll();
 
             // 테이블 연관관계 순서대로
             userInit();
@@ -70,20 +72,29 @@ public class BaseInitData {
         };
     }
 
-    // ReviewsDoc 데이터 초기화
-    private void reviewsDocInit() {
+    private void truncateAll(){
+        // 연관관계 순서대로 삭제해야함
         reviewDocService.truncate();
-    }
-
-    // RestaurantsDoc 데이터 초기화
-    private void restaurantDocInit() {
         restaurantDocService.truncate();
+
+        favoriteRestaurantService.truncate();
+        favoriteService.truncate();
+
+        commentService.truncate();
+        reactionService.truncate();
+        boardService.truncate();
+
+        reviewService.truncate();
+        userService.truncate();
+
+        businessHourService.truncate();
+        restaurantMenuService.truncate();
+        restaurantService.truncate();
+        restaurantCategoryService.truncate();
     }
 
     // Restaurant 데이터 초기화
     private void restaurantInit() {
-        restaurantService.truncate();
-
         String[] names = {"마녀커피", "피자알볼로", "스타벅스", "버거킹", "맘스터치", "서브웨이", "홍콩반점", "교촌치킨"};
         String[] details = {"분위기 좋은 카페", "맛있는 피자집", "글로벌 커피 체인", "햄버거 전문점", "치킨 버거 전문점",
                 "샌드위치 전문점", "중국 음식점", "치킨 전문점"};
@@ -120,8 +131,6 @@ public class BaseInitData {
 
     // RestaurantCategory 데이터 초기화
     private void restaurantCategoryInit(){
-        restaurantCategoryService.truncate();
-
         String[] names = {"한식", "중식", "일식", "양식", "패스트푸드"};
 
         IntStream.range(0, 5).forEach(i -> {
@@ -134,8 +143,6 @@ public class BaseInitData {
     }
 
     private void restaurantMenuInit() {
-        restaurantMenuService.truncate();
-
         // 모든 음식점 가져오기
         RestaurantDto.RestaurantShowAllResponse restaurants = restaurantService.getRestaurants();
         List<Long> restaurantIds = restaurants.getRestaurants().stream()
@@ -174,8 +181,6 @@ public class BaseInitData {
     }
 
     private void businessHourInit() {
-        businessHourService.truncate();
-
         // 모든 음식점 가져오기
         RestaurantDto.RestaurantShowAllResponse restaurants = restaurantService.getRestaurants();
         List<Long> restaurantIds = restaurants.getRestaurants().stream()
@@ -216,8 +221,6 @@ public class BaseInitData {
 
     // Reviews 데이터 초기화
     private void reviewInit() {
-        reviewService.truncate();
-
         String[] names = {"맛있네요", "좋아요", "괜찮아요", "별로에요", "맛없어요"};
         String[] bodies = {"맛있어요", "서비스가 좋아요", "가격이 착해요", "재방문 의사 있어요", "별로에요"};
 
@@ -254,8 +257,6 @@ public class BaseInitData {
     }
 
     private void userInit() {
-        userService.truncate();
-
         String[] names = {"김민준", "이서연", "박지호", "최수아", "정우진", "강하은", "윤도현", "임서윤", "한지민", "송민서"};
         String[] domains = {"gmail.com", "naver.com", "kakao.com", "daum.net"};
         String[] phoneNumbers = {"010-1234-", "010-5678-", "010-9012-", "010-3456-"};
@@ -289,10 +290,6 @@ public class BaseInitData {
     }
 
     private void communityInit() {
-        // 기존 데이터 삭제
-        commentService.truncate();
-        boardService.truncate();
-
         // 게시글 데이터 배열
         String[] titles = {
                 "맛집 추천해주세요", "오늘 날씨 좋네요", "여행 계획 중입니다",
@@ -378,8 +375,6 @@ public class BaseInitData {
     }
 
     private void favoriteInit() {
-        favoriteService.truncate();
-
         // 모든 사용자와 레스토랑 가져오기
         List<UserDto.UserInfo> users = userService.findAllUsers();
         RestaurantDto.RestaurantShowAllResponse restaurants = restaurantService.getRestaurants();
