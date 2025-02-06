@@ -4,6 +4,8 @@ package com.ll.commars.domain.auth.naver.controller;
 import com.ll.commars.domain.auth.auth.service.AuthService;
 import com.ll.commars.domain.auth.naver.service.NaverService;
 import com.ll.commars.domain.user.user.entity.User;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -15,10 +17,12 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping(value = "/api/auth", produces = APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
+@Tag(name = "ApiV1NaverController", description = "네이버 로그인 API")
 public class ApiV1NaverController {
     private final String state = UUID.randomUUID().toString();
 
@@ -26,7 +30,8 @@ public class ApiV1NaverController {
     private final AuthService authService;
 
 
-    @PostMapping("/login/naver")
+    @PostMapping(value = "/login/naver", consumes = APPLICATION_JSON_VALUE)
+    @Operation(summary = "네이버 로그인")
     public ResponseEntity<?> loginForNaver(@RequestBody Map<String, String> body) {
 
         System.out.println("body = " + body);
@@ -93,12 +98,14 @@ public class ApiV1NaverController {
 //    }
 
     @GetMapping("/login/naver/state")
+    @Operation(summary = "네이버 로그인 상태")
     public ResponseEntity<?> naverState() {
         System.out.println("get state = " + state);
         return ResponseEntity.ok(state);
     }
 
     @GetMapping("/logout/naver")
+    @Operation(summary = "네이버 로그아웃")
     public void logout(HttpServletResponse response) {
         String accessToken = response.getHeader(HttpHeaders.AUTHORIZATION);
 

@@ -4,6 +4,8 @@ package com.ll.commars.global.jwt.controller;
 import com.ll.commars.domain.user.user.entity.User;
 import com.ll.commars.domain.user.user.service.UserService;
 import com.ll.commars.global.jwt.component.JwtProvider;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -18,15 +20,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 import java.util.Optional;
-
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
-@RequestMapping("/api/jwt")
+@RequestMapping(value = "/api/jwt", produces = APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
+@Tag(name = "ApiV1JwtController", description = "JWT 관련 API")
 public class ApiV1JwtController {
     private final JwtProvider jwtProvider;
     private final UserService userService;
 
     @GetMapping("/refresh")
+    @Operation(summary = "Refresh Token을 이용한 Access Token 재발급")
     public ResponseEntity<?> refresh(@AuthenticationPrincipal UserDetails userDetails, HttpServletRequest request) {
 
         String requestToken = extractRefreshTokenFromCookies(request);
