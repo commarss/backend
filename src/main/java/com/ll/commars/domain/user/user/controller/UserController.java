@@ -1,5 +1,6 @@
 package com.ll.commars.domain.user.user.controller;
 
+import com.ll.commars.domain.user.user.dto.UserDto;
 import com.ll.commars.global.rsData.RsData;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
@@ -95,26 +96,13 @@ public class UserController {
 
     @GetMapping("/favorite")
     @Operation(summary = "찜 리스트 조회")
-    public RsData<List<Map<String, Object>>> getFavoriteLists(HttpSession session) {
+    public RsData<UserDto.UserFavoriteListsResponse> getFavoriteLists(HttpSession session) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
-            return ResponseEntity.status(401).body(null);
+            return new RsData<>("401", "로그인이 필요합니다.", null);
         }
 
-        List<Map<String, Object>> favoriteList = userService.getFavoriteList(user.getEmail()).stream()
-                .map(restaurant -> {
-                    Map<String, Object> response = new HashMap<>();
-                    response.put("id", restaurant.getId());
-                    response.put("name", restaurant.getName());
-                    response.put("address", restaurant.getAddress());
-                    response.put("phoneNumber", restaurant.getPhoneNumber());
-                    response.put("category", restaurant.getCategory());
-                    response.put("reviewCount", restaurant.getReviewCount());
-                    response.put("averageRating", restaurant.getAverageRating());
-                    return response;
-                })
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(favoriteList);
+        UserDto.UserFavoriteListsResponse response = userService.getFavoriteLists(user);
+        return new RsData<>("200", "찜 리스트 조회 성공", response);
     }
 }

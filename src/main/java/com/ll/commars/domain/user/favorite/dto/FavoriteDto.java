@@ -9,6 +9,7 @@ import java.util.List;
 
 @Data
 public class FavoriteDto {
+    // 찜 리스트 정보
     @Getter
     @Builder
     public static class FavoriteInfo {
@@ -18,10 +19,10 @@ public class FavoriteDto {
         private List<RestaurantDto.RestaurantInfo> restaurantLists;
     }
 
+    // 찜 리스트에 속한 식당 응답
     @Getter
     @Builder
     public static class FavoriteResponse {
-        private Long id;
-        private List<FavoriteRestaurantResponse> favoriteRestaurants;
+        private List<RestaurantDto.RestaurantInfo> favoriteRestaurants;
     }
 }
