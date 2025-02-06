@@ -15,6 +15,9 @@ import com.ll.commars.domain.restaurant.restaurantDoc.service.RestaurantDocServi
 import com.ll.commars.domain.review.review.dto.ReviewDto;
 import com.ll.commars.domain.review.review.service.ReviewService;
 import com.ll.commars.domain.review.reviewDoc.service.ReviewDocService;
+import com.ll.commars.domain.user.favorite.dto.FavoriteDto;
+import com.ll.commars.domain.user.favorite.entity.Favorite;
+import com.ll.commars.domain.user.favorite.service.FavoriteService;
 import com.ll.commars.domain.user.user.dto.UserDto;
 import com.ll.commars.domain.user.user.entity.User;
 import com.ll.commars.domain.user.user.service.UserService;
@@ -44,6 +47,7 @@ public class BaseInitData {
     private final RestaurantCategoryService restaurantCategoryService;
     private final RestaurantMenuService restaurantMenuService;
     private final BusinessHourService businessHourService;
+    private final FavoriteService favoriteService;
 
     @Bean
     public ApplicationRunner baseInitDataApplicationRunner() {
@@ -62,6 +66,7 @@ public class BaseInitData {
             reviewInit();
             restaurantMenuInit();
             businessHourInit();
+            favoriteInit();
         };
     }
 
@@ -369,6 +374,58 @@ public class BaseInitData {
                     userId,
                     comment
             );
+        });
+    }
+
+    private void favoriteInit() {
+        favoriteService.truncate();
+
+        // 모든 사용자와 레스토랑 가져오기
+        List<UserDto.UserInfo> users = userService.findAllUsers();
+        RestaurantDto.RestaurantShowAllResponse restaurants = restaurantService.getRestaurants();
+
+        List<Long> restaurantIds = restaurants.getRestaurants().stream()
+                .map(RestaurantDto.RestaurantInfo::getId)
+                .toList();
+
+        Random random = new Random();
+        String[] favoriteNames = {"맛집 리스트", "가고 싶은 곳", "자주 가는 곳", "친구와 가고 싶은 곳", "데이트 코스"};
+
+        // 각 사용자별로 찜 목록 생성
+        users.forEach(user -> {
+            // 유저 엔티티 조회
+            User userEntity = userService.findById(user.getId())
+                    .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+            // 찜 목록 생성 (1-3개)
+            int favoriteCount = random.nextInt(3) + 1;
+
+            IntStream.range(0, favoriteCount).forEach(i -> {
+                // 빈 찜 목록 생성
+                FavoriteDto.CreateFavoriteListRequest createRequest = FavoriteDto.CreateFavoriteListRequest.builder()
+                        .name(favoriteNames[random.nextInt(favoriteNames.length)])
+                        .isPublic(random.nextBoolean())
+                        .build();
+
+                favoriteService.saveFavoriteList(userEntity, createRequest);
+
+                // 생성된 찜 목록 조회
+                List<Favorite> userFavorites = favoriteService.getFavoritesByUser(userEntity);
+                Long favoriteId = userFavorites.get(userFavorites.size() - 1).getId();
+
+                // 랜덤한 개수의 레스토랑 추가 (1 ~ restaurants.size)
+                int restaurantCount = random.nextInt(restaurantIds.size()) + 1;
+
+                // 중복없이 랜덤하게 레스토랑 선택
+                List<Long> selectedRestaurants = new ArrayList<>(restaurantIds);
+                java.util.Collections.shuffle(selectedRestaurants);
+                selectedRestaurants = selectedRestaurants.subList(0, restaurantCount);
+
+                // 선택된 레스토랑들을 찜 목록에 추가
+                selectedRestaurants.forEach(restaurantId -> {
+                    favoriteService.addRestaurantToFavorite(favoriteId, restaurantId);
+                });
+            });
         });
     }
 }

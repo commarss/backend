@@ -95,4 +95,9 @@ public class FavoriteService {
     public void deleteFavorite(Long favoriteId) {
         favoriteRepository.deleteById(favoriteId);
     }
+
+    @Transactional
+    public void truncate() {
+        favoriteRepository.deleteAll();
+    }
 }
