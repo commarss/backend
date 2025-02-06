@@ -1,19 +1,8 @@
 package com.ll.commars.domain.auth.auth.controller;
 
 
-import com.ll.commars.domain.auth.authUserInfo.entity.AuthUserInfo;
-import com.ll.commars.domain.user.user.entity.User;
-import com.ll.commars.domain.user.user.repository.UserRepository;
-import com.ll.commars.domain.user.user.service.UserService;
-import com.ll.commars.domain.user.user.dto.userDTO;
-import com.ll.commars.domain.auth.authUserInfo.repository.AuthUserInfoRepository;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
 
 @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 @RestController

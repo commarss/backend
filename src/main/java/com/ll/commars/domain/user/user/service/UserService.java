@@ -3,6 +3,9 @@ package com.ll.commars.domain.user.user.service;
 // 트랜잭션 단위로 실행될 메소드를 선언하고 있는 클래스
 // 스프링이 관리하는 Bean
 
+import com.ll.commars.domain.user.favorite.dto.FavoriteDto;
+import com.ll.commars.domain.user.favorite.service.FavoriteService;
+import com.ll.commars.domain.user.user.dto.UserDto;
 import com.ll.commars.domain.user.user.entity.User;
 import com.ll.commars.domain.user.user.repository.UserRepository;
 import com.ll.commars.domain.user.user.controller.UserController;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +25,7 @@ public class UserService {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private final UserRepository userRepository;
+    private final FavoriteService favoriteService;
 
     public User createUser(String email, String name, Integer socialProvider, String password, String phoneNumber, String profileImageUrl, LocalDateTime birthDate,Integer gender) {
         User user = new User();
@@ -92,5 +97,30 @@ public class UserService {
 
     public Optional<User> findById(long l) {
         return userRepository.findById(l);
+    }
+
+    public UserDto.UserFavoriteListsResponse getFavoriteLists(User user) {
+        List<FavoriteDto.FavoriteInfo> favorites = favoriteService.getFavoritesByUser(user)
+                .stream()
+                .map(favoriteService::toFavoriteInfo)
+                .collect(Collectors.toList());
+
+        return UserDto.UserFavoriteListsResponse.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .favoriteLists(favorites)
+                .build();
+    }
+
+    // 찜 리스트 생성(식당 추가 X)
+    public void createFavoriteList(User user, FavoriteDto.CreateFavoriteListRequest request) {
+        // 찜 리스트 생성
+        FavoriteDto.CreateFavoriteListRequest createFavoriteListRequest = FavoriteDto.CreateFavoriteListRequest.builder()
+                .name(request.getName())
+                .isPublic(request.getIsPublic())
+                .build();
+
+        // 찜 리스트 저장
+        favoriteService.saveFavoriteList(user, createFavoriteListRequest);
     }
 }
