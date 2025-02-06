@@ -8,4 +8,5 @@ import java.util.List;
 public interface FavoriteRestaurantRepository extends JpaRepository<FavoriteRestaurant, Long> {
     List<FavoriteRestaurant> findByFavoriteId(Long favoriteId);
     void deleteByFavoriteIdAndRestaurantId(Long favoriteId, Long restaurantId);
+    void deleteByFavoriteId(Long favoriteId);
 }

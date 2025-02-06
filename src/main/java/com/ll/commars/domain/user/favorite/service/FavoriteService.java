@@ -31,10 +31,19 @@ public class FavoriteService {
     }
 
     public FavoriteDto.FavoriteInfo toFavoriteInfo(Favorite favorite) {
-        List<RestaurantDto.RestaurantInfo> restaurants = favorite.getFavoriteRestaurants().stream()
-                .map(fr -> RestaurantDto.RestaurantInfo.builder()
+        List<RestaurantDto.RestaurantBasicInfo> restaurants = favorite.getFavoriteRestaurants().stream()
+                .map(fr -> RestaurantDto.RestaurantBasicInfo.builder()
                         .id(fr.getRestaurant().getId())
                         .name(fr.getRestaurant().getName())
+                        .details(fr.getRestaurant().getDetails())
+                        .averageRate(fr.getRestaurant().getAverageRate())
+                        .imageUrl(fr.getRestaurant().getImageUrl())
+                        .contact(fr.getRestaurant().getContact())
+                        .lat(fr.getRestaurant().getLat())
+                        .lng(fr.getRestaurant().getLng())
+                        .runningState(fr.getRestaurant().getRunningState())
+                        .summarizedReview(fr.getRestaurant().getSummarizedReview())
+                        .categoryId(fr.getRestaurant().getRestaurantCategory().getId())
                         .address(fr.getRestaurant().getAddress())
                         .build())
                 .collect(Collectors.toList());
@@ -57,6 +66,7 @@ public class FavoriteService {
         favoriteRepository.save(favorite);
     }
 
+    @Transactional
     public FavoriteDto.FavoriteInfo getFavorite(Long favoriteId) {
         Favorite favorite = favoriteRepository.findById(favoriteId).orElseThrow(() -> new RuntimeException("찜 목록을 찾을 수 없습니다."));
         return toFavoriteInfo(favorite);
@@ -92,7 +102,9 @@ public class FavoriteService {
         return toFavoriteInfo(favorite);
     }
 
+    @Transactional
     public void deleteFavorite(Long favoriteId) {
+        favoriteRestaurantRepository.deleteByFavoriteId(favoriteId);
         favoriteRepository.deleteById(favoriteId);
     }
 

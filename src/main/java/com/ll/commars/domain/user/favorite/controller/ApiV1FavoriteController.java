@@ -32,7 +32,7 @@ public class ApiV1FavoriteController {
 
     @GetMapping("/{favorite_id}")
     @Operation(summary = "찜 목록에 존재하는 식당 조회")
-    public RsData<FavoriteDto.FavoriteInfo> getFavorite(@PathVariable Long favoriteId) {
+    public RsData<FavoriteDto.FavoriteInfo> getFavorite(@PathVariable("favorite_id") Long favoriteId) {
         FavoriteDto.FavoriteInfo response = favoriteService.getFavorite(favoriteId);
         return new RsData<>("200", "찜 목록 조회 성공", response);
     }

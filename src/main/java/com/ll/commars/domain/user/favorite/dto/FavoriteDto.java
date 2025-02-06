@@ -16,7 +16,7 @@ public class FavoriteDto {
         private Long id; // 찜 리스트 ID
         private String name; // 찜 리스트 이름
         private Boolean isPublic; // 찜 리스트 공개 여부
-        private List<RestaurantDto.RestaurantInfo> restaurantLists;
+        private List<RestaurantDto.RestaurantBasicInfo> restaurantLists;
     }
 
     // 찜 리스트에 속한 식당 응답

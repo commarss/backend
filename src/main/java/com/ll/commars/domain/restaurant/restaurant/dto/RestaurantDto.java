@@ -36,6 +36,24 @@ public class RestaurantDto {
         // 나머지 연관 관계도 추가해야 함...
     }
 
+    // 식당 기본 정보 (연관관계 제외)
+    @Getter
+    @Builder
+    public static class RestaurantBasicInfo {
+        private Long id;
+        private String name;
+        private String details;
+        private Double averageRate;
+        private String imageUrl;
+        private String contact;
+        private String address;
+        private Double lat;
+        private Double lng;
+        private Boolean runningState;
+        private String summarizedReview;
+        private Long categoryId;
+    }
+
     // 식당 등록 및 수정에 필요한 기본 정보
     // 메뉴, 영업시간 등은 따로 추가
     @Getter
