@@ -19,16 +19,16 @@ spring:
     properties:
       hibernate:
         default_batch_fetch_size: 100
-        format_sql: true
-        highlight_sql: true
-        use_sql_comments: true
+        format_sql: false # true
+        highlight_sql: false # true
+        use_sql_comments: false # true
 logging:
   level:
     com.ll.commars: DEBUG
-    org.hibernate.SQL: DEBUG
-    org.hibernate.orm.jdbc.bind: TRACE
-    org.hibernate.orm.jdbc.extract: TRACE
-    org.springframework.transaction.interceptor: TRACE
+    org.hibernate.SQL: OFF # DEBUG
+    org.hibernate.orm.jdbc.bind: OFF # TRACE
+    org.hibernate.orm.jdbc.extract: OFF # TRACE
+    org.springframework.transaction.interceptor: OFF # TRACE
 custom:
   dev:
     cookieDomain: localhost

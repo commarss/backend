@@ -13,7 +13,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findByBoard_IdWithUser(@Param("boardId") Long boardId);
 
 
-    // ✅ 특정 부모 댓글의 대댓글 조회
-    @Query("SELECT c FROM Comment c WHERE c.parentComment.id = :parentCommentId ORDER BY c.id ASC")
-    List<Comment> findByParentCommentId(Long parentCommentId);
+//    // ✅ 특정 부모 댓글의 대댓글 조회
+//    @Query("SELECT c FROM Comment c WHERE c.parentComment.id = :parentCommentId ORDER BY c.id ASC")
+//    List<Comment> findByParentCommentId(Long parentCommentId);
 }

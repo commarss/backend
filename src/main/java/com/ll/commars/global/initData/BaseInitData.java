@@ -11,6 +11,7 @@ import com.ll.commars.domain.restaurant.restaurantDoc.service.RestaurantDocServi
 import com.ll.commars.domain.review.review.dto.ReviewDto;
 import com.ll.commars.domain.review.review.service.ReviewService;
 import com.ll.commars.domain.review.reviewDoc.service.ReviewDocService;
+import com.ll.commars.domain.user.user.dto.UserDto;
 import com.ll.commars.domain.user.user.entity.User;
 import com.ll.commars.domain.user.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import org.springframework.context.annotation.Configuration;
 import com.ll.commars.domain.reviewerRank.service.ReviewrService;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -47,11 +49,13 @@ public class BaseInitData {
             restaurantDocInit();
 
             // 테이블 연관관계 순서대로
-//            userInit();
-//            restaurantCategoryInit();
-//
-//            communityInit();
-//            restaurantInit();
+            userInit();
+            restaurantCategoryInit();
+
+            communityInit();
+            restaurantInit();
+
+            reviewInit();
         };
     }
 
@@ -124,41 +128,71 @@ public class BaseInitData {
         String[] names = {"맛있네요", "좋아요", "괜찮아요", "별로에요", "맛없어요"};
         String[] bodies = {"맛있어요", "서비스가 좋아요", "가격이 착해요", "재방문 의사 있어요", "별로에요"};
 
+        // 모든 음식점 가져오기
         RestaurantDto.RestaurantShowAllResponse restaurants = restaurantService.getRestaurants();
         List<Long> restaurantIds = restaurants.getRestaurants().stream()
                 .map(RestaurantDto.RestaurantInfo::getId)
                 .toList();
 
+        // 모든 사용자 가져오기
+        List<UserDto.UserInfo> users = userService.findAllUsers();
+        List<Long> userIds = users.stream()
+                .map(UserDto.UserInfo::getId)
+                .toList();
+
         Random random = new Random();
 
         IntStream.range(0, 20).forEach(i -> {
-            Long randomRestaurantId = restaurantIds.get(random.nextInt(restaurantIds.size()));
+            Long userId = userIds.get(random.nextInt(userIds.size()));
+            Long restaurantId = restaurantIds.get(random.nextInt(restaurantIds.size()));
+            String name = names[random.nextInt(names.length)];
+            String body = bodies[random.nextInt(bodies.length)];
+            Integer rate = random.nextInt(5) + 1; // 1-5 사이 랜덤 점수
 
             ReviewDto.ReviewWriteRequest review = ReviewDto.ReviewWriteRequest.builder()
-                    .reviewName(names[random.nextInt(names.length)])
-                    .body(bodies[random.nextInt(bodies.length)])
-                    .rate(1 + random.nextInt(5)) // 1-5 사이 랜덤 점수
+                    .userId(userId)
+                    .reviewName(name)
+                    .body(body)
+                    .rate(rate)
                     .build();
 
-            restaurantService.writeReview(randomRestaurantId, review);
+            restaurantService.writeReview(restaurantId, review);
         });
     }
 
-    private void userInit(){
+    private void userInit() {
         userService.truncate();
-        // 카카오 유저 5명 생성
-        userService.createUser("kakao1@example.com", "카카오유저1", 1, "password123", "010-1111-1111", "profile_image_url1", LocalDateTime.now(), 1);
-        userService.createUser("kakao2@example.com", "카카오유저2", 1, "password234", "010-1111-2222", "profile_image_url2", LocalDateTime.now(), 2);
-        userService.createUser("kakao3@example.com", "카카오유저3", 1, "password345", "010-1111-3333", "profile_image_url3", LocalDateTime.now(), 1);
-        userService.createUser("kakao4@example.com", "카카오유저4", 1, "password456", "010-1111-4444", "profile_image_url4", LocalDateTime.now(), 2);
-        userService.createUser("kakao5@example.com", "카카오유저5", 1, "password567", "010-1111-5555", "profile_image_url5", LocalDateTime.now(), 1);
 
-        // 구글 유저 5명 생성
-        userService.createUser("google1@example.com", "구글유저1", 3, "password678", "010-2222-1111", "profile_image_url6", LocalDateTime.now(), 1);
-        userService.createUser("google2@example.com", "구글유저2", 3, "password789", "010-2222-2222", "profile_image_url7", LocalDateTime.now(), 2);
-        userService.createUser("google3@example.com", "구글유저3", 3, "password890", "010-2222-3333", "profile_image_url8", LocalDateTime.now(), 1);
-        userService.createUser("google4@example.com", "구글유저4", 3, "password901", "010-2222-4444", "profile_image_url9", LocalDateTime.now(), 2);
-        userService.createUser("google5@example.com", "구글유저5", 3, "password012", "010-2222-5555", "profile_image_url10", LocalDateTime.now(), 1);
+        String[] names = {"김민준", "이서연", "박지호", "최수아", "정우진", "강하은", "윤도현", "임서윤", "한지민", "송민서"};
+        String[] domains = {"gmail.com", "naver.com", "kakao.com", "daum.net"};
+        String[] phoneNumbers = {"010-1234-", "010-5678-", "010-9012-", "010-3456-"};
+        String[] profileImages = {
+                "profile1.jpg", "profile2.jpg", "profile3.jpg", "profile4.jpg", "profile5.jpg",
+                "profile6.jpg", "profile7.jpg", "profile8.jpg", "profile9.jpg", "profile10.jpg"
+        };
+
+        Random random = new Random();
+
+        IntStream.range(0, 20).forEach(i -> {
+            String name = names[random.nextInt(names.length)];
+            String email = name + (random.nextInt(100) + 1) + "@" + domains[random.nextInt(domains.length)];
+            String phoneNumber = phoneNumbers[random.nextInt(phoneNumbers.length)] + String.format("%04d", random.nextInt(10000));
+            String password = "password" + (random.nextInt(900) + 100);
+            Integer socialProvider = random.nextInt(3) + 1; // 1: 카카오, 2: 네이버, 3: 구글
+            String profileImageUrl = "http://example.com/images/" + profileImages[random.nextInt(profileImages.length)];
+            Integer gender = random.nextInt(2) + 1; // 1: 남성, 2: 여성
+
+            userService.createUser(
+                    email,
+                    name,
+                    socialProvider,
+                    password,
+                    phoneNumber,
+                    profileImageUrl,
+                    LocalDateTime.now().minusYears(random.nextInt(30) + 20), // 20-50살 사이
+                    gender
+            );
+        });
     }
 
     private void communityInit() {
@@ -166,88 +200,150 @@ public class BaseInitData {
         commentService.truncate();
         boardService.truncate();
 
+        // 게시글 데이터 배열
+        String[] titles = {
+                "맛집 추천해주세요", "오늘 날씨 좋네요", "여행 계획 중입니다",
+                "운동 같이하실 분", "독서모임 하실 분", "영화 추천해주세요",
+                "주말에 뭐하세요?", "취미 공유해요", "맛집 탐방기",
+                "카페 추천합니다"
+        };
 
-        // 사용자 가져오기
-        User user1 = userService.findByEmail("kakao1@example.com");
-        User user2 = userService.findByEmail("google2@example.com");
+        String[] contents = {
+                "추천 부탁드립니다!", "정말 좋은 날씨네요~", "여행 코스 추천해주세요",
+                "함께 운동하면 더 재미있을 것 같아요", "매주 토요일마다 모여요",
+                "재미있는 영화 알려주세요", "주말 계획 공유해요", "취미가 뭐예요?",
+                "여기 정말 맛있어요", "분위기 좋은 카페예요"
+        };
 
-        // 게시글 추가 (해시태그 포함)
-        Long board1Id = boardService.addBoard(user1.getId(), "첫 번째 게시글", "안녕하세요, 첫 번째 게시글입니다.", List.of("첫번째", "게시글", "테스트"));
-        System.out.println("board1Id: " + board1Id);
-        Long board2Id = boardService.addBoard(user2.getId(), "두 번째 게시글", "반갑습니다!", List.of("두번째", "게시글"));
-        System.out.println("board2Id: " + board2Id);
-        Long board3Id = boardService.addBoard(user1.getId(), "세 번째 게시글", "이것은 테스트 게시글입니다.", List.of("테스트", "커뮤니티"));
-        System.out.println("board3Id: " + board3Id);
+        String[] tags = {"맛집", "일상", "여행", "운동", "독서", "영화", "취미", "음식", "카페", "문화"};
 
-        // 댓글 추가
-        commentService.addComment(board1Id, user2.getId(), "첫 번째 게시글에 대한 첫 번째 댓글입니다.");
-        commentService.addComment(board1Id, user1.getId(), "첫 번째 게시글에 대한 두 번째 댓글입니다.");
-        commentService.addComment(board2Id, user1.getId(), "두 번째 게시글에 대한 첫 번째 댓글입니다.");
-        commentService.addComment(board3Id, user2.getId(), "세 번째 게시글에 대한 첫 번째 댓글입니다.");
+        String[] comments = {
+                "좋은 정보 감사합니다!", "저도 같이 하고 싶어요", "동의합니다",
+                "정말 좋네요", "관심 있어요", "잘 보고 갑니다",
+                "도움이 되었어요", "재미있네요", "응원합니다",
+                "좋은 글이에요"
+        };
+
+        String[] imageUrls = {
+                "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg",
+                "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg",
+                "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg",
+                "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg",
+                "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg",
+                "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg",
+                "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg",
+                "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg",
+                "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg",
+                "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg"
+        };
+
+        // 모든 사용자 가져오기
+        List<UserDto.UserInfo> users = userService.findAllUsers();
+        List<Long> userIds = users.stream()
+                .map(UserDto.UserInfo::getId)
+                .toList();
+
+        Random random = new Random();
+        List<Long> boardIds = new ArrayList<>();
+
+        // 20개의 게시글 생성
+        IntStream.range(0, 20).forEach(i -> {
+            // 랜덤 태그 2-3개 선택
+            int tagCount = random.nextInt(2) + 2;
+            List<String> selectedTags = new ArrayList<>();
+            for (int j = 0; j < tagCount; j++) {
+                selectedTags.add(tags[random.nextInt(tags.length)]);
+            }
+
+            Long userId = userIds.get(random.nextInt(userIds.size()));
+            String title = titles[random.nextInt(titles.length)];
+            String content = contents[random.nextInt(contents.length)];
+            String imageUrl = imageUrls[random.nextInt(imageUrls.length)];
+
+            Long boardId = boardService.addBoard(
+                    userId,
+                    title,
+                    content,
+                    selectedTags,
+                    imageUrl
+            );
+            boardIds.add(boardId);
+        });
+
+        // 20개의 댓글 생성
+        IntStream.range(0, 20).forEach(i -> {
+            Long userId = userIds.get(random.nextInt(userIds.size()));
+            Long boardId = boardIds.get(random.nextInt(boardIds.size()));
+            String comment = comments[random.nextInt(comments.length)];
+
+            commentService.addComment(
+                    boardId,
+                    userId,
+                    comment
+            );
+        });
     }
-
-    public final ReviewrService reviewrService;
 
     // ✅ 10명의 유저가 리뷰를 작성하도록 초기 데이터 설정
     private void work7() {
-        System.out.println("🌟 리뷰 초기 데이터 생성 시작!");
-
-        // ✅ 기존 데이터 삭제
-        //reviewrService.truncate();
-        //userService.truncate();
-        //restaurantService.truncate();
-
-        System.out.println("🔹 모든 데이터 삭제 완료!");
-
-        // ✅ 10명의 유저 생성
-        IntStream.rangeClosed(1, 10).forEach(i -> {
-            String email = "user" + i + "@example.com";
-            String name = "유저" + i;
-            int provider = (i % 2 == 0) ? 1 : 3;
-            String phone = "010-1234-" + (1000 + i);
-
-            userService.createUser(email, name, provider, "password123", phone, "profile" + i + ".jpg", LocalDateTime.now(), (i % 2) + 1);
-        });
-
-        // ✅ 유저 확인
-        List<User> users = userService.findAllUsers();
-        System.out.println("🔹 생성된 유저 수: " + users.size());
-
-        // ✅ 5개의 음식점 추가
-        String[] restaurantNames = {"맛있는 식당", "고기 맛집", "해산물 전문점", "이탈리안 레스토랑", "한식 밥집"};
-        Random random = new Random();
-        IntStream.rangeClosed(1, 5).forEach(i -> {
-            Restaurant restaurant = Restaurant.builder()
-                    .name(restaurantNames[i - 1])
-                    .details("훌륭한 요리를 제공하는 레스토랑입니다.")
-                    .averageRate(4.0 + (i % 2))
-                    .address("서울시 강남구")
-                    .lat(37.5665 + (random.nextDouble() - 0.5) * 0.01) // 서울 근처 랜덤 위도
-                    .lng(126.9780 + (random.nextDouble() - 0.5) * 0.01) // 서울 근처 랜덤 경도
-                    .build();
-            //restaurantService.save(restaurant);
-        });
-
-        // ✅ 레스토랑 확인
-        //List<Restaurant> restaurants = restaurantService.findAllRestaurants();
-        //System.out.println("🔹 생성된 레스토랑 수: " + restaurants.size());
-
-
-        users.forEach(user -> {
-            int reviewCount = random.nextInt(10) + 1; // 유저당 1~10개 리뷰 작성
-            for (int i = 0; i < reviewCount; i++) {
-                //Restaurant randomRestaurant = restaurants.get(random.nextInt(restaurants.size()));
-
-                ReviewDto.ReviewWriteRequest review = ReviewDto.ReviewWriteRequest.builder()
-                        .reviewName("리뷰 제목 " + i)
-                        .body("이곳은 정말 좋습니다! " + (i + 1))
-                        .rate(random.nextInt(5) + 1)
-                        .build();
-
-                //reviewrService.writeReview(randomRestaurant.getId(), review, user.getEmail());
-            }
-        });
-
-        System.out.println("✅ 리뷰 데이터 초기화 완료!");
+//        System.out.println("🌟 리뷰 초기 데이터 생성 시작!");
+//
+//        // ✅ 기존 데이터 삭제
+//        //reviewrService.truncate();
+//        //userService.truncate();
+//        //restaurantService.truncate();
+//
+//        System.out.println("🔹 모든 데이터 삭제 완료!");
+//
+//        // ✅ 10명의 유저 생성
+//        IntStream.rangeClosed(1, 10).forEach(i -> {
+//            String email = "user" + i + "@example.com";
+//            String name = "유저" + i;
+//            int provider = (i % 2 == 0) ? 1 : 3;
+//            String phone = "010-1234-" + (1000 + i);
+//
+//            userService.createUser(email, name, provider, "password123", phone, "profile" + i + ".jpg", LocalDateTime.now(), (i % 2) + 1);
+//        });
+//
+//        // ✅ 유저 확인
+////        List<User> users = userService.findAllUsers();
+////        System.out.println("🔹 생성된 유저 수: " + users.size());
+//
+//        // ✅ 5개의 음식점 추가
+//        String[] restaurantNames = {"맛있는 식당", "고기 맛집", "해산물 전문점", "이탈리안 레스토랑", "한식 밥집"};
+//        Random random = new Random();
+//        IntStream.rangeClosed(1, 5).forEach(i -> {
+//            Restaurant restaurant = Restaurant.builder()
+//                    .name(restaurantNames[i - 1])
+//                    .details("훌륭한 요리를 제공하는 레스토랑입니다.")
+//                    .averageRate(4.0 + (i % 2))
+//                    .address("서울시 강남구")
+//                    .lat(37.5665 + (random.nextDouble() - 0.5) * 0.01) // 서울 근처 랜덤 위도
+//                    .lng(126.9780 + (random.nextDouble() - 0.5) * 0.01) // 서울 근처 랜덤 경도
+//                    .build();
+//            //restaurantService.save(restaurant);
+//        });
+//
+//        // ✅ 레스토랑 확인
+//        //List<Restaurant> restaurants = restaurantService.findAllRestaurants();
+//        //System.out.println("🔹 생성된 레스토랑 수: " + restaurants.size());
+//
+//
+////        users.forEach(user -> {
+////            int reviewCount = random.nextInt(10) + 1; // 유저당 1~10개 리뷰 작성
+////            for (int i = 0; i < reviewCount; i++) {
+////                //Restaurant randomRestaurant = restaurants.get(random.nextInt(restaurants.size()));
+////
+////                ReviewDto.ReviewWriteRequest review = ReviewDto.ReviewWriteRequest.builder()
+////                        .reviewName("리뷰 제목 " + i)
+////                        .body("이곳은 정말 좋습니다! " + (i + 1))
+////                        .rate(random.nextInt(5) + 1)
+////                        .build();
+////
+////                //reviewrService.writeReview(randomRestaurant.getId(), review, user.getEmail());
+////            }
+////        });
+//
+//        System.out.println("✅ 리뷰 데이터 초기화 완료!");
     }
 }

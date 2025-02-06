@@ -102,7 +102,9 @@ public class BoardController {
             String content = (String) request.get("content");
             List<String> tags = (List<String>) request.get("tags");
 
-            boardService.addBoard(user.getId(), title, content, tags);
+            String imageUrl = "wetwet";
+
+            boardService.addBoard(user.getId(), title, content, tags, imageUrl);
             return ResponseEntity.status(201).body("게시글이 등록되었습니다.");
         } catch (Exception e) {
             return ResponseEntity.status(500).body("게시글 등록 중 오류 발생: " + e.getMessage());

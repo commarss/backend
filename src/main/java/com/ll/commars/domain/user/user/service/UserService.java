@@ -81,9 +81,21 @@ public class UserService {
         userRepository.deleteAll();
     }
 
-    // ✅ 모든 유저 조회 메서드 추가
-    public List<User> findAllUsers() {
-        return userRepository.findAll();
+    public List<UserDto.UserInfo> findAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(user -> UserDto.UserInfo.builder()
+                        .id(user.getId())
+                        .socialProvider(user.getSocialProvider())
+                        .email(user.getEmail())
+                        .name(user.getName())
+                        .password(user.getPassword())
+                        .loginId(user.getLoginId())
+                        .phoneNumber(user.getPhoneNumber())
+                        .profileImageUrl(user.getProfileImageUrl())
+                        .birthDate(user.getBirthDate())
+                        .build())
+                .collect(Collectors.toList());
     }
 
 
