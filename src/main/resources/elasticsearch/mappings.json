@@ -1,0 +1,22 @@
+{
+  "properties": {
+    "name": {
+      "type": "text",
+      "analyzer": "korean"
+    },
+    "body": {
+      "type": "text",
+      "analyzer": "korean"
+    },
+    "rate": {
+      "type": "integer"
+    },
+    "details": {
+      "type": "text",
+      "analyzer": "korean"
+    },
+    "average_rate": {
+      "type": "double"
+    }
+  }
+}
