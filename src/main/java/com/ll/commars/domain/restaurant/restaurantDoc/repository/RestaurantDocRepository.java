@@ -10,22 +10,22 @@ import java.util.List;
 @Repository
 public interface RestaurantDocRepository extends ElasticsearchRepository<RestaurantDoc, String> {
     @Query("""
-        {
-            "bool": {
-                "should": [
-                    {
-                        "wildcard": {
-                            "name": "*?0*"
+            {
+                "bool": {
+                    "should": [
+                        {
+                            "match": {
+                                "name": "?0"
+                            }
+                        },
+                        {
+                            "match": {
+                                "details": "?0"
+                            }
                         }
-                    },
-                    {
-                        "wildcard": {
-                            "details": "*?0*"
-                        }
-                    }
-                ]
+                    ]
+                }
             }
-        }
     """)
     List<RestaurantDoc> searchByKeyword(String keyword);
 

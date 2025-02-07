@@ -2,11 +2,11 @@ package com.ll.commars.domain.review.reviewDoc.document;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
+import org.springframework.data.elasticsearch.annotations.*;
 
-@Document(indexName = "es_reviews")
+@Document(indexName = "es_reviews", createIndex = true)
+@Setting(settingPath = "elasticsearch/settings.json")
+@Mapping(mappingPath = "elasticsearch/mappings.json")
 @Getter
 @Setter
 @Builder
