@@ -20,4 +20,7 @@ public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
 
     @Query("SELECT COUNT(f) FROM Favorite f WHERE f.user.email = :email")
     int countByUserEmail(@Param("email") String email);
+
+    // 유저 ID로 찜 목록 조회
+    List<Favorite> findByUserId(Long userId);
 }

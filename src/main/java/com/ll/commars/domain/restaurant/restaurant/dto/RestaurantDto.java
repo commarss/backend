@@ -7,8 +7,7 @@ import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
 import com.ll.commars.domain.review.review.dto.ReviewDto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 import java.util.List;
 
@@ -94,4 +93,10 @@ public class RestaurantDto {
         private String restaurantName;
         private String categoryName;
     }
+
+
+
+
+
+
 }
