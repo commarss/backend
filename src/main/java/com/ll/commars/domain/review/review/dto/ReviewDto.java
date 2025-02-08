@@ -1,0 +1,47 @@
+package com.ll.commars.domain.review.review.dto;
+
+import lombok.Builder;
+import lombok.Getter;
+
+import java.util.List;
+
+public class ReviewDto {
+    // 리뷰 정보
+    @Getter
+    @Builder
+    public static class ReviewInfo{
+        private String userName;
+        private String restaurantName;
+        private String reviewName;
+        private String body;
+        private Integer rate;
+    }
+
+    // 리뷰 작성 및 수정 시 요청
+    @Getter
+    @Builder
+    public static class ReviewWriteRequest{
+        private Long userId;
+        private String reviewName;
+        private String body;
+        private Integer rate;
+    }
+
+    // 리뷰 작성 및 수정 시 응답
+    @Getter
+    @Builder
+    public static class ReviewWriteResponse{
+        private String userName;
+        private String restaurantName;
+        private String reviewName;
+        private String body;
+        private Integer rate;
+    }
+
+    // 모든 리뷰 조회 시 응답
+    @Getter
+    @Builder
+    public static class ShowAllReviewsResponse {
+        List<ReviewInfo> reviews;
+    }
+}

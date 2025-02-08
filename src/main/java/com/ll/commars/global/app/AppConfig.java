@@ -12,7 +12,7 @@ public class AppConfig {
     private static String siteBackUrl;
     @Getter
     private static String siteCookieDomain;
-
+    /*
     @Value("${custom.site.frontUrl}")
     public void setSiteFrontUrl(String siteFrontUrl) {
         this.siteFrontUrl = siteFrontUrl;
@@ -26,5 +26,5 @@ public class AppConfig {
     @Value("${custom.site.cookieDomain}")
     public void setSiteCookieDomain(String siteCookieDomain) {
         this.siteCookieDomain = siteCookieDomain;
-    }
+    }*/
 }
