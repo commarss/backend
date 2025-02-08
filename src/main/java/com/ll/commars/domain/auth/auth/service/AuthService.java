@@ -40,6 +40,7 @@ public class AuthService {
 
     public AuthUser toAuthUser(User user) {
         return AuthUser.builder()
+                .id(user.getId())  // 🔹 ID 추가
                 .name(user.getName())
                 .email(user.getEmail())
                 .profileImageUrl(user.getProfileImageUrl())

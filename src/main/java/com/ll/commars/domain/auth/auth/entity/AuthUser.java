@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @SuperBuilder
 @ToString(callSuper = true)
 public class AuthUser {
+    private Long id;  // 🔹 ID 필드 추가
     private String name;
     private String email;
     private Integer gender;

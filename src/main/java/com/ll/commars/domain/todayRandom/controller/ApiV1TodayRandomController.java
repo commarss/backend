@@ -27,7 +27,7 @@ public class ApiV1TodayRandomController {
     }
 
     @GetMapping("/random") //랜덤 5개 식당조회
-    @Operation(summary = "랜덤 5개 식당조회")
+    @Operation(summary = "회원 거리와 찜기반 랜덤 5개 식당조회")
     public List<RestaurantSummaryDTO> getRandomRestaurants(
             @RequestParam("lat") double lat,
             @RequestParam("lng") double lng,
@@ -43,15 +43,13 @@ public class ApiV1TodayRandomController {
     }
 
 
-    // 랜덤 5개 중 1개 선택하여 상세 정보 반환 (RestaurantSummaryDTO 사용)
-    /*
-    @GetMapping("/selected")
-    public Optional<RestaurantSummaryDTO> getRandomSelectedRestaurant(
+    @GetMapping("/notuser/random") // 유저아닌 거리랜덤 5개 식당 조회
+    @Operation(summary = "비회원 거리 랜덤 5개 식당 조회")
+    public List<RestaurantSummaryDTO> getnotuserRandomRestaurants(
             @RequestParam("lat") double lat,
-            @RequestParam("lng") double lng,
-            @RequestParam("id") Long userId) {
-        return todayRandomService.getRandomRestaurantDetails(lat, lng, userId);
-    }*/
+            @RequestParam("lng") double lng) {
+        return todayRandomService.getnotuserRandomRestaurants(lat, lng);
+    }
 
 
 
