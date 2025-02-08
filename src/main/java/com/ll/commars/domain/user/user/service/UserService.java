@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -103,6 +104,7 @@ public class UserService {
         return userRepository.findById(l);
     }
 
+    @Transactional
     public UserDto.UserFavoriteListsResponse getFavoriteLists(User user) {
         List<FavoriteDto.FavoriteInfo> favorites = favoriteService.getFavoritesByUser(user)
                 .stream()

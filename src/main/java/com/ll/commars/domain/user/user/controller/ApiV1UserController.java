@@ -14,10 +14,13 @@ import com.ll.commars.domain.user.user.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -97,13 +100,13 @@ public class ApiV1UserController {
 
     @GetMapping("/favorites")
     @Operation(summary = "회원의 모든 찜 리스트 조회")
-    public RsData<UserDto.UserFavoriteListsResponse> getFavoriteLists(HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        if (user == null) {
-            return new RsData<>("401", "로그인이 필요합니다.", null);
+    public RsData<UserDto.UserFavoriteListsResponse> getFavoriteLists(@AuthenticationPrincipal UserDetails userDetails) {
+        Optional<User> user = userService.findById(Long.parseLong(userDetails.getUsername()));
+        if (user.isEmpty()) {
+            return new RsData<>("401", "찜: 로그인이 필요합니다.", null);
         }
 
-        UserDto.UserFavoriteListsResponse response = userService.getFavoriteLists(user);
+        UserDto.UserFavoriteListsResponse response = userService.getFavoriteLists(user.get());
         return new RsData<>("200", "찜 리스트 조회 성공", response);
     }
 
