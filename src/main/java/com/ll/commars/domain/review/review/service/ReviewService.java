@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -51,6 +50,23 @@ public class ReviewService {
                 .reviewName(review.getName())
                 .body(review.getBody())
                 .rate(review.getRate())
+                .build();
+    }
+
+    public ReviewDto.ShowAllReviewsResponse showAllReviews(Long restaurantId) {
+        List<Review> reviews = reviewRepository.findByRestaurantId(restaurantId);
+
+        return ReviewDto.ShowAllReviewsResponse.builder()
+                .reviews(reviews.stream()
+                        .map(review -> ReviewDto.ReviewInfo.builder()
+                                .reviewId(review.getId())
+                                .userName(review.getUser().getName())
+                                .restaurantId(review.getRestaurant().getId())
+                                .reviewName(review.getName())
+                                .body(review.getBody())
+                                .rate(review.getRate())
+                                .build())
+                        .toList())
                 .build();
     }
 }

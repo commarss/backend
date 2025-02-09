@@ -1,6 +1,5 @@
 package com.ll.commars.domain.review.review.repository;
 
-import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
 import com.ll.commars.domain.review.review.entity.Review;
 import com.ll.commars.domain.reviewerRank.dto.ReviewerRank;
 import org.springframework.data.domain.Pageable;
@@ -12,8 +11,8 @@ import java.util.List;
 
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
-    @Query("SELECT r FROM Review r JOIN FETCH r.user WHERE r.restaurant = :restaurant")
-    List<Review> findByRestaurant(Restaurant restaurant);
+//    @Query("SELECT r FROM Review r JOIN FETCH r.user WHERE r.restaurant = :restaurant")
+    List<Review> findByRestaurantId(Long restaurantId);
 
     // ✅ 상위 10명의 리뷰어 조회 (LIMIT 제거 및 Pageable 추가)
     @Query("SELECT new com.ll.commars.domain.reviewerRank.dto.ReviewerRank(r.user.id, r.user.name, COUNT(r)) " +

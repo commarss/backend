@@ -10,9 +10,10 @@ public class ReviewDto {
     @Getter
     @Builder
     public static class ReviewInfo{
-        private String userName;
-        private String restaurantName;
-        private String reviewName;
+        private Long id;
+        private Long userId;
+        private Long restaurantId;
+        private String name;
         private String body;
         private Integer rate;
     }

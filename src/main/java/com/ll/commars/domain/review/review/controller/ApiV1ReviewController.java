@@ -36,4 +36,11 @@ public class ApiV1ReviewController {
         ReviewDto.ReviewWriteResponse response = reviewService.modifyReview(reviewId, request);
         return new RsData<>("200", "리뷰 수정 성공", response);
     }
+
+    @GetMapping("/showAllReviews")
+    @Operation(summary = "모든 리뷰 조회")
+    public RsData<ReviewDto.ShowAllReviewsResponse> showAllReviews( @RequestParam("restaurant_id") @NotNull Long restaurantId){
+        ReviewDto.ShowAllReviewsResponse response = reviewService.showAllReviews(restaurantId);
+        return new RsData<>("200", "모든 리뷰 조회 성공", response);
+    }
 }
