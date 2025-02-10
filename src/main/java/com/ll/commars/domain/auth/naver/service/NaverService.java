@@ -63,6 +63,7 @@ public class NaverService {
     }
 
     public User loginForNaver(Map<String, Object> userProfile) {
+        System.out.println(userProfile);
         User naverUser = User.builder()
                 .socialProvider(2)
                 .phoneNumber((String) userProfile.get("mobile"))
