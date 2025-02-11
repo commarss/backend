@@ -49,6 +49,7 @@ public class ApiV1LocationController {
         location.put("latitude", latitude);
         location.put("longitude", longitude);
 
-        return ResponseEntity.ok(location);
+        return ResponseEntity.ok()
+                .body(location);
     }
 }
