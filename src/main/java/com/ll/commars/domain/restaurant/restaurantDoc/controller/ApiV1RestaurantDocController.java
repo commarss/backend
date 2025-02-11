@@ -15,9 +15,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequiredArgsConstructor
 @Tag(name = "ApiV1RestaurantDocController", description = "식당 검색 API(ElasticSearch)")
 public class ApiV1RestaurantDocController {
-    private final RestaurantDocService restaurantDocService;
+   private final RestaurantDocService restaurantDocService;
 
-    // 사실상 ES에 데이터를 쓸 일은 없음
+   // 사실상 ES에 데이터를 쓸 일은 없음
 //    @PostMapping("/write")
 //    public RsData<RestaurantsDoc> write(
 //            @RequestBody @Valid RestaurantsDocWriteRequest request
@@ -32,15 +32,15 @@ public class ApiV1RestaurantDocController {
 //            @NotBlank Double averageRate
 //    ) {}
 
-    @GetMapping("/search")
-    @Operation(summary = "식당 검색")
-    public List<RestaurantDoc> search(@RequestParam("keyword") String keyword) {
-        return restaurantDocService.searchByKeyword(keyword);
-    }
+   @GetMapping("/search")
+   @Operation(summary = "식당 검색")
+   public List<RestaurantDoc> search(@RequestParam("keyword") String keyword) {
+       return restaurantDocService.searchByKeyword(keyword);
+   }
 
-    @GetMapping("/sort/rate")
-    @Operation(summary = "평점순으로 정렬")
-    public List<RestaurantDoc> showSortByRate() {
-        return restaurantDocService.showSortByRate();
-    }
+   @GetMapping("/sort/rate")
+   @Operation(summary = "평점순으로 정렬")
+   public List<RestaurantDoc> showSortByRate() {
+       return restaurantDocService.showSortByRate();
+   }
 }

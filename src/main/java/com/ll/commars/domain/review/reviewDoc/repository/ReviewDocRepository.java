@@ -9,23 +9,23 @@ import java.util.List;
 
 @Repository
 public interface ReviewDocRepository extends ElasticsearchRepository<ReviewDoc, String> {
-    @Query("""
-            {
-                "bool": {
-                    "should": [
-                        {
-                            "match": {
-                                "name": "?0"
-                            }
-                        },
-                        {
-                            "match": {
-                                "body": "?0"
-                            }
-                        }
-                    ]
-                }
-            }
-    """)
-    List<ReviewDoc> searchByKeyword(String keyword);
+   @Query("""
+           {
+               "bool": {
+                   "should": [
+                       {
+                           "match": {
+                               "name": "?0"
+                           }
+                       },
+                       {
+                           "match": {
+                               "body": "?0"
+                           }
+                       }
+                   ]
+               }
+           }
+   """)
+   List<ReviewDoc> searchByKeyword(String keyword);
 }

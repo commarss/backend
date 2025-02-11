@@ -13,15 +13,15 @@ import org.springframework.data.elasticsearch.annotations.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReviewDoc {
-    @Id
-    private String id;
+   @Id
+   private String id;
 
-    @Field(type = FieldType.Text)
-    private String name;
+   @Field(type = FieldType.Text)
+   private String name;
 
-    @Field(type = FieldType.Text)
-    private String body;
+   @Field(type = FieldType.Text)
+   private String body;
 
-    @Field(type = FieldType.Integer)
-    private Integer rate;
+   @Field(type = FieldType.Integer)
+   private Integer rate;
 }

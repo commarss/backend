@@ -13,15 +13,15 @@ import org.springframework.data.elasticsearch.annotations.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RestaurantDoc {
-    @Id
-    private String id;
+   @Id
+   private String id;
 
-    @Field(type = FieldType.Text)
-    private String name;
+   @Field(type = FieldType.Text)
+   private String name;
 
-    @Field(type = FieldType.Text)
-    private String details;
+   @Field(type = FieldType.Text)
+   private String details;
 
-    @Field(name = "average_rate", type = FieldType.Double)
-    private Double averageRate;
+   @Field(name = "average_rate", type = FieldType.Double)
+   private Double averageRate;
 }

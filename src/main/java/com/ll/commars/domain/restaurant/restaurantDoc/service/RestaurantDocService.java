@@ -10,27 +10,27 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class RestaurantDocService {
-    private final RestaurantDocRepository restaurantDocRepository;
+   private final RestaurantDocRepository restaurantDocRepository;
 
-    public RestaurantDoc write(String name, String details, Double averageRate) {
-        RestaurantDoc restaurantDoc = RestaurantDoc.builder()
-                .name(name)
-                .details(details)
-                .averageRate(averageRate)
-                .build();
+   public RestaurantDoc write(String name, String details, Double averageRate) {
+       RestaurantDoc restaurantDoc = RestaurantDoc.builder()
+               .name(name)
+               .details(details)
+               .averageRate(averageRate)
+               .build();
 
-        return restaurantDocRepository.save(restaurantDoc);
-    }
+       return restaurantDocRepository.save(restaurantDoc);
+   }
 
-    public void truncate() {
-        restaurantDocRepository.deleteAll();
-    }
+   public void truncate() {
+       restaurantDocRepository.deleteAll();
+   }
 
-    public List<RestaurantDoc> searchByKeyword(String keyword) {
-        return restaurantDocRepository.searchByKeyword(keyword);
-    }
+   public List<RestaurantDoc> searchByKeyword(String keyword) {
+       return restaurantDocRepository.searchByKeyword(keyword);
+   }
 
-    public List<RestaurantDoc> showSortByRate() {
-        return restaurantDocRepository.findAllByOrderByAverageRateDesc();
-    }
+   public List<RestaurantDoc> showSortByRate() {
+       return restaurantDocRepository.findAllByOrderByAverageRateDesc();
+   }
 }

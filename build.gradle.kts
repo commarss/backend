@@ -56,7 +56,7 @@ dependencies {
     implementation("com.github.f4b6a3:tsid-creator:5.2.6")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-data-elasticsearch")
-    developmentOnly("org.springframework.boot:spring-boot-docker-compose")
+    //developmentOnly("org.springframework.boot:spring-boot-docker-compose")
 
     // Swagger
     implementation ("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")

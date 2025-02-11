@@ -18,7 +18,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequiredArgsConstructor
 @Tag(name = "ApiV1ReviewDocController", description = "리뷰 CRUD API(ElasticSearch)")
 public class ApiV1ReviewDocController {
-    private final ReviewDocService reviewDocService;
+   private final ReviewDocService reviewDocService;
 
 //    @PostMapping("/write")
 //    public RsData<ReviewDoc> write(
@@ -33,9 +33,9 @@ public class ApiV1ReviewDocController {
 //            @NotBlank Integer rate
 //    ) {}
 
-    @GetMapping("/search")
-    @Operation(summary = "리뷰 검색")
-    public List<ReviewDoc> search(@RequestParam("keyword") String keyword) {
-        return reviewDocService.searchByKeyword(keyword);
-    }
+   @GetMapping("/search")
+   @Operation(summary = "리뷰 검색")
+   public List<ReviewDoc> search(@RequestParam("keyword") String keyword) {
+       return reviewDocService.searchByKeyword(keyword);
+   }
 }
