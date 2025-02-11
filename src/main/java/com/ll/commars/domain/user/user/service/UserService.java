@@ -89,23 +89,41 @@ public class UserService {
     }
 
 
+//    public User accessionCheck(User user) {
+//        System.out.println("accessiom: " + user);
+//        Optional<User> findUser = userRepository.findByEmailAndName(user.getEmail(), user.getName());
+//        System.out.println("find: " + findUser.get().getName());
+//        return findUser.orElseGet(() -> userRepository.save(user));
+//    }
+
     public User accessionCheck(User user) {
         System.out.println("accessiom: " + user);
         Optional<User> findUser = userRepository.findByEmailAndName(user.getEmail(), user.getName());
-        System.out.println("find: " + findUser.get().getName());
         return findUser.orElseGet(() -> userRepository.save(user));
     }
 
+
     // 카카오 로그인용 신규 사용자 여부 확인 로직
-    public User accessionKakaoCheck(User user) {
-        // socialProvider와 socialId를 기준으로 기존 사용자를 조회
-        Optional<User> optionlUser = userRepository.findBySocialProviderAndId(
-                user.getSocialProvider(),
-                user.getId()
-        );
-        // 기존 사용자가 있다면 반환하고, 없으면 신규 가입 처리
-        return optionlUser.orElseGet(() -> userRepository.save(user));
-    }
+//    public User accessionKakaoCheck(User user) {
+//        // socialProvider와 kakaoId를 기준으로 기존 사용자를 조회
+//        Optional<User> findUser = userRepository.findBySocialProviderAndKakaoId(
+//                user.getSocialProvider(),
+//                user.getKakaoId()
+//        );
+//        // 기존 사용자가 있다면 반환하고, 없으면 신규 가입 처리
+//        return findUser.orElseGet(() -> userRepository.save(user));
+//    }
+
+//    public User accessionKakaoCheck(User user) {
+//        Optional<User> findUser = userRepository.findBySocialProviderAndKakaoId(
+//                user.getSocialProvider(),
+//                user.getKakaoId()
+//        );
+//        findUser.ifPresent(u -> System.out.println("find: " + u.getName()));
+//        // 값이 없으면 저장하고, 있으면 기존 사용자를 반환
+//        return findUser.orElseGet(() -> userRepository.save(user));
+//    }
+
 
     public Optional<User> findByIdAndEmail(Long id, String email) {
         return userRepository.findByIdAndEmail(id, email);

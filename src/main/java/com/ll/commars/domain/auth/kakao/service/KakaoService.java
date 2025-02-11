@@ -81,29 +81,25 @@ public class KakaoService {
      * Kakao의 사용자 프로필 정보를 기반으로 내부 User 엔티티로 변환하고, 가입/로그인 처리
      */
     public User loginForKakao(Map<String, Object> userProfile) {
-        // Kakao API의 응답 예시에서 root에 "id"가 있습니다.
+        // Kakao API에서 제공하는 고유 식별자인 id값 추출
         Long kakaoId = ((Number) userProfile.get("id")).longValue();
 
+        // kakao_account와 profile 데이터 추출
         Map<String, Object> kakaoAccount = (Map<String, Object>) userProfile.get("kakao_account");
         Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
 
-        System.out.println(profile);
-
-        // 이메일은 제공되지 않을 수도 있으므로, 고유한 id를 사용합니다.
-        // String email = (String) kakaoAccount.get("email"); // 필요한 경우 사용
-
         String nickname = (String) profile.get("nickname");
         String profileImageUrl = (String) profile.get("profile_image_url");
+        String email = kakaoId + "@kakao.com"; // 카카오에서 이메일 제공x, 카카오 고유 id로 임시 이메일 생성하기
 
+        // User 엔티티 생성
         User kakaoUser = User.builder()
                 .socialProvider(1)
-//                .id(Long.valueOf(kakaoId))
-//                .socialId(String.valueOf(kakaoId))  // Kakao 고유 id를 문자열로 저장
-                .email("kakao@email"+nickname)          // 이메일이 필요하면 사용 (현재 주석 처리)
+                .email(nickname+kakaoId+"@kakao.com")          // 이메일이 필요하면 사용 (현재 주석 처리)
                 .name(nickname)
                 .profileImageUrl(profileImageUrl)
                 .build();
 
-        return userService.accessionKakaoCheck(kakaoUser);
+        return userService.accessionCheck(kakaoUser);
     }
 }
