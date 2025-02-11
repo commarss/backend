@@ -40,3 +40,4 @@ out/
 application-secret.yml
 /logstash/pipeline/logstash.conf
 db_dev.*
+.terraform

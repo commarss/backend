@@ -11,10 +11,10 @@ import com.ll.commars.domain.restaurant.menu.dto.RestaurantMenuDto;
 import com.ll.commars.domain.restaurant.menu.service.RestaurantMenuService;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantDto;
 import com.ll.commars.domain.restaurant.restaurant.service.RestaurantService;
-import com.ll.commars.domain.restaurant.restaurantDoc.service.RestaurantDocService;
+//import com.ll.commars.domain.restaurant.restaurantDoc.service.RestaurantDocService;
 import com.ll.commars.domain.review.review.dto.ReviewDto;
 import com.ll.commars.domain.review.review.service.ReviewService;
-import com.ll.commars.domain.review.reviewDoc.service.ReviewDocService;
+//import com.ll.commars.domain.review.reviewDoc.service.ReviewDocService;
 import com.ll.commars.domain.user.favorite.dto.FavoriteDto;
 import com.ll.commars.domain.user.favorite.entity.Favorite;
 import com.ll.commars.domain.user.favorite.service.FavoriteService;
@@ -37,9 +37,9 @@ import java.util.stream.IntStream;
 @Configuration
 @RequiredArgsConstructor
 public class BaseInitData {
-    private final ReviewDocService reviewDocService;
+    //private final ReviewDocService reviewDocService;
     private final ReviewService reviewService;
-    private final RestaurantDocService restaurantDocService;
+    //private final RestaurantDocService restaurantDocService;
     private final RestaurantService restaurantService;
     private final UserService userService;
     private final BoardService boardService;
@@ -72,8 +72,8 @@ public class BaseInitData {
 
     private void truncateAll(){
         // 연관관계 순서대로 삭제해야함
-        reviewDocService.truncate();
-        restaurantDocService.truncate();
+        //reviewDocService.truncate();
+        //restaurantDocService.truncate();
 
         favoriteRestaurantService.truncate();
         favoriteService.truncate();
