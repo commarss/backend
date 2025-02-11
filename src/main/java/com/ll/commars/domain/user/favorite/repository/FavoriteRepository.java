@@ -1,6 +1,7 @@
 package com.ll.commars.domain.user.favorite.repository;
 
 import com.ll.commars.domain.user.favorite.entity.Favorite;
+import com.ll.commars.domain.user.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -23,4 +24,6 @@ public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
 
     // 유저 ID로 찜 목록 조회
     List<Favorite> findByUserId(Long userId);
+
+    boolean existsByUserAndFavoriteRestaurantsRestaurantId(User user, Long restaurantId);
 }

@@ -9,11 +9,13 @@ import com.ll.commars.domain.user.favorite.repository.FavoriteRepository;
 import com.ll.commars.domain.user.favoriteRestaurant.entity.FavoriteRestaurant;
 import com.ll.commars.domain.user.favoriteRestaurant.repository.FavoriteRestaurantRepository;
 import com.ll.commars.domain.user.user.entity.User;
+import com.ll.commars.domain.user.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,6 +24,7 @@ public class FavoriteService {
     private final FavoriteRepository favoriteRepository;
     private final RestaurantRepository restaurantRepository;
     private final FavoriteRestaurantRepository favoriteRestaurantRepository;
+    private final UserService userService;
     public int getFavoriteCount(String email) {
         return favoriteRepository.countByUserEmail(email);
     }
@@ -111,5 +114,23 @@ public class FavoriteService {
     @Transactional
     public void truncate() {
         favoriteRepository.deleteAll();
+    }
+
+    @Transactional
+    public Favorite createFavoriteList( String favoriteName, String userId) {
+        Optional<User> user = userService.findById(Long.parseLong(userId));
+        if (user.isEmpty()) {
+            throw new IllegalArgumentException("User not found");
+        }
+        return favoriteRepository.save(Favorite.builder()
+                .name(favoriteName)
+                .isPublic(false)
+                .user(user.get())
+                .build());
+    }
+
+    @Transactional
+    public boolean isFavorite(User user, Long restaurantId) {
+        return favoriteRepository.existsByUserAndFavoriteRestaurantsRestaurantId(user, restaurantId);
     }
 }
