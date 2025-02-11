@@ -6,6 +6,8 @@ import com.ll.commars.domain.review.review.dto.ReviewDto;
 import com.ll.commars.domain.review.review.entity.Review;
 import com.ll.commars.domain.review.review.repository.ReviewRepository;
 import com.ll.commars.domain.reviewerRank.dto.ReviewerRank;
+import com.ll.commars.domain.reviewerRank.dto.ReviewerRankResponse;
+
 
 import com.ll.commars.domain.user.user.entity.User;
 import com.ll.commars.domain.user.user.repository.UserRepository;
@@ -44,11 +46,16 @@ public class ReviewerService {
     }
 
 
-    // ✅ 상위 10명의 리뷰어 조회 (Pageable 적용)
-    public List<ReviewerRank> getTopReviewers() {
+    // ✅ 상위 10명의 리뷰어 조회 후 top3, others 분리
+    public ReviewerRankResponse getTopReviewers() {
         List<ReviewerRank> topReviewers = reviewRepository.findTopReviewers(PageRequest.of(0, 10));
         System.out.println("🔹 상위 리뷰어 수: " + topReviewers.size());
-        return topReviewers;
+
+        // 상위 3명과 그 외 유저 분리
+        List<ReviewerRank> top3Reviewers = topReviewers.subList(0, Math.min(3, topReviewers.size()));
+        List<ReviewerRank> otherReviewers = topReviewers.subList(Math.min(3, topReviewers.size()), topReviewers.size());
+
+        return new ReviewerRankResponse(top3Reviewers, otherReviewers);
     }
 
 

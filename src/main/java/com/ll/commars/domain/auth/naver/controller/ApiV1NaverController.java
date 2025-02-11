@@ -51,51 +51,6 @@ public class ApiV1NaverController {
        return authService.login(naverUser);
     }
 
-//    @GetMapping("/login/naver/callback")
-//    public ResponseEntity<?> naverCallback(@RequestParam String code, @RequestParam String state) {
-//        System.out.println("code = " + code);
-//        System.out.println("state = " + state);
-//        String naverAccessToken = naverservice.getAccessToken(code, state);
-//
-//        if (naverAccessToken == null) {
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("토큰 발급 실패");
-//        }
-//
-//        Map<String, Object> profile = naverservice.getUserProfile(naverAccessToken);
-//
-//        Map<String, String> userProfile = (Map<String, String>) naverservice.getUserProfile(naverAccessToken).get("response");
-//
-//        System.out.println("profile = " + profile);
-//        System.out.println("naver userProfile = " + userProfile);
-//
-////        Optional<Member> naverMember = naverservice.loginForNaver(userProfile);
-////
-////        String accessToken = jwtProvider.generateAccessToken(naverMember.get().getId());
-////        String refreshToken = jwtProvider.generateRefreshToken(naverMember.get().getId());
-//
-////        String id = (String) userProfile.get("id");
-//
-//        String id = userProfile.get("response");
-//        System.out.println("id = " + id);
-//
-//        String accessToken = jwtProvider.generateAccessToken(Long.parseLong(id));
-//        String refreshToken = jwtProvider.generateRefreshToken(Long.parseLong(id));
-//
-//        System.out.println("accessToken = " + accessToken);
-//
-//        ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", refreshToken)
-//                .httpOnly(true)
-//                .secure(true)
-//                .path("/")
-//                .maxAge(jwtProvider.REFRESH_TOKEN_VALIDITY)
-//                .sameSite("Strict")
-//                .build();
-//
-//        return ResponseEntity.ok()
-//                .header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
-//                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-//                .body(Map.of("naverMember", userProfile, "accessToken", accessToken));
-//    }
 
     @GetMapping("/login/naver/state")
     @Operation(summary = "네이버 로그인 상태")

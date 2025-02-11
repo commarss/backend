@@ -77,4 +77,24 @@ public class TodayRandomService {
         return restaurantRepository.findById(restaurantId)
                 .map(RestaurantSummaryDTO::fromEntity);
     }
+
+    @Transactional(readOnly = true)
+    public List<RestaurantSummaryDTO> getnotuserRandomRestaurants(double lat, double lng) {
+        // 반경 2km 내의 식당 목록 가져오기
+        List<Restaurant> nearbyRestaurants = restaurantRepository.findRestaurantsWithinRadius(lat, lng);
+
+        // 식당이 5개 이하라면 그대로 반환
+        if (nearbyRestaurants.size() <= 5) {
+            return nearbyRestaurants.stream()
+                    .map(RestaurantSummaryDTO::fromEntity)
+                    .collect(Collectors.toList());
+        }
+
+        // 무작위로 5개 선택
+        Collections.shuffle(nearbyRestaurants);
+        return nearbyRestaurants.stream()
+                .limit(5)
+                .map(RestaurantSummaryDTO::fromEntity)
+                .collect(Collectors.toList());
+    }
 }

@@ -6,7 +6,7 @@ spring:
       enabled: ALWAYS
   profiles:
     active: dev
-    include: secret, oauth
+    include: secret
 #  datasource:
 #    url: jdbc:h2:file:./db_dev;MODE=MySQL
 #    username: sa
@@ -59,3 +59,5 @@ jwt:
     /api/user/reset-password
 google:
   client-id: "${spring.security.oauth2.client.registration.google.client-id}"
+kakao:
+  client-id: "${spring.security.oauth2.client.registration.kakao.client-id}"

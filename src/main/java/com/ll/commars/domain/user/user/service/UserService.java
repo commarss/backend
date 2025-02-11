@@ -56,8 +56,6 @@ public class UserService {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new RuntimeException("이미 등록된 이메일입니다.");
         }
-
-
         userRepository.save(user);
     }
 
@@ -92,8 +90,21 @@ public class UserService {
 
 
     public User accessionCheck(User user) {
+        System.out.println("accessiom: " + user);
         Optional<User> findUser = userRepository.findByEmailAndName(user.getEmail(), user.getName());
+        System.out.println("find: " + findUser.get().getName());
         return findUser.orElseGet(() -> userRepository.save(user));
+    }
+
+    // 카카오 로그인용 신규 사용자 여부 확인 로직
+    public User accessionKakaoCheck(User user) {
+        // socialProvider와 socialId를 기준으로 기존 사용자를 조회
+        Optional<User> optionlUser = userRepository.findBySocialProviderAndId(
+                user.getSocialProvider(),
+                user.getId()
+        );
+        // 기존 사용자가 있다면 반환하고, 없으면 신규 가입 처리
+        return optionlUser.orElseGet(() -> userRepository.save(user));
     }
 
     public Optional<User> findByIdAndEmail(Long id, String email) {
@@ -136,9 +147,10 @@ public class UserService {
                 .getReviews()
                 .stream()
                 .map(review -> ReviewDto.ReviewInfo.builder()
-                        .userName(review.getUser().getName())
-                        .restaurantName(review.getRestaurant().getName())
-                        .reviewName(review.getName())
+                        .userId(review.getUser().getId())
+                        .restaurantId(review.getRestaurant().getId())
+                        .id(review.getId())
+                        .name(review.getName())
                         .body(review.getBody())
                         .rate(review.getRate())
                         .build())

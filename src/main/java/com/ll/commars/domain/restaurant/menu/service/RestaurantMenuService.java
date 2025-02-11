@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class RestaurantMenuService {
@@ -64,5 +66,14 @@ public class RestaurantMenuService {
 
     public void truncate() {
         restaurantMenuRepository.deleteAll();
+    }
+
+    public RestaurantMenuDto.ShowAllMenusResponse findByRestaurantId(Long restaurantId) {
+
+        List<RestaurantMenuDto.MenuInfo> restaurantMenus = restaurantMenuRepository.findByRestaurantId(restaurantId);
+
+        return RestaurantMenuDto.ShowAllMenusResponse.builder()
+                .menus(restaurantMenus)
+                .build();
     }
 }

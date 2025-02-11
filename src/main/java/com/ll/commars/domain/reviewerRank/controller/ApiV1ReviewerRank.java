@@ -1,6 +1,7 @@
 package com.ll.commars.domain.reviewerRank.controller;
 
 import com.ll.commars.domain.reviewerRank.dto.ReviewerRank;
+import com.ll.commars.domain.reviewerRank.dto.ReviewerRankResponse;
 import com.ll.commars.domain.reviewerRank.service.ReviewerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,8 +22,8 @@ public class ApiV1ReviewerRank {
 
     @GetMapping("/top10")
     @Operation(summary = "리뷰를 가장 많이 작성한 상위 10명의 유저 조회")
-    public ResponseEntity<List<ReviewerRank>> getTopReviewers() {
-        List<ReviewerRank> topReviewers = reviewerService.getTopReviewers();
-        return ResponseEntity.ok(topReviewers);
+    public ResponseEntity<ReviewerRankResponse> getTopReviewers() {
+        ReviewerRankResponse reviewerRanks = reviewerService.getTopReviewers();
+        return ResponseEntity.ok(reviewerRanks);
     }
 }
