@@ -30,6 +30,11 @@ public class User extends BaseEntity {
     @Column(name = "social_provider", nullable = false)
     private Integer socialProvider;
 
+    // 카카오 사용자 식별을 위한 고유 kakaoId(socialId)
+    @NotNull
+    @Column(name = "kakaoId")
+    private Long kakaoId;
+
     @Column(name = "email")
     private String email;
 
