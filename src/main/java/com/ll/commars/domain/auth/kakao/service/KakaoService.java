@@ -95,12 +95,11 @@ public class KakaoService {
         // User 엔티티 생성
         User kakaoUser = User.builder()
                 .socialProvider(1)
-                .kakaoId(kakaoId)
-                .email("kakao@email"+nickname)          // 이메일이 필요하면 사용 (현재 주석 처리)
+                .email(nickname+kakaoId+"@kakao.com")          // 이메일이 필요하면 사용 (현재 주석 처리)
                 .name(nickname)
                 .profileImageUrl(profileImageUrl)
                 .build();
 
-        return userService.accessionKakaoCheck(kakaoUser);
+        return userService.accessionCheck(kakaoUser);
     }
 }

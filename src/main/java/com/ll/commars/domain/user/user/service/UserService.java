@@ -98,12 +98,7 @@ public class UserService {
     public User accessionCheck(User user) {
         System.out.println("accessiom: " + user);
         Optional<User> findUser = userRepository.findByEmailAndName(user.getEmail(), user.getName());
-        if (findUser.isPresent()) {
-            System.out.println("find: " + findUser.get().getName());
-            return findUser.get();
-        } else {
-            return userRepository.save(user);
-        }
+        return findUser.orElseGet(() -> userRepository.save(user));
     }
 
 
@@ -118,15 +113,15 @@ public class UserService {
 //        return findUser.orElseGet(() -> userRepository.save(user));
 //    }
 
-    public User accessionKakaoCheck(User user) {
-        Optional<User> findUser = userRepository.findBySocialProviderAndKakaoId(
-                user.getSocialProvider(),
-                user.getKakaoId()
-        );
-        findUser.ifPresent(u -> System.out.println("find: " + u.getName()));
-        // 값이 없으면 저장하고, 있으면 기존 사용자를 반환
-        return findUser.orElseGet(() -> userRepository.save(user));
-    }
+//    public User accessionKakaoCheck(User user) {
+//        Optional<User> findUser = userRepository.findBySocialProviderAndKakaoId(
+//                user.getSocialProvider(),
+//                user.getKakaoId()
+//        );
+//        findUser.ifPresent(u -> System.out.println("find: " + u.getName()));
+//        // 값이 없으면 저장하고, 있으면 기존 사용자를 반환
+//        return findUser.orElseGet(() -> userRepository.save(user));
+//    }
 
 
     public Optional<User> findByIdAndEmail(Long id, String email) {
