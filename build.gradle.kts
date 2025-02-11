@@ -42,7 +42,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
     implementation("com.google.api-client:google-api-client:1.33.0")
-    implementation("com.google.http-client:google-http-client-gson:2.11.1")
+    implementation("com.google.http-client:google-http-client-gson:1.33.0")
     implementation("com.google.oauth-client:google-oauth-client:1.33.3")
     implementation("org.springframework.boot:spring-boot-starter-websocket")
     compileOnly("org.projectlombok:lombok")
