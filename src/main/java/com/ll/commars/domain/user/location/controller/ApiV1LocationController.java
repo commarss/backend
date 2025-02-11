@@ -1,10 +1,13 @@
 package com.ll.commars.domain.user.location.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -12,13 +15,18 @@ import org.springframework.web.client.RestTemplate;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 @RestController
 @RequiredArgsConstructor
+@RequestMapping(value = "/api/v1/location", produces = APPLICATION_JSON_VALUE)
+@Tag(name = "ApiV1LocationController", description = "위치 정보 API")
 public class ApiV1LocationController {
     @Value("${spring.ipInfo.token}")
     private String token;
 
-    @GetMapping("/api/v1/user/location/current")
+    @GetMapping("/current")
+    @Operation(summary = "현재 사용자의 위치 정보 조회")
     public ResponseEntity<?> getUserLocation(HttpServletRequest request) {
         String ipAdress = request.getHeader("X-FORWARDED-FOR");
         if (ipAdress == null || ipAdress.isEmpty()) {
@@ -26,7 +34,7 @@ public class ApiV1LocationController {
         }
 
         // 테스트를 위해 token을 직접 하드코딩
-        String url = "https://ipinfo.io/" + ipAdress + "?token=14a73545c4250f";
+        String url = "https://ipinfo.io/" + ipAdress + "?token=" + token;
         RestTemplate restTemplate = new RestTemplate();
 
         try {
