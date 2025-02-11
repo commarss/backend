@@ -76,8 +76,9 @@ public class Board extends BaseEntity {
     @ColumnDefault("0")
     private Integer likeCount;
 
-    @Column(nullable = false, columnDefinition = "int default 0")
-    private int dislikeCount = 0;  // 🚀 기본값 0 설정
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private int dislikeCount;  // 🚀 기본값 0 설정
 
     // ✅ 좋아요 추가
     public void incrementLikes() {

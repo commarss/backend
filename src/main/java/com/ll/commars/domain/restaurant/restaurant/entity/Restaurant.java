@@ -18,7 +18,6 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-@ToString(exclude = {"restaurantMenus", "restaurantCategories", "restaurantBusinessHours", "reviews", "favoriteRestaurants"})
 @NoArgsConstructor
 @AllArgsConstructor
 public class Restaurant extends BaseEntity {
