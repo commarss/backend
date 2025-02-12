@@ -19,7 +19,7 @@ class ServiceManager:
             ]
         )
         self.logger = logging.getLogger(__name__)
-                
+
         self.socat_port: int = socat_port
         self.sleep_duration: int = sleep_duration
         self.services: Dict[str, int] = {
@@ -77,6 +77,8 @@ class ServiceManager:
         url = f"http://127.0.0.1:{port}/actuator/health"
         try:
             response = requests.get(url, timeout=5)  # n초 이내 응답 없으면 예외 발생
+            self.logger.info(f"Response status code: {response.status_code}")
+
             if response.status_code == 200 and response.json().get('status') == 'UP':
                 self.logger.info(f"Service is 'UP' on port {port}")
                 return True
