@@ -9,7 +9,7 @@ from typing import Dict, Optional
 
 class ServiceManager:
     # 초기화 함수
-    def __init__(self, socat_port: int = 8090, sleep_duration: int = 3) -> None:
+    def __init__(self, socat_port: int = 8081, sleep_duration: int = 3) -> None:
         self.socat_port: int = socat_port
         self.sleep_duration: int = sleep_duration
         self.services: Dict[str, int] = {
