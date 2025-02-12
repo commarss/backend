@@ -79,7 +79,7 @@ public class ApiV1FavoriteController {
             @AuthenticationPrincipal UserDetails userDetails
     ) {
         String userId = userDetails.getUsername();
-        Favorite response = favoriteService.createFavoriteList(String.valueOf(request.get("name")), userId);
+        Favorite response = userService.createFavoriteList(String.valueOf(request.get("name")), userId);
         FavoriteDto.FavoriteInfo favoriteInfo = favoriteService.toFavoriteInfo(response);
         return new RsData<>("201", "찜 목록 생성 성공", favoriteInfo);
     }

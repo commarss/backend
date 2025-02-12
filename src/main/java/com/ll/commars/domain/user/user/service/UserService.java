@@ -5,6 +5,7 @@ package com.ll.commars.domain.user.user.service;
 
 import com.ll.commars.domain.review.review.dto.ReviewDto;
 import com.ll.commars.domain.user.favorite.dto.FavoriteDto;
+import com.ll.commars.domain.user.favorite.entity.Favorite;
 import com.ll.commars.domain.user.favorite.service.FavoriteService;
 import com.ll.commars.domain.user.user.dto.UserDto;
 import com.ll.commars.domain.user.user.entity.User;
@@ -28,6 +29,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final FavoriteService favoriteService;
+
 
     public User createUser(String email, String name, Integer socialProvider, String password, String phoneNumber, String profileImageUrl, LocalDateTime birthDate,Integer gender) {
         User user = new User();
@@ -186,5 +188,15 @@ public class UserService {
         return userRepository.findByEmail(email).orElse(null);  // ✅ Optional을 벗긴 버전
     }
 
-
+    public Favorite createFavoriteList(String favoriteName, String userId) {
+        Optional<User> user = userRepository.findById(Long.parseLong(userId));
+        if (user.isEmpty()) {
+            throw new IllegalArgumentException("User not found");
+        }
+        return favoriteService.saveFavorite(Favorite.builder()
+                .name(favoriteName)
+                .isPublic(false)
+                .user(user.get())
+                .build());
+    }
 }

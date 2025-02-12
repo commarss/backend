@@ -24,7 +24,6 @@ public class FavoriteService {
     private final FavoriteRepository favoriteRepository;
     private final RestaurantRepository restaurantRepository;
     private final FavoriteRestaurantRepository favoriteRestaurantRepository;
-    private final UserService userService;
     public int getFavoriteCount(String email) {
         return favoriteRepository.countByUserEmail(email);
     }
@@ -117,20 +116,11 @@ public class FavoriteService {
     }
 
     @Transactional
-    public Favorite createFavoriteList( String favoriteName, String userId) {
-        Optional<User> user = userService.findById(Long.parseLong(userId));
-        if (user.isEmpty()) {
-            throw new IllegalArgumentException("User not found");
-        }
-        return favoriteRepository.save(Favorite.builder()
-                .name(favoriteName)
-                .isPublic(false)
-                .user(user.get())
-                .build());
-    }
-
-    @Transactional
     public boolean isFavorite(User user, Long restaurantId) {
         return favoriteRepository.existsByUserAndFavoriteRestaurantsRestaurantId(user, restaurantId);
+    }
+
+    public Favorite saveFavorite(Favorite favorite) {
+        return favoriteRepository.save(favorite);
     }
 }
