@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -33,7 +34,9 @@ public class FavoriteService {
     }
 
     public FavoriteDto.FavoriteInfo toFavoriteInfo(Favorite favorite) {
-        List<RestaurantDto.RestaurantBasicInfo> restaurants = favorite.getFavoriteRestaurants().stream()
+        List<RestaurantDto.RestaurantBasicInfo> restaurants = Optional.ofNullable(favorite.getFavoriteRestaurants())
+                .orElse(Collections.emptyList()) // Null이면 빈 리스트 반환
+                .stream()
                 .map(fr -> RestaurantDto.RestaurantBasicInfo.builder()
                         .id(fr.getRestaurant().getId())
                         .name(fr.getRestaurant().getName())
@@ -53,19 +56,22 @@ public class FavoriteService {
         return FavoriteDto.FavoriteInfo.builder()
                 .id(favorite.getId())
                 .name(favorite.getName())
-                .isPublic(favorite.getIsPublic())
+                .isPublic(favorite.getIsPublic() != null ? favorite.getIsPublic() : true)
                 .restaurantLists(restaurants)
                 .build();
     }
 
     public void saveFavoriteList(User user, FavoriteDto.CreateFavoriteListRequest createFavoriteListRequest) {
+        Boolean isPublicValue = createFavoriteListRequest.getIsPublic();
+        System.out.println("📌 [디버깅] 받은 isPublic 값: " + isPublicValue);
         Favorite favorite = Favorite.builder()
                 .name(createFavoriteListRequest.getName())
-                .isPublic(createFavoriteListRequest.getIsPublic())
+                .isPublic(isPublicValue != null ? isPublicValue : true)
                 .user(user)
                 .build();
 
         favoriteRepository.save(favorite);
+        System.out.println("📌 [디버깅] 저장된 isPublic 값: " + favorite.getIsPublic());
     }
 
     @Transactional
@@ -127,4 +133,13 @@ public class FavoriteService {
     public Optional<Favorite> findByUserAndName(User user, String name) {
         return favoriteRepository.findByUserAndName(user, name);
     }
+
+    @Transactional
+    public List<FavoriteDto.FavoriteInfo> getAllFavoritesByUser(Long userId) {
+        List<Favorite> favorites = favoriteRepository.findByUserId(userId);  // 사용자의 찜 목록 조회
+        return favorites.stream()
+                .map(favorite -> toFavoriteInfo(favorite))  // Favorite 객체를 FavoriteInfo로 변환
+                .collect(Collectors.toList());
+    }
+
 }
