@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.elasticsearch.client.ClientConfiguration;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchConfiguration;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
+import org.springframework.data.elasticsearch.support.HttpHeaders;
 
 import java.time.Duration;
 
@@ -18,8 +19,10 @@ public class ElasticsearchConfig extends ElasticsearchConfiguration {
     public ClientConfiguration clientConfiguration() {
         return ClientConfiguration.builder()
                 .connectedTo(elasticsearchUrl.replace("http://", ""))
-                .withConnectTimeout(Duration.ofSeconds(5))
-                .withSocketTimeout(Duration.ofSeconds(60))
+                .withDefaultHeaders(new HttpHeaders() {{
+                    add("Accept", "application/json");
+                    add("Content-Type", "application/json");
+                }})
                 .build();
     }
 }
