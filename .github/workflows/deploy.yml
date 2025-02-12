@@ -81,6 +81,6 @@ jobs:
           comment: Deploy
           command: |
             mkdir -p /dockerProjects/likelion_mars
-            curl -o /dockerProjects/likelion_mars/zero_downtime_deploy.py https://raw.githubusercontent.com/BackEndSchoolPlus3th/mars-back/deploy/infraScript/zero_downtime_deploy.py
+            curl -o /dockerProjects/likelion_mars/zero_downtime_deploy.py https://raw.githubusercontent.com/BackEndSchoolPlus3th/mars-back/main/infraScript/zero_downtime_deploy.py
             chmod +x /dockerProjects/likelion_mars/zero_downtime_deploy.py
             python3 /dockerProjects/likelion_mars/zero_downtime_deploy.py
