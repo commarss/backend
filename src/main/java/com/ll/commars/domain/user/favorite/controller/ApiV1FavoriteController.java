@@ -74,14 +74,13 @@ public class ApiV1FavoriteController {
 
     @PostMapping("/create")
     @Operation(summary = "찜 목록 생성")
-    public RsData<FavoriteDto.FavoriteInfo> createFavoriteList(
+    public ResponseEntity<?> createFavoriteList(
             @RequestBody Map<String, Object> request,
             @AuthenticationPrincipal UserDetails userDetails
     ) {
+        System.out.println("request = " + request);
         String userId = userDetails.getUsername();
-        Favorite response = userService.createFavoriteList(String.valueOf(request.get("name")), userId);
-        FavoriteDto.FavoriteInfo favoriteInfo = favoriteService.toFavoriteInfo(response);
-        return new RsData<>("201", "찜 목록 생성 성공", favoriteInfo);
+        return userService.createFavoriteList(String.valueOf(request.get("name")), userId);
     }
 
     @GetMapping("/isFavorite")

@@ -14,6 +14,7 @@ import com.ll.commars.domain.user.user.controller.ApiV1UserController;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -188,15 +189,23 @@ public class UserService {
         return userRepository.findByEmail(email).orElse(null);  // ✅ Optional을 벗긴 버전
     }
 
-    public Favorite createFavoriteList(String favoriteName, String userId) {
+    public ResponseEntity<?> createFavoriteList(String favoriteName, String userId) {
         Optional<User> user = userRepository.findById(Long.parseLong(userId));
         if (user.isEmpty()) {
             throw new IllegalArgumentException("User not found");
         }
-        return favoriteService.saveFavorite(Favorite.builder()
+
+        Optional<Favorite> favorite = favoriteService.findByUserAndName(user.get(), favoriteName);
+        if (favorite.isPresent()) {
+            return ResponseEntity.badRequest().body("Favorite already exists");
+        }
+
+        favoriteService.saveFavorite(Favorite.builder()
                 .name(favoriteName)
                 .isPublic(false)
                 .user(user.get())
                 .build());
+
+        return ResponseEntity.ok().build();
     }
 }

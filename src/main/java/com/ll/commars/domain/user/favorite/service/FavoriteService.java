@@ -123,4 +123,8 @@ public class FavoriteService {
     public Favorite saveFavorite(Favorite favorite) {
         return favoriteRepository.save(favorite);
     }
+
+    public Optional<Favorite> findByUserAndName(User user, String name) {
+        return favoriteRepository.findByUserAndName(user, name);
+    }
 }
