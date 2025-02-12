@@ -202,6 +202,7 @@ public class RestaurantService {
 
         List<RestaurantMenuDto.MenuInfo> menuInfos = restaurant.getRestaurantMenus().stream()
                 .map(menu -> RestaurantMenuDto.MenuInfo.builder()
+                        .id(menu.getId())
                         .name(menu.getName())
                         .price(menu.getPrice())
                         .imageUrl(menu.getImageUrl())
