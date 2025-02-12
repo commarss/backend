@@ -76,8 +76,9 @@ class ServiceManager:
     def _is_service_up(self, port: int) -> bool:
         url = f"http://127.0.0.1:{port}/actuator/health"
         try:
-            response = requests.get(url, timeout=30)  # n초 이내 응답 없으면 예외 발생
+            response = requests.get(url, timeout=5)  # n초 이내 응답 없으면 예외 발생
             if response.status_code == 200 and response.json().get('status') == 'UP':
+                self.logger.info(f"Service is 'UP' on port {port}")
                 return True
         except requests.RequestException:
             pass
@@ -108,7 +109,6 @@ class ServiceManager:
         self.logger.info("Switched ports successfully")
 
         if self.current_name is not None:
-            self._remove_container(self.current_name)
             self._remove_container(self.current_name)
 
         print("Switched service successfully!")
