@@ -12,11 +12,12 @@ import java.util.List;
 public class RestaurantDocService {
    private final RestaurantDocRepository restaurantDocRepository;
 
-   public RestaurantDoc write(String name, String details, Double averageRate) {
+   public RestaurantDoc write(String name, String details, Double averageRate, Double lat, Double lng) {
        RestaurantDoc restaurantDoc = RestaurantDoc.builder()
                .name(name)
                .details(details)
                .averageRate(averageRate)
+               .location(lat + "," + lng)
                .build();
 
        return restaurantDocRepository.save(restaurantDoc);
@@ -33,4 +34,10 @@ public class RestaurantDocService {
    public List<RestaurantDoc> showSortByRate() {
        return restaurantDocRepository.findAllByOrderByAverageRateDesc();
    }
+
+    public List<RestaurantDoc> findNearbyRestaurants(Double lat, Double lng, Double distance) {
+        return restaurantDocRepository.findByLocationNear(distance, lat, lng);
+    }
+
+
 }

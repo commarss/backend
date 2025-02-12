@@ -17,6 +17,9 @@
     },
     "average_rate": {
       "type": "double"
+    },
+    "location": {
+      "type": "geo_point"
     }
   }
 }
