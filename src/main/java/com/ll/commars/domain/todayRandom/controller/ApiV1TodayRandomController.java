@@ -3,6 +3,7 @@ package com.ll.commars.domain.todayRandom.controller;
 
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantSummaryDTO;
 import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
+import com.ll.commars.domain.review.review.dto.RestaurantReviewAnalysisDTO;
 import com.ll.commars.domain.todayRandom.service.TodayRandomService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,6 +21,7 @@ import java.util.Optional;
 @Tag(name = "ApiV1BoardController", description = "오늘뭐먹지 관련 API")
 public class ApiV1TodayRandomController {
     private final TodayRandomService todayRandomService;
+
 
     @Autowired
     public ApiV1TodayRandomController(TodayRandomService todayRandomService) {
@@ -49,6 +51,20 @@ public class ApiV1TodayRandomController {
             @RequestParam("lat") double lat,
             @RequestParam("lng") double lng) {
         return todayRandomService.getnotuserRandomRestaurants(lat, lng);
+    }
+
+
+    // 모든 레스토랑에 대한 리뷰 분석 결과 반환
+    @GetMapping("/review-analysis/{restaurantId}")
+    @Operation(summary = "레스토랑 리뷰 분석 정보", description = "레스토랑에 대한 리뷰 개수와 평균 평점을 계산하여 반환합니다.")
+    public RestaurantReviewAnalysisDTO getRestaurantReviewAnalysis(@PathVariable Long restaurantId) {
+        return todayRandomService.getRestaurantReviewAnalysis(restaurantId);
+    }
+
+    @GetMapping("/review-analysis")
+    @Operation(summary = "전체 레스토랑 리뷰 분석 순위", description = "전체 레스토랑을 리뷰 분석 점수 기준으로 순위를 매겨 반환합니다.")
+    public List<RestaurantReviewAnalysisDTO> getAllRestaurantReviewAnalysis() {
+        return todayRandomService.getAllRestaurantReviewAnalysis();
     }
 
 
