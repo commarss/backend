@@ -55,7 +55,7 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     implementation("com.github.f4b6a3:tsid-creator:5.2.6")
     implementation("org.springframework.boot:spring-boot-starter-validation")
-    implementation("org.springframework.boot:spring-boot-starter-data-elasticsearch")
+    //implementation("org.springframework.boot:spring-boot-starter-data-elasticsearch")
     //developmentOnly("org.springframework.boot:spring-boot-docker-compose")
 
     // Swagger
