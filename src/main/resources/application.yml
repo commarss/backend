@@ -52,7 +52,8 @@ jwt:
     /api/user/delete,
     /api/user/post,
     /api/user/locations,
-    /api/v1/user/location
+    /api/v1/user/location,
+    /api/users/favorites
   excluded-base-urls:
     /api/public,
     /login-success,

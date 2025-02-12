@@ -8,6 +8,8 @@ import com.ll.commars.domain.todayRandom.service.TodayRandomService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -33,8 +35,9 @@ public class ApiV1TodayRandomController {
     public List<RestaurantSummaryDTO> getRandomRestaurants(
             @RequestParam("lat") double lat,
             @RequestParam("lng") double lng,
-            @RequestParam("id") Long id) {
-        return todayRandomService.getRandomRestaurants(lat, lng, id);
+            @AuthenticationPrincipal UserDetails userDetails) {
+        Long userId = Long.valueOf(userDetails.getUsername());
+        return todayRandomService.getRandomRestaurants(lat, lng, userId);
     }
 
     // 프론트에서 선택한 1개의 식당 상세 정보 가져오기
