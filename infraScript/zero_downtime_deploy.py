@@ -7,17 +7,19 @@ import time
 from typing import Dict, Optional
 import logging
 
-# 로깅 설정 추가
-logging.basicConfig(
-    filename='/var/log/zero_downtime_deploy.log',
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
-)
-
-
 class ServiceManager:
     # 초기화 함수
     def __init__(self, socat_port: int = 8081, sleep_duration: int = 3) -> None:
+        logging.basicConfig(
+            level=logging.INFO,
+            format='%(asctime)s - %(levelname)s - %(message)s',
+            handlers=[
+                logging.FileHandler('/dockerProjects/likelion_mars/deploy.log'),
+                logging.StreamHandler()
+            ]
+        )
+        self.logger = logging.getLogger(__name__)
+                
         self.socat_port: int = socat_port
         self.sleep_duration: int = sleep_duration
         self.services: Dict[str, int] = {
@@ -83,23 +85,34 @@ class ServiceManager:
 
     # 서비스를 업데이트하는 함수
     def update_service(self) -> None:
+        self.logger.info("Starting service update process...")
         self._find_current_service()
+        self.logger.info(f"Current service: {self.current_name} on port {self.current_port}")
+
         self._find_next_service()
+        self.logger.info(f"Next service: {self.next_name} on port {self.next_port}")
 
         self._remove_container(self.next_name)
+        self.logger.info(f"Removed container: {self.next_name}")
+
         self._run_container(self.next_name, self.next_port)
+        self.logger.info(f"Started new container: {self.next_name}")
 
         # 새 서비스가 'UP' 상태가 될 때까지 기다림
         while not self._is_service_up(self.next_port):
+            self.logger.info(f"Waiting for {self.next_name} to be 'UP'...")
             print(f"Waiting for {self.next_name} to be 'UP'...")
             time.sleep(self.sleep_duration)
 
         self._switch_port()
+        self.logger.info("Switched ports successfully")
 
         if self.current_name is not None:
             self._remove_container(self.current_name)
+            self._remove_container(self.current_name)
 
         print("Switched service successfully!")
+        self.logger.info("Service update completed successfully!")
 
 
 if __name__ == "__main__":

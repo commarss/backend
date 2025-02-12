@@ -84,3 +84,8 @@ jobs:
             curl -o /dockerProjects/likelion_mars/zero_downtime_deploy.py https://raw.githubusercontent.com/BackEndSchoolPlus3th/mars-back/main/infraScript/zero_downtime_deploy.py
             chmod +x /dockerProjects/likelion_mars/zero_downtime_deploy.py
             python3 /dockerProjects/likelion_mars/zero_downtime_deploy.py
+            # 로그 파일 출력
+            if [ -f "/dockerProjects/likelion_mars/deploy.log" ]; then
+              echo "=== Deployment Log ==="
+              cat /dockerProjects/likelion_mars/deploy.log
+            fi
