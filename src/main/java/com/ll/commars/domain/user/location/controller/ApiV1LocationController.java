@@ -22,7 +22,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping(value = "/api/v1/location", produces = APPLICATION_JSON_VALUE)
 @Tag(name = "ApiV1LocationController", description = "위치 정보 API")
 public class ApiV1LocationController {
-    @Value("${spring.ipInfo.token}")
+    @Value("${custom.ipInfo.token}")
     private String token;
 
     @GetMapping("/current")
