@@ -5,6 +5,14 @@ import requests  # HTTP 요청을 위한 모듈 추가
 import subprocess
 import time
 from typing import Dict, Optional
+import logging
+
+# 로깅 설정 추가
+logging.basicConfig(
+    filename='/var/log/zero_downtime_deploy.log',
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
 
 
 class ServiceManager:
