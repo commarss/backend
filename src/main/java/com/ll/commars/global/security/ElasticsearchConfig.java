@@ -10,6 +10,7 @@ import org.springframework.data.elasticsearch.support.HttpHeaders;
 import java.time.Duration;
 
 @Configuration
+@EnableElasticsearchRepositories(basePackages = "com.ll.commars")
 public class ElasticsearchConfig extends ElasticsearchConfiguration {
 
     @Value("${spring.data.elasticsearch.uris}")
@@ -18,11 +19,9 @@ public class ElasticsearchConfig extends ElasticsearchConfiguration {
     @Override
     public ClientConfiguration clientConfiguration() {
         return ClientConfiguration.builder()
-                .connectedTo(elasticsearchUrl.replace("http://", ""))
-                .withDefaultHeaders(new HttpHeaders() {{
-                    add("Accept", "application/json");
-                    add("Content-Type", "application/json");
-                }})
+                .connectedTo("211.188.58.205:9200")
+                .withSocketTimeout(30000)
+                .withConnectTimeout(30000)
                 .build();
     }
 }
