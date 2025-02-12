@@ -6,7 +6,7 @@ on:
       - 'src/**'
       - 'build.gradle.kts'
       - 'Dockerfile'
-      - 'readme.md'
+      - 'README.md'
       - 'infraScript/**'
     branches:
       - 'main'
