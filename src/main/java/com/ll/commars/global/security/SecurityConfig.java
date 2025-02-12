@@ -55,8 +55,10 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173","http://localhost:5174", "http://localhost:5175", "https://accounts.google.com", "https://nid.naver.com")); // React 프론트엔드 URL 허용
+
+        configuration.setAllowedOrigins(List.of("*"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setExposedHeaders(List.of("Authorization", "Content-Type", "refreshToken", "accessToken"));
         configuration.setAllowCredentials(true); // 인증정보 포함 허용
