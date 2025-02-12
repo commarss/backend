@@ -63,3 +63,12 @@ google:
   client-id: "${spring.security.oauth2.client.registration.google.client-id}"
 kakao:
   client-id: "${spring.security.oauth2.client.registration.kakao.client-id}"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always

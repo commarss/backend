@@ -65,6 +65,7 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.6")
 
     //implementation("org.springdoc:springdoc-openapi-ui:1.8.0")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
 
 }
 
