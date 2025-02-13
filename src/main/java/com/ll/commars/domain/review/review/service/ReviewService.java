@@ -1,15 +1,20 @@
 package com.ll.commars.domain.review.review.service;
 
+import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
 import com.ll.commars.domain.restaurant.restaurant.repository.RestaurantRepository;
+import com.ll.commars.domain.restaurant.restaurant.service.RestaurantService;
 import com.ll.commars.domain.review.review.dto.ReviewDto;
 import com.ll.commars.domain.review.review.entity.Review;
 import com.ll.commars.domain.review.review.repository.ReviewRepository;
+import com.ll.commars.domain.user.user.entity.User;
 import com.ll.commars.domain.user.user.repository.UserRepository;
+import com.ll.commars.domain.user.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +22,8 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final RestaurantRepository restaurantRepository;
     private final UserRepository userRepository;
+    private final RestaurantService restaurantService;
+    private final UserService userService;
 
     public void truncate() {
         reviewRepository.deleteAll();
@@ -68,5 +75,20 @@ public class ReviewService {
                                 .build())
                         .toList())
                 .build();
+    }
+
+    public Review wirteReview(String restaurantId, String username, String name, String body, int rate) {
+        Restaurant restaurant = restaurantService.findById(Long.valueOf(restaurantId));
+        Optional<User> user = userService.findById(Long.parseLong(username));
+
+        Review review = Review.builder()
+                .name(name)
+                .body(body)
+                .rate(rate)
+                .restaurant(restaurant)
+                .user(user.orElseThrow(() -> new IllegalArgumentException("User not found")))
+                .build();
+
+        return reviewRepository.save(review);
     }
 }

@@ -406,4 +406,8 @@ public class RestaurantService {
     }
 
 
+    public Restaurant findById(Long restaurantId) {
+        return restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
+    }
 }

@@ -45,6 +45,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         for (String excludeBaseUrlPattern : excludeBaseUrlPatterns) {
             excludeBaseUrlPattern = excludeBaseUrlPattern.trim();
             if (requestURI.startsWith(excludeBaseUrlPattern)) {
+                System.out.println("🔒 토큰 검증 필터 제외 URL :" + requestURI);
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -53,6 +54,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         for (String excludeUrlPattern : excludeUrlPatterns) {
             excludeUrlPattern = excludeUrlPattern.trim();
             if (requestURI.matches(excludeUrlPattern)) {
+                System.out.println("🔒 토큰 검증 필터 제외 URL :" + requestURI);
                 return;
             }
         }
@@ -73,6 +75,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         JwtAuthenticationToken jwtAuthenticationToken = new JwtAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                         jwtAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                         SecurityContextHolder.getContext().setAuthentication(jwtAuthenticationToken);
+
+                        System.out.println("✅ JWT 토큰 검증 완료: " + userDetails.getUsername());
                     }
                 } else {
                     response.sendError(HttpStatus.UNAUTHORIZED.value(), "Invalid JWT token");
