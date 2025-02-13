@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -34,8 +35,8 @@ public class ApiV1RestaurantDocController {
 
    @GetMapping("/search")
    @Operation(summary = "식당 검색")
-   public List<RestaurantDoc> search(@RequestParam("keyword") String keyword) {
-       return restaurantDocService.searchByKeyword(keyword);
+   public List<RestaurantDoc> search(@RequestParam("keyword") String keyword, @RequestParam("lat") String lat, @RequestParam("lng") String lng) throws IOException {
+       return restaurantDocService.searchByKeyword(keyword, Double.parseDouble(lat), Double.parseDouble(lng), "50km");
    }
 
    @GetMapping("/sort/rate")

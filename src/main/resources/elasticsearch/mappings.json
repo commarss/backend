@@ -2,18 +2,21 @@
   "properties": {
     "name": {
       "type": "text",
-      "analyzer": "korean"
+      "analyzer": "ngram_analyzer",
+      "search_analyzer": "korean_analyzer"
     },
     "body": {
       "type": "text",
-      "analyzer": "korean"
+      "analyzer": "ngram_analyzer",
+      "search_analyzer": "korean_analyzer"
     },
     "rate": {
       "type": "integer"
     },
     "details": {
       "type": "text",
-      "analyzer": "korean"
+      "analyzer": "ngram_analyzer",
+      "search_analyzer": "korean_analyzer"
     },
     "average_rate": {
       "type": "double"

@@ -58,6 +58,7 @@ dependencies {
 
     // Elasticsearch
     implementation("org.springframework.boot:spring-boot-starter-data-elasticsearch")
+    implementation("co.elastic.clients:elasticsearch-java:8.17.2")
 
     // Docker
     //developmentOnly("org.springframework.boot:spring-boot-docker-compose")

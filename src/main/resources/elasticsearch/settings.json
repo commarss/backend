@@ -13,12 +13,23 @@
             "nori_posfilter",
             "nori_readingform"
           ]
+        },
+        "ngram_analyzer": {
+          "type": "custom",
+          "tokenizer": "ngram_tokenizer",
+          "filter": ["lowercase"]
         }
       },
       "tokenizer": {
         "nori_tokenizer": {
           "type": "nori_tokenizer",
           "decompound_mode": "mixed"
+        },
+        "ngram_tokenizer": {
+          "type": "ngram",
+          "min_gram": 2,
+          "max_gram": 3,
+          "token_chars": ["letter", "digit"]
         }
       },
       "filter": {
@@ -29,6 +40,10 @@
             "SSC", "SSO", "SC", "SE", "XPN", "XSA",
             "XSN", "XSV", "UNA", "NA", "VSV"
           ]
+        },
+        "korean_stop": {
+          "type": "stop",
+          "stopwords": ["이", "그", "저", "그리고", "하지만"]
         }
       }
     }
