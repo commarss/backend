@@ -41,26 +41,29 @@ public class RestaurantDocService {
                 .field("name")
                 .query(keyword)
                 .fuzziness("AUTO")
+                .boost(2.0f)
         )._toQuery();
 
         Query matchDetailsQuery = MatchQuery.of(m -> m
                 .field("details")
                 .query(keyword)
                 .fuzziness("AUTO")
+                .boost(1.0f)
         )._toQuery();
 
         // ✅ 사용자 위치 기준 반경 검색 (Geo Distance)
         Query geoDistanceQuery = GeoDistanceQuery.of(g -> g
-                .field("location")  // ES의 GeoPoint 필드
-                .distance(distance) // 검색 반경 (예: "50km")
-                .location(GeoLocation.of(l -> l.latlon(LatLonGeoLocation.of(ll -> ll.lat(userLat).lon(userLng))))) // ✅ 수정된 부분
+                .field("location")
+                .distance(distance)
+                .location(GeoLocation.of(l -> l.latlon(LatLonGeoLocation.of(ll -> ll.lat(userLat).lon(userLng)))))
+                .boost(0.5f)
         )._toQuery();
 
         // 키워드 + 거리 필터 조합
         Query boolQuery = BoolQuery.of(b -> b
                 .should(matchNameQuery)
                 .should(matchDetailsQuery)
-                .filter(geoDistanceQuery) // ✅ 거리 필터 추가
+                .filter(geoDistanceQuery)
         )._toQuery();
 
         // Function Score Query (평점 높은 곳 우선)
