@@ -67,6 +67,9 @@ dependencies {
     //implementation("org.springdoc:springdoc-openapi-ui:1.8.0")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
 
+    // S3
+    implementation(platform("software.amazon.awssdk:bom:2.24.0"))
+    implementation("software.amazon.awssdk:s3")
 }
 
 tasks.withType<Test> {
