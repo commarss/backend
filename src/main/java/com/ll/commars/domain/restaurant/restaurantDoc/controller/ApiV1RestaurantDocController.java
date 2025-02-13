@@ -43,4 +43,14 @@ public class ApiV1RestaurantDocController {
    public List<RestaurantDoc> showSortByRate() {
        return restaurantDocService.showSortByRate();
    }
+
+    @GetMapping("/nearby")
+    @Operation(summary = "주변 식당 검색")
+    public List<RestaurantDoc> findNearbyRestaurants(
+            @RequestParam("lat") Double lat,
+            @RequestParam("lng") Double lng,
+            @RequestParam("distance") Double distance
+    ) {
+        return restaurantDocService.findNearbyRestaurants(lat, lng, distance);
+    }
 }

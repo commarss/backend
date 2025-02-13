@@ -30,4 +30,21 @@ public interface RestaurantDocRepository extends ElasticsearchRepository<Restaur
    List<RestaurantDoc> searchByKeyword(String keyword);
 
    List<RestaurantDoc> findAllByOrderByAverageRateDesc();
+
+   @Query("""
+           {
+               "bool": {
+                   "must": {
+                       "geo_distance": {
+                           "distance": "?0km",
+                           "location": {
+                               "lat": ?1,
+                               "lon": ?2
+                           }
+                       }
+                   }
+               }
+           }
+    """)
+   List<RestaurantDoc> findByLocationNear(Double distance, Double lat, Double lng);
 }

@@ -8,6 +8,7 @@ import com.ll.commars.domain.user.user.service.UserService;
 import com.ll.commars.global.rsData.RsData;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -15,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -44,7 +46,7 @@ public class ApiV1FavoriteController {
         return new RsData<>("200", "찜 목록 조회 성공", response);
     }
 
-    @DeleteMapping("/{favorite_id}/")
+    @DeleteMapping("/{favorite_id}")
     @Operation(summary = "찜 목록 삭제")
     public RsData<String> deleteFavorite(@PathVariable("favorite_id") Long favoriteId) {
         favoriteService.deleteFavorite(favoriteId);
@@ -86,13 +88,43 @@ public class ApiV1FavoriteController {
     @GetMapping("/isFavorite")
     @Operation(summary = "사용자의 찜 목록에 식당이 존재하는지 확인")
     public ResponseEntity<Map<String, Boolean>> isFavorite(
-            @RequestParam Long restaurantId,
+            @RequestParam(name = "restaurantId") Long restaurantId,
+//            @RequestParam Long restaurantId,
             @AuthenticationPrincipal UserDetails userDetails
     ) {
-        User user = userService.findByEmail(userDetails.getUsername()).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        if (userDetails == null) {
+            throw new IllegalArgumentException("UserDetails is null. Authentication failed.");
+        }
+        User user = userService.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        boolean isFavorite = favoriteService.isFavorite(user, 1L);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("isFavorite", isFavorite);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/check")
+    @Operation(summary = "찜 목록에 식당이 존재하는지 확인")
+    public ResponseEntity<?> checkFavorite(
+            @RequestParam("restaurantId") Long restaurantId,
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        User user = userService.findById(Long.parseLong(userDetails.getUsername()))
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
         boolean isFavorite = favoriteService.isFavorite(user, restaurantId);
         Map<String, Boolean> response = new HashMap<>();
         response.put("isFavorite", isFavorite);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping
+    @Operation(summary = "사용자가 가진 모든 찜 목록 조회")
+    public RsData<List<FavoriteDto.FavoriteInfo>> getFavorites(@AuthenticationPrincipal UserDetails userDetails) {
+        Long userId = Long.valueOf(userDetails.getUsername()); // 현재 로그인한 사용자 정보 가져오기
+        List<FavoriteDto.FavoriteInfo> favoriteList = favoriteService.getAllFavoritesByUser(userId);
+        return new RsData<>("200", "찜 목록 조회 성공", favoriteList);
+    }
+
+
+
 }
