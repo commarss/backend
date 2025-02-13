@@ -3,6 +3,7 @@ package com.ll.commars.domain.user.favorite.controller;
 import com.ll.commars.domain.user.favorite.dto.FavoriteDto;
 import com.ll.commars.domain.user.favorite.entity.Favorite;
 import com.ll.commars.domain.user.favorite.service.FavoriteService;
+import com.ll.commars.domain.user.favoriteRestaurant.service.FavoriteRestaurantService;
 import com.ll.commars.domain.user.user.entity.User;
 import com.ll.commars.domain.user.user.service.UserService;
 import com.ll.commars.global.rsData.RsData;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -28,6 +30,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class ApiV1FavoriteController {
     private final FavoriteService favoriteService;
     private final UserService userService;
+    private final FavoriteRestaurantService favoriteRestaurantService;
 
     // 찜 목록 개수 조회
     @GetMapping("/count")
@@ -85,24 +88,6 @@ public class ApiV1FavoriteController {
         return userService.createFavoriteList(String.valueOf(request.get("name")), userId);
     }
 
-    @GetMapping("/isFavorite")
-    @Operation(summary = "사용자의 찜 목록에 식당이 존재하는지 확인")
-    public ResponseEntity<Map<String, Boolean>> isFavorite(
-            @RequestParam(name = "restaurantId") Long restaurantId,
-//            @RequestParam Long restaurantId,
-            @AuthenticationPrincipal UserDetails userDetails
-    ) {
-        if (userDetails == null) {
-            throw new IllegalArgumentException("UserDetails is null. Authentication failed.");
-        }
-        User user = userService.findByEmail(userDetails.getUsername())
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-        boolean isFavorite = favoriteService.isFavorite(user, 1L);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("isFavorite", isFavorite);
-        return ResponseEntity.ok(response);
-    }
-
     @GetMapping("/check")
     @Operation(summary = "찜 목록에 식당이 존재하는지 확인")
     public ResponseEntity<?> checkFavorite(
@@ -111,9 +96,14 @@ public class ApiV1FavoriteController {
     ) {
         User user = userService.findById(Long.parseLong(userDetails.getUsername()))
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
-        boolean isFavorite = favoriteService.isFavorite(user, restaurantId);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("isFavorite", isFavorite);
+        Optional<Favorite> isFavorite = favoriteService.isFavorite(user, restaurantId);
+        Map<String, Long> response = new HashMap<>();
+
+        if (isFavorite.isEmpty()) {
+            response.put("isFavorite", null);
+            return ResponseEntity.ok(response);
+        }
+        response.put("isFavorite", isFavorite.get().getId());
         return ResponseEntity.ok(response);
     }
 
@@ -125,6 +115,16 @@ public class ApiV1FavoriteController {
         return new RsData<>("200", "찜 목록 조회 성공", favoriteList);
     }
 
+    @PostMapping("/delete/restaurant")
+    @Operation(summary = "찜 목록에서 식당 삭제")
+    public ResponseEntity<?> deleteRestaurantFromFavorite(
+            @RequestBody Map<String, Object> request
+    ) {
+        String favoriteId = String.valueOf(request.get("favoriteId"));
+        String restaurantId = String.valueOf(request.get("restaurantId"));
+        favoriteRestaurantService.deleteRestaurantFromFavorite(Long.parseLong(favoriteId), Long.parseLong(restaurantId));
 
+        return new ResponseEntity<>(Map.of("message", "식당 삭제 성공"), org.springframework.http.HttpStatus.OK);
+    }
 
 }

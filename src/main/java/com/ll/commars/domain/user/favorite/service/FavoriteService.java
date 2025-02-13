@@ -122,8 +122,8 @@ public class FavoriteService {
     }
 
     @Transactional
-    public boolean isFavorite(User user, Long restaurantId) {
-        return favoriteRepository.existsByUserAndFavoriteRestaurantsRestaurantId(user, restaurantId);
+    public Optional<Favorite> isFavorite(User user, Long restaurantId) {
+        return favoriteRepository.findByUserAndFavoriteRestaurantsRestaurantId(user, restaurantId);
     }
 
     public Favorite saveFavorite(Favorite favorite) {

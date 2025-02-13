@@ -28,4 +28,6 @@ public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
     boolean existsByUserAndFavoriteRestaurantsRestaurantId(User user, Long restaurantId);
 
     Optional<Favorite> findByUserAndName(User user, String name);
+
+    Optional<Favorite> findByUserAndFavoriteRestaurantsRestaurantId(User user, Long restaurantId);
 }
