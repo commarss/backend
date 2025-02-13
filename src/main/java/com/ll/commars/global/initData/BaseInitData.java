@@ -236,22 +236,22 @@ public class BaseInitData {
 
         Random random = new Random();
 
-        IntStream.range(0, 20).forEach(i -> {
-            Long userId = userIds.get(random.nextInt(userIds.size()));
-            Long restaurantId = restaurantIds.get(random.nextInt(restaurantIds.size()));
-            String name = names[random.nextInt(names.length)];
-            String body = bodies[random.nextInt(bodies.length)];
-            Integer rate = random.nextInt(5) + 1; // 1-5 사이 랜덤 점수
-
-            ReviewDto.ReviewWriteRequest review = ReviewDto.ReviewWriteRequest.builder()
-                    .userId(userId)
-                    .reviewName(name)
-                    .body(body)
-                    .rate(rate)
-                    .build();
-
-            restaurantService.writeReview(restaurantId, review);
-        });
+//        IntStream.range(0, 20).forEach(i -> {
+//            Long userId = userIds.get(random.nextInt(userIds.size()));
+//            Long restaurantId = restaurantIds.get(random.nextInt(restaurantIds.size()));
+//            String name = names[random.nextInt(names.length)];
+//            String body = bodies[random.nextInt(bodies.length)];
+//            Integer rate = random.nextInt(5) + 1; // 1-5 사이 랜덤 점수
+////
+////            ReviewDto.ReviewWriteRequest review = ReviewDto.ReviewWriteRequest.builder()
+////                    .userId(userId)
+////                    .reviewName(name)
+////                    .body(body)
+////                    .rate(rate)
+////                    .build();
+////
+////            restaurantService.writeReview(restaurantId, review);
+////        });
     }
 
     private void userInit() {

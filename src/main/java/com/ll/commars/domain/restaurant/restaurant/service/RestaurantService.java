@@ -15,11 +15,16 @@ import com.ll.commars.domain.review.review.entity.Review;
 import com.ll.commars.domain.review.review.repository.ReviewRepository;
 import com.ll.commars.domain.user.user.entity.User;
 import com.ll.commars.domain.user.user.repository.UserRepository;
+import com.ll.commars.domain.user.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,6 +35,7 @@ public class RestaurantService {
     private final UserRepository userRepository;
     private final RestaurantCategoryRepository restaurantCategoryRepository;
     private final BusinessHourRepository businessHourRepository;
+    private final UserService userService;
 
     // 식당 정보 등록
     @Transactional
@@ -132,23 +138,23 @@ public class RestaurantService {
     }
 
     // 식당 리뷰 작성
-    public ReviewDto.ReviewWriteResponse writeReview(Long restaurantId, ReviewDto.ReviewWriteRequest request) {
+    @Transactional
+    public ReviewDto.ReviewWriteResponse writeReview(Long restaurantId, ReviewDto.ReviewWriteRequest request, Long userId) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
 
-        User writer = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        Optional<User> user = userService.findById(userId);
 
         reviewRepository.save(Review.builder()
                 .restaurant(restaurant)
-                .user(writer)
+                .user(user.get())
                 .body(request.getBody())
                 .name(request.getReviewName())
                 .rate(request.getRate())
                 .build());
 
         return ReviewDto.ReviewWriteResponse.builder()
-                .userName(writer.getName())
+                .userName(user.get().getName())
                 .reviewName(request.getReviewName())
                 .restaurantName(restaurant.getName())
                 .body(request.getBody())
