@@ -27,4 +27,10 @@ public class RestaurantDoc {
 
    @GeoPointField
    private String location;
+
+   @Field(type = FieldType.Float)
+   private float lat;
+
+   @Field(type = FieldType.Float)
+   private float lng;
 }
