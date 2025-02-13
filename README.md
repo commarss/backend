@@ -47,7 +47,9 @@
 
 ## 인프라🧬
 ### CI/CD
-![image](https://github.com/user-attachments/assets/f1a0b09e-7afc-465f-9e08-4e89305e21d3)
+![architecture_diagram](https://github.com/user-attachments/assets/32a91405-9707-4b3d-a50d-130251d5e000)
+![deploy_diagram drawio](https://github.com/user-attachments/assets/b37549a1-3ddc-4eb9-a95d-566d4e3944af)
+
 ### 서비스 요청 흐름도
 
 ## 팀원 👨‍👨‍👧‍👧👩‍👦‍👦
