@@ -5,11 +5,6 @@
       "analyzer": "ngram_analyzer",
       "search_analyzer": "korean_analyzer"
     },
-    "body": {
-      "type": "text",
-      "analyzer": "ngram_analyzer",
-      "search_analyzer": "korean_analyzer"
-    },
     "rate": {
       "type": "integer"
     },
