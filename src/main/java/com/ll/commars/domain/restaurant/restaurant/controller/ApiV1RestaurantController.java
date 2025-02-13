@@ -13,6 +13,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -92,10 +94,12 @@ public class ApiV1RestaurantController {
     @PostMapping(value = "/{restaurant_id}/review", consumes = APPLICATION_JSON_VALUE)
     @Operation(summary = "식당 리뷰 등록")
     public RsData<ReviewDto.ReviewWriteResponse> writeReview(
+            @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("restaurant_id") @NotNull Long restaurantId,
             @RequestBody @Valid ReviewDto.ReviewWriteRequest request
-    ){
-        ReviewDto.ReviewWriteResponse response = restaurantService.writeReview(restaurantId, request);
+            ){
+        Long userId = Long.valueOf(userDetails.getUsername());
+        ReviewDto.ReviewWriteResponse response = restaurantService.writeReview(restaurantId, request, userId);
         return new RsData<>("201", "리뷰 등록 성공", response);
     }
 

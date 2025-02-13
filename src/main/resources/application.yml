@@ -53,12 +53,14 @@ jwt:
     /api/user/post,
     /api/user/locations,
     /api/v1/user/location,
-    /api/users/favorites
+    /api/users/favorites,
+    /api/v1/restaurantsDoc/nearby
   excluded-base-urls:
     /api/public,
     /login-success,
     /api/auth/login,
-    /api/user/reset-password
+    /api/user/reset-password,
+    /api/v1/restaurant
 google:
   client-id: "${spring.security.oauth2.client.registration.google.client-id}"
 kakao:
