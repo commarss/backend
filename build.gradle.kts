@@ -55,16 +55,22 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     implementation("com.github.f4b6a3:tsid-creator:5.2.6")
     implementation("org.springframework.boot:spring-boot-starter-validation")
+
+    // Elasticsearch
     implementation("org.springframework.boot:spring-boot-starter-data-elasticsearch")
+
+    // Docker
     //developmentOnly("org.springframework.boot:spring-boot-docker-compose")
 
     // Swagger
     implementation ("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
+
+    // JWT
     implementation("io.jsonwebtoken:jjwt-api:0.12.6")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.6")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.6")
 
-    //implementation("org.springdoc:springdoc-openapi-ui:1.8.0")
+    // Deploy
     implementation("org.springframework.boot:spring-boot-starter-actuator")
 
     // S3
