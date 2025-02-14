@@ -4,3 +4,12 @@ custom:
     cookieDomain: "${custom.prod.cookieDomain}"
     frontUrl: "${custom.prod.frontUrl}"
     backUrl: "${custom.prod.backUrl}"
+
+spring:
+  elasticsearch:
+    uris: http://211.188.54.241:9200
+  datasource:
+    url: jdbc:mysql://likelion-mars-mysql.cvi8qmy2a7zg.ap-northeast-2.rds.amazonaws.com/likelion_mars
+    username: "${custom.secret.db.username}"
+    password: "${custom.secret.db.password}"
+    driver-class-name: com.mysql.cj.jdbc.Driver

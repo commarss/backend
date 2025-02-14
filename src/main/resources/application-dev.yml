@@ -4,3 +4,10 @@ custom:
     cookieDomain: "${custom.dev.cookieDomain}"
     frontUrl: "${custom.dev.frontUrl}"
     backUrl: "${custom.dev.backUrl}"
+
+spring:
+  datasource:
+    url: jdbc:mysql://likelion-mars-mysql.cvi8qmy2a7zg.ap-northeast-2.rds.amazonaws.com/likelion_mars_dev
+    username: "${custom.secret.db.username}"
+    password: "${custom.secret.db.password}"
+    driver-class-name: com.mysql.cj.jdbc.Driver

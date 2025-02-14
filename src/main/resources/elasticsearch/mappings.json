@@ -1,23 +1,34 @@
 {
   "properties": {
+    "id": {
+      "type": "keyword"
+    },
     "name": {
       "type": "text",
-      "analyzer": "ngram_analyzer",
-      "search_analyzer": "korean_analyzer"
-    },
-    "rate": {
-      "type": "integer"
+      "analyzer": "korean"
     },
     "details": {
       "type": "text",
-      "analyzer": "ngram_analyzer",
-      "search_analyzer": "korean_analyzer"
+      "analyzer": "korean"
+    },
+    "body": {
+      "type": "text",
+      "analyzer": "korean"
+    },
+    "rate": {
+      "type": "integer"
     },
     "average_rate": {
       "type": "double"
     },
     "location": {
       "type": "geo_point"
+    },
+    "lat": {
+      "type": "float"
+    },
+    "lng": {
+      "type": "float"
     }
   }
 }

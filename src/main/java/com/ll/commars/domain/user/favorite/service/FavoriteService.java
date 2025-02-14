@@ -63,7 +63,6 @@ public class FavoriteService {
 
     public void saveFavoriteList(User user, FavoriteDto.CreateFavoriteListRequest createFavoriteListRequest) {
         Boolean isPublicValue = createFavoriteListRequest.getIsPublic();
-        System.out.println("📌 [디버깅] 받은 isPublic 값: " + isPublicValue);
         Favorite favorite = Favorite.builder()
                 .name(createFavoriteListRequest.getName())
                 .isPublic(isPublicValue != null ? isPublicValue : true)
@@ -71,7 +70,6 @@ public class FavoriteService {
                 .build();
 
         favoriteRepository.save(favorite);
-        System.out.println("📌 [디버깅] 저장된 isPublic 값: " + favorite.getIsPublic());
     }
 
     @Transactional
