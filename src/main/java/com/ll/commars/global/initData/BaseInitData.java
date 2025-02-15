@@ -28,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ import java.util.stream.IntStream;
 
 @Configuration
 @RequiredArgsConstructor
+@Profile("dev") // 개발 환경에서만 실행하도록
 public class BaseInitData {
     private final ReviewDocService reviewDocService;
     private final ReviewService reviewService;
