@@ -55,7 +55,7 @@ public class RestaurantService {
                 .contact(request.getContact())
                 .address(request.getAddress())
                 .lat(request.getLat())
-                .lng(request.getLng())
+                .lon(request.getLon())
                 .runningState(request.getRunningState())
                 .summarizedReview(request.getSummarizedReview())
                 .build();
@@ -121,7 +121,7 @@ public class RestaurantService {
                             .contact(restaurant.getContact())
                             .address(restaurant.getAddress())
                             .lat(restaurant.getLat())
-                            .lng(restaurant.getLng())
+                            .lon(restaurant.getLon())
                             .runningState(restaurant.getRunningState())
                             .summarizedReview(restaurant.getSummarizedReview())
                             .categoryId(restaurant.getRestaurantCategory().getId())
@@ -244,7 +244,7 @@ public class RestaurantService {
                 .contact(restaurant.getContact())
                 .address(restaurant.getAddress())
                 .lat(restaurant.getLat())
-                .lng(restaurant.getLng())
+                .lon(restaurant.getLon())
                 .runningState(restaurant.getRunningState())
                 .summarizedReview(restaurant.getSummarizedReview())
                 .categoryId(restaurant.getRestaurantCategory().getId())
@@ -273,7 +273,7 @@ public class RestaurantService {
         restaurant.setContact(request.getContact());
         restaurant.setAddress(request.getAddress());
         restaurant.setLat(request.getLat());
-        restaurant.setLng(request.getLng());
+        restaurant.setLon(request.getLon());
         restaurant.setRunningState(request.getRunningState());
         restaurant.setSummarizedReview(request.getSummarizedReview());
         restaurant.setRestaurantCategory(restaurantCategoryRepository.findById(request.getCategoryId())

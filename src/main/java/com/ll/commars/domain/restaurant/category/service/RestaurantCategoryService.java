@@ -67,7 +67,7 @@ public class RestaurantCategoryService {
                         .imageUrl(restaurant.getImageUrl())
                         .contact(restaurant.getContact())
                         .lat(restaurant.getLat())
-                        .lng(restaurant.getLng())
+                        .lon(restaurant.getLon())
                         .runningState(restaurant.getRunningState())
                         .summarizedReview(restaurant.getSummarizedReview())
                         .categoryId(restaurant.getRestaurantCategory().getId())

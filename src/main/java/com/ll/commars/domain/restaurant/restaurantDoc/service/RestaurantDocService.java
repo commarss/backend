@@ -9,6 +9,7 @@ import co.elastic.clients.elasticsearch.core.SearchResponse;
 import com.ll.commars.domain.restaurant.restaurantDoc.document.RestaurantDoc;
 import com.ll.commars.domain.restaurant.restaurantDoc.repository.RestaurantDocRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -21,20 +22,20 @@ public class RestaurantDocService {
    private final RestaurantDocRepository restaurantDocRepository;
    private final ElasticsearchClient elasticsearchClient;
 
-   public RestaurantDoc write(String name, String details, Double averageRate, Double lat, Double lng) {
-       RestaurantDoc restaurantDoc = RestaurantDoc.builder()
-               .name(name)
-               .details(details)
-               .averageRate(averageRate)
-               .location(lat + "," + lng)
-               .build();
+    public RestaurantDoc write(String name, String details, Double averageRate, Double lat, Double lon) {
+        RestaurantDoc restaurantDoc = RestaurantDoc.builder()
+                .name(name)
+                .details(details)
+                .averageRate(averageRate)
+                .location(lat + "," + lon)
+                .build();
 
-       return restaurantDocRepository.save(restaurantDoc);
-   }
+        return restaurantDocRepository.save(restaurantDoc);
+    }
 
-   public void truncate() {
-       restaurantDocRepository.deleteAll();
-   }
+    public void truncate() {
+        restaurantDocRepository.deleteAll();
+    }
 
     public List<RestaurantDoc> searchByKeyword(String keyword, double userLat, double userLng, String distance) throws IOException {
         Query matchNameQuery = MatchQuery.of(m -> m
@@ -93,12 +94,37 @@ public class RestaurantDocService {
     }
 
     public List<RestaurantDoc> showSortByRate() {
-       return restaurantDocRepository.findTop5ByOrderByAverageRateDesc();
-   }
-
-    public List<RestaurantDoc> findNearbyRestaurants(Double lat, Double lng, Double distance) {
-        return restaurantDocRepository.findByLocationNear(distance, lat, lng);
+        return restaurantDocRepository.findTop5ByOrderByAverageRateDesc();
     }
 
+    public List<RestaurantDoc> findNearbyRestaurants(Double lat, Double lon, Double distance) {
+        try {
+            // GeoDistance 쿼리 생성
+            Query geoDistanceQuery = GeoDistanceQuery.of(g -> g
+                    .field("location")
+                    .distance(distance + "km")
+                    .location(l -> l.latlon(ll -> ll
+                            .lat(lat)
+                            .lon(lon)
+                    ))
+            )._toQuery();
 
+            // 검색 요청 생성
+            SearchRequest searchRequest = SearchRequest.of(s -> s
+                    .index("es_restaurants")
+                    .query(geoDistanceQuery)
+                    .size(10)
+            );
+
+            // 검색 실행
+            SearchResponse<RestaurantDoc> response = elasticsearchClient.search(searchRequest, RestaurantDoc.class);
+
+            // 결과 반환
+            return response.hits().hits().stream()
+                    .map(hit -> hit.source())
+                    .collect(Collectors.toList());
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to search nearby restaurants", e);
+        }
+    }
 }

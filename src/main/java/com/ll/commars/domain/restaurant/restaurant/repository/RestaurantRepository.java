@@ -22,9 +22,9 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
         SELECT r FROM Restaurant r
         WHERE (6371 * ACOS(
             COS(RADIANS(:lat)) * COS(RADIANS(r.lat)) 
-            * COS(RADIANS(r.lng) - RADIANS(:lng)) 
+            * COS(RADIANS(r.lon) - RADIANS(:lon)) 
             + SIN(RADIANS(:lat)) * SIN(RADIANS(r.lat))
         )) <= 2
     """)
-    List<Restaurant> findRestaurantsWithinRadius(@Param("lat") double lat, @Param("lng") double lng);
+    List<Restaurant> findRestaurantsWithinRadius(@Param("lat") double lat, @Param("lon") double lon);
 }

@@ -1,10 +1,15 @@
 package com.ll.commars.domain.restaurant.restaurantDoc.document;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.*;
+import org.springframework.data.elasticsearch.core.geo.GeoPoint;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Document(indexName = "es_restaurants", createIndex = true)
@@ -32,9 +37,9 @@ public class RestaurantDoc {
    @GeoPointField
    private String location;
 
-   @Field(type = FieldType.Float)
-   private float lat;
+   @Field(type = FieldType.Double)
+   private Double lat;
 
-   @Field(type = FieldType.Float)
-   private float lng;
+   @Field(type = FieldType.Double)
+   private Double lon;
 }

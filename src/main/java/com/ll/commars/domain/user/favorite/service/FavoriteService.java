@@ -45,7 +45,7 @@ public class FavoriteService {
                         .imageUrl(fr.getRestaurant().getImageUrl())
                         .contact(fr.getRestaurant().getContact())
                         .lat(fr.getRestaurant().getLat())
-                        .lng(fr.getRestaurant().getLng())
+                        .lon(fr.getRestaurant().getLon())
                         .runningState(fr.getRestaurant().getRunningState())
                         .summarizedReview(fr.getRestaurant().getSummarizedReview())
                         .categoryId(fr.getRestaurant().getRestaurantCategory().getId())

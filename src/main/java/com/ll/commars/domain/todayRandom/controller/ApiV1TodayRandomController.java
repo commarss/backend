@@ -34,10 +34,10 @@ public class ApiV1TodayRandomController {
     @Operation(summary = "회원 거리와 찜기반 랜덤 5개 식당조회")
     public List<RestaurantSummaryDTO> getRandomRestaurants(
             @RequestParam("lat") double lat,
-            @RequestParam("lng") double lng,
+            @RequestParam("lon") double lon,
             @AuthenticationPrincipal UserDetails userDetails) {
         Long userId = Long.valueOf(userDetails.getUsername());
-        return todayRandomService.getRandomRestaurants(lat, lng, userId);
+        return todayRandomService.getRandomRestaurants(lat, lon, userId);
     }
 
     // 프론트에서 선택한 1개의 식당 상세 정보 가져오기
@@ -52,8 +52,8 @@ public class ApiV1TodayRandomController {
     @Operation(summary = "비회원 거리 랜덤 5개 식당 조회")
     public List<RestaurantSummaryDTO> getnotuserRandomRestaurants(
             @RequestParam("lat") double lat,
-            @RequestParam("lng") double lng) {
-        return todayRandomService.getnotuserRandomRestaurants(lat, lng);
+            @RequestParam("lon") double lon) {
+        return todayRandomService.getnotuserRandomRestaurants(lat, lon);
     }
 
 

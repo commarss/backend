@@ -5,6 +5,7 @@ import com.ll.commars.domain.restaurant.restaurantDoc.service.RestaurantDocServi
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -35,22 +36,22 @@ public class ApiV1RestaurantDocController {
 
    @GetMapping("/search")
    @Operation(summary = "식당 검색")
-   public List<RestaurantDoc> search(@RequestParam("keyword") String keyword, @RequestParam("lat") String lat, @RequestParam("lng") String lng) throws IOException {
-       return restaurantDocService.searchByKeyword(keyword, Double.parseDouble(lat), Double.parseDouble(lng), "50km");
+   public List<RestaurantDoc> search(@RequestParam("keyword") String keyword, @RequestParam("lat") String lat, @RequestParam("lon") String lon) throws IOException {
+       return restaurantDocService.searchByKeyword(keyword, Double.parseDouble(lat), Double.parseDouble(lon), "50km");
    }
 
-   @GetMapping("/sort/rate")
-   @Operation(summary = "평점순으로 정렬")
-   public List<RestaurantDoc> showSortByRate() {
-       return restaurantDocService.showSortByRate();
-   }
+    @GetMapping("/sort/rate")
+    @Operation(summary = "평점순으로 정렬")
+    public List<RestaurantDoc> showSortByRate() {
+        return restaurantDocService.showSortByRate();
+    }
 
     @GetMapping("/nearby")
     @Operation(summary = "주변 식당 검색")
     public List<RestaurantDoc> findNearbyRestaurants(
-            @RequestParam("lat") Double lat,
-            @RequestParam("lng") Double lng,
-            @RequestParam("distance") Double distance
+            @RequestParam(value = "lat", defaultValue = "37.5665") Double lat,
+            @RequestParam(value = "lng", defaultValue = "126.9780") Double lng,
+            @RequestParam(value = "distance", defaultValue = "2.0") Double distance
     ) {
         return restaurantDocService.findNearbyRestaurants(lat, lng, distance);
     }

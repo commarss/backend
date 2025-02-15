@@ -116,13 +116,14 @@ public class BaseInitDataDev {
             // Skip header
             String header = br.readLine();
             String line;
+            //int count = 0;
 
             while ((line = br.readLine()) != null) {
                 String[] data = line.split("\\|");
                 String name = data[0].trim();
                 String address = data[1].trim();
                 double lat = Double.parseDouble(data[2].trim());
-                double lng = Double.parseDouble(data[3].trim());
+                double lon = Double.parseDouble(data[3].trim());
                 String categoryName = data[4].trim();
 
                 // 카테고리 ID 찾기
@@ -139,13 +140,14 @@ public class BaseInitDataDev {
                         .contact("02-1234-5678") // Could be added to CSV if needed
                         .address(address)
                         .lat(lat)
-                        .lng(lng)
+                        .lon(lon)
                         .runningState(true)
                         .summarizedReview("")
                         .categoryId(categoryId)
                         .build();
 
                 restaurantService.write(restaurant);
+                //count++;
             }
         } catch (IOException e) {
             throw new RuntimeException("Failed to read restaurants from CSV file: " + csvPath.toString(), e);

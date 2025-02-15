@@ -25,10 +25,10 @@
       "type": "geo_point"
     },
     "lat": {
-      "type": "float"
+      "type": "double"
     },
-    "lng": {
-      "type": "float"
+    "lon": {
+      "type": "double"
     }
   }
 }

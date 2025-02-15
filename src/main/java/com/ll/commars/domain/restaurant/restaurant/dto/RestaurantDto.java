@@ -24,7 +24,7 @@ public class RestaurantDto {
         private String contact;
         private String address;
         private Double lat;
-        private Double lng;
+        private Double lon;
         private Boolean runningState;
         private String summarizedReview;
         private Long categoryId;
@@ -47,7 +47,7 @@ public class RestaurantDto {
         private String contact;
         private String address;
         private Double lat;
-        private Double lng;
+        private Double lon;
         private Boolean runningState;
         private String summarizedReview;
         private Long categoryId;
@@ -65,7 +65,7 @@ public class RestaurantDto {
         private String contact;
         private String address;
         private Double lat;
-        private Double lng;
+        private Double lon;
         private Boolean runningState;
         private String summarizedReview;
         private Long categoryId;

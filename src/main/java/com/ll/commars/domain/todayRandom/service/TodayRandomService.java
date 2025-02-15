@@ -40,7 +40,7 @@ public class TodayRandomService {
     }
 
     @Transactional(readOnly = true) // Lazy Loading 방지
-    public List<RestaurantSummaryDTO> getRandomRestaurants(double lat, double lng, Long userId) {
+    public List<RestaurantSummaryDTO> getRandomRestaurants(double lat, double lon, Long userId) {
         // 1. 유저의 찜 목록 가져오기
         List<Favorite> favorites = favoriteRepository.findByUserId(userId);
         Set<Long> favoriteIds = favorites.stream()
@@ -54,7 +54,7 @@ public class TodayRandomService {
                 .collect(Collectors.toSet());
 
         // 3. 거리 내의 식당 목록 가져오기
-        List<Restaurant> nearbyRestaurants = restaurantRepository.findRestaurantsWithinRadius(lat, lng);
+        List<Restaurant> nearbyRestaurants = restaurantRepository.findRestaurantsWithinRadius(lat, lon);
 
         // 4. 반경 내 찜한 식당 필터링
         List<Restaurant> filteredRestaurants = nearbyRestaurants.stream()
@@ -70,8 +70,8 @@ public class TodayRandomService {
     }
 
     /*@Transactional(readOnly = true) //랜덤으로 1개 선택
-    public Optional<RestaurantSummaryDTO> getRandomRestaurantDetails(double lat, double lng, Long userId) {
-        List<RestaurantSummaryDTO> randomRestaurants = getRandomRestaurants(lat, lng, userId);
+    public Optional<RestaurantSummaryDTO> getRandomRestaurantDetails(double lat, double lon, Long userId) {
+        List<RestaurantSummaryDTO> randomRestaurants = getRandomRestaurants(lat, lon, userId);
 
         if (randomRestaurants.isEmpty()) {
             return Optional.empty();
@@ -88,9 +88,9 @@ public class TodayRandomService {
     }
 
     @Transactional(readOnly = true)
-    public List<RestaurantSummaryDTO> getnotuserRandomRestaurants(double lat, double lng) {
+    public List<RestaurantSummaryDTO> getnotuserRandomRestaurants(double lat, double lon) {
         // 반경 2km 내의 식당 목록 가져오기
-        List<Restaurant> nearbyRestaurants = restaurantRepository.findRestaurantsWithinRadius(lat, lng);
+        List<Restaurant> nearbyRestaurants = restaurantRepository.findRestaurantsWithinRadius(lat, lon);
 
         // 식당이 5개 이하라면 그대로 반환
         if (nearbyRestaurants.size() <= 5) {

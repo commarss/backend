@@ -54,8 +54,8 @@ public class Restaurant extends BaseEntity {
 
     // 경도
     @NotNull
-    @Column(name = "lng", nullable = false)
-    private Double lng;
+    @Column(name = "lon", nullable = false)
+    private Double lon;
 
     // 식당 영업 여부
     @Column(name = "running_state")
