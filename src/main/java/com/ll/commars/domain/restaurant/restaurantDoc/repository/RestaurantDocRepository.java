@@ -10,41 +10,44 @@ import java.util.List;
 @Repository
 public interface RestaurantDocRepository extends ElasticsearchRepository<RestaurantDoc, String> {
    @Query("""
-           {
-               "bool": {
-                   "should": [
-                       {
-                           "match": {
-                               "name": "?0"
-                           }
-                       },
-                       {
-                           "match": {
-                               "details": "?0"
-                           }
-                       }
-                   ]
-               }
-           }
-   """)
+        {
+            "bool": {
+                "should": [
+                    {
+                        "match": {
+                            "name": "?0"
+                        }
+                    },
+                    {
+                        "match": {
+                            "details": "?0"
+                        }
+                    }
+                ]
+            },
+            "size": 5
+        }
+""")
+
    List<RestaurantDoc> searchByKeyword(String keyword);
 
-   List<RestaurantDoc> findAllByOrderByAverageRateDesc();
-
+   List<RestaurantDoc> findTop5ByOrderByAverageRateDesc();
    @Query("""
-           {
-               "bool": {
-                   "must": {
-                       "geo_distance": {
-                           "distance": "?0km",
-                           "location": {
-                               "lat": ?1,
-                               "lon": ?2
-                           }
-                       }
-                   }
-               }
-           }
-    """)
+        {
+            "bool": {
+                "must": {
+                    "geo_distance": {
+                        "distance": "?0km",
+                        "location": {
+                            "lat": ?1,
+                            "lon": ?2
+                        }
+                    }
+                }
+            },
+            "size": 10
+        }
+""")
+
    List<RestaurantDoc> findByLocationNear(Double distance, Double lat, Double lng);
 }

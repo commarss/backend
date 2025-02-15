@@ -13,7 +13,6 @@ import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantDto;
 import com.ll.commars.domain.restaurant.restaurant.service.RestaurantService;
 //import com.ll.commars.domain.restaurant.restaurantDoc.service.RestaurantDocService;
 import com.ll.commars.domain.restaurant.restaurantDoc.service.RestaurantDocService;
-import com.ll.commars.domain.review.review.dto.ReviewDto;
 import com.ll.commars.domain.review.review.service.ReviewService;
 //import com.ll.commars.domain.review.reviewDoc.service.ReviewDocService;
 import com.ll.commars.domain.review.reviewDoc.service.ReviewDocService;
@@ -30,9 +29,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -40,7 +45,7 @@ import java.util.stream.IntStream;
 @Configuration
 @RequiredArgsConstructor
 @Profile("dev") // 개발 환경에서만 실행하도록
-public class BaseInitData {
+public class BaseInitDataDev {
     private final ReviewDocService reviewDocService;
     private final ReviewService reviewService;
     private final RestaurantDocService restaurantDocService;
@@ -97,51 +102,78 @@ public class BaseInitData {
 
     // Restaurant 데이터 초기화
     private void restaurantInit() {
-        String[] names = {"마녀커피", "피자알볼로", "스타벅스", "버거킹", "맘스터치", "서브웨이", "홍콩반점", "교촌치킨"};
-        String[] details = {"분위기 좋은 카페", "맛있는 피자집", "글로벌 커피 체인", "햄버거 전문점", "치킨 버거 전문점",
-                "샌드위치 전문점", "중국 음식점", "치킨 전문점"};
-        String[] addresses = {"서울시 강남구", "서울시 서초구", "서울시 송파구", "서울시 마포구", "서울시 종로구"};
-        String[] summarizedReviews = {"맛있고 분위기가 좋아요", "가성비가 좋아요", "서비스가 친절해요",
-                "음식이 빨리 나와요", "재방문 의사 있어요"};
+        Path csvPath = Paths.get("../api/data/restaurants.csv").toAbsolutePath();
 
-        // 존재하는 카테고리 ID 가져오기
+        // 존재하는 카테고리 맵 생성 (카테고리명 -> ID)
         RestaurantCategoryDto.ShowAllCategoriesResponse categories = restaurantCategoryService.getCategories();
-        List<Long> categoriesId = categories.getCategories().stream()
-                .map(RestaurantCategoryDto.RestaurantCategoryInfo::getId)
-                .toList();
+        Map<String, Long> categoryMap = categories.getCategories().stream()
+                .collect(Collectors.toMap(
+                        RestaurantCategoryDto.RestaurantCategoryInfo::getName,
+                        RestaurantCategoryDto.RestaurantCategoryInfo::getId
+                ));
 
-        Random random = new Random();
+        try (BufferedReader br = new BufferedReader(new FileReader(csvPath.toFile()))) {
+            // Skip header
+            String header = br.readLine();
+            String line;
 
-        IntStream.range(0, 10).forEach(i -> {
-            RestaurantDto.RestaurantWriteRequest restaurant = RestaurantDto.RestaurantWriteRequest.builder()
-                    .name(names[random.nextInt(names.length)])
-                    .details(details[random.nextInt(details.length)])
-                    .averageRate(3.0 + random.nextDouble() * 2.0) // 3.0-5.0 사이 랜덤 점수
-                    .imageUrl(String.format("http://example.com/restaurant%d.jpg", i))
-                    .contact(String.format("02-%d-%d", 1000 + random.nextInt(9000), 1000 + random.nextInt(9000)))
-                    .address(addresses[random.nextInt(addresses.length)])
-                    .lat(37.4967 + (random.nextDouble() - 0.5) * 0.1) // 37.4467-37.5467 사이
-                    .lng(127.0498 + (random.nextDouble() - 0.5) * 0.1) // 126.9998-127.0998 사이
-                    .runningState(random.nextBoolean())
-                    .summarizedReview(summarizedReviews[random.nextInt(summarizedReviews.length)])
-                    .categoryId(categoriesId.get(random.nextInt(categoriesId.size())))
-                    .build();
+            while ((line = br.readLine()) != null) {
+                String[] data = line.split("\\|");
+                String name = data[0].trim();
+                String address = data[1].trim();
+                double lat = Double.parseDouble(data[2].trim());
+                double lng = Double.parseDouble(data[3].trim());
+                String categoryName = data[4].trim();
 
-            restaurantService.write(restaurant);
-        });
+                // 카테고리 ID 찾기
+                Long categoryId = categoryMap.get(categoryName);
+                if (categoryId == null) {
+                    continue; // Skip if category not found
+                }
+
+                RestaurantDto.RestaurantWriteRequest restaurant = RestaurantDto.RestaurantWriteRequest.builder()
+                        .name(name)
+                        .details("") // Could be added to CSV if needed
+                        .averageRate(0.0) // Initial rating
+                        .imageUrl("http://example.com/restaurant_default.jpg")
+                        .contact("02-1234-5678") // Could be added to CSV if needed
+                        .address(address)
+                        .lat(lat)
+                        .lng(lng)
+                        .runningState(true)
+                        .summarizedReview("")
+                        .categoryId(categoryId)
+                        .build();
+
+                restaurantService.write(restaurant);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to read restaurants from CSV file: " + csvPath.toString(), e);
+        }
     }
 
     // RestaurantCategory 데이터 초기화
-    private void restaurantCategoryInit(){
-        String[] names = {"한식", "중식", "일식", "양식", "패스트푸드"};
+    private void restaurantCategoryInit() {
+        Path csvPath = Paths.get("../api/data/restaurant_categories.csv").toAbsolutePath();
 
-        IntStream.range(0, 5).forEach(i -> {
-            RestaurantCategoryDto.RestaurantCategoryEnrollRequest category = RestaurantCategoryDto.RestaurantCategoryEnrollRequest.builder()
-                    .name(names[i])
-                    .build();
+        try (BufferedReader br = new BufferedReader(new FileReader(csvPath.toFile()))) {
+            // Skip header if exists
+            String line = br.readLine();
 
-            restaurantCategoryService.writeCategory(category);
-        });
+            while ((line = br.readLine()) != null) {
+                String categoryName = line.trim();
+                if (!categoryName.isEmpty()) {
+                    RestaurantCategoryDto.RestaurantCategoryEnrollRequest category =
+                            RestaurantCategoryDto.RestaurantCategoryEnrollRequest.builder()
+                                    .name(categoryName)
+                                    .build();
+
+                    restaurantCategoryService.writeCategory(category);
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to read restaurant categories from CSV file", e);
+        }
     }
 
     private void restaurantMenuInit() {

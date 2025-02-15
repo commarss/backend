@@ -93,7 +93,7 @@ public class RestaurantDocService {
     }
 
     public List<RestaurantDoc> showSortByRate() {
-       return restaurantDocRepository.findAllByOrderByAverageRateDesc();
+       return restaurantDocRepository.findTop5ByOrderByAverageRateDesc();
    }
 
     public List<RestaurantDoc> findNearbyRestaurants(Double lat, Double lng, Double distance) {

@@ -30,7 +30,7 @@ public class Restaurant extends BaseEntity {
     private String name;
 
     @NotNull
-    @Column(name = "details", nullable = false)
+    @Column(name = "details")
     private String details;
 
     @Column(name = "average_rate")
