@@ -36,6 +36,9 @@ public class ApiV1ReviewDocController {
    @GetMapping("/search")
    @Operation(summary = "리뷰 검색")
    public List<ReviewDoc> search(@RequestParam("keyword") String keyword) {
-       return reviewDocService.searchByKeyword(keyword);
+      List<ReviewDoc> results = reviewDocService.searchByKeyword(keyword);
+      System.out.println("results = " + results);
+
+      return results;
    }
 }

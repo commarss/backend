@@ -10,22 +10,35 @@ import java.util.List;
 @Repository
 public interface ReviewDocRepository extends ElasticsearchRepository<ReviewDoc, String> {
    @Query("""
-           {
-               "bool": {
-                   "should": [
-                       {
-                           "match": {
-                               "name": "?0"
-                           }
-                       },
-                       {
-                           "match": {
-                               "body": "?0"
-                           }
-                       }
-                   ]
-               }
-           }
-   """)
+        {
+            "function_score": {
+                "query": {
+                    "bool": {
+                        "should": [
+                            {
+                                "multi_match": {
+                                    "query": "?0",
+                                    "fields": ["name^2", "body"],
+                                    "operator": "or",
+                                    "fuzziness": "AUTO"
+                                }
+                            }
+                        ]
+                    }
+                },
+                "functions": [
+                    {
+                        "field_value_factor": {
+                            "field": "rate",
+                            "factor": 1.5,
+                            "modifier": "sqrt",
+                            "missing": 0
+                        }
+                    }
+                ],
+                "boost_mode": "multiply"
+            }
+        }
+    """)
    List<ReviewDoc> searchByKeyword(String keyword);
 }
