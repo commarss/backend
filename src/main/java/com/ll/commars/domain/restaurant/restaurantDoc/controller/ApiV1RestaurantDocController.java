@@ -34,11 +34,36 @@ public class ApiV1RestaurantDocController {
 //            @NotBlank Double averageRate
 //    ) {}
 
-   @GetMapping("/search")
-   @Operation(summary = "식당 검색")
-   public List<RestaurantDoc> search(@RequestParam("keyword") String keyword, @RequestParam("lat") String lat, @RequestParam("lon") String lon) throws IOException {
-       return restaurantDocService.searchByKeyword(keyword, Double.parseDouble(lat), Double.parseDouble(lon), "50km");
-   }
+    @GetMapping("/search")
+    @Operation(summary = "식당 검색 - 키워드로 주변 식당을 평점순 정렬")
+    public ResponseEntity<List<RestaurantDoc>> search(
+            @RequestParam("keyword") String keyword,
+            @RequestParam("lat") String lat,
+            @RequestParam("lon") String lon,
+            @RequestParam(value = "distance", defaultValue = "50") String distance
+    ) {
+        try {
+            if (keyword == null || keyword.trim().isEmpty()) {
+                return ResponseEntity.badRequest().build();
+            }
+
+            double latitude = Double.parseDouble(lat);
+            double longitude = Double.parseDouble(lon);
+
+            List<RestaurantDoc> results = restaurantDocService.searchByKeyword(
+                    keyword.trim(),
+                    latitude,
+                    longitude,
+                    distance + "km"
+            );
+            System.out.println("results = " + results);
+            return ResponseEntity.ok(results);
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            return ResponseEntity.ok(List.of()); // 빈 결과 반환
+        }
+    }
 
     @GetMapping("/sort/rate")
     @Operation(summary = "평점순으로 정렬")

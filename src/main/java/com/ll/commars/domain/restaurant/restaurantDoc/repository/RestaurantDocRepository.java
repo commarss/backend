@@ -9,27 +9,48 @@ import java.util.List;
 
 @Repository
 public interface RestaurantDocRepository extends ElasticsearchRepository<RestaurantDoc, String> {
+   // name에 2배 가중치
    @Query("""
         {
-            "bool": {
-                "should": [
-                    {
-                        "match": {
-                            "name": "?0"
-                        }
-                    },
-                    {
-                        "match": {
-                            "details": "?0"
+            "function_score": {
+                "query": {
+                    "bool": {
+                        "must": [
+                            {
+                                "multi_match": {
+                                    "query": "?0",
+                                    "fields": ["name^2", "details"],
+                                    "operator": "or",
+                                    "fuzziness": "AUTO"
+                                }
+                            }
+                        ],
+                        "filter": {
+                            "geo_distance": {
+                                "distance": "?3",
+                                "location": {
+                                    "lat": ?1,
+                                    "lon": ?2
+                                }
+                            }
                         }
                     }
-                ]
-            },
-            "size": 5
+                },
+                "functions": [
+                    {
+                        "field_value_factor": {
+                            "field": "average_rate",
+                            "factor": 1.5,
+                            "modifier": "sqrt",
+                            "missing": 0
+                        }
+                    }
+                ],
+                "boost_mode": "multiply"
+            }
         }
-""")
-
-   List<RestaurantDoc> searchByKeyword(String keyword);
+    """)
+   List<RestaurantDoc> searchByKeywordAndLocation(String keyword, double lat, double lon, String distance);
 
    List<RestaurantDoc> findTop5ByOrderByAverageRateDesc();
    @Query("""

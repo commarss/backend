@@ -37,60 +37,22 @@ public class RestaurantDocService {
         restaurantDocRepository.deleteAll();
     }
 
-    public List<RestaurantDoc> searchByKeyword(String keyword, double userLat, double userLng, String distance) throws IOException {
-        Query matchNameQuery = MatchQuery.of(m -> m
-                .field("name")
-                .query(keyword)
-                .fuzziness("AUTO")
-                .boost(2.0f)
-        )._toQuery();
-
-        Query matchDetailsQuery = MatchQuery.of(m -> m
-                .field("details")
-                .query(keyword)
-                .fuzziness("AUTO")
-                .boost(1.0f)
-        )._toQuery();
-
-        // ✅ 사용자 위치 기준 반경 검색 (Geo Distance)
-        Query geoDistanceQuery = GeoDistanceQuery.of(g -> g
-                .field("location")
-                .distance(distance)
-                .location(GeoLocation.of(l -> l.latlon(LatLonGeoLocation.of(ll -> ll.lat(userLat).lon(userLng)))))
-                .boost(0.5f)
-        )._toQuery();
-
-        // 키워드 + 거리 필터 조합
-        Query boolQuery = BoolQuery.of(b -> b
-                .should(matchNameQuery)
-                .should(matchDetailsQuery)
-                .filter(geoDistanceQuery)
-        )._toQuery();
-
-        // Function Score Query (평점 높은 곳 우선)
-        FunctionScoreQuery functionScoreQuery = FunctionScoreQuery.of(f -> f
-                .query(boolQuery)
-                .functions(FunctionScore.of(fs -> fs
-                        .fieldValueFactor(FieldValueFactorScoreFunction.of(fv -> fv
-                                .field("average_rate")
-                                .factor(1.5)
-                                .modifier(FieldValueFactorModifier.Sqrt)
-                        ))
-                ))
-        );
-
-        // 검색 요청
-        SearchRequest searchRequest = SearchRequest.of(s -> s
-                .index("es_restaurants")
-                .query(functionScoreQuery._toQuery())
-        );
-
-        // 검색 실행
-        SearchResponse<RestaurantDoc> response = elasticsearchClient.search(searchRequest, RestaurantDoc.class);
-
-        return response.hits().hits().stream()
-                .map(hit -> hit.source())
-                .collect(Collectors.toList());
+    public List<RestaurantDoc> searchByKeyword(String keyword, double userLat, double userLng, String distance) {
+        try {
+            if (keyword == null || keyword.trim().isEmpty()) {
+                System.out.println("empty keyword");
+                return List.of();
+            }
+            return restaurantDocRepository.searchByKeywordAndLocation(
+                    keyword.trim(),
+                    userLat,
+                    userLng,
+                    distance
+            );
+        } catch (Exception e) {
+            System.out.println("e = " + e);
+            return List.of();
+        }
     }
 
     public List<RestaurantDoc> showSortByRate() {
