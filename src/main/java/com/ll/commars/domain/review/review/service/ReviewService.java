@@ -89,6 +89,22 @@ public class ReviewService {
                 .user(user.orElseThrow(() -> new IllegalArgumentException("User not found")))
                 .build();
 
-        return reviewRepository.save(review);
+        reviewRepository.save(review);
+
+        Long restaurantId2Long = Long.valueOf(restaurantId);
+
+        // 해당 식당의 모든 리뷰 평점 평균 계산
+        List<Review> allReviews = reviewRepository.findByRestaurantId(restaurantId2Long);
+        double newAverageRate = allReviews.stream()
+                .mapToInt(Review::getRate)
+                .average()
+                .orElse(0.0);
+        System.out.println("newAverageRate = " + newAverageRate);
+
+        // 식당의 평균 평점 업데이트
+        restaurant.setAverageRate(newAverageRate);
+        restaurantRepository.save(restaurant);
+
+        return review;
     }
 }

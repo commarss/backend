@@ -153,6 +153,18 @@ public class RestaurantService {
                 .rate(request.getRate())
                 .build());
 
+        // 해당 식당의 모든 리뷰 평점 평균 계산
+        List<Review> allReviews = reviewRepository.findByRestaurantId(restaurantId);
+        double newAverageRate = allReviews.stream()
+                .mapToInt(Review::getRate)
+                .average()
+                .orElse(0.0);
+        System.out.println("newAverageRate = " + newAverageRate);
+
+        // 식당의 평균 평점 업데이트
+        restaurant.setAverageRate(newAverageRate);
+        restaurantRepository.save(restaurant);
+
         return ReviewDto.ReviewWriteResponse.builder()
                 .userName(user.get().getName())
                 .reviewName(request.getReviewName())
