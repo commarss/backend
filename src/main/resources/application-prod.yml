@@ -7,7 +7,7 @@ custom:
 
 spring:
   elasticsearch:
-    uris: http://211.188.54.241:9200
+    uris: http://223.130.156.107:9200
   datasource:
     url: jdbc:mysql://likelion-mars-mysql.cvi8qmy2a7zg.ap-northeast-2.rds.amazonaws.com/likelion_mars
     username: "${custom.secret.db.username}"
