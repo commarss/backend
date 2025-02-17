@@ -5,7 +5,7 @@ spring:
     ansi:
       enabled: ALWAYS
   profiles:
-    active: dev # 배포 환경 시 prod, 개발 환경 시 dev 설정
+    active: prod # 배포 환경 시 prod, 개발 환경 시 dev 설정
     include: secret
 #  datasource:
 #    url: jdbc:h2:file:./db_dev;MODE=MySQL

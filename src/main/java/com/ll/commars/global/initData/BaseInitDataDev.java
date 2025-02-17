@@ -67,10 +67,10 @@ public class BaseInitDataDev {
 //
 //            // 테이블 연관관계 순서대로
 //            userInit();
-//            restaurantCategoryInit();
+            restaurantCategoryInit();
 //
 //            communityInit();
-//            restaurantInit();
+            restaurantInit();
 //
 //            reviewInit();
 //            restaurantMenuInit();
