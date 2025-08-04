@@ -20,18 +20,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
-@Table(name = "boards")
 @Getter
-@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -41,28 +36,23 @@ public class Board extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@NotNull
 	@Column(nullable = false)
 	private String title;
 
-	@NotNull
 	@Column(nullable = false)
 	private String content;
 
-	@NotNull
 	@Column(nullable = false)
-	@ColumnDefault("0") // 객체 생성 시점이 아닌(Builder.Default) 테이블 생성 시점에 views의 기본 값 세팅
-	private Integer views;
+	@ColumnDefault("0")
+	private int views = 0;
 
-	@Column(name = "image_url")
+	@Column
 	private String imageUrl;
 
-	// Board와 User: 다대일 관계 (게시글 작성자)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	// Board와 Comment: 일대다 관계
 	@OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
 	@Builder.Default
 	private List<Comment> comments = new ArrayList<>();
@@ -86,33 +76,9 @@ public class Board extends BaseEntity {
 
 	@Column(nullable = false)
 	@ColumnDefault("0")
-	private Integer likeCount;
+	private int likeCount = 0;
 
 	@Column(nullable = false)
 	@ColumnDefault("0")
-	private int dislikeCount;  // 🚀 기본값 0 설정
-
-	// ✅ 좋아요 추가
-	public void incrementLikes() {
-		this.likeCount += 1;
-	}
-
-	// ✅ 싫어요 추가
-	public void incrementDislikes() {
-		this.dislikeCount += 1;
-	}
-
-	// ✅ 좋아요 감소
-	public void decrementLikes() {
-		if (this.likeCount > 0) {
-			this.likeCount -= 1;
-		}
-	}
-
-	// ✅ 싫어요 감소
-	public void decrementDislikes() {
-		if (this.dislikeCount > 0) {
-			this.dislikeCount -= 1;
-		}
-	}
+	private int dislikeCount = 0;
 }
