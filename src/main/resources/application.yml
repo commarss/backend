@@ -1,76 +1,12 @@
 server:
-  port: 8090
+  port: 8080
+
 spring:
+  config:
+    import:
+      - classpath:/secret/application-db.yml
+      - classpath:/secret/application-variable.yml
+
   output:
     ansi:
       enabled: ALWAYS
-  profiles:
-    active: prod # 배포 환경 시 prod, 개발 환경 시 dev 설정
-    include: secret
-#  datasource:
-#    url: jdbc:h2:file:./db_dev;MODE=MySQL
-#    username: sa
-#    password:
-#    driver-class-name: org.h2.Driver
-  jpa:
-    open-in-view: false
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        default_batch_fetch_size: 100
-        format_sql: false # true
-        highlight_sql: false # true
-        use_sql_comments: false # true
-logging:
-  level:
-    com.ll.commars: DEBUG
-    org.hibernate.SQL: OFF # DEBUG
-    org.hibernate.orm.jdbc.bind: OFF # TRACE
-    org.hibernate.orm.jdbc.extract: OFF # TRACE
-    org.springframework.transaction.interceptor: OFF # TRACE
-custom:
-  dev:
-    cookieDomain: localhost
-    frontUrl: "http://${custom.dev.cookieDomain}:5173"
-    backUrl: "http://${custom.dev.cookieDomain}:${server.port}"
-  prod:
-    cookieDomain: commars.whqtker.site
-    frontUrl: "https://www.${custom.prod.cookieDomain}"
-    backUrl: "https://api.${custom.prod.cookieDomain}"
-  site:
-    name: "COMMARS DEV"
-    cookieDomain: "${custom.dev.cookieDomain}"
-    frontUrl: "${custom.dev.frontUrl}"
-    backUrl: "${custom.dev.backUrl}"
-jwt:
-  secret-key: "itSPqeI2VV2ThZq0r40MIzwTze2rXR9Uy5s46wNSga/s7bn1yHLUmP/7B4h/YvQvgE+YTtiHbZLy1wETqG4stw=="
-  excluded-urls:
-    /api/refresh,
-    /api/user/register/email,
-    /api/user/profile,
-    /api/user/delete,
-    /api/user/post,
-    /api/user/locations,
-    /api/v1/user/location,
-    /api/users/favorites,
-    /api/v1/restaurantsDoc/nearby
-  excluded-base-urls:
-    /api/public,
-    /login-success,
-    /api/auth/login,
-    /api/user/reset-password,
-    /api/v1/restaurant
-google:
-  client-id: "${spring.security.oauth2.client.registration.google.client-id}"
-kakao:
-  client-id: "${spring.security.oauth2.client.registration.kakao.client-id}"
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health
-  endpoint:
-    health:
-      show-details: always
