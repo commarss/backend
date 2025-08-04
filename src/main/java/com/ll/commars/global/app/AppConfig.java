@@ -1,17 +1,18 @@
 package com.ll.commars.global.app;
 
-import lombok.Getter;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+
+import lombok.Getter;
 
 @Configuration
 public class AppConfig {
-    @Getter
-    private static String siteFrontUrl;
-    @Getter
-    private static String siteBackUrl;
-    @Getter
-    private static String siteCookieDomain;
+
+	@Getter
+	private static String siteFrontUrl;
+	@Getter
+	private static String siteBackUrl;
+	@Getter
+	private static String siteCookieDomain;
     /*
     @Value("${custom.site.frontUrl}")
     public void setSiteFrontUrl(String siteFrontUrl) {

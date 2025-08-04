@@ -1,5 +1,11 @@
 package com.ll.commars.domain.review.review.service;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
 import com.ll.commars.domain.restaurant.restaurant.repository.RestaurantRepository;
 import com.ll.commars.domain.restaurant.restaurant.service.RestaurantService;
@@ -9,102 +15,99 @@ import com.ll.commars.domain.review.review.repository.ReviewRepository;
 import com.ll.commars.domain.user.user.entity.User;
 import com.ll.commars.domain.user.user.repository.UserRepository;
 import com.ll.commars.domain.user.user.service.UserService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class ReviewService {
-    private final ReviewRepository reviewRepository;
-    private final RestaurantRepository restaurantRepository;
-    private final UserRepository userRepository;
-    private final RestaurantService restaurantService;
-    private final UserService userService;
 
-    public void truncate() {
-        reviewRepository.deleteAll();
-    }
+	private final ReviewRepository reviewRepository;
+	private final RestaurantRepository restaurantRepository;
+	private final UserRepository userRepository;
+	private final RestaurantService restaurantService;
+	private final UserService userService;
 
-    @Transactional
-    public void deleteReview(Long reviewId) {
-        reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new IllegalArgumentException("Review not found"));
+	public void truncate() {
+		reviewRepository.deleteAll();
+	}
 
-        reviewRepository.deleteById(reviewId);
-    }
+	@Transactional
+	public void deleteReview(Long reviewId) {
+		reviewRepository.findById(reviewId)
+			.orElseThrow(() -> new IllegalArgumentException("Review not found"));
 
-    @Transactional
-    public ReviewDto.ReviewWriteResponse modifyReview(Long reviewId, ReviewDto.ReviewWriteRequest request) {
-        Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new IllegalArgumentException("Review not found"));
+		reviewRepository.deleteById(reviewId);
+	}
 
-        // 매개변수의 reviewId와 request의 userId가 일치하지 않으면 예외를 발생시킨다.
-        if (!review.getUser().getId().equals(request.getUserId())) {
-            throw new IllegalArgumentException("User not matched");
-        }
+	@Transactional
+	public ReviewDto.ReviewWriteResponse modifyReview(Long reviewId, ReviewDto.ReviewWriteRequest request) {
+		Review review = reviewRepository.findById(reviewId)
+			.orElseThrow(() -> new IllegalArgumentException("Review not found"));
 
-        review.setName(request.getReviewName());
-        review.setBody(request.getBody());
-        review.setRate(request.getRate());
+		// 매개변수의 reviewId와 request의 userId가 일치하지 않으면 예외를 발생시킨다.
+		if (!review.getUser().getId().equals(request.getUserId())) {
+			throw new IllegalArgumentException("User not matched");
+		}
 
-        return ReviewDto.ReviewWriteResponse.builder()
-                .userName(review.getUser().getName())
-                .restaurantName(review.getRestaurant().getName())
-                .reviewName(review.getName())
-                .body(review.getBody())
-                .rate(review.getRate())
-                .build();
-    }
+		review.setName(request.getReviewName());
+		review.setBody(request.getBody());
+		review.setRate(request.getRate());
 
-    public ReviewDto.ShowAllReviewsResponse showAllReviews(Long restaurantId) {
-        List<Review> reviews = reviewRepository.findByRestaurantId(restaurantId);
+		return ReviewDto.ReviewWriteResponse.builder()
+			.userName(review.getUser().getName())
+			.restaurantName(review.getRestaurant().getName())
+			.reviewName(review.getName())
+			.body(review.getBody())
+			.rate(review.getRate())
+			.build();
+	}
 
-        return ReviewDto.ShowAllReviewsResponse.builder()
-                .reviews(reviews.stream()
-                        .map(review -> ReviewDto.ReviewInfo.builder()
-                                .id(review.getId())
-                                .userId(review.getUser().getId())
-                                .restaurantId(review.getRestaurant().getId())
-                                .name(review.getName())
-                                .body(review.getBody())
-                                .rate(review.getRate())
-                                .build())
-                        .toList())
-                .build();
-    }
+	public ReviewDto.ShowAllReviewsResponse showAllReviews(Long restaurantId) {
+		List<Review> reviews = reviewRepository.findByRestaurantId(restaurantId);
 
-    public Review wirteReview(String restaurantId, String username, String name, String body, int rate) {
-        Restaurant restaurant = restaurantService.findById(Long.valueOf(restaurantId));
-        Optional<User> user = userService.findById(Long.parseLong(username));
+		return ReviewDto.ShowAllReviewsResponse.builder()
+			.reviews(reviews.stream()
+				.map(review -> ReviewDto.ReviewInfo.builder()
+					.id(review.getId())
+					.userId(review.getUser().getId())
+					.restaurantId(review.getRestaurant().getId())
+					.name(review.getName())
+					.body(review.getBody())
+					.rate(review.getRate())
+					.build())
+				.toList())
+			.build();
+	}
 
-        Review review = Review.builder()
-                .name(name)
-                .body(body)
-                .rate(rate)
-                .restaurant(restaurant)
-                .user(user.orElseThrow(() -> new IllegalArgumentException("User not found")))
-                .build();
+	public Review wirteReview(String restaurantId, String username, String name, String body, int rate) {
+		Restaurant restaurant = restaurantService.findById(Long.valueOf(restaurantId));
+		Optional<User> user = userService.findById(Long.parseLong(username));
 
-        reviewRepository.save(review);
+		Review review = Review.builder()
+			.name(name)
+			.body(body)
+			.rate(rate)
+			.restaurant(restaurant)
+			.user(user.orElseThrow(() -> new IllegalArgumentException("User not found")))
+			.build();
 
-        Long restaurantId2Long = Long.valueOf(restaurantId);
+		reviewRepository.save(review);
 
-        // 해당 식당의 모든 리뷰 평점 평균 계산
-        List<Review> allReviews = reviewRepository.findByRestaurantId(restaurantId2Long);
-        double newAverageRate = allReviews.stream()
-                .mapToInt(Review::getRate)
-                .average()
-                .orElse(0.0);
-        System.out.println("newAverageRate = " + newAverageRate);
+		Long restaurantId2Long = Long.valueOf(restaurantId);
 
-        // 식당의 평균 평점 업데이트
-        restaurant.setAverageRate(newAverageRate);
-        restaurantRepository.save(restaurant);
+		// 해당 식당의 모든 리뷰 평점 평균 계산
+		List<Review> allReviews = reviewRepository.findByRestaurantId(restaurantId2Long);
+		double newAverageRate = allReviews.stream()
+			.mapToInt(Review::getRate)
+			.average()
+			.orElse(0.0);
+		System.out.println("newAverageRate = " + newAverageRate);
 
-        return review;
-    }
+		// 식당의 평균 평점 업데이트
+		restaurant.setAverageRate(newAverageRate);
+		restaurantRepository.save(restaurant);
+
+		return review;
+	}
 }

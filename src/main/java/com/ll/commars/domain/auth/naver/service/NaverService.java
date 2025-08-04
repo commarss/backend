@@ -1,8 +1,7 @@
 package com.ll.commars.domain.auth.naver.service;
 
-import com.ll.commars.domain.user.user.entity.User;
-import com.ll.commars.domain.user.user.service.UserService;
-import lombok.RequiredArgsConstructor;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -12,79 +11,84 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Map;
+import com.ll.commars.domain.user.user.entity.User;
+import com.ll.commars.domain.user.user.service.UserService;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class NaverService {
-    private final UserService userService;
 
-    @Value("${spring.security.oauth2.client.registration.naver.client-id}")
-    private String clientId;
+	private final UserService userService;
 
-    @Value("${spring.security.oauth2.client.registration.naver.client-secret}")
-    private String clientSecret;
+	@Value("${spring.security.oauth2.client.registration.naver.client-id}")
+	private String clientId;
 
-    public String getAccessToken(String code, String state) {
-        String tokenUrl = "https://nid.naver.com/oauth2.0/token?grant_type=authorization_code"
-                + "&client_id=" + clientId
-                + "&client_secret=" + clientSecret
-                + "&code=" + code
-                + "&state=" + state;
+	@Value("${spring.security.oauth2.client.registration.naver.client-secret}")
+	private String clientSecret;
 
-        try {
-            RestTemplate restTemplate = new RestTemplate();
-            ResponseEntity<Map> response = restTemplate.getForEntity(tokenUrl, Map.class);
+	public String getAccessToken(String code, String state) {
+		String tokenUrl = "https://nid.naver.com/oauth2.0/token?grant_type=authorization_code"
+			+ "&client_id=" + clientId
+			+ "&client_secret=" + clientSecret
+			+ "&code=" + code
+			+ "&state=" + state;
 
-            if (response.getStatusCodeValue() != 200) {
-                System.err.println("response = " + response);
-                return null;
-            }
+		try {
+			RestTemplate restTemplate = new RestTemplate();
+			ResponseEntity<Map> response = restTemplate.getForEntity(tokenUrl, Map.class);
 
-            return (String) response.getBody().get("access_token");
+			if (response.getStatusCodeValue() != 200) {
+				System.err.println("response = " + response);
+				return null;
+			}
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+			return (String)response.getBody().get("access_token");
 
-    public Map<String, Object> getUserProfile(String accessToken) {
-        String profileUrl = "https://openapi.naver.com/v1/nid/me";
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + accessToken);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 
-        HttpEntity<String> entity = new HttpEntity<>(headers);
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<Map<String, Object>> response = restTemplate.exchange(profileUrl, HttpMethod.GET, entity, new ParameterizedTypeReference<Map<String, Object>>() {});
+	public Map<String, Object> getUserProfile(String accessToken) {
+		String profileUrl = "https://openapi.naver.com/v1/nid/me";
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Authorization", "Bearer " + accessToken);
 
+		HttpEntity<String> entity = new HttpEntity<>(headers);
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<Map<String, Object>> response = restTemplate.exchange(profileUrl, HttpMethod.GET, entity,
+			new ParameterizedTypeReference<Map<String, Object>>() {
+			});
 
-        return (Map<String, Object>) response.getBody().get("response");
-    }
+		return (Map<String, Object>)response.getBody().get("response");
+	}
 
-    public User loginForNaver(Map<String, Object> userProfile) {
-        System.out.println(userProfile);
-        User naverUser = User.builder()
-                .socialProvider(2)
-                .phoneNumber((String) userProfile.get("mobile"))
-                .email((String) userProfile.get("email"))
-                .name((String) userProfile.get("name"))
-                .profileImageUrl((String) userProfile.get("profile_image"))
-                .build();
+	public User loginForNaver(Map<String, Object> userProfile) {
+		System.out.println(userProfile);
+		User naverUser = User.builder()
+			.socialProvider(2)
+			.phoneNumber((String)userProfile.get("mobile"))
+			.email((String)userProfile.get("email"))
+			.name((String)userProfile.get("name"))
+			.profileImageUrl((String)userProfile.get("profile_image"))
+			.build();
 
-        return userService.accessionCheck(naverUser);
-    }
+		return userService.accessionCheck(naverUser);
+	}
 
-    public String logout(String accessToken) {
-        String logoutUrl = "https://nid.naver.com/oauth2.0/token?grant_type=delete"
-                + "&client_id=" + clientId
-                + "&client_secret=" + clientSecret
-                + "&access_token=" + accessToken
-                + "&service_provider=NAVER";
+	public String logout(String accessToken) {
+		String logoutUrl = "https://nid.naver.com/oauth2.0/token?grant_type=delete"
+			+ "&client_id=" + clientId
+			+ "&client_secret=" + clientSecret
+			+ "&access_token=" + accessToken
+			+ "&service_provider=NAVER";
 
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<Map> response = restTemplate.exchange(logoutUrl, HttpMethod.GET, null, Map.class);
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<Map> response = restTemplate.exchange(logoutUrl, HttpMethod.GET, null, Map.class);
 
-        return (String) response.getBody().get("result");
-    }
+		return (String)response.getBody().get("result");
+	}
 }

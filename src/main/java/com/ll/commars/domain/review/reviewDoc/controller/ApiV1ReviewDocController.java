@@ -1,44 +1,42 @@
 package com.ll.commars.domain.review.reviewDoc.controller;
 
+import java.util.List;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.ll.commars.domain.review.reviewDoc.document.ReviewDoc;
 import com.ll.commars.domain.review.reviewDoc.service.ReviewDocService;
-import com.ll.commars.global.rsData.RsData;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping(value = "/api/v1/reviewsDocs", produces = APPLICATION_JSON_VALUE)
+@RequestMapping("/api/v1/reviewsDocs")
 @RequiredArgsConstructor
-@Tag(name = "ApiV1ReviewDocController", description = "리뷰 CRUD API(ElasticSearch)")
 public class ApiV1ReviewDocController {
-   private final ReviewDocService reviewDocService;
 
-//    @PostMapping("/write")
-//    public RsData<ReviewDoc> write(
-//            @RequestBody @Valid ReviewsDocWriteRequest request
-//    ){
-//        ReviewDoc reviewDoc = reviewDocService.write(request.content, request.rate);
-//        return new RsData<>("201", "리뷰 작성 성공", reviewDoc);
-//    }
+	private final ReviewDocService reviewDocService;
 
-//    record ReviewsDocWriteRequest(
-//            @NotBlank String content,
-//            @NotBlank Integer rate
-//    ) {}
+	//    @PostMapping("/write")
+	//    public RsData<ReviewDoc> write(
+	//            @RequestBody @Valid ReviewsDocWriteRequest request
+	//    ){
+	//        ReviewDoc reviewDoc = reviewDocService.write(request.content, request.rate);
+	//        return new RsData<>("201", "리뷰 작성 성공", reviewDoc);
+	//    }
 
-   @GetMapping("/search")
-   @Operation(summary = "리뷰 검색")
-   public List<ReviewDoc> search(@RequestParam("keyword") String keyword) {
-      List<ReviewDoc> results = reviewDocService.searchByKeyword(keyword);
-      System.out.println("results = " + results);
+	//    record ReviewsDocWriteRequest(
+	//            @NotBlank String content,
+	//            @NotBlank Integer rate
+	//    ) {}
 
-      return results;
-   }
+	@GetMapping("/search")
+	public List<ReviewDoc> search(@RequestParam("keyword") String keyword) {
+		List<ReviewDoc> results = reviewDocService.searchByKeyword(keyword);
+		System.out.println("results = " + results);
+
+		return results;
+	}
 }

@@ -1,46 +1,54 @@
 package com.ll.commars.domain.restaurant.category.controller;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.ll.commars.domain.restaurant.category.dto.RestaurantCategoryDto;
 import com.ll.commars.domain.restaurant.category.service.RestaurantCategoryService;
-import com.ll.commars.global.rsData.RsData;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
-
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/api/v1/restaurant-category", produces = APPLICATION_JSON_VALUE)
-@Tag(name = "ApiV1RestaurantCategoryController", description = "식당 카테고리 API")
+@RequestMapping("/api/v1/restaurant-category")
 public class ApiV1RestaurantCategoryController {
-    private final RestaurantCategoryService restaurantCategoryService;
 
-    @PostMapping(value = "/", consumes = APPLICATION_JSON_VALUE)
-    @Operation(summary = "식당 카테고리 등록")
-    public RsData<RestaurantCategoryDto.RestaurantCategoryInfo> writeCategory(
-            @RequestBody @Valid RestaurantCategoryDto.RestaurantCategoryEnrollRequest request
-    ) {
-        RestaurantCategoryDto.RestaurantCategoryInfo response = restaurantCategoryService.writeCategory(request);
-        return new RsData<>("201", "식당 카테고리 등록 성공", response);
-    }
+	private final RestaurantCategoryService restaurantCategoryService;
 
-    @GetMapping("/")
-    @Operation(summary = "모든 카테고리 조회")
-    public RsData<RestaurantCategoryDto.ShowAllCategoriesResponse> getCategories() {
-        RestaurantCategoryDto.ShowAllCategoriesResponse response = restaurantCategoryService.getCategories();
-        return new RsData<>("200", "모든 카테고리 조회 성공", response);
-    }
+	@PostMapping("/")
+	public ResponseEntity<RestaurantCategoryDto.RestaurantCategoryInfo> writeCategory(
+		@RequestBody @Valid RestaurantCategoryDto.RestaurantCategoryEnrollRequest request
+	) {
+		RestaurantCategoryDto.RestaurantCategoryInfo response = restaurantCategoryService.writeCategory(request);
+		return ResponseEntity
+			.status(201)
+			.body(response);
+	}
 
-    @GetMapping("/{category_id}")
-    @Operation(summary = "특정 카테고리에 속한 식당 조회")
-    public RsData<RestaurantCategoryDto.ShowAllRestaurantsByCategoryResponse> getRestaurantByCategory(
-            @PathVariable("category_id") Long categoryId
-    ) {
-        RestaurantCategoryDto.ShowAllRestaurantsByCategoryResponse response = restaurantCategoryService.getRestaurantByCategory(categoryId);
-        return new RsData<>("200", "특정 카테고리에 속한 식당 조회 성공", response);
-    }
+	@GetMapping("/")
+	public ResponseEntity<RestaurantCategoryDto.ShowAllCategoriesResponse> getCategories() {
+		RestaurantCategoryDto.ShowAllCategoriesResponse response = restaurantCategoryService.getCategories();
+		return ResponseEntity
+			.status(200)
+			.body(response);
+	}
+
+	@GetMapping("/{category_id}")
+	public ResponseEntity<RestaurantCategoryDto.ShowAllRestaurantsByCategoryResponse> getRestaurantByCategory(
+		@PathVariable("category_id") Long categoryId
+	) {
+		RestaurantCategoryDto.ShowAllRestaurantsByCategoryResponse response = restaurantCategoryService.getRestaurantByCategory(
+			categoryId);
+
+		return ResponseEntity
+			.status(200)
+			.body(response);
+	}
 }
 

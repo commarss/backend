@@ -10,7 +10,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReviewAnalysisDTO {
-    private String name;  // 리뷰 작성자 이름
-    private String body;  // 리뷰 내용
-    private int rate;     // 평점
+
+	private String name;  // 리뷰 작성자 이름
+	private String body;  // 리뷰 내용
+	private int rate;     // 평점
 }
