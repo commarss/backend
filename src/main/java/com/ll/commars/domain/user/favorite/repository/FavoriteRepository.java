@@ -6,12 +6,10 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 import com.ll.commars.domain.user.favorite.entity.Favorite;
 import com.ll.commars.domain.user.user.entity.User;
 
-@Repository
 public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
 
 	// 특정 리뷰어(email)의 찜 목록을 조회

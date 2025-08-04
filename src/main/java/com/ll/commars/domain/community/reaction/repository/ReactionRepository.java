@@ -1,13 +1,11 @@
 package com.ll.commars.domain.community.reaction.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 import com.ll.commars.domain.community.board.entity.Board;
 import com.ll.commars.domain.community.reaction.entity.Reaction;
 import com.ll.commars.domain.user.user.entity.User;
 
-@Repository
 public interface ReactionRepository extends JpaRepository<Reaction, Long> {
 
 	// 특정 유저가 특정 게시글에 반응(좋아요/싫어요)을 남겼는지 확인
