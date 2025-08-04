@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-import com.ll.commars.domain.community.post.service.PostService;
+import com.ll.commars.domain.community.post.service.PostCommandService;
 import com.ll.commars.domain.community.comment.service.CommentService;
 import com.ll.commars.domain.community.reaction.service.ReactionService;
 import com.ll.commars.domain.restaurant.businessHour.dto.BusinessHourDto;
@@ -52,7 +52,7 @@ public class BaseInitDataDev {
 	private final RestaurantDocService restaurantDocService;
 	private final RestaurantService restaurantService;
 	private final UserService userService;
-	private final PostService postService;
+	private final PostCommandService postCommandService;
 	private final CommentService commentService;
 	private final RestaurantCategoryService restaurantCategoryService;
 	private final RestaurantMenuService restaurantMenuService;
@@ -90,7 +90,7 @@ public class BaseInitDataDev {
 
 		commentService.truncate();
 		reactionService.truncate();
-		postService.truncate();
+		postCommandService.truncate();
 
 		reviewService.truncate();
 		userService.truncate();
@@ -388,7 +388,7 @@ public class BaseInitDataDev {
 			String content = contents[random.nextInt(contents.length)];
 			String imageUrl = imageUrls[random.nextInt(imageUrls.length)];
 
-			Long boardId = postService.addBoard(
+			Long boardId = postCommandService.addBoard(
 				userId,
 				title,
 				content,

@@ -80,12 +80,11 @@ public class Post extends BaseEntity {
 		this.reactions = reactions;
 	}
 
-	public Post(String title, String content, String imageUrl, User user, List<PostHashTag> postHashTags) {
+	public Post(String title, String content, String imageUrl, User user) {
 		this.title = title;
 		this.content = content;
 		this.imageUrl = imageUrl;
 		this.user = user;
-		this.postHashTags = postHashTags;
 	}
 
 	public void updatePost(String title, String content, List<PostHashTag> postHashTags) {
@@ -96,5 +95,11 @@ public class Post extends BaseEntity {
 
 	public void incrementViews() {
 		this.views++;
+	}
+
+	public void addHashTags(List<PostHashTag> hashTags) {
+		this.postHashTags.clear();
+		this.postHashTags.addAll(hashTags);
+		hashTags.forEach(hashTag -> hashTag.setPost(this));
 	}
 }

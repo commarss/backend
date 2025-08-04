@@ -1,7 +1,5 @@
 package com.ll.commars.domain.community.post.controller;
 
-import static org.springframework.http.MediaType.*;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,9 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ll.commars.domain.community.post.dto.PostCreateRequest;
+import com.ll.commars.domain.community.post.dto.PostCreateResponse;
 import com.ll.commars.domain.community.post.entity.Post;
 import com.ll.commars.domain.community.post.repository.PostRepository;
-import com.ll.commars.domain.community.post.service.PostService;
+import com.ll.commars.domain.community.post.service.PostCommandService;
 import com.ll.commars.domain.user.user.entity.User;
 import com.ll.commars.domain.user.user.service.UserService;
 
@@ -33,14 +33,25 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PostController {
 
-    private final PostService postService;
+    private final PostCommandService postCommandService;
     private final UserService userService;
     private final PostRepository postRepository;
+
+    @PostMapping
+    public ResponseEntity<PostCreateResponse> createPost(
+        @RequestBody PostCreateRequest request,
+        @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        User user = getAuthenticatedUser(userDetails);
+        PostCreateResponse response = postCommandService.createPost(user.getId(), request);
+
+        return ResponseEntity.ok(response);
+    }
 
     @GetMapping
     public ResponseEntity<?> getPosts() {
         try {
-            List<Post> posts = postService.getAllBoards();
+            List<Post> posts = postCommandService.getAllBoards();
             List<Map<String, Object>> postList = posts.stream().map(board -> {
                 Map<String, Object> postMap = new HashMap<>();
                 postMap.put("boardId", board.getId());
@@ -55,15 +66,10 @@ public class PostController {
         }
     }
 
-    private User getAuthenticatedUser(@AuthenticationPrincipal UserDetails userDetails) {
-        return userService.findById(Long.parseLong(userDetails.getUsername())).orElseThrow(
-            () -> new RuntimeException("사용자를 찾을 수 없습니다."));
-    }
-
     @GetMapping("/{postId}")
     public ResponseEntity<?> getPostDetail(@PathVariable("postId") Long postId) {
         try {
-            Post post = postService.getBoard(postId);
+            Post post = postCommandService.getBoard(postId);
             System.out.println("게시글 조회 성공: " + post.getTitle()); // 콘솔에 출력
 
             Map<String, Object> response = new HashMap<>();
@@ -87,16 +93,9 @@ public class PostController {
         }
     }
 
-    @PostMapping(consumes = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> createPost(@RequestBody Map<String, Object> request,
-        @AuthenticationPrincipal UserDetails userDetails) {
-        User user = getAuthenticatedUser(userDetails);
-        String title = (String)request.get("title");
-        String content = (String)request.get("content");
-        List<String> tags = (List<String>)request.get("tags");
-        String imageUrl = (String)request.get("imageUrl"); // ✅ imageUrl 가져오기
-        postService.addBoard(user.getId(), title, content, tags, imageUrl);
-        return ResponseEntity.status(201).body("게시글이 등록되었습니다.");
+    private User getAuthenticatedUser(@AuthenticationPrincipal UserDetails userDetails) {
+        return userService.findById(Long.parseLong(userDetails.getUsername())).orElseThrow(
+            () -> new RuntimeException("사용자를 찾을 수 없습니다."));
     }
 
     @PutMapping("/{postId}")
@@ -107,7 +106,7 @@ public class PostController {
         String title = (String)request.get("title");
         String content = (String)request.get("content");
         List<String> tags = (List<String>)request.get("tags");
-        postService.updateBoard(postId, title, content, tags);
+        postCommandService.updateBoard(postId, title, content, tags);
         return ResponseEntity.ok("게시글이 수정되었습니다.");
     }
 
@@ -115,7 +114,7 @@ public class PostController {
     public ResponseEntity<?> deletePost(@PathVariable("postId") Long postId,
         @AuthenticationPrincipal UserDetails userDetails) {
         User user = getAuthenticatedUser(userDetails);
-        postService.deleteBoard(postId);
+        postCommandService.deleteBoard(postId);
         return ResponseEntity.ok("게시글이 삭제되었습니다.");
     }
 

@@ -5,8 +5,11 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ll.commars.domain.community.post.dto.PostCreateRequest;
+import com.ll.commars.domain.community.post.dto.PostCreateResponse;
 import com.ll.commars.domain.community.post.entity.Post;
 import com.ll.commars.domain.community.post.entity.PostHashTag;
+import com.ll.commars.domain.community.post.repository.PostHashTagRepository;
 import com.ll.commars.domain.community.post.repository.PostRepository;
 import com.ll.commars.domain.user.user.entity.User;
 import com.ll.commars.domain.user.user.repository.UserRepository;
@@ -15,20 +18,26 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class PostService {
+public class PostCommandService {
 
 	private final PostRepository postRepository;
 	private final UserRepository userRepository;
+	private final PostHashTagRepository postHashTagRepository;
 
 	@Transactional
-	public Long addBoard(Long userId, String title, String content, List<PostHashTag> postHashTags, String imageUrl) {
+	public PostCreateResponse createPost(Long userId, PostCreateRequest request) {
 		User user = userRepository.findById(userId)
 			.orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
 
-		Post post = new Post(title, content, imageUrl, user, postHashTags);
+		Post post = new Post(request.title(), request.content(), request.imageUrl(), user);
 
-		post = postRepository.save(post);
-		return post.getId();
+		List<PostHashTag> postHashTags = request.hashTags().stream()
+			.map(PostHashTag::new)
+			.toList();
+
+		post.addHashTags(postHashTags);
+
+		return PostCreateResponse.from(postRepository.save(post));
 	}
 
 	public List<Post> getAllBoards() {

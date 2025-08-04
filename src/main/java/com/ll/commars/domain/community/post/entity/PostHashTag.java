@@ -22,9 +22,17 @@ public class PostHashTag {
     private Long id;
 
     @Column(nullable = false)
-    private String tag;
+    private String name;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "board_id")
+    @JoinColumn(name = "post_id")
     private Post post;
+
+    public PostHashTag(String name) {
+        this.name = name;
+    }
+
+    public void setPost(Post post) {
+        this.post = post;
+    }
 }
