@@ -1,4 +1,4 @@
-package com.ll.commars.domain.community.board.dto;
+package com.ll.commars.domain.community.post.dto;
 
 import lombok.Builder;
 import lombok.Getter;

@@ -3,7 +3,7 @@ package com.ll.commars.domain.community.comment.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ll.commars.domain.community.board.entity.Board;
+import com.ll.commars.domain.community.post.entity.Post;
 import com.ll.commars.domain.user.user.entity.User;
 
 import jakarta.persistence.CascadeType;
@@ -48,7 +48,7 @@ public class Comment {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "board_id")
-	private Board board;
+	private Post post;
 
 	@OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Reply> replies = new ArrayList<>();

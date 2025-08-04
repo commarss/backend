@@ -1,4 +1,4 @@
-package com.ll.commars.domain.community.board.entity;
+package com.ll.commars.domain.community.post.entity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-public class BoardHashTag {
+public class PostHashTag {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,5 +26,5 @@ public class BoardHashTag {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "board_id")
-    private Board board;
+    private Post post;
 }

@@ -1,6 +1,6 @@
 package com.ll.commars.domain.community.reaction.entity;
 
-import com.ll.commars.domain.community.board.entity.Board;
+import com.ll.commars.domain.community.post.entity.Post;
 import com.ll.commars.domain.user.user.entity.User;
 
 import jakarta.persistence.Column;
@@ -37,7 +37,7 @@ public class Reaction {
 	// ✅ 게시글과의 관계 설정 (다대일)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "board_id", nullable = false)
-	private Board board;
+	private Post post;
 
 	// ✅ 유저와의 관계 설정 (다대일)
 	@ManyToOne(fetch = FetchType.LAZY)

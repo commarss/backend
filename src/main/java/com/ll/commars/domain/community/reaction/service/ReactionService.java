@@ -5,7 +5,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ll.commars.domain.community.board.entity.Board;
+import com.ll.commars.domain.community.post.entity.Post;
 import com.ll.commars.domain.community.reaction.entity.Reaction;
 import com.ll.commars.domain.community.reaction.repository.ReactionRepository;
 import com.ll.commars.domain.user.user.entity.User;
@@ -23,18 +23,18 @@ public class ReactionService {
 	// ✅ 좋아요 ON/OFF 기능
 	@Transactional
 	public boolean toggleReaction(Long postId, Long userId) {
-		Board board = new Board();
-		board.setId(postId);
+		Post post = new Post();
+		post.setId(postId);
 
 		User user = userRepository.findById(userId)
 			.orElseThrow(() -> new IllegalArgumentException("Invalid userId: " + userId));
 
-		Reaction reaction = reactionRepository.findByBoardAndUser(board, user);
+		Reaction reaction = reactionRepository.findByBoardAndUser(post, user);
 
 		if (reaction == null) {
 			// 좋아요 추가
 			reaction = new Reaction();
-			reaction.setBoard(board);
+			reaction.setPost(post);
 			reaction.setUser(user);
 			reaction.setLiked(true);
 			reactionRepository.save(reaction);

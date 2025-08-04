@@ -1,4 +1,4 @@
-package com.ll.commars.domain.community.board.controller;
+package com.ll.commars.domain.community.post.controller;
 
 import static org.springframework.http.MediaType.*;
 
@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ll.commars.domain.community.board.entity.Board;
-import com.ll.commars.domain.community.board.repository.BoardRepository;
-import com.ll.commars.domain.community.board.service.BoardService;
+import com.ll.commars.domain.community.post.entity.Post;
+import com.ll.commars.domain.community.post.repository.PostRepository;
+import com.ll.commars.domain.community.post.service.PostService;
 import com.ll.commars.domain.user.user.entity.User;
 import com.ll.commars.domain.user.user.service.UserService;
 
@@ -31,21 +31,21 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/posts")
 @RequiredArgsConstructor
-public class BoardController {
+public class PostController {
 
-    private final BoardService boardService;
+    private final PostService postService;
     private final UserService userService;
-    private final BoardRepository boardRepository;
+    private final PostRepository postRepository;
 
     @GetMapping
     public ResponseEntity<?> getPosts() {
         try {
-            List<Board> posts = boardService.getAllBoards();
+            List<Post> posts = postService.getAllBoards();
             List<Map<String, Object>> postList = posts.stream().map(board -> {
                 Map<String, Object> postMap = new HashMap<>();
                 postMap.put("boardId", board.getId());
                 postMap.put("title", board.getTitle());
-                postMap.put("hashTags", board.getBoardHashTags());
+                postMap.put("hashTags", board.getPostHashTags());
                 return postMap;
             }).collect(Collectors.toList());
 
@@ -63,20 +63,20 @@ public class BoardController {
     @GetMapping("/{postId}")
     public ResponseEntity<?> getPostDetail(@PathVariable("postId") Long postId) {
         try {
-            Board board = boardService.getBoard(postId);
-            System.out.println("게시글 조회 성공: " + board.getTitle()); // 콘솔에 출력
+            Post post = postService.getBoard(postId);
+            System.out.println("게시글 조회 성공: " + post.getTitle()); // 콘솔에 출력
 
             Map<String, Object> response = new HashMap<>();
-            response.put("boardId", board.getId());
-            response.put("title", board.getTitle());
-            response.put("content", board.getContent());
-            response.put("viewCnt", board.getViews());
-            response.put("hashTags", board.getBoardHashTags());
+            response.put("boardId", post.getId());
+            response.put("title", post.getTitle());
+            response.put("content", post.getContent());
+            response.put("viewCnt", post.getViews());
+            response.put("hashTags", post.getPostHashTags());
 
             Map<String, Object> userMap = new HashMap<>();
-            userMap.put("userId", board.getUser().getId());
-            userMap.put("email", board.getUser().getEmail());
-            userMap.put("name", board.getUser().getName());
+            userMap.put("userId", post.getUser().getId());
+            userMap.put("email", post.getUser().getEmail());
+            userMap.put("name", post.getUser().getName());
             response.put("user", userMap);
 
             return ResponseEntity.ok(response);
@@ -95,7 +95,7 @@ public class BoardController {
         String content = (String)request.get("content");
         List<String> tags = (List<String>)request.get("tags");
         String imageUrl = (String)request.get("imageUrl"); // ✅ imageUrl 가져오기
-        boardService.addBoard(user.getId(), title, content, tags, imageUrl);
+        postService.addBoard(user.getId(), title, content, tags, imageUrl);
         return ResponseEntity.status(201).body("게시글이 등록되었습니다.");
     }
 
@@ -107,7 +107,7 @@ public class BoardController {
         String title = (String)request.get("title");
         String content = (String)request.get("content");
         List<String> tags = (List<String>)request.get("tags");
-        boardService.updateBoard(postId, title, content, tags);
+        postService.updateBoard(postId, title, content, tags);
         return ResponseEntity.ok("게시글이 수정되었습니다.");
     }
 
@@ -115,13 +115,13 @@ public class BoardController {
     public ResponseEntity<?> deletePost(@PathVariable("postId") Long postId,
         @AuthenticationPrincipal UserDetails userDetails) {
         User user = getAuthenticatedUser(userDetails);
-        boardService.deleteBoard(postId);
+        postService.deleteBoard(postId);
         return ResponseEntity.ok("게시글이 삭제되었습니다.");
     }
 
     @GetMapping("/count")
     public ResponseEntity<?> getUserPostCount(@RequestParam("email") String email) {
-        int postCount = boardRepository.countPostsByEmail(email);
+        int postCount = postRepository.countPostsByEmail(email);
         return ResponseEntity.ok(Map.of("count", postCount));
     }
 }

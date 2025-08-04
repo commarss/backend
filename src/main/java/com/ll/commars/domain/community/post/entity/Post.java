@@ -1,4 +1,4 @@
-package com.ll.commars.domain.community.board.entity;
+package com.ll.commars.domain.community.post.entity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Board extends BaseEntity {
+public class Post extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,17 +57,17 @@ public class Board extends BaseEntity {
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	@OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Comment> comments = new ArrayList<>();
 
-	@OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<BoardHashTag> boardHashTags = new ArrayList<>();
+	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<PostHashTag> postHashTags = new ArrayList<>();
 
-	@OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Reaction> reactions = new ArrayList<>();
 
-	public Board(String title, String content, int views, String imageUrl, int likeCount, int dislikeCount,
-		User user, List<Comment> comments, List<BoardHashTag> boardHashTags, List<Reaction> reactions) {
+	public Post(String title, String content, int views, String imageUrl, int likeCount, int dislikeCount,
+		User user, List<Comment> comments, List<PostHashTag> postHashTags, List<Reaction> reactions) {
 		this.title = title;
 		this.content = content;
 		this.views = views;
@@ -76,22 +76,22 @@ public class Board extends BaseEntity {
 		this.dislikeCount = dislikeCount;
 		this.user = user;
 		this.comments = comments;
-		this.boardHashTags = boardHashTags;
+		this.postHashTags = postHashTags;
 		this.reactions = reactions;
 	}
 
-	public Board(String title, String content, String imageUrl, User user, List<BoardHashTag> boardHashTags) {
+	public Post(String title, String content, String imageUrl, User user, List<PostHashTag> postHashTags) {
 		this.title = title;
 		this.content = content;
 		this.imageUrl = imageUrl;
 		this.user = user;
-		this.boardHashTags = boardHashTags;
+		this.postHashTags = postHashTags;
 	}
 
-	public void updateBoard(String title, String content, List<BoardHashTag> boardHashTags) {
+	public void updatePost(String title, String content, List<PostHashTag> postHashTags) {
 		this.title = title;
 		this.content = content;
-		this.boardHashTags = boardHashTags;
+		this.postHashTags = postHashTags;
 	}
 
 	public void incrementViews() {
