@@ -40,9 +40,9 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/posts")
 @RequiredArgsConstructor
-public class ApiV1BoardController {
+public class BoardController {
 
-	private static final Logger logger = LoggerFactory.getLogger(ApiV1BoardController.class);
+	private static final Logger logger = LoggerFactory.getLogger(BoardController.class);
 	private final BoardService boardService;
 	private final CommentService commentService;
 	private final UserService userService;
