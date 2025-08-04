@@ -61,13 +61,13 @@ public class Board extends BaseEntity {
 	private List<Comment> comments = new ArrayList<>();
 
 	@OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<HashTag> hashTags = new ArrayList<>();
+	private List<BoardHashTag> boardHashTags = new ArrayList<>();
 
 	@OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Reaction> reactions = new ArrayList<>();
 
 	public Board(String title, String content, int views, String imageUrl, int likeCount, int dislikeCount,
-		User user, List<Comment> comments, List<HashTag> hashTags, List<Reaction> reactions) {
+		User user, List<Comment> comments, List<BoardHashTag> boardHashTags, List<Reaction> reactions) {
 		this.title = title;
 		this.content = content;
 		this.views = views;
@@ -76,22 +76,22 @@ public class Board extends BaseEntity {
 		this.dislikeCount = dislikeCount;
 		this.user = user;
 		this.comments = comments;
-		this.hashTags = hashTags;
+		this.boardHashTags = boardHashTags;
 		this.reactions = reactions;
 	}
 
-	public Board(String title, String content, String imageUrl, User user, List<HashTag> hashTags) {
+	public Board(String title, String content, String imageUrl, User user, List<BoardHashTag> boardHashTags) {
 		this.title = title;
 		this.content = content;
 		this.imageUrl = imageUrl;
 		this.user = user;
-		this.hashTags = hashTags;
+		this.boardHashTags = boardHashTags;
 	}
 
-	public void updateBoard(String title, String content, List<HashTag> hashTags) {
+	public void updateBoard(String title, String content, List<BoardHashTag> boardHashTags) {
 		this.title = title;
 		this.content = content;
-		this.hashTags = hashTags;
+		this.boardHashTags = boardHashTags;
 	}
 
 	public void incrementViews() {
