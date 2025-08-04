@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-public class HashTag {
+public class BoardHashTag {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
