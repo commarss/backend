@@ -46,7 +46,7 @@ public class Comment {
 
 	// Comment와 Board: 다대일
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "board_id")
+	@JoinColumn(name = "post_id")
 	private Post post;
 
 	@OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)

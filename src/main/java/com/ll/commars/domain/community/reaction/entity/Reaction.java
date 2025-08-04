@@ -36,7 +36,7 @@ public class Reaction {
 
 	// ✅ 게시글과의 관계 설정 (다대일)
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "board_id", nullable = false)
+	@JoinColumn(name = "post_id", nullable = false)
 	private Post post;
 
 	// ✅ 유저와의 관계 설정 (다대일)
