@@ -19,11 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ll.commars.domain.community.post.dto.PostCreateRequest;
 import com.ll.commars.domain.community.post.dto.PostCreateResponse;
 import com.ll.commars.domain.community.post.dto.PostDetailResponse;
+import com.ll.commars.domain.community.post.dto.PostLikeResponse;
 import com.ll.commars.domain.community.post.dto.PostListResponse;
 import com.ll.commars.domain.community.post.dto.PostUpdateRequest;
 import com.ll.commars.domain.community.post.dto.PostUpdateResponse;
 import com.ll.commars.domain.community.post.repository.PostRepository;
 import com.ll.commars.domain.community.post.service.PostCommandService;
+import com.ll.commars.domain.community.post.service.PostLikeService;
 import com.ll.commars.domain.community.post.service.PostQueryService;
 import com.ll.commars.domain.user.user.entity.User;
 import com.ll.commars.domain.user.user.service.UserService;
@@ -37,6 +39,7 @@ public class PostController {
 
     private final PostCommandService postCommandService;
     private final PostQueryService postQueryService;
+    private final PostLikeService postLikeService;
     private final UserService userService;
 
     @PostMapping
@@ -78,9 +81,9 @@ public class PostController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{postId}")
+    @DeleteMapping("/{post-id}")
     public ResponseEntity<Void> deletePost(
-        @PathVariable("postId") Long postId,
+        @PathVariable("post-id") Long postId,
         @AuthenticationPrincipal UserDetails userDetails
     ) {
         User user = getAuthenticatedUser(userDetails);
@@ -89,16 +92,15 @@ public class PostController {
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<?> toggleReaction(@PathVariable("postId") Long postId,
-        @AuthenticationPrincipal UserDetails userDetails) {
-        if (userDetails == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
-        }
+    @PostMapping("/{post-id}/like")
+    public ResponseEntity<PostLikeResponse> likePost(
+        @PathVariable("postId") Long postId,
+        @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        User user = getAuthenticatedUser(userDetails);
 
-        Long userId = Long.parseLong(userDetails.getUsername());
-
-        boolean isLiked = postLikeService.toggleReaction(postId, userId);
-        return ResponseEntity.ok(Map.of("liked", isLiked));
+        PostLikeResponse response = postCommandService.likePost(user.getId(), postId);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping

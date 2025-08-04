@@ -48,10 +48,6 @@ public class Post extends BaseEntity {
 	@ColumnDefault("0")
 	private int likeCount = 0;
 
-	@Column(nullable = false)
-	@ColumnDefault("0")
-	private int dislikeCount = 0;
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	private User user;
@@ -65,14 +61,13 @@ public class Post extends BaseEntity {
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<PostLike> postLikes = new ArrayList<>();
 
-	public Post(String title, String content, int views, String imageUrl, int likeCount, int dislikeCount,
+	public Post(String title, String content, int views, String imageUrl, int likeCount,
 		User user, List<Comment> comments, List<PostHashTag> postHashTags, List<PostLike> postLikes) {
 		this.title = title;
 		this.content = content;
 		this.views = views;
 		this.imageUrl = imageUrl;
 		this.likeCount = likeCount;
-		this.dislikeCount = dislikeCount;
 		this.user = user;
 		this.comments = comments;
 		this.postHashTags = postHashTags;
@@ -101,5 +96,9 @@ public class Post extends BaseEntity {
 		this.postHashTags.clear();
 		this.postHashTags.addAll(hashTags);
 		hashTags.forEach(hashTag -> hashTag.setPost(this));
+	}
+
+	public void addLike() {
+		this.likeCount++;
 	}
 }

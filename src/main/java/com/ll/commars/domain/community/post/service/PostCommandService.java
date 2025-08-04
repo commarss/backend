@@ -7,10 +7,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ll.commars.domain.community.post.dto.PostCreateRequest;
 import com.ll.commars.domain.community.post.dto.PostCreateResponse;
+import com.ll.commars.domain.community.post.dto.PostLikeResponse;
 import com.ll.commars.domain.community.post.dto.PostUpdateRequest;
 import com.ll.commars.domain.community.post.dto.PostUpdateResponse;
 import com.ll.commars.domain.community.post.entity.Post;
 import com.ll.commars.domain.community.post.entity.PostHashTag;
+import com.ll.commars.domain.community.post.entity.PostLike;
 import com.ll.commars.domain.community.post.repository.PostRepository;
 import com.ll.commars.domain.user.user.entity.User;
 import com.ll.commars.domain.user.user.repository.UserRepository;
@@ -67,5 +69,21 @@ public class PostCommandService {
 			.orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
 
 		post.incrementViews();
+	}
+
+	@Transactional
+	public PostLikeResponse likePost(Long userId, Long postId) {
+		Post post = postRepository.findById(postId)
+			.orElseThrow(() -> new IllegalArgumentException("Post not found with id: " + postId));
+
+		User user = userRepository.findById(userId)
+			.orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
+
+		post.addLike();
+
+		PostLike postLike = new PostLike(post, user);
+		post.getPostLikes().add(postLike);
+
+		return PostLikeResponse.from(postLike);
 	}
 }
