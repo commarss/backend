@@ -7,6 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ll.commars.domain.community.comment.dto.CommentResponse;
 import com.ll.commars.domain.community.post.dto.PostHashTagResponse;
+import com.ll.commars.domain.community.post.dto.PostDetailResponse;
+import com.ll.commars.domain.community.post.dto.PostListResponse;
 import com.ll.commars.domain.community.post.dto.PostResponse;
 import com.ll.commars.domain.community.post.entity.Post;
 import com.ll.commars.domain.community.post.repository.PostRepository;
@@ -21,7 +23,7 @@ public class PostQueryService {
 	private final PostRepository postRepository;
 
 	@Transactional(readOnly = true)
-	public PostResponse getPost(Long postId) {
+	public PostDetailResponse getPost(Long postId) {
 		Post post = postRepository.findPostWithDetailsById(postId)
 			.orElseThrow(() -> new RuntimeException("Post not found with id: " + postId));
 
@@ -37,6 +39,17 @@ public class PostQueryService {
 			.map(ReactionResponse::from)
 			.toList();
 
-		return PostResponse.of(post, comments, postHashTags, reactions);
+		return PostDetailResponse.of(post, comments, postHashTags, reactions);
+	}
+
+	@Transactional(readOnly = true)
+	public PostListResponse getPosts() {
+		List<Post> posts = postRepository.findAll();
+
+		return PostListResponse.of(
+			posts.stream()
+				.map(PostResponse::of)
+				.toList()
+		);
 	}
 }

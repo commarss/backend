@@ -20,7 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ll.commars.domain.community.post.dto.PostCreateRequest;
 import com.ll.commars.domain.community.post.dto.PostCreateResponse;
-import com.ll.commars.domain.community.post.dto.PostResponse;
+import com.ll.commars.domain.community.post.dto.PostDetailResponse;
+import com.ll.commars.domain.community.post.dto.PostListResponse;
 import com.ll.commars.domain.community.post.entity.Post;
 import com.ll.commars.domain.community.post.repository.PostRepository;
 import com.ll.commars.domain.community.post.service.PostCommandService;
@@ -52,30 +53,19 @@ public class PostController {
     }
 
     @GetMapping("/{post-id}")
-    public ResponseEntity<PostResponse> getPost(
+    public ResponseEntity<PostDetailResponse> getPost(
         @PathVariable("postId") Long postId
     ) {
         postCommandService.incrementViews(postId);
-        PostResponse response = postQueryService.getPost(postId);
+        PostDetailResponse response = postQueryService.getPost(postId);
         return ResponseEntity.ok(response);
     }
 
+    // todo: paging 적용
     @GetMapping
-    public ResponseEntity<?> getPosts() {
-        try {
-            List<Post> posts = postCommandService.getAllBoards();
-            List<Map<String, Object>> postList = posts.stream().map(board -> {
-                Map<String, Object> postMap = new HashMap<>();
-                postMap.put("boardId", board.getId());
-                postMap.put("title", board.getTitle());
-                postMap.put("hashTags", board.getPostHashTags());
-                return postMap;
-            }).collect(Collectors.toList());
-
-            return ResponseEntity.ok(Map.of("posts", postList));
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("게시글 조회 중 오류 발생: " + e.getMessage());
-        }
+    public ResponseEntity<PostListResponse> getPosts() {
+        PostListResponse response = postQueryService.getPosts();
+        return ResponseEntity.ok(response);
     }
 
     private User getAuthenticatedUser(@AuthenticationPrincipal UserDetails userDetails) {
