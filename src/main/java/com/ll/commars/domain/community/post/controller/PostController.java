@@ -79,11 +79,14 @@ public class PostController {
     }
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity<?> deletePost(@PathVariable("postId") Long postId,
-        @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<Void> deletePost(
+        @PathVariable("postId") Long postId,
+        @AuthenticationPrincipal UserDetails userDetails
+    ) {
         User user = getAuthenticatedUser(userDetails);
-        postCommandService.deleteBoard(postId);
-        return ResponseEntity.ok("게시글이 삭제되었습니다.");
+        postCommandService.deletePost(user.getId(), postId);
+
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/count")
