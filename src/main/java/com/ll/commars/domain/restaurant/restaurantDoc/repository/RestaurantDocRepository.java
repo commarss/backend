@@ -4,11 +4,9 @@ import java.util.List;
 
 import org.springframework.data.elasticsearch.annotations.Query;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
-import org.springframework.stereotype.Repository;
 
 import com.ll.commars.domain.restaurant.restaurantDoc.document.RestaurantDoc;
 
-@Repository
 public interface RestaurantDocRepository extends ElasticsearchRepository<RestaurantDoc, String> {
 
 	// name에 2배 가중치

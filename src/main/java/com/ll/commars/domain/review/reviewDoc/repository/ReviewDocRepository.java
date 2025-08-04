@@ -4,11 +4,9 @@ import java.util.List;
 
 import org.springframework.data.elasticsearch.annotations.Query;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
-import org.springframework.stereotype.Repository;
 
 import com.ll.commars.domain.review.reviewDoc.document.ReviewDoc;
 
-@Repository
 public interface ReviewDocRepository extends ElasticsearchRepository<ReviewDoc, String> {
 
 	@Query("""
