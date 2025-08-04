@@ -7,9 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ll.commars.domain.community.comment.entity.Comment;
-import com.ll.commars.domain.community.comment.entity.Reply;
 import com.ll.commars.domain.community.comment.repository.CommentRepository;
-import com.ll.commars.domain.community.comment.repository.ReplyRepository;
 import com.ll.commars.domain.user.user.entity.User;
 import com.ll.commars.domain.user.user.repository.UserRepository;
 
