@@ -57,18 +57,8 @@ public class Board extends BaseEntity {
 	@Builder.Default
 	private List<Comment> comments = new ArrayList<>();
 
-	// ✅ HashTags를 ','로 구분된 문자열로 저장
-	// 태그 CRUD가 복잡하므로 추후 테이블로 분리해야 함.
-	@Column(name = "hash_tags", length = 1000)
-	private String hashTags;
-
-	public void setHashTags(List<String> tags) {
-		this.hashTags = String.join(",", tags);
-	}
-
-	public List<String> getHashTags() {
-		return hashTags != null ? List.of(hashTags.split("\\s*,\\s*")) : List.of();
-	}
+	@OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<HashTag> hashTags = new ArrayList<>();
 
 	@OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
 	@Builder.Default
