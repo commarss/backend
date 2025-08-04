@@ -38,7 +38,6 @@ public class PostController {
     private final PostCommandService postCommandService;
     private final PostQueryService postQueryService;
     private final UserService userService;
-    private final PostRepository postRepository;
 
     @PostMapping
     public ResponseEntity<PostCreateResponse> createPost(
@@ -106,12 +105,6 @@ public class PostController {
     public ResponseEntity<?> getReactions(@PathVariable("postId") Long postId) {
         Map<String, Integer> reactions = postLikeService.getReactions(postId);
         return ResponseEntity.ok(reactions);
-    }
-
-    @GetMapping("/count")
-    public ResponseEntity<?> getUserPostCount(@RequestParam("email") String email) {
-        int postCount = postRepository.countPostsByEmail(email);
-        return ResponseEntity.ok(Map.of("count", postCount));
     }
 
     private User getAuthenticatedUser(@AuthenticationPrincipal UserDetails userDetails) {
