@@ -42,7 +42,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BoardController {
 
-	private static final Logger logger = LoggerFactory.getLogger(BoardController.class);
 	private final BoardService boardService;
 	private final CommentService commentService;
 	private final UserService userService;
@@ -97,16 +96,6 @@ public class BoardController {
 			System.out.println("게시글 조회 실패! 오류 메시지: " + e.getMessage()); // 오류 출력
 			e.printStackTrace(); // 전체 오류 로그 출력
 			return ResponseEntity.status(404).body("게시글을 찾을 수 없습니다.");
-		}
-	}
-
-	@PutMapping("/{postId}/increment-views")
-	public ResponseEntity<?> incrementPostViews(@PathVariable("postId") Long postId) {
-		try {
-			boardService.incrementViews(postId);
-			return ResponseEntity.ok("조회수 증가 완료");
-		} catch (Exception e) {
-			return ResponseEntity.status(500).body("조회수 증가 실패");
 		}
 	}
 

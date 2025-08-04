@@ -20,16 +20,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 public class Board extends BaseEntity {
 
 	@Id
@@ -49,21 +45,6 @@ public class Board extends BaseEntity {
 	@Column
 	private String imageUrl;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id")
-	private User user;
-
-	@OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
-	@Builder.Default
-	private List<Comment> comments = new ArrayList<>();
-
-	@OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<HashTag> hashTags = new ArrayList<>();
-
-	@OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
-	@Builder.Default
-	private List<Reaction> reactions = new ArrayList<>();
-
 	@Column(nullable = false)
 	@ColumnDefault("0")
 	private int likeCount = 0;
@@ -71,4 +52,49 @@ public class Board extends BaseEntity {
 	@Column(nullable = false)
 	@ColumnDefault("0")
 	private int dislikeCount = 0;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id")
+	private User user;
+
+	@OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Comment> comments = new ArrayList<>();
+
+	@OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<HashTag> hashTags = new ArrayList<>();
+
+	@OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Reaction> reactions = new ArrayList<>();
+
+	public Board(String title, String content, int views, String imageUrl, int likeCount, int dislikeCount,
+		User user, List<Comment> comments, List<HashTag> hashTags, List<Reaction> reactions) {
+		this.title = title;
+		this.content = content;
+		this.views = views;
+		this.imageUrl = imageUrl;
+		this.likeCount = likeCount;
+		this.dislikeCount = dislikeCount;
+		this.user = user;
+		this.comments = comments;
+		this.hashTags = hashTags;
+		this.reactions = reactions;
+	}
+
+	public Board(String title, String content, String imageUrl, User user, List<HashTag> hashTags) {
+		this.title = title;
+		this.content = content;
+		this.imageUrl = imageUrl;
+		this.user = user;
+		this.hashTags = hashTags;
+	}
+
+	public void updateBoard(String title, String content, List<HashTag> hashTags) {
+		this.title = title;
+		this.content = content;
+		this.hashTags = hashTags;
+	}
+
+	public void incrementViews() {
+		this.views++;
+	}
 }
