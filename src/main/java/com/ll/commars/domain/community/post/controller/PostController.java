@@ -20,9 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ll.commars.domain.community.post.dto.PostCreateRequest;
 import com.ll.commars.domain.community.post.dto.PostCreateResponse;
+import com.ll.commars.domain.community.post.dto.PostResponse;
 import com.ll.commars.domain.community.post.entity.Post;
 import com.ll.commars.domain.community.post.repository.PostRepository;
 import com.ll.commars.domain.community.post.service.PostCommandService;
+import com.ll.commars.domain.community.post.service.PostQueryService;
 import com.ll.commars.domain.user.user.entity.User;
 import com.ll.commars.domain.user.user.service.UserService;
 
@@ -34,6 +36,7 @@ import lombok.RequiredArgsConstructor;
 public class PostController {
 
     private final PostCommandService postCommandService;
+    private final PostQueryService postQueryService;
     private final UserService userService;
     private final PostRepository postRepository;
 
@@ -45,6 +48,15 @@ public class PostController {
         User user = getAuthenticatedUser(userDetails);
         PostCreateResponse response = postCommandService.createPost(user.getId(), request);
 
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{post-id}")
+    public ResponseEntity<PostResponse> getPost(
+        @PathVariable("postId") Long postId
+    ) {
+        postCommandService.incrementViews(postId);
+        PostResponse response = postQueryService.getPost(postId);
         return ResponseEntity.ok(response);
     }
 
@@ -63,33 +75,6 @@ public class PostController {
             return ResponseEntity.ok(Map.of("posts", postList));
         } catch (Exception e) {
             return ResponseEntity.status(500).body("게시글 조회 중 오류 발생: " + e.getMessage());
-        }
-    }
-
-    @GetMapping("/{postId}")
-    public ResponseEntity<?> getPostDetail(@PathVariable("postId") Long postId) {
-        try {
-            Post post = postCommandService.getBoard(postId);
-            System.out.println("게시글 조회 성공: " + post.getTitle()); // 콘솔에 출력
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("boardId", post.getId());
-            response.put("title", post.getTitle());
-            response.put("content", post.getContent());
-            response.put("viewCnt", post.getViews());
-            response.put("hashTags", post.getPostHashTags());
-
-            Map<String, Object> userMap = new HashMap<>();
-            userMap.put("userId", post.getUser().getId());
-            userMap.put("email", post.getUser().getEmail());
-            userMap.put("name", post.getUser().getName());
-            response.put("user", userMap);
-
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            System.out.println("게시글 조회 실패! 오류 메시지: " + e.getMessage()); // 오류 출력
-            e.printStackTrace(); // 전체 오류 로그 출력
-            return ResponseEntity.status(404).body("게시글을 찾을 수 없습니다.");
         }
     }
 

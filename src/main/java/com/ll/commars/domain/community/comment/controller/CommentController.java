@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ll.commars.domain.community.comment.dto.ReplyDto;
 import com.ll.commars.domain.community.comment.entity.Comment;
 import com.ll.commars.domain.community.comment.entity.Reply;
 import com.ll.commars.domain.community.comment.service.CommentService;

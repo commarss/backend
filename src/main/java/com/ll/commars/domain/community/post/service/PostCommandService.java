@@ -45,15 +45,6 @@ public class PostCommandService {
 	}
 
 	@Transactional
-	public Post getBoard(Long postId) {
-		Post post = postRepository.findById(postId)
-			.orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
-
-		post.incrementViews();
-		return post;
-	}
-
-	@Transactional
 	public void updateBoard(Long postId, String title, String content, List<PostHashTag> tags) {
 		Post post = postRepository.findById(postId)
 			.orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
@@ -66,5 +57,13 @@ public class PostCommandService {
 	@Transactional
 	public void deleteBoard(Long boardId) {
 		postRepository.deleteById(boardId);
+	}
+
+	@Transactional
+	public void incrementViews(Long postId) {
+		Post post = postRepository.findById(postId)
+			.orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
+
+		post.incrementViews();
 	}
 }
