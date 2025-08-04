@@ -87,9 +87,10 @@ public class Post extends BaseEntity {
 		this.user = user;
 	}
 
-	public void updatePost(String title, String content, List<PostHashTag> postHashTags) {
+	public void updatePost(String title, String content, String imageUrl, List<PostHashTag> postHashTags) {
 		this.title = title;
 		this.content = content;
+		this.imageUrl = imageUrl;
 		this.postHashTags = postHashTags;
 	}
 

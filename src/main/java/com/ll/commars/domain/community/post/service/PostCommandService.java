@@ -7,6 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ll.commars.domain.community.post.dto.PostCreateRequest;
 import com.ll.commars.domain.community.post.dto.PostCreateResponse;
+import com.ll.commars.domain.community.post.dto.PostUpdateRequest;
+import com.ll.commars.domain.community.post.dto.PostUpdateResponse;
 import com.ll.commars.domain.community.post.entity.Post;
 import com.ll.commars.domain.community.post.entity.PostHashTag;
 import com.ll.commars.domain.community.post.repository.PostHashTagRepository;
@@ -45,13 +47,18 @@ public class PostCommandService {
 	}
 
 	@Transactional
-	public void updateBoard(Long postId, String title, String content, List<PostHashTag> tags) {
+	public PostUpdateResponse updateBoard(Long userId, Long postId, PostUpdateRequest request) {
 		Post post = postRepository.findById(postId)
 			.orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
 
-		post.updatePost(title, content, tags);
+		// todo: 검증 로직 추가
+		List<PostHashTag> postHashTags = request.hashTags().stream()
+			.map(PostHashTag::new)
+			.toList();
 
-		postRepository.save(post);
+		post.updatePost(request.title(), request.content(), request.imageUrl(), postHashTags);
+
+		return PostUpdateResponse.of(postId);
 	}
 
 	@Transactional

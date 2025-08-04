@@ -1,9 +1,6 @@
 package com.ll.commars.domain.community.post.controller;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,7 +19,8 @@ import com.ll.commars.domain.community.post.dto.PostCreateRequest;
 import com.ll.commars.domain.community.post.dto.PostCreateResponse;
 import com.ll.commars.domain.community.post.dto.PostDetailResponse;
 import com.ll.commars.domain.community.post.dto.PostListResponse;
-import com.ll.commars.domain.community.post.entity.Post;
+import com.ll.commars.domain.community.post.dto.PostUpdateRequest;
+import com.ll.commars.domain.community.post.dto.PostUpdateResponse;
 import com.ll.commars.domain.community.post.repository.PostRepository;
 import com.ll.commars.domain.community.post.service.PostCommandService;
 import com.ll.commars.domain.community.post.service.PostQueryService;
@@ -68,21 +66,16 @@ public class PostController {
         return ResponseEntity.ok(response);
     }
 
-    private User getAuthenticatedUser(@AuthenticationPrincipal UserDetails userDetails) {
-        return userService.findById(Long.parseLong(userDetails.getUsername())).orElseThrow(
-            () -> new RuntimeException("사용자를 찾을 수 없습니다."));
-    }
-
-    @PutMapping("/{postId}")
-    public ResponseEntity<?> updatePost(@PathVariable("postId") Long postId,
-        @RequestBody Map<String, Object> request,
-        @AuthenticationPrincipal UserDetails userDetails) {
+    @PutMapping("/{post-id}")
+    public ResponseEntity<PostUpdateResponse> updatePost(
+        @PathVariable("post-id") Long postId,
+        @RequestBody PostUpdateRequest request,
+        @AuthenticationPrincipal UserDetails userDetails
+    ) {
         User user = getAuthenticatedUser(userDetails);
-        String title = (String)request.get("title");
-        String content = (String)request.get("content");
-        List<String> tags = (List<String>)request.get("tags");
-        postCommandService.updateBoard(postId, title, content, tags);
-        return ResponseEntity.ok("게시글이 수정되었습니다.");
+        PostUpdateResponse response = postCommandService.updateBoard(user.getId(), postId, request);
+
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{postId}")
@@ -97,5 +90,10 @@ public class PostController {
     public ResponseEntity<?> getUserPostCount(@RequestParam("email") String email) {
         int postCount = postRepository.countPostsByEmail(email);
         return ResponseEntity.ok(Map.of("count", postCount));
+    }
+
+    private User getAuthenticatedUser(@AuthenticationPrincipal UserDetails userDetails) {
+        return userService.findById(Long.parseLong(userDetails.getUsername())).orElseThrow(
+            () -> new RuntimeException("사용자를 찾을 수 없습니다."));
     }
 }
