@@ -1,0 +1,65 @@
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.3.3
+    container_name: local-commars-elasticsearch
+    environment:
+      - discovery.type=single-node # 사용할 노드의 수
+      - xpack.security.enabled=false # 로컬 환경에서는 보안 비활성화
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m # JVM 힙 메모리 설정
+    command: >
+      bash -c '
+        bin/elasticsearch-plugin install analysis-nori;
+        /usr/local/bin/docker-entrypoint.sh elasticsearch
+      '
+    ports:
+      - "9200:9200"
+    networks:
+      - elastic
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.3.3
+    container_name: local-commars-kibana
+    environment:
+      SERVER_NAME: kibana
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+    ports:
+      - 5601:5601
+    depends_on:
+      - elasticsearch
+    networks:
+      - elastic
+
+  logstash:
+    build:
+      context: ./logstash
+    container_name: local-commars-logstash
+    environment:
+      - LS_JAVA_OPTS=-Xms512m -Xmx512m
+    volumes:
+      - ./src/main/resources/secret/pipeline:/usr/share/logstash/pipeline:ro
+    ports:
+      - "5001:5001"
+      - "5044:5044"
+    depends_on:
+      - elasticsearch
+    networks:
+      - elastic
+
+  mysql:
+    image: mysql:8.0
+    container_name: local-commars-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: local_commars_root_password
+      MYSQL_DATABASE: commars
+      MYSQL_USER: local_commars_username
+      MYSQL_PASSWORD: local_commars_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./local_mysql:/var/lib/mysql
+    networks:
+        - elastic
+
+networks:
+  elastic:
+    driver: bridge

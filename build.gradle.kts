@@ -32,11 +32,6 @@ dependencies {
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
 
-    // Webflux
-//    implementation("org.springframework.boot:spring-boot-starter-webflux")
-
-    // Thymeleaf
-    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -59,12 +54,6 @@ dependencies {
     // Elasticsearch
     implementation("org.springframework.boot:spring-boot-starter-data-elasticsearch")
     implementation("co.elastic.clients:elasticsearch-java:8.17.2")
-
-    // Docker
-    developmentOnly("org.springframework.boot:spring-boot-docker-compose")
-
-    // Swagger
-    implementation ("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
 
     // JWT
     implementation("io.jsonwebtoken:jjwt-api:0.12.6")

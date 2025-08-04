@@ -22,10 +22,10 @@ public class NaverService {
 
 	private final UserService userService;
 
-	@Value("${spring.security.oauth2.client.registration.naver.client-id}")
+	@Value("${oauth.naver.client-id}")
 	private String clientId;
 
-	@Value("${spring.security.oauth2.client.registration.naver.client-secret}")
+	@Value("${oauth.naver.client-secret}")
 	private String clientSecret;
 
 	public String getAccessToken(String code, String state) {

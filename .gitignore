@@ -36,10 +36,6 @@ out/
 ### VS Code ###
 .vscode/
 
-
-application-secret.yml
-/logstash/pipeline/logstash.conf
-db_dev.*
 .terraform
 # Terraform 상태 파일
 *.tfstate
@@ -69,3 +65,4 @@ terraform.rc
 #
 .terraform.lock.hcl
 **/.terraform.lock.hcl/*
+/local_mysql/

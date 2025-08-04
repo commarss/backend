@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class JwtProvider {
 
-	@Value("${jwt.secret-key}")
+	@Value("${jwt.secret}")
 	private String secretKey;
 
 	public final long ACCESS_TOKEN_VALIDITY = 24 * 60 * 60 * 1000L;

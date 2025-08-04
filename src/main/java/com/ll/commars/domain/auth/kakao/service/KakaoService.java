@@ -25,10 +25,10 @@ public class KakaoService {
 
 	private final UserService userService;
 
-	@Value("${spring.security.oauth2.client.registration.kakao.client-id}")
+	@Value("${oauth.kakao.client-id}")
 	private String clientId;
 
-	@Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
+	@Value("${oauth.kakao.redirect-url}")
 	private String redirectUri;
 
 	public String getAccessToken(String code) {
