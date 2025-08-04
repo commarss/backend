@@ -1,6 +1,5 @@
-package com.ll.commars.domain.community.reaction.entity;
+package com.ll.commars.domain.community.post.entity;
 
-import com.ll.commars.domain.community.post.entity.Post;
 import com.ll.commars.domain.user.user.entity.User;
 
 import jakarta.persistence.Column;
@@ -28,7 +27,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Reaction {
+public class PostLike {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

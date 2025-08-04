@@ -12,7 +12,7 @@ import com.ll.commars.domain.community.post.dto.PostListResponse;
 import com.ll.commars.domain.community.post.dto.PostResponse;
 import com.ll.commars.domain.community.post.entity.Post;
 import com.ll.commars.domain.community.post.repository.PostRepository;
-import com.ll.commars.domain.community.reaction.dto.ReactionResponse;
+import com.ll.commars.domain.community.post.dto.PostLikeResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,8 +35,8 @@ public class PostQueryService {
 			.map(PostHashTagResponse::from)
 			.toList();
 
-		List<ReactionResponse> reactions = post.getReactions().stream()
-			.map(ReactionResponse::from)
+		List<PostLikeResponse> reactions = post.getPostLikes().stream()
+			.map(PostLikeResponse::from)
 			.toList();
 
 		return PostDetailResponse.of(post, comments, postHashTags, reactions);

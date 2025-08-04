@@ -5,8 +5,6 @@ import java.util.List;
 import com.ll.commars.domain.community.comment.dto.CommentListResponse;
 import com.ll.commars.domain.community.comment.dto.CommentResponse;
 import com.ll.commars.domain.community.post.entity.Post;
-import com.ll.commars.domain.community.reaction.dto.ReactionListResponse;
-import com.ll.commars.domain.community.reaction.dto.ReactionResponse;
 
 public record PostDetailResponse(
 	Long id,
@@ -19,10 +17,10 @@ public record PostDetailResponse(
 	Long authorId,
 	CommentListResponse commentListResponse,
 	PostHashTagListResponse postHashTagListResponse,
-	ReactionListResponse reactionListResponse
+	PostLikeListResponse postLikeListResponse
 ) {
 
-	public static PostDetailResponse of(Post post, List<CommentResponse> comments, List<PostHashTagResponse> postHashTags, List<ReactionResponse> reactions) {
+	public static PostDetailResponse of(Post post, List<CommentResponse> comments, List<PostHashTagResponse> postHashTags, List<PostLikeResponse> reactions) {
 		return new PostDetailResponse(
 			post.getId(),
 			post.getTitle(),
@@ -34,7 +32,7 @@ public record PostDetailResponse(
 			post.getUser().getId(),
 			CommentListResponse.of(comments),
 			PostHashTagListResponse.of(postHashTags),
-			ReactionListResponse.of(reactions)
+			PostLikeListResponse.of(reactions)
 		);
 	}
 }

@@ -20,7 +20,7 @@ import org.springframework.context.annotation.Profile;
 
 import com.ll.commars.domain.community.post.service.PostCommandService;
 import com.ll.commars.domain.community.comment.service.CommentService;
-import com.ll.commars.domain.community.reaction.service.ReactionService;
+import com.ll.commars.domain.community.post.service.PostLikeService;
 import com.ll.commars.domain.restaurant.businessHour.dto.BusinessHourDto;
 import com.ll.commars.domain.restaurant.businessHour.service.BusinessHourService;
 import com.ll.commars.domain.restaurant.category.dto.RestaurantCategoryDto;
@@ -59,7 +59,7 @@ public class BaseInitDataDev {
 	private final BusinessHourService businessHourService;
 	private final FavoriteService favoriteService;
 	private final FavoriteRestaurantService favoriteRestaurantService;
-	private final ReactionService reactionService;
+	private final PostLikeService postLikeService;
 
 	@Bean
 	public ApplicationRunner baseInitDataApplicationRunner() {
@@ -89,7 +89,7 @@ public class BaseInitDataDev {
 		favoriteService.truncate();
 
 		commentService.truncate();
-		reactionService.truncate();
+		postLikeService.truncate();
 		postCommandService.truncate();
 
 		reviewService.truncate();

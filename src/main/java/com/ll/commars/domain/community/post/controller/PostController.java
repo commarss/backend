@@ -2,6 +2,7 @@ package com.ll.commars.domain.community.post.controller;
 
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -87,6 +88,24 @@ public class PostController {
         postCommandService.deletePost(user.getId(), postId);
 
         return ResponseEntity.ok().build();
+    }
+
+    public ResponseEntity<?> toggleReaction(@PathVariable("postId") Long postId,
+        @AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+        }
+
+        Long userId = Long.parseLong(userDetails.getUsername());
+
+        boolean isLiked = postLikeService.toggleReaction(postId, userId);
+        return ResponseEntity.ok(Map.of("liked", isLiked));
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getReactions(@PathVariable("postId") Long postId) {
+        Map<String, Integer> reactions = postLikeService.getReactions(postId);
+        return ResponseEntity.ok(reactions);
     }
 
     @GetMapping("/count")

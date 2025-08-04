@@ -6,7 +6,6 @@ import java.util.List;
 import org.hibernate.annotations.ColumnDefault;
 
 import com.ll.commars.domain.community.comment.entity.Comment;
-import com.ll.commars.domain.community.reaction.entity.Reaction;
 import com.ll.commars.domain.user.user.entity.User;
 import com.ll.commars.global.baseEntity.BaseEntity;
 
@@ -64,10 +63,10 @@ public class Post extends BaseEntity {
 	private List<PostHashTag> postHashTags = new ArrayList<>();
 
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Reaction> reactions = new ArrayList<>();
+	private List<PostLike> postLikes = new ArrayList<>();
 
 	public Post(String title, String content, int views, String imageUrl, int likeCount, int dislikeCount,
-		User user, List<Comment> comments, List<PostHashTag> postHashTags, List<Reaction> reactions) {
+		User user, List<Comment> comments, List<PostHashTag> postHashTags, List<PostLike> postLikes) {
 		this.title = title;
 		this.content = content;
 		this.views = views;
@@ -77,7 +76,7 @@ public class Post extends BaseEntity {
 		this.user = user;
 		this.comments = comments;
 		this.postHashTags = postHashTags;
-		this.reactions = reactions;
+		this.postLikes = postLikes;
 	}
 
 	public Post(String title, String content, String imageUrl, User user) {
