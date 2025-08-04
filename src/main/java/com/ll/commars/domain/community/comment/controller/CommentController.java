@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ll.commars.domain.community.comment.entity.Comment;
 import com.ll.commars.domain.community.comment.service.CommentService;
-import com.ll.commars.domain.community.comment.service.ReplyService;
 import com.ll.commars.domain.user.user.entity.User;
 import com.ll.commars.domain.user.user.service.UserService;
 
@@ -31,7 +30,6 @@ import lombok.RequiredArgsConstructor;
 public class CommentController {
 
     private final CommentService commentService;
-    private final ReplyService replyService;
     private final UserService userService;
 
     private User getAuthenticatedUser(@AuthenticationPrincipal UserDetails userDetails) {
@@ -94,22 +92,5 @@ public class CommentController {
         User user = getAuthenticatedUser(userDetails);
         commentService.deleteComment(commentId, user.getId());
         return ResponseEntity.ok("댓글이 삭제되었습니다.");
-    }
-
-    @PostMapping("/comments/{commentId}/replies")
-    public ResponseEntity<?> addReply(@PathVariable("commentId") Long commentId,
-        @RequestBody Map<String, String> request,
-        @AuthenticationPrincipal UserDetails userDetails) {
-        User user = getAuthenticatedUser(userDetails);
-        String content = request.get("content");
-        Reply reply = replyService.addReply(commentId, user.getId(), content);
-
-        return ResponseEntity.ok(new ReplyDto(reply)); // ✅ DTO로 반환
-    }
-
-    @GetMapping("/comments/{commentId}/replies")
-    public ResponseEntity<List<ReplyDto>> getReplies(@PathVariable("commentId") Long commentId) {
-        List<ReplyDto> replies = replyService.getRepliesByCommentId(commentId);
-        return ResponseEntity.ok(replies);
     }
 }
