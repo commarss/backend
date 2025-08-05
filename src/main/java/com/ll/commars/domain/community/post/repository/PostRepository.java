@@ -15,14 +15,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 		"LEFT JOIN FETCH p.user " +
 		"LEFT JOIN FETCH p.comments " +
 		"LEFT JOIN FETCH p.postHashTags " +
-		"LEFT JOIN FETCH p.reactions " +
+		"LEFT JOIN FETCH p.postLikes " +
 		"WHERE p.id = :postId")
 	Optional<Post> findPostWithDetailsById(@Param("postId") Long postId);
-
-	long countByTitleContaining(String keyword);
-
-	@Query("SELECT COUNT(b) FROM Post b WHERE b.user.email = :email")
-	int countPostsByEmail(@Param("email") String email);
 
 	@EntityGraph(attributePaths = {"user"})
 	Optional<Post> findById(Long id);

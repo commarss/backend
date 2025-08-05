@@ -4,7 +4,7 @@ import com.ll.commars.domain.community.comment.entity.Comment;
 
 public record CommentCreateResponse(
 	Long id, // 댓글 ID
-	String content // 댓글 내용
+	String content
 ) {
 
 	public static CommentCreateResponse from(Comment comment) {

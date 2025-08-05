@@ -15,7 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "reactions", uniqueConstraints = {
+@Table(name = "post_like", uniqueConstraints = {
 	@UniqueConstraint(columnNames = {"post_id", "user_id"})
 })
 @Getter
