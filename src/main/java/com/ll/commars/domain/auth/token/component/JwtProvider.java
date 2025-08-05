@@ -1,4 +1,4 @@
-package com.ll.commars.global.jwt.component;
+package com.ll.commars.domain.auth.token.component;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -9,8 +9,8 @@ import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.ll.commars.domain.auth.token.entity.JwtToken;
 import com.ll.commars.domain.user.entity.User;
-import com.ll.commars.global.jwt.entity.JwtToken;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
+// todo: TokenProvider 인터페이스를 생성하고 이를 구현하는 방식으로 작성할지?
 public class JwtProvider {
 
 	@Value("${jwt.secret}")

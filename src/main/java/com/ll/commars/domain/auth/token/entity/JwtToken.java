@@ -1,4 +1,4 @@
-package com.ll.commars.global.jwt.entity;
+package com.ll.commars.domain.auth.token.entity;
 
 import java.util.Date;
 
