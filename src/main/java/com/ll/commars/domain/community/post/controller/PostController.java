@@ -32,82 +32,82 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PostController {
 
-    private final PostCommandService postCommandService;
-    private final PostQueryService postQueryService;
-    private final UserService userService;
+	private final PostCommandService postCommandService;
+	private final PostQueryService postQueryService;
+	private final UserService userService;
 
-    @PostMapping
-    public ResponseEntity<PostCreateResponse> createPost(
-        @RequestBody PostCreateRequest request,
-        @AuthenticationPrincipal UserDetails userDetails
-    ) {
-        User user = getAuthenticatedUser(userDetails);
-        PostCreateResponse response = postCommandService.createPost(user.getId(), request);
+	@PostMapping
+	public ResponseEntity<PostCreateResponse> createPost(
+		@RequestBody PostCreateRequest request,
+		@AuthenticationPrincipal UserDetails userDetails
+	) {
+		User user = getAuthenticatedUser(userDetails);
+		PostCreateResponse response = postCommandService.createPost(user.getId(), request);
 
-        return ResponseEntity.ok(response);
-    }
+		return ResponseEntity.ok(response);
+	}
 
-    @GetMapping("/{post-id}")
-    public ResponseEntity<PostDetailResponse> getPost(
-        @PathVariable("post-id") Long postId
-    ) {
-        postCommandService.incrementViews(postId);
-        PostDetailResponse response = postQueryService.getPost(postId);
-        return ResponseEntity.ok(response);
-    }
+	@GetMapping("/{post-id}")
+	public ResponseEntity<PostDetailResponse> getPost(
+		@PathVariable("post-id") Long postId
+	) {
+		postCommandService.incrementViews(postId);
+		PostDetailResponse response = postQueryService.getPost(postId);
+		return ResponseEntity.ok(response);
+	}
 
-    // todo: paging 적용
-    @GetMapping
-    public ResponseEntity<PostListResponse> getPosts() {
-        PostListResponse response = postQueryService.getPosts();
-        return ResponseEntity.ok(response);
-    }
+	// todo: paging 적용
+	@GetMapping
+	public ResponseEntity<PostListResponse> getPosts() {
+		PostListResponse response = postQueryService.getPosts();
+		return ResponseEntity.ok(response);
+	}
 
-    @PutMapping("/{post-id}")
-    public ResponseEntity<PostUpdateResponse> updatePost(
-        @PathVariable("post-id") Long postId,
-        @RequestBody PostUpdateRequest request,
-        @AuthenticationPrincipal UserDetails userDetails
-    ) {
-        User user = getAuthenticatedUser(userDetails);
-        PostUpdateResponse response = postCommandService.updateBoard(user.getId(), postId, request);
+	@PutMapping("/{post-id}")
+	public ResponseEntity<PostUpdateResponse> updatePost(
+		@PathVariable("post-id") Long postId,
+		@RequestBody PostUpdateRequest request,
+		@AuthenticationPrincipal UserDetails userDetails
+	) {
+		User user = getAuthenticatedUser(userDetails);
+		PostUpdateResponse response = postCommandService.updateBoard(user.getId(), postId, request);
 
-        return ResponseEntity.ok(response);
-    }
+		return ResponseEntity.ok(response);
+	}
 
-    @DeleteMapping("/{post-id}")
-    public ResponseEntity<Void> deletePost(
-        @PathVariable("post-id") Long postId,
-        @AuthenticationPrincipal UserDetails userDetails
-    ) {
-        User user = getAuthenticatedUser(userDetails);
-        postCommandService.deletePost(user.getId(), postId);
+	@DeleteMapping("/{post-id}")
+	public ResponseEntity<Void> deletePost(
+		@PathVariable("post-id") Long postId,
+		@AuthenticationPrincipal UserDetails userDetails
+	) {
+		User user = getAuthenticatedUser(userDetails);
+		postCommandService.deletePost(user.getId(), postId);
 
-        return ResponseEntity.ok().build();
-    }
+		return ResponseEntity.ok().build();
+	}
 
-    @PostMapping("/{post-id}/like")
-    public ResponseEntity<PostLikeCreateResponse> likePost(
-        @PathVariable("post-id") Long postId,
-        @AuthenticationPrincipal UserDetails userDetails
-    ) {
-        User user = getAuthenticatedUser(userDetails);
+	@PostMapping("/{post-id}/like")
+	public ResponseEntity<PostLikeCreateResponse> likePost(
+		@PathVariable("post-id") Long postId,
+		@AuthenticationPrincipal UserDetails userDetails
+	) {
+		User user = getAuthenticatedUser(userDetails);
 
-        PostLikeCreateResponse response = postCommandService.likePost(user.getId(), postId);
-        return ResponseEntity.ok(response);
-    }
+		PostLikeCreateResponse response = postCommandService.likePost(user.getId(), postId);
+		return ResponseEntity.ok(response);
+	}
 
-    @GetMapping("/{post-id}/like")
-    public ResponseEntity<PostLikeResponse> getLikes(
-        @PathVariable("post-id") Long postId
-    ) {
-        PostLikeResponse response = postQueryService.getLikes(postId);
+	@GetMapping("/{post-id}/like")
+	public ResponseEntity<PostLikeResponse> getLikes(
+		@PathVariable("post-id") Long postId
+	) {
+		PostLikeResponse response = postQueryService.getLikes(postId);
 
-        return ResponseEntity.ok(response);
-    }
+		return ResponseEntity.ok(response);
+	}
 
-    private User getAuthenticatedUser(@AuthenticationPrincipal UserDetails userDetails) {
-        return userService.findById(Long.parseLong(userDetails.getUsername())).orElseThrow(
-            () -> new RuntimeException("사용자를 찾을 수 없습니다."));
-    }
+	private User getAuthenticatedUser(@AuthenticationPrincipal UserDetails userDetails) {
+		return userService.findById(Long.parseLong(userDetails.getUsername())).orElseThrow(
+			() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+	}
 }

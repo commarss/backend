@@ -9,8 +9,8 @@ public record CommentUpdateResponse(
 
 	public static CommentUpdateResponse from(Comment comment) {
 		return new CommentUpdateResponse(
-				comment.getId(),
-				comment.getContent()
+			comment.getId(),
+			comment.getContent()
 		);
 	}
 }

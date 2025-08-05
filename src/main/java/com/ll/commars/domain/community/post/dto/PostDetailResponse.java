@@ -19,7 +19,8 @@ public record PostDetailResponse(
 	PostLikeCreateListResponse postLikeCreateListResponse
 ) {
 
-	public static PostDetailResponse of(Post post, List<CommentResponse> comments, List<PostHashTagResponse> postHashTags, List<PostLikeCreateResponse> reactions) {
+	public static PostDetailResponse of(Post post, List<CommentResponse> comments,
+		List<PostHashTagResponse> postHashTags, List<PostLikeCreateResponse> reactions) {
 		return new PostDetailResponse(
 			post.getId(),
 			post.getTitle(),

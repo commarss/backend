@@ -17,22 +17,22 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PostHashTag {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(nullable = false)
-    private String name;
+	@Column(nullable = false)
+	private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "post_id")
-    private Post post;
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "post_id")
+	private Post post;
 
-    public PostHashTag(String name) {
-        this.name = name;
-    }
+	public PostHashTag(String name) {
+		this.name = name;
+	}
 
-    public void setPost(Post post) {
-        this.post = post;
-    }
+	public void setPost(Post post) {
+		this.post = post;
+	}
 }

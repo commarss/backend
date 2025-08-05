@@ -26,45 +26,45 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CommentController {
 
-    private final CommentService commentService;
-    private final UserService userService;
+	private final CommentService commentService;
+	private final UserService userService;
 
-    private User getAuthenticatedUser(@AuthenticationPrincipal UserDetails userDetails) {
-        return userService.findById(Long.parseLong(userDetails.getUsername())).orElseThrow(
-            () -> new RuntimeException("사용자를 찾을 수 없습니다."));
-    }
+	private User getAuthenticatedUser(@AuthenticationPrincipal UserDetails userDetails) {
+		return userService.findById(Long.parseLong(userDetails.getUsername())).orElseThrow(
+			() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+	}
 
-    @PostMapping
-    public ResponseEntity<CommentCreateResponse> createComment(
-        @RequestBody CommentCreateRequest request,
-        @AuthenticationPrincipal UserDetails userDetails
-    ) {
-        User user = getAuthenticatedUser(userDetails);
-        CommentCreateResponse response = commentService.createComment(user.getId(), request);
+	@PostMapping
+	public ResponseEntity<CommentCreateResponse> createComment(
+		@RequestBody CommentCreateRequest request,
+		@AuthenticationPrincipal UserDetails userDetails
+	) {
+		User user = getAuthenticatedUser(userDetails);
+		CommentCreateResponse response = commentService.createComment(user.getId(), request);
 
-        return ResponseEntity.ok(response);
-    }
+		return ResponseEntity.ok(response);
+	}
 
-    @PatchMapping("/{commen-id}")
-    public ResponseEntity<CommentUpdateResponse> updateComment(
-        @PathVariable("commen-id") Long commentId,
-        @RequestBody CommentUpdateRequest request,
-        @AuthenticationPrincipal UserDetails userDetails
-    ) {
-        User user = getAuthenticatedUser(userDetails);
-        CommentUpdateResponse response = commentService.updateComment(user.getId(), commentId, request);
+	@PatchMapping("/{commen-id}")
+	public ResponseEntity<CommentUpdateResponse> updateComment(
+		@PathVariable("commen-id") Long commentId,
+		@RequestBody CommentUpdateRequest request,
+		@AuthenticationPrincipal UserDetails userDetails
+	) {
+		User user = getAuthenticatedUser(userDetails);
+		CommentUpdateResponse response = commentService.updateComment(user.getId(), commentId, request);
 
-        return ResponseEntity.ok(response);
-    }
+		return ResponseEntity.ok(response);
+	}
 
-    @DeleteMapping("/comment-id}")
-    public ResponseEntity<Void> deleteComment(
-        @PathVariable("comment-id") Long commentId,
-        @AuthenticationPrincipal UserDetails userDetails
-    ) {
-        User user = getAuthenticatedUser(userDetails);
-        commentService.deleteComment(commentId, user.getId());
+	@DeleteMapping("/comment-id}")
+	public ResponseEntity<Void> deleteComment(
+		@PathVariable("comment-id") Long commentId,
+		@AuthenticationPrincipal UserDetails userDetails
+	) {
+		User user = getAuthenticatedUser(userDetails);
+		commentService.deleteComment(commentId, user.getId());
 
-        return ResponseEntity.ok().build();
-    }
+		return ResponseEntity.ok().build();
+	}
 }

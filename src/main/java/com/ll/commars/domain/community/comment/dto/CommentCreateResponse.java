@@ -9,8 +9,8 @@ public record CommentCreateResponse(
 
 	public static CommentCreateResponse from(Comment comment) {
 		return new CommentCreateResponse(
-				comment.getId(),
-				comment.getContent()
+			comment.getId(),
+			comment.getContent()
 		);
 	}
 }
