@@ -13,14 +13,13 @@ public record PostDetailResponse(
 	Integer views,
 	String imageUrl,
 	Integer likeCount,
-	Integer dislikeCount,
 	Long authorId,
 	CommentListResponse commentListResponse,
 	PostHashTagListResponse postHashTagListResponse,
-	PostLikeListResponse postLikeListResponse
+	PostLikeCreateListResponse postLikeCreateListResponse
 ) {
 
-	public static PostDetailResponse of(Post post, List<CommentResponse> comments, List<PostHashTagResponse> postHashTags, List<PostLikeResponse> reactions) {
+	public static PostDetailResponse of(Post post, List<CommentResponse> comments, List<PostHashTagResponse> postHashTags, List<PostLikeCreateResponse> reactions) {
 		return new PostDetailResponse(
 			post.getId(),
 			post.getTitle(),
@@ -28,11 +27,10 @@ public record PostDetailResponse(
 			post.getViews(),
 			post.getImageUrl(),
 			post.getLikeCount(),
-			post.getDislikeCount(),
 			post.getUser().getId(),
 			CommentListResponse.of(comments),
 			PostHashTagListResponse.of(postHashTags),
-			PostLikeListResponse.of(reactions)
+			PostLikeCreateListResponse.of(reactions)
 		);
 	}
 }

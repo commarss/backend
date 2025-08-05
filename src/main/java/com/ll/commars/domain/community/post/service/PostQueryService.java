@@ -6,13 +6,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ll.commars.domain.community.comment.dto.CommentResponse;
-import com.ll.commars.domain.community.post.dto.PostHashTagResponse;
 import com.ll.commars.domain.community.post.dto.PostDetailResponse;
+import com.ll.commars.domain.community.post.dto.PostHashTagResponse;
+import com.ll.commars.domain.community.post.dto.PostLikeCreateResponse;
+import com.ll.commars.domain.community.post.dto.PostLikeResponse;
 import com.ll.commars.domain.community.post.dto.PostListResponse;
 import com.ll.commars.domain.community.post.dto.PostResponse;
 import com.ll.commars.domain.community.post.entity.Post;
+import com.ll.commars.domain.community.post.entity.PostLike;
+import com.ll.commars.domain.community.post.repository.PostLikeRepository;
 import com.ll.commars.domain.community.post.repository.PostRepository;
-import com.ll.commars.domain.community.post.dto.PostLikeResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 public class PostQueryService {
 
 	private final PostRepository postRepository;
+	private final PostLikeRepository postLikeRepository;
 
 	@Transactional(readOnly = true)
 	public PostDetailResponse getPost(Long postId) {
@@ -35,8 +39,8 @@ public class PostQueryService {
 			.map(PostHashTagResponse::from)
 			.toList();
 
-		List<PostLikeResponse> reactions = post.getPostLikes().stream()
-			.map(PostLikeResponse::from)
+		List<PostLikeCreateResponse> reactions = post.getPostLikes().stream()
+			.map(PostLikeCreateResponse::from)
 			.toList();
 
 		return PostDetailResponse.of(post, comments, postHashTags, reactions);
@@ -51,5 +55,14 @@ public class PostQueryService {
 				.map(PostResponse::of)
 				.toList()
 		);
+	}
+
+	@Transactional(readOnly = true)
+	public PostLikeResponse getLikes(Long postId) {
+		List<PostLike> postLikes = postLikeRepository.findAllByPostId(postId)
+			.stream()
+			.toList();
+
+		return PostLikeResponse.from(postLikes);
 	}
 }

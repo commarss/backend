@@ -1,8 +1,5 @@
 package com.ll.commars.domain.community.post.controller;
 
-import java.util.Map;
-
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,19 +10,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ll.commars.domain.community.post.dto.PostCreateRequest;
 import com.ll.commars.domain.community.post.dto.PostCreateResponse;
 import com.ll.commars.domain.community.post.dto.PostDetailResponse;
+import com.ll.commars.domain.community.post.dto.PostLikeCreateResponse;
 import com.ll.commars.domain.community.post.dto.PostLikeResponse;
 import com.ll.commars.domain.community.post.dto.PostListResponse;
 import com.ll.commars.domain.community.post.dto.PostUpdateRequest;
 import com.ll.commars.domain.community.post.dto.PostUpdateResponse;
-import com.ll.commars.domain.community.post.repository.PostRepository;
 import com.ll.commars.domain.community.post.service.PostCommandService;
-import com.ll.commars.domain.community.post.service.PostLikeService;
 import com.ll.commars.domain.community.post.service.PostQueryService;
 import com.ll.commars.domain.user.user.entity.User;
 import com.ll.commars.domain.user.user.service.UserService;
@@ -39,7 +34,6 @@ public class PostController {
 
     private final PostCommandService postCommandService;
     private final PostQueryService postQueryService;
-    private final PostLikeService postLikeService;
     private final UserService userService;
 
     @PostMapping
@@ -55,7 +49,7 @@ public class PostController {
 
     @GetMapping("/{post-id}")
     public ResponseEntity<PostDetailResponse> getPost(
-        @PathVariable("postId") Long postId
+        @PathVariable("post-id") Long postId
     ) {
         postCommandService.incrementViews(postId);
         PostDetailResponse response = postQueryService.getPost(postId);
@@ -93,20 +87,23 @@ public class PostController {
     }
 
     @PostMapping("/{post-id}/like")
-    public ResponseEntity<PostLikeResponse> likePost(
-        @PathVariable("postId") Long postId,
+    public ResponseEntity<PostLikeCreateResponse> likePost(
+        @PathVariable("post-id") Long postId,
         @AuthenticationPrincipal UserDetails userDetails
     ) {
         User user = getAuthenticatedUser(userDetails);
 
-        PostLikeResponse response = postCommandService.likePost(user.getId(), postId);
+        PostLikeCreateResponse response = postCommandService.likePost(user.getId(), postId);
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping
-    public ResponseEntity<?> getReactions(@PathVariable("postId") Long postId) {
-        Map<String, Integer> reactions = postLikeService.getReactions(postId);
-        return ResponseEntity.ok(reactions);
+    @GetMapping("/{post-id}/like")
+    public ResponseEntity<PostLikeResponse> getLikes(
+        @PathVariable("post-id") Long postId
+    ) {
+        PostLikeResponse response = postQueryService.getLikes(postId);
+
+        return ResponseEntity.ok(response);
     }
 
     private User getAuthenticatedUser(@AuthenticationPrincipal UserDetails userDetails) {

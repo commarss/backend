@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ll.commars.domain.community.post.dto.PostCreateRequest;
 import com.ll.commars.domain.community.post.dto.PostCreateResponse;
-import com.ll.commars.domain.community.post.dto.PostLikeResponse;
+import com.ll.commars.domain.community.post.dto.PostLikeCreateResponse;
 import com.ll.commars.domain.community.post.dto.PostUpdateRequest;
 import com.ll.commars.domain.community.post.dto.PostUpdateResponse;
 import com.ll.commars.domain.community.post.entity.Post;
@@ -72,7 +72,7 @@ public class PostCommandService {
 	}
 
 	@Transactional
-	public PostLikeResponse likePost(Long userId, Long postId) {
+	public PostLikeCreateResponse likePost(Long userId, Long postId) {
 		Post post = postRepository.findById(postId)
 			.orElseThrow(() -> new IllegalArgumentException("Post not found with id: " + postId));
 
@@ -84,6 +84,6 @@ public class PostCommandService {
 		PostLike postLike = new PostLike(post, user);
 		post.getPostLikes().add(postLike);
 
-		return PostLikeResponse.from(postLike);
+		return PostLikeCreateResponse.from(postLike);
 	}
 }
