@@ -11,8 +11,8 @@ import com.ll.commars.domain.community.comment.entity.Comment;
 import com.ll.commars.domain.community.comment.repository.CommentRepository;
 import com.ll.commars.domain.community.post.entity.Post;
 import com.ll.commars.domain.community.post.repository.PostRepository;
-import com.ll.commars.domain.user.user.entity.User;
-import com.ll.commars.domain.user.user.repository.UserRepository;
+import com.ll.commars.domain.user.entity.User;
+import com.ll.commars.domain.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 

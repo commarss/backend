@@ -7,8 +7,8 @@ import com.ll.commars.domain.restaurant.businessHour.entity.BusinessHour;
 import com.ll.commars.domain.restaurant.category.entity.RestaurantCategory;
 import com.ll.commars.domain.restaurant.menu.entity.RestaurantMenu;
 import com.ll.commars.domain.review.review.entity.Review;
-import com.ll.commars.domain.user.favoriteRestaurant.entity.FavoriteRestaurant;
-import com.ll.commars.global.baseEntity.BaseEntity;
+import com.ll.commars.domain.favorite.favoriteRestaurant.entity.FavoriteRestaurant;
+import com.ll.commars.global.BaseEntity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

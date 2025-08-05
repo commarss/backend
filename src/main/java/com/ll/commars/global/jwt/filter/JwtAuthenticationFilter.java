@@ -10,8 +10,8 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.ll.commars.domain.user.user.entity.User;
-import com.ll.commars.domain.user.user.service.UserService;
+import com.ll.commars.domain.user.entity.User;
+import com.ll.commars.domain.user.service.UserService;
 import com.ll.commars.global.jwt.component.JwtProvider;
 import com.ll.commars.global.jwt.entity.JwtAuthenticationToken;
 import com.ll.commars.global.jwt.entity.JwtToken;

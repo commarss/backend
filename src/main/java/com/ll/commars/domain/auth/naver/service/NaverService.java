@@ -11,8 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.ll.commars.domain.user.user.entity.User;
-import com.ll.commars.domain.user.user.service.UserService;
+import com.ll.commars.domain.user.entity.User;
+import com.ll.commars.domain.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 

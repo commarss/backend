@@ -20,9 +20,9 @@ import com.ll.commars.domain.restaurant.restaurant.repository.RestaurantReposito
 import com.ll.commars.domain.review.review.dto.ReviewDto;
 import com.ll.commars.domain.review.review.entity.Review;
 import com.ll.commars.domain.review.review.repository.ReviewRepository;
-import com.ll.commars.domain.user.user.entity.User;
-import com.ll.commars.domain.user.user.repository.UserRepository;
-import com.ll.commars.domain.user.user.service.UserService;
+import com.ll.commars.domain.user.entity.User;
+import com.ll.commars.domain.user.repository.UserRepository;
+import com.ll.commars.domain.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 

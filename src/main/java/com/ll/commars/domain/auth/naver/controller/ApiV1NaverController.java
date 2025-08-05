@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ll.commars.domain.auth.auth.service.AuthService;
 import com.ll.commars.domain.auth.naver.service.NaverService;
-import com.ll.commars.domain.user.user.entity.User;
+import com.ll.commars.domain.user.entity.User;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

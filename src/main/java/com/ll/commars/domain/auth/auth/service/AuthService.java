@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.ll.commars.domain.auth.auth.entity.AuthResponse;
 import com.ll.commars.domain.auth.auth.entity.AuthUser;
-import com.ll.commars.domain.user.user.entity.User;
+import com.ll.commars.domain.user.entity.User;
 import com.ll.commars.global.jwt.component.JwtProvider;
 
 import lombok.RequiredArgsConstructor;

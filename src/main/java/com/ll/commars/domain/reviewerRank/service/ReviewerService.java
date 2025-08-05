@@ -13,8 +13,8 @@ import com.ll.commars.domain.review.review.entity.Review;
 import com.ll.commars.domain.review.review.repository.ReviewRepository;
 import com.ll.commars.domain.reviewerRank.dto.ReviewerRank;
 import com.ll.commars.domain.reviewerRank.dto.ReviewerRankResponse;
-import com.ll.commars.domain.user.user.entity.User;
-import com.ll.commars.domain.user.user.repository.UserRepository;
+import com.ll.commars.domain.user.entity.User;
+import com.ll.commars.domain.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 

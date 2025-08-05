@@ -17,10 +17,10 @@ import com.ll.commars.domain.review.review.dto.RestaurantReviewAnalysisDTO;
 import com.ll.commars.domain.review.review.dto.ReviewAnalysisDTO;
 import com.ll.commars.domain.review.review.entity.Review;
 import com.ll.commars.domain.review.review.repository.ReviewRepository;
-import com.ll.commars.domain.user.favorite.entity.Favorite;
-import com.ll.commars.domain.user.favorite.repository.FavoriteRepository;
-import com.ll.commars.domain.user.favoriteRestaurant.entity.FavoriteRestaurant;
-import com.ll.commars.domain.user.favoriteRestaurant.repository.FavoriteRestaurantRepository;
+import com.ll.commars.domain.favorite.favorite.entity.Favorite;
+import com.ll.commars.domain.favorite.favorite.repository.FavoriteRepository;
+import com.ll.commars.domain.favorite.favoriteRestaurant.entity.FavoriteRestaurant;
+import com.ll.commars.domain.favorite.favoriteRestaurant.repository.FavoriteRestaurantRepository;
 
 @Service
 

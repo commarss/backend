@@ -22,8 +22,8 @@ import com.ll.commars.domain.community.post.dto.PostUpdateRequest;
 import com.ll.commars.domain.community.post.dto.PostUpdateResponse;
 import com.ll.commars.domain.community.post.service.PostCommandService;
 import com.ll.commars.domain.community.post.service.PostQueryService;
-import com.ll.commars.domain.user.user.entity.User;
-import com.ll.commars.domain.user.user.service.UserService;
+import com.ll.commars.domain.user.entity.User;
+import com.ll.commars.domain.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 

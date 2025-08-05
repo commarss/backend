@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ll.commars.domain.user.user.entity.User;
-import com.ll.commars.domain.user.user.service.UserService;
+import com.ll.commars.domain.user.entity.User;
+import com.ll.commars.domain.user.service.UserService;
 import com.ll.commars.global.jwt.component.JwtProvider;
 
 import jakarta.servlet.http.Cookie;

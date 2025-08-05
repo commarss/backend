@@ -1,7 +1,7 @@
 package com.ll.commars.domain.community.comment.entity;
 
 import com.ll.commars.domain.community.post.entity.Post;
-import com.ll.commars.domain.user.user.entity.User;
+import com.ll.commars.domain.user.entity.User;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
