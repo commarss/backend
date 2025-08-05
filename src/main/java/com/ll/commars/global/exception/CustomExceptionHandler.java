@@ -1,5 +1,6 @@
 package com.ll.commars.global.exception;
 
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,7 +18,7 @@ public class CustomExceptionHandler {
 		log.error("커스텀 예외 발생: {}, {}", ex.getCode(), ex.getMessage());
 
 		return ResponseEntity
-			.status(ex.getCode())
+			.status(HttpStatusCode.valueOf(ex.getCode()))
 			.body(errorResponse);
 	}
 }
