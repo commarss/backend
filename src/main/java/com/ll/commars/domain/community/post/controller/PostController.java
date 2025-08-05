@@ -70,7 +70,7 @@ public class PostController {
 		@AuthenticationPrincipal UserDetails userDetails
 	) {
 		User user = getAuthenticatedUser(userDetails);
-		PostUpdateResponse response = postCommandService.updateBoard(user.getId(), postId, request);
+		PostUpdateResponse response = postCommandService.updatePost(user.getId(), postId, request);
 
 		return ResponseEntity.ok(response);
 	}

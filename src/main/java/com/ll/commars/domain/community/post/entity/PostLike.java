@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "reactions", uniqueConstraints = {
-	@UniqueConstraint(columnNames = {"board_id", "user_id"})
+	@UniqueConstraint(columnNames = {"post_id", "user_id"})
 })
 @Getter
 @NoArgsConstructor

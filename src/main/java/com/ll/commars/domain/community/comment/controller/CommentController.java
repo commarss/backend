@@ -45,9 +45,9 @@ public class CommentController {
 		return ResponseEntity.ok(response);
 	}
 
-	@PatchMapping("/{commen-id}")
+	@PatchMapping("/{comment-id}")
 	public ResponseEntity<CommentUpdateResponse> updateComment(
-		@PathVariable("commen-id") Long commentId,
+		@PathVariable("comment-id") Long commentId,
 		@RequestBody CommentUpdateRequest request,
 		@AuthenticationPrincipal UserDetails userDetails
 	) {
@@ -57,7 +57,7 @@ public class CommentController {
 		return ResponseEntity.ok(response);
 	}
 
-	@DeleteMapping("/comment-id}")
+	@DeleteMapping("/{comment-id}")
 	public ResponseEntity<Void> deleteComment(
 		@PathVariable("comment-id") Long commentId,
 		@AuthenticationPrincipal UserDetails userDetails

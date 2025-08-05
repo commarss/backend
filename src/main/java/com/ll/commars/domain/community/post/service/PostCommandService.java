@@ -43,7 +43,7 @@ public class PostCommandService {
 	}
 
 	@Transactional
-	public PostUpdateResponse updateBoard(Long userId, Long postId, PostUpdateRequest request) {
+	public PostUpdateResponse updatePost(Long userId, Long postId, PostUpdateRequest request) {
 		Post post = postRepository.findById(postId)
 			.orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
 
@@ -58,9 +58,9 @@ public class PostCommandService {
 	}
 
 	@Transactional
-	public void deletePost(Long userId, Long boardId) {
+	public void deletePost(Long userId, Long postId) {
 		// todo: 검증 로직 추가
-		postRepository.deleteById(boardId);
+		postRepository.deleteById(postId);
 	}
 
 	@Transactional
