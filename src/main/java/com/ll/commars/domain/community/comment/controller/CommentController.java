@@ -1,23 +1,20 @@
 package com.ll.commars.domain.community.comment.controller;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ll.commars.domain.community.comment.entity.Comment;
+import com.ll.commars.domain.community.comment.dto.CommentCreateRequest;
+import com.ll.commars.domain.community.comment.dto.CommentCreateResponse;
+import com.ll.commars.domain.community.comment.dto.CommentUpdateRequest;
+import com.ll.commars.domain.community.comment.dto.CommentUpdateResponse;
 import com.ll.commars.domain.community.comment.service.CommentService;
 import com.ll.commars.domain.user.user.entity.User;
 import com.ll.commars.domain.user.user.service.UserService;
@@ -25,7 +22,7 @@ import com.ll.commars.domain.user.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/posts/{postId}")
+@RequestMapping("/api/comments")
 @RequiredArgsConstructor
 public class CommentController {
 
@@ -37,60 +34,37 @@ public class CommentController {
             () -> new RuntimeException("사용자를 찾을 수 없습니다."));
     }
 
-    @PostMapping("/comments")
-    public ResponseEntity<?> addComment(@PathVariable("postId") Long postId,
-        @RequestBody Map<String, String> request,
-        @AuthenticationPrincipal UserDetails userDetails) {
+    @PostMapping
+    public ResponseEntity<CommentCreateResponse> createComment(
+        @RequestBody CommentCreateRequest request,
+        @AuthenticationPrincipal UserDetails userDetails
+    ) {
         User user = getAuthenticatedUser(userDetails);
-        String content = request.get("content");
-        commentService.addComment(postId, user.getId(), content);
-        return ResponseEntity.ok("댓글이 추가되었습니다.");
+        CommentCreateResponse response = commentService.createComment(user.getId(), request);
+
+        return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/comments")
-    public ResponseEntity<?> getCommentsByPostId(@PathVariable("postId") Long postId) {
-        try {
-            List<Comment> comments = commentService.getCommentsByBoardId(postId);
-
-            List<Map<String, Object>> commentList = comments.stream().map(comment -> {
-                Map<String, Object> commentMap = new HashMap<>();
-                commentMap.put("commentId", comment.getId());
-                commentMap.put("content", comment.getContent());
-
-                if (comment.getUser() != null) {
-                    Map<String, Object> userMap = new HashMap<>();
-                    userMap.put("userId", comment.getUser().getId());
-                    userMap.put("email", comment.getUser().getEmail());
-                    userMap.put("name", comment.getUser().getName());
-                    commentMap.put("user", userMap);
-                } else {
-                    commentMap.put("user", null);
-                }
-
-                return commentMap;
-            }).collect(Collectors.toList());
-
-            return ResponseEntity.ok(Map.of("postId", postId, "comments", commentList));
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("댓글 조회 중 오류 발생: " + e.getMessage());
-        }
-    }
-
-    @PutMapping("/comments/{commentId}")
-    public ResponseEntity<?> updateComment(@PathVariable("commentId") Long commentId,
-        @RequestBody Map<String, String> request,
-        @AuthenticationPrincipal UserDetails userDetails) {
+    @PatchMapping("/{commen-id}")
+    public ResponseEntity<CommentUpdateResponse> updateComment(
+        @PathVariable("commen-id") Long commentId,
+        @RequestBody CommentUpdateRequest request,
+        @AuthenticationPrincipal UserDetails userDetails
+    ) {
         User user = getAuthenticatedUser(userDetails);
-        String content = request.get("content");
-        commentService.updateComment(commentId, user.getId(), content);
-        return ResponseEntity.ok("댓글이 수정되었습니다.");
+        CommentUpdateResponse response = commentService.updateComment(user.getId(), commentId, request);
+
+        return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/comments/{commentId}")
-    public ResponseEntity<?> deleteComment(@PathVariable("commentId") Long commentId,
-        @AuthenticationPrincipal UserDetails userDetails) {
+    @DeleteMapping("/comment-id}")
+    public ResponseEntity<Void> deleteComment(
+        @PathVariable("comment-id") Long commentId,
+        @AuthenticationPrincipal UserDetails userDetails
+    ) {
         User user = getAuthenticatedUser(userDetails);
         commentService.deleteComment(commentId, user.getId());
-        return ResponseEntity.ok("댓글이 삭제되었습니다.");
+
+        return ResponseEntity.ok().build();
     }
 }
