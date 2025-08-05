@@ -1,4 +1,4 @@
-package com.ll.commars.domain.auth.token.entity;
+package com.ll.commars.domain.auth.token;
 
 import java.util.Collection;
 

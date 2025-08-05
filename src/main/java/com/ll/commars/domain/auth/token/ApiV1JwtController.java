@@ -1,4 +1,4 @@
-package com.ll.commars.domain.auth.token.controller;
+package com.ll.commars.domain.auth.token;
 
 import java.util.Map;
 import java.util.Optional;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ll.commars.domain.auth.token.component.JwtProvider;
 import com.ll.commars.domain.user.entity.User;
 import com.ll.commars.domain.user.service.UserService;
 
