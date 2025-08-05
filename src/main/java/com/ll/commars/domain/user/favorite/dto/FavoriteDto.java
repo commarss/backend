@@ -6,14 +6,11 @@ import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Data
 @NoArgsConstructor
-
 public class FavoriteDto {
 
 	// 찜 리스트 정보
@@ -23,6 +20,7 @@ public class FavoriteDto {
 
 		private Long id; // 찜 리스트 ID
 		private String name; // 찜 리스트 이름
+		@Builder.Default
 		private Boolean isPublic = true; // 찜 리스트 공개 여부
 		private List<RestaurantDto.RestaurantBasicInfo> restaurantLists;
 	}
@@ -41,8 +39,8 @@ public class FavoriteDto {
 	public static class CreateFavoriteListRequest {
 
 		private String name;
+		@Builder.Default
 		private Boolean isPublic = true;
-		;
 	}
 
 	// 찜 리스트에 식당 추가 시 요청

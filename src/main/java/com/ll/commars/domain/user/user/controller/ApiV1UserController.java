@@ -29,6 +29,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ApiV1UserController {
 
+	// todo: 사용자의 게시글의 개수 세는 엔드포인트 구현
+
 	private static final Logger logger = LoggerFactory.getLogger(ApiV1UserController.class);
 	private final UserService userService;
 

@@ -4,8 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ll.commars.domain.community.board.entity.Board;
 import com.ll.commars.domain.community.comment.entity.Comment;
+import com.ll.commars.domain.community.post.entity.Post;
 import com.ll.commars.domain.review.review.entity.Review;
 import com.ll.commars.domain.user.favorite.entity.Favorite;
 import com.ll.commars.global.baseEntity.BaseEntity;
@@ -82,7 +82,7 @@ public class User extends BaseEntity {
 	// User와 Board: 일대다
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonIgnore
-	private List<Board> boards;
+	private List<Post> posts;
 
 	// User와 Comment: 일대다
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)

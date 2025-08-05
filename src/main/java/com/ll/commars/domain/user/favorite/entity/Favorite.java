@@ -17,20 +17,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
-@Table(name = "favorites")
 @Getter
-@Setter
 @Builder
-@NoArgsConstructor
+@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Favorite extends BaseEntity {
 
@@ -54,12 +49,4 @@ public class Favorite extends BaseEntity {
 	// Favorite과 FavoriteRestaurant: 일대다
 	@OneToMany(mappedBy = "favorite", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	private List<FavoriteRestaurant> favoriteRestaurants = new ArrayList<>();  // ✅ 초기화 추가!
-
-	// ✅ 저장 전에 null이면 true로 설정
-	@PrePersist
-	public void prePersist() {
-		if (isPublic == null) {
-			isPublic = true;
-		}
-	}
 }

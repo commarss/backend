@@ -1,7 +1,4 @@
-package com.ll.commars.domain.community.comment.entity;
-
-import com.ll.commars.domain.community.post.entity.Post;
-import com.ll.commars.domain.user.user.entity.User;
+package com.ll.commars.domain.community.post.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,31 +14,24 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Comment {
+public class PostHashTag {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column
-	private String content;
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id")
-	private User user;
+	@Column(nullable = false)
+	private String name;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "post_id")
 	private Post post;
 
-	public Comment(String content, User user, Post post) {
-		this.content = content;
-		this.user = user;
-		this.post = post;
-		post.getComments().add(this);
+	public PostHashTag(String name) {
+		this.name = name;
 	}
 
-	public void updateContent(String content) {
-		this.content = content;
+	public void setPost(Post post) {
+		this.post = post;
 	}
 }
