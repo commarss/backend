@@ -3,7 +3,7 @@ package com.ll.commars.domain.restaurant.category.entity;
 import java.util.List;
 
 import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
-import com.ll.commars.global.baseEntity.BaseEntity;
+import com.ll.commars.global.BaseEntity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

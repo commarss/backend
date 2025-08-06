@@ -16,8 +16,8 @@ import com.ll.commars.domain.community.comment.dto.CommentCreateResponse;
 import com.ll.commars.domain.community.comment.dto.CommentUpdateRequest;
 import com.ll.commars.domain.community.comment.dto.CommentUpdateResponse;
 import com.ll.commars.domain.community.comment.service.CommentService;
-import com.ll.commars.domain.user.user.entity.User;
-import com.ll.commars.domain.user.user.service.UserService;
+import com.ll.commars.domain.user.entity.User;
+import com.ll.commars.domain.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 

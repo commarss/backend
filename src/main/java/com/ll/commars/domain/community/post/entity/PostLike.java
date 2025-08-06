@@ -1,6 +1,6 @@
 package com.ll.commars.domain.community.post.entity;
 
-import com.ll.commars.domain.user.user.entity.User;
+import com.ll.commars.domain.user.entity.User;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
