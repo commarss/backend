@@ -27,19 +27,23 @@ public class JwtProvider implements TokenProvider {
 	byte[] keyBytes = jwtProperties.key().getBytes(StandardCharsets.UTF_8);
 	SecretKey key = Keys.hmacShaKeyFor(keyBytes);
 
-	@Override
-	public AccessToken generateAccessToken(User user) {
-		long expirationMillis = jwtProperties.accessTokenExpiration();
+	private String generateToken(User user, long expirationMillis) {
 		Instant now = Instant.now();
 		Instant expiresAt = now.plus(expirationMillis, ChronoUnit.MILLIS);
 
-		String tokenValue = Jwts.builder()
+		return Jwts.builder()
 			.subject(user.getEmail())
 			.claim("id", user.getId())
 			.issuedAt(Date.from(now))
 			.expiration(Date.from(expiresAt))
 			.signWith(key)
 			.compact();
+	}
+
+	@Override
+	public AccessToken generateAccessToken(User user) {
+		long expirationMillis = jwtProperties.accessTokenExpiration();
+		String tokenValue = generateToken(user, expirationMillis);
 
 		return new AccessToken(user.getEmail(), tokenValue, expirationMillis);
 	}
@@ -47,16 +51,7 @@ public class JwtProvider implements TokenProvider {
 	@Override
 	public RefreshToken generateRefreshToken(User user) {
 		long expirationMillis = jwtProperties.refreshTokenExpiration();
-		Instant now = Instant.now();
-		Instant expiresAt = now.plus(expirationMillis, ChronoUnit.MILLIS);
-
-		String tokenValue = Jwts.builder()
-			.subject(user.getEmail())
-			.claim("id", user.getId())
-			.issuedAt(Date.from(now))
-			.expiration(Date.from(expiresAt))
-			.signWith(key)
-			.compact();
+		String tokenValue = generateToken(user, expirationMillis);
 
 		return new RefreshToken(user.getEmail(), tokenValue, expirationMillis);
 	}
