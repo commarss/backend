@@ -50,7 +50,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 					.authorities("ROLE_USER")
 					.build();
 
-				JwtAuthenticationToken authentication = new JwtAuthenticationToken(userDetails, null,
+				JwtAuthenticationToken authentication = new JwtAuthenticationToken(userDetails,
 					userDetails.getAuthorities());
 				authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 				SecurityContextHolder.getContext().setAuthentication(authentication);

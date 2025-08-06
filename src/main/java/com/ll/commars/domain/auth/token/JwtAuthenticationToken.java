@@ -12,7 +12,7 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
 	private final String credentials;
 
 	// 인증 전
-	private JwtAuthenticationToken(String accessToken) {
+	public JwtAuthenticationToken(String accessToken) {
 		super(null);
 		this.principal = accessToken;
 		this.credentials = accessToken;
@@ -20,7 +20,7 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
 	}
 
 	// 인증 후
-	private JwtAuthenticationToken(UserDetails principal, Collection<? extends GrantedAuthority> authorities) {
+	public JwtAuthenticationToken(UserDetails principal, Collection<? extends GrantedAuthority> authorities) {
 		super(authorities);
 		this.principal = principal;
 		this.credentials = null;
