@@ -1,6 +1,5 @@
 package com.ll.commars.domain.auth.token;
 
-import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
@@ -10,39 +9,44 @@ import org.springframework.stereotype.Component;
 
 import com.ll.commars.domain.auth.token.entity.AccessToken;
 import com.ll.commars.domain.auth.token.entity.JwtClaims;
+import com.ll.commars.domain.auth.token.entity.JwtTokenValue;
 import com.ll.commars.domain.auth.token.entity.RefreshToken;
 import com.ll.commars.domain.user.entity.User;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import lombok.RequiredArgsConstructor;
 
 @Component
-@RequiredArgsConstructor
 public class JwtProvider implements TokenProvider {
 
 	private final JwtProperties jwtProperties;
+	private final SecretKey secretKey;
+	private final JwtParser jwtParser;
 
-	byte[] keyBytes = jwtProperties.key().getBytes(StandardCharsets.UTF_8);
-	SecretKey key = Keys.hmacShaKeyFor(keyBytes);
+	public JwtProvider(JwtProperties jwtProperties) {
+		this.jwtProperties = jwtProperties;
+		this.secretKey = Keys.hmacShaKeyFor(jwtProperties.key().getBytes());
+		this.jwtParser = Jwts.parser().verifyWith(this.secretKey).build();
+	}
 
-	private String generateToken(User user, long expirationMillis) {
+	private JwtTokenValue generateToken(User user, long expirationMillis) {
 		Instant now = Instant.now();
 		Instant expiresAt = now.plus(expirationMillis, ChronoUnit.MILLIS);
 
 		JwtClaims jwtClaims = JwtClaims.from(user, now, expiresAt);
 
-		return Jwts.builder()
+		return JwtTokenValue.of(Jwts.builder()
 			.claims(jwtClaims.toClaimsMap())
-			.signWith(key)
-			.compact();
+			.signWith(secretKey)
+			.compact());
 	}
 
 	@Override
 	public AccessToken generateAccessToken(User user) {
 		long expirationMillis = jwtProperties.accessTokenExpiration();
-		String tokenValue = generateToken(user, expirationMillis);
+		JwtTokenValue tokenValue = generateToken(user, expirationMillis);
 
 		return new AccessToken(user.getEmail(), tokenValue, expirationMillis);
 	}
@@ -50,26 +54,16 @@ public class JwtProvider implements TokenProvider {
 	@Override
 	public RefreshToken generateRefreshToken(User user) {
 		long expirationMillis = jwtProperties.refreshTokenExpiration();
-		String tokenValue = generateToken(user, expirationMillis);
+		JwtTokenValue tokenValue = generateToken(user, expirationMillis);
 
 		return new RefreshToken(user.getEmail(), tokenValue, expirationMillis);
 	}
 
-	public boolean validateToken(String token) {
-		try {
-			getClaims(token);
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
-	}
-
-	public JwtClaims getClaims(String token) {
-		Claims claims = Jwts.parser()
-			.verifyWith(key)
-			.build().
-			parseSignedClaims(token).
-			getPayload();
+	@Override
+	public JwtClaims parseClaim(JwtTokenValue tokenValue) {
+		Claims claims = jwtParser
+			.parseSignedClaims(tokenValue.value())
+			.getPayload();
 
 		return JwtClaims.from(claims);
 	}

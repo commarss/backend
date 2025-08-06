@@ -4,5 +4,5 @@ public sealed interface Token permits AccessToken, RefreshToken {
 
 	long expiration();
 	String subject();
-	String token();
+	JwtTokenValue token();
 }

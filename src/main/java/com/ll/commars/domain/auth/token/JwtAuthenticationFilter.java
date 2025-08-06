@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.ll.commars.domain.auth.token.entity.JwtClaims;
+import com.ll.commars.domain.auth.token.entity.JwtTokenValue;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -39,8 +40,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		String tokenValue = authHeader.substring("Bearer ".length());
 
 			if (SecurityContextHolder.getContext().getAuthentication() == null) {
-
-				JwtClaims jwtClaims = jwtProvider.getClaims(tokenValue);
+				JwtTokenValue jwtTokenValue = JwtTokenValue.of(tokenValue);
+				JwtClaims jwtClaims = jwtProvider.parseClaim(jwtTokenValue);
 
 				String email = jwtClaims.publicClaims().subject();
 				Long userId = jwtClaims.privateClaims().userId();
