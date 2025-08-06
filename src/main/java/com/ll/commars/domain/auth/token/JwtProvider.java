@@ -3,13 +3,13 @@ package com.ll.commars.domain.auth.token;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
 
 import javax.crypto.SecretKey;
 
 import org.springframework.stereotype.Component;
 
 import com.ll.commars.domain.auth.token.entity.AccessToken;
+import com.ll.commars.domain.auth.token.entity.JwtClaims;
 import com.ll.commars.domain.auth.token.entity.RefreshToken;
 import com.ll.commars.domain.user.entity.User;
 
@@ -31,11 +31,10 @@ public class JwtProvider implements TokenProvider {
 		Instant now = Instant.now();
 		Instant expiresAt = now.plus(expirationMillis, ChronoUnit.MILLIS);
 
+		JwtClaims jwtClaims = JwtClaims.from(user, now, expiresAt);
+
 		return Jwts.builder()
-			.subject(user.getEmail())
-			.claim("id", user.getId())
-			.issuedAt(Date.from(now))
-			.expiration(Date.from(expiresAt))
+			.claims(jwtClaims.toClaimsMap())
 			.signWith(key)
 			.compact();
 	}
@@ -65,11 +64,13 @@ public class JwtProvider implements TokenProvider {
 		}
 	}
 
-	public Claims getClaims(String token) {
-		return Jwts.parser()
+	public JwtClaims getClaims(String token) {
+		Claims claims = Jwts.parser()
 			.verifyWith(key)
 			.build().
 			parseSignedClaims(token).
 			getPayload();
+
+		return JwtClaims.from(claims);
 	}
 }
