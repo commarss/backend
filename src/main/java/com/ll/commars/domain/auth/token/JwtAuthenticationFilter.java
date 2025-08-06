@@ -1,7 +1,6 @@
 package com.ll.commars.domain.auth.token;
 
 import java.io.IOException;
-import java.util.Optional;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -10,9 +9,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.ll.commars.domain.user.entity.User;
-import com.ll.commars.domain.user.service.UserService;
-
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,10 +21,11 @@ import lombok.RequiredArgsConstructor;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	private final JwtProvider jwtProvider;
-	private final UserService userService;
 
 	@Override
-	public void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+	public void doFilterInternal(
+		HttpServletRequest request,
+		HttpServletResponse response,
 		FilterChain filterChain) throws ServletException, IOException {
 
 		String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
@@ -37,32 +35,26 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			return;
 		}
 
-		String accessToken = authHeader.substring("Bearer ".length());
+		String tokenValue = authHeader.substring("Bearer ".length());
 
-		try {
-			if (jwtProvider.validateToken(accessToken)) {
-				if (SecurityContextHolder.getContext().getAuthentication() == null) {
-					JwtToken jwtToken = jwtProvider.getJwtToken(accessToken);
-					Optional<User> userOptional = userService.findByIdAndEmail(jwtToken.getId(), jwtToken.getEmail());
+			if (SecurityContextHolder.getContext().getAuthentication() == null) {
 
-					if (userOptional.isPresent()) {
-						User user = userOptional.get();
-						UserDetails userDetails = org.springframework.security.core.userdetails.User.builder()
-							.username(String.valueOf(user.getId()))
-							.password("")
-							.authorities("USER")
-							.build();
+				Claims claims = jwtProvider.getClaims(tokenValue);
 
-						JwtAuthenticationToken jwtAuthenticationToken = new JwtAuthenticationToken(userDetails, null,
-							userDetails.getAuthorities());
-						jwtAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-						SecurityContextHolder.getContext().setAuthentication(jwtAuthenticationToken);
-					}
-				}
+				String email = claims.getSubject();
+				Long userId = claims.get("id", Long.class);
+
+				UserDetails userDetails = org.springframework.security.core.userdetails.User.builder()
+					.username(String.valueOf(userId))
+					.password("")
+					.authorities("ROLE_USER")
+					.build();
+
+				JwtAuthenticationToken authentication = new JwtAuthenticationToken(userDetails, null,
+					userDetails.getAuthorities());
+				authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+				SecurityContextHolder.getContext().setAuthentication(authentication);
 			}
-		} catch (Exception e) {
-			logger.warn("JWT token validation failed: " + e.getMessage());
-		}
 
 		filterChain.doFilter(request, response);
 	}
