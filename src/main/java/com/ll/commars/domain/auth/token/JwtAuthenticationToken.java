@@ -8,22 +8,32 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public class JwtAuthenticationToken extends AbstractAuthenticationToken {
 
-	private final UserDetails principal;
+	private final Object principal;
+	private final String credentials;
 
-	public JwtAuthenticationToken(UserDetails principal, Object credentials,
-		Collection<? extends GrantedAuthority> authorities) {
+	// 인증 전
+	private JwtAuthenticationToken(String accessToken) {
+		super(null);
+		this.principal = accessToken;
+		this.credentials = accessToken;
+		setAuthenticated(false);
+	}
+
+	// 인증 후
+	private JwtAuthenticationToken(UserDetails principal, Collection<? extends GrantedAuthority> authorities) {
 		super(authorities);
 		this.principal = principal;
-		this.setAuthenticated(true);
+		this.credentials = null;
+		setAuthenticated(true);
 	}
 
 	@Override
 	public Object getCredentials() {
-		return null;
+		return this.credentials;
 	}
 
 	@Override
-	public UserDetails getPrincipal() {
-		return principal;
+	public Object getPrincipal() {
+		return this.principal;
 	}
 }
