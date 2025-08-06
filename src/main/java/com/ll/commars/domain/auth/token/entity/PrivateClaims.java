@@ -5,4 +5,5 @@ import java.util.List;
 public record PrivateClaims(
 	Long userId,
 	List<String> roles
-) {}
+) {
+}

@@ -9,6 +9,8 @@ import com.ll.commars.domain.user.entity.User;
 public interface TokenProvider {
 
 	AccessToken generateAccessToken(User user);
+
 	RefreshToken generateRefreshToken(User user);
+
 	JwtClaims parseClaim(JwtTokenValue tokenValue);
 }

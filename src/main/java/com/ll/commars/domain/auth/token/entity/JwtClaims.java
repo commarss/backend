@@ -23,7 +23,7 @@ public record JwtClaims(
 		);
 		PrivateClaims privateClaims = new PrivateClaims(
 			claims.get("userId", Long.class),
-			(List<String>) claims.get("roles")
+			(List<String>)claims.get("roles")
 		);
 		return new JwtClaims(publicClaims, privateClaims);
 	}
@@ -37,7 +37,7 @@ public record JwtClaims(
 		);
 		PrivateClaims privateClaims = new PrivateClaims(
 			user.getId(),
-			List.of("ROLE_USER")
+			List.of("ROLE_USER") // todo: 매직 상수 별도 관리
 		);
 		return new JwtClaims(publicClaims, privateClaims);
 	}

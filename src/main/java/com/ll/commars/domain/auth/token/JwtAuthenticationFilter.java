@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -22,7 +23,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-	private final JwtProvider jwtProvider;
+	private final TokenProvider tokenProvider;
+	private final UserDetailsService userDetailsService;
 
 	@Override
 	public void doFilterInternal(
@@ -39,24 +41,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 		String tokenValue = authHeader.substring("Bearer ".length());
 
-			if (SecurityContextHolder.getContext().getAuthentication() == null) {
-				JwtTokenValue jwtTokenValue = JwtTokenValue.of(tokenValue);
-				JwtClaims jwtClaims = jwtProvider.parseClaim(jwtTokenValue);
+		if (SecurityContextHolder.getContext().getAuthentication() == null) {
+			JwtTokenValue jwtTokenValue = JwtTokenValue.of(tokenValue);
+			JwtClaims jwtClaims = tokenProvider.parseClaim(jwtTokenValue);
 
-				String email = jwtClaims.publicClaims().subject();
-				Long userId = jwtClaims.privateClaims().userId();
+			UserDetails userDetails = userDetailsService.loadUserByUsername(
+				String.valueOf(jwtClaims.privateClaims().userId())
+			);
 
-				UserDetails userDetails = org.springframework.security.core.userdetails.User.builder()
-					.username(String.valueOf(userId))
-					.password("")
-					.authorities("ROLE_USER")
-					.build();
+			JwtAuthenticationToken authentication = JwtAuthenticationToken.authenticated(
+				userDetails,
+				userDetails.getAuthorities()
+			);
 
-				JwtAuthenticationToken authentication = new JwtAuthenticationToken(userDetails,
-					userDetails.getAuthorities());
-				authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-				SecurityContextHolder.getContext().setAuthentication(authentication);
-			}
+			authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+		}
 
 		filterChain.doFilter(request, response);
 	}

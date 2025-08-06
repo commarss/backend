@@ -7,4 +7,5 @@ public record PublicClaims(
 	String subject,
 	Instant issuedAt,
 	Instant expiresAt
-) {}
+) {
+}

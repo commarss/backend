@@ -12,7 +12,7 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
 	private final String credentials;
 
 	// 인증 전
-	public JwtAuthenticationToken(String accessToken) {
+	private JwtAuthenticationToken(String accessToken) {
 		super(null);
 		this.principal = accessToken;
 		this.credentials = accessToken;
@@ -20,11 +20,22 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
 	}
 
 	// 인증 후
-	public JwtAuthenticationToken(UserDetails principal, Collection<? extends GrantedAuthority> authorities) {
+	private JwtAuthenticationToken(UserDetails principal, Collection<? extends GrantedAuthority> authorities) {
 		super(authorities);
 		this.principal = principal;
 		this.credentials = null;
 		setAuthenticated(true);
+	}
+
+	// 인증 전 토큰 생성
+	public static JwtAuthenticationToken unauthenticated(String accessToken) {
+		return new JwtAuthenticationToken(accessToken);
+	}
+
+	// 인증 후 토큰 생성
+	public static JwtAuthenticationToken authenticated(UserDetails principal,
+		Collection<? extends GrantedAuthority> authorities) {
+		return new JwtAuthenticationToken(principal, authorities);
 	}
 
 	@Override

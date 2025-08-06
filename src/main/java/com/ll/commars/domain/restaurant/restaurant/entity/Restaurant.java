@@ -3,11 +3,11 @@ package com.ll.commars.domain.restaurant.restaurant.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ll.commars.domain.favorite.favoriteRestaurant.entity.FavoriteRestaurant;
 import com.ll.commars.domain.restaurant.businessHour.entity.BusinessHour;
 import com.ll.commars.domain.restaurant.category.entity.RestaurantCategory;
 import com.ll.commars.domain.restaurant.menu.entity.RestaurantMenu;
 import com.ll.commars.domain.review.review.entity.Review;
-import com.ll.commars.domain.favorite.favoriteRestaurant.entity.FavoriteRestaurant;
 import com.ll.commars.global.BaseEntity;
 
 import jakarta.persistence.CascadeType;

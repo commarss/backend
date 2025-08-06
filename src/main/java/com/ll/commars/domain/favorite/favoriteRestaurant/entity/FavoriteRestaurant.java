@@ -1,7 +1,7 @@
 package com.ll.commars.domain.favorite.favoriteRestaurant.entity;
 
-import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
 import com.ll.commars.domain.favorite.favorite.entity.Favorite;
+import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

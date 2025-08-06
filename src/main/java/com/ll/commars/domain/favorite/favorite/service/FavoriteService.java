@@ -10,12 +10,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ll.commars.domain.favorite.favorite.dto.FavoriteDto;
 import com.ll.commars.domain.favorite.favorite.entity.Favorite;
+import com.ll.commars.domain.favorite.favorite.repository.FavoriteRepository;
 import com.ll.commars.domain.favorite.favoriteRestaurant.entity.FavoriteRestaurant;
 import com.ll.commars.domain.favorite.favoriteRestaurant.repository.FavoriteRestaurantRepository;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantDto;
 import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
 import com.ll.commars.domain.restaurant.restaurant.repository.RestaurantRepository;
-import com.ll.commars.domain.favorite.favorite.repository.FavoriteRepository;
 import com.ll.commars.domain.user.entity.User;
 
 import lombok.RequiredArgsConstructor;
