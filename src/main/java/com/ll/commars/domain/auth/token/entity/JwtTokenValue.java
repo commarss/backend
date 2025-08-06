@@ -1,12 +1,16 @@
 package com.ll.commars.domain.auth.token.entity;
 
+import static com.ll.commars.global.exception.ErrorCode.*;
+
 import org.springframework.util.StringUtils;
+
+import com.ll.commars.global.exception.CustomException;
 
 public record JwtTokenValue(String value) {
 
 	public JwtTokenValue {
 		if (!StringUtils.hasText(value)) {
-			throw new IllegalArgumentException("Token value cannot be empty.");
+			throw new CustomException(INVALID_TOKEN);
 		}
 	}
 
