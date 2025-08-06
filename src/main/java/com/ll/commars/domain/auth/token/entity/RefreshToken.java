@@ -5,8 +5,4 @@ public record RefreshToken(
 		JwtTokenValue token,
 		long expiration
 ) implements Token{
-
-	public RefreshToken(String subject, JwtTokenValue token) {
-		this(subject, token, 0L);
-	}
 }

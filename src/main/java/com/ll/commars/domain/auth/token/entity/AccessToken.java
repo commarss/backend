@@ -5,8 +5,4 @@ public record AccessToken(
 		JwtTokenValue token,
 		long expiration
 ) implements Token {
-
-	public AccessToken(String subject, JwtTokenValue token) {
-		this(subject, token, 0L);
-	}
 }
