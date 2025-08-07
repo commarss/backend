@@ -1,4 +1,4 @@
-package com.ll.commars.domain.auth.auth.controller;
+package com.ll.commars.domain.auth.controller;
 
 import java.util.Map;
 import java.util.Optional;

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ll.commars.domain.auth.auth.service.AuthService;
+import com.ll.commars.domain.auth.service.AuthService;
 import com.ll.commars.domain.auth.naver.service.NaverService;
 import com.ll.commars.domain.user.entity.User;
 
