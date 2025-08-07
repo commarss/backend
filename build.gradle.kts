@@ -25,47 +25,51 @@ repositories {
 
 dependencies {
 
-    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
-    implementation("org.springframework.boot:spring-boot-starter-security")
-    implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")
-    testImplementation("org.springframework.security:spring-security-test")
-    compileOnly("org.projectlombok:lombok")
-    annotationProcessor("org.projectlombok:lombok")
-
-
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    // Spring Boot
     implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
-    implementation("com.google.api-client:google-api-client:1.33.0")
-    implementation("com.google.http-client:google-http-client-gson:1.33.0")
-    implementation("com.google.oauth-client:google-oauth-client:1.33.3")
-    implementation("org.springframework.boot:spring-boot-starter-websocket")
-    compileOnly("org.projectlombok:lombok")
-    developmentOnly("org.springframework.boot:spring-boot-devtools")
-    runtimeOnly("com.mysql:mysql-connector-j")
-    annotationProcessor("org.projectlombok:lombok")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.springframework.security:spring-security-test")
-    runtimeOnly("com.h2database:h2")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    implementation("com.github.f4b6a3:tsid-creator:5.2.6")
     implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.springframework.boot:spring-boot-starter-websocket")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
 
-    // Elasticsearch
-    implementation("org.springframework.boot:spring-boot-starter-data-elasticsearch")
-    implementation("co.elastic.clients:elasticsearch-java:8.17.2")
+    // Spring Security
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+    implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")
 
     // JWT
     implementation("io.jsonwebtoken:jjwt-api:0.12.6")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.6")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.6")
 
-    // Deploy
-    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    // Databases
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
+    runtimeOnly("com.mysql:mysql-connector-j")
+    runtimeOnly("com.h2database:h2")
+
+    // Elasticsearch
+    implementation("org.springframework.boot:spring-boot-starter-data-elasticsearch")
+    implementation("co.elastic.clients:elasticsearch-java:8.17.2")
 
     // S3
     implementation(platform("software.amazon.awssdk:bom:2.24.0"))
     implementation("software.amazon.awssdk:s3")
+
+    // Google
+    implementation("com.google.api-client:google-api-client:1.33.0")
+    implementation("com.google.http-client:google-http-client-gson:1.33.0")
+    implementation("com.google.oauth-client:google-oauth-client:1.33.3")
+
+    // Util
+    compileOnly("org.projectlombok:lombok")
+    annotationProcessor("org.projectlombok:lombok")
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
+    implementation("com.github.f4b6a3:tsid-creator:5.2.6")
+
+    // Test
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.security:spring-security-test")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 tasks.withType<Test> {
