@@ -1,4 +1,4 @@
-INSERT INTO users (social_provider, email, name, phone_number, profile_image_url, birth_date, gender)
+INSERT INTO member (social_provider, email, name, phone_number, profile_image_url, birth_date, gender)
 VALUES (3, 'hong@example.com', '홍길동', '010-1234-5678', 'https://example.com/profiles/hong.jpg',
         '1995-05-10 00:00:00', 1),
        (1, 'lee@example.com', '이순신', '010-8765-4321', 'https://example.com/profiles/lee.png', '1988-11-20 00:00:00',
