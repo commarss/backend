@@ -6,8 +6,13 @@ import java.time.Duration;
 import java.time.Instant;
 
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import com.ll.commars.domain.auth.dto.SignInRequest;
+import com.ll.commars.domain.auth.dto.SignInResponse;
 import com.ll.commars.domain.auth.dto.TokenReissueResponse;
 import com.ll.commars.domain.auth.token.TokenProvider;
 import com.ll.commars.domain.auth.token.entity.AccessToken;
@@ -26,6 +31,7 @@ public class AuthService {
 
 	private final TokenProvider tokenProvider;
 	private final MemberRepository memberRepository;
+	private final AuthenticationManager authenticationManager;
 	private final RedisTemplate<String, String> redisTemplate;
 
 	public void signOut(JwtTokenValue accessTokenValue) {
@@ -69,6 +75,27 @@ public class AuthService {
 			newAccessToken.token().value(),
 			newRefreshToken.token().value()
 		);
+	}
+
+	public SignInResponse signIn(SignInRequest request) {
+		Authentication authentication = authenticationManager.authenticate(
+			new UsernamePasswordAuthenticationToken(request.email(), request.password())
+		);
+
+		String email = authentication.getName();
+		Member member = memberRepository.findByEmail(email)
+			.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
+
+		AccessToken accessToken = tokenProvider.generateAccessToken(member);
+		RefreshToken refreshToken = tokenProvider.generateRefreshToken(member);
+
+		redisTemplate.opsForValue().set(
+			"refreshToken" + member.getId(),
+			refreshToken.token().value(),
+			Duration.ofMillis(refreshToken.expiration())
+		);
+
+		return new SignInResponse(accessToken.token().value(), refreshToken.token().value());
 	}
 
 	// public ResponseEntity<?> login(User user) {

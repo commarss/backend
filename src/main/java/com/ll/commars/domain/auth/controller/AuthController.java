@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ll.commars.domain.auth.dto.SignInRequest;
+import com.ll.commars.domain.auth.dto.SignInResponse;
 import com.ll.commars.domain.auth.dto.SignUpRequest;
 import com.ll.commars.domain.auth.dto.SignUpResponse;
 import com.ll.commars.domain.auth.dto.TokenReissueResponse;
@@ -37,6 +39,20 @@ public class AuthController {
 		SignUpResponse response = signUpService.signUp(request);
 
 		return ResponseEntity.ok(response);
+	}
+
+	@PostMapping("/sign-in")
+	public ResponseEntity<SignInResponse> signIn(
+		@Valid @RequestBody SignInRequest request
+	) {
+		SignInResponse response = authService.signIn(request);
+
+		ResponseCookie refreshTokenCookie = tokenCookieManager
+			.createRefreshTokenCookie(response.refreshToken());
+
+		return ResponseEntity.ok()
+			.header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
+			.body(response);
 	}
 
 	@PostMapping("sign-out")
