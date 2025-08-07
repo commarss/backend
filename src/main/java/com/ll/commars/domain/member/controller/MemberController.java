@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,10 +20,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ll.commars.domain.favorite.favorite.dto.FavoriteDto;
-import com.ll.commars.domain.member.entity.Member;
-import com.ll.commars.domain.review.review.dto.ReviewDto;
 import com.ll.commars.domain.member.dto.MemberDto;
+import com.ll.commars.domain.member.entity.Member;
 import com.ll.commars.domain.member.service.MemberService;
+import com.ll.commars.domain.review.review.dto.ReviewDto;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -38,48 +36,10 @@ public class MemberController {
 
 	// todo: 사용자의 게시글의 개수 세는 엔드포인트 구현
 
-	private static final Logger logger = LoggerFactory.getLogger(MemberController.class);
 	private final MemberService memberService;
 
 	@Value("${custom.ipInfo.token}")
 	private String token;
-
-	@PostMapping("/signup")
-	public ResponseEntity<String> signup(@RequestBody Member request) {
-		if (memberService.isEmailTaken(request.getEmail())) {
-			return ResponseEntity.badRequest().body("이미 사용 중인 이메일입니다.");
-		}
-
-		Member newMember = new Member();
-
-		memberService.saveUser(newMember);
-		return ResponseEntity.ok("회원가입이 완료되었습니다.");
-	}
-
-	@PostMapping("/login")
-	public ResponseEntity<?> login(@RequestBody Member member, HttpSession session) {
-		logger.info("Login attempt for email: {}", member.getEmail());
-		Member authenticatedMember = memberService.authenticate(member.getEmail());
-
-		if (authenticatedMember != null) {
-			logger.info("Login successful for email: {}", member.getEmail());
-
-			// 로그인 정보를 DB에 저장하지 않고, 로그만 기록
-			logger.info("User {} logged in at {}", authenticatedMember.getEmail(), java.time.LocalDateTime.now());
-
-			// 세션에 사용자 정보 저장
-			session.setAttribute("user", authenticatedMember);
-			// 확인용 로그 추가
-			logger.info("User stored in session: {}", authenticatedMember.getEmail());
-			logger.info("Session user set: {}", session.getAttribute("user"));  // 추가 확인 로그
-			System.out.println("세션정보: " + session.getAttribute("user"));
-
-			return ResponseEntity.ok(authenticatedMember);
-		}
-
-		logger.warn("Login failed for email: {}", member.getEmail());
-		return ResponseEntity.status(401).body("이메일 또는 비밀번호가 일치하지 않습니다.");
-	}
 
 	@GetMapping("/current-user")
 	public ResponseEntity<?> getCurrentUser(HttpSession session) {
@@ -91,12 +51,6 @@ public class MemberController {
 			return ResponseEntity.ok(response);
 		}
 		return ResponseEntity.status(401).body("로그인된 사용자가 없습니다.");
-	}
-
-	@PostMapping("/logout")
-	public ResponseEntity<String> logout(HttpSession session) {
-		session.invalidate();
-		return ResponseEntity.ok("로그아웃되었습니다.");
 	}
 
 	// 내 위치 기반 식당 찾기
