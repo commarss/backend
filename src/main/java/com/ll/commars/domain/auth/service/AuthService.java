@@ -1,14 +1,22 @@
 package com.ll.commars.domain.auth.service;
 
+import static com.ll.commars.global.exception.ErrorCode.*;
+
 import java.time.Duration;
 import java.time.Instant;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import com.ll.commars.domain.auth.dto.TokenReissueResponse;
 import com.ll.commars.domain.auth.token.TokenProvider;
+import com.ll.commars.domain.auth.token.entity.AccessToken;
 import com.ll.commars.domain.auth.token.entity.JwtClaims;
 import com.ll.commars.domain.auth.token.entity.JwtTokenValue;
+import com.ll.commars.domain.auth.token.entity.RefreshToken;
+import com.ll.commars.domain.member.entity.Member;
+import com.ll.commars.domain.member.repository.MemberRepository;
+import com.ll.commars.global.exception.CustomException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class AuthService {
 
 	private final TokenProvider tokenProvider;
+	private final MemberRepository memberRepository;
 	private final RedisTemplate<String, String> redisTemplate;
 
 	public void signOut(JwtTokenValue accessTokenValue) {
@@ -33,6 +42,33 @@ public class AuthService {
 				Duration.ofMillis(remainingMillis)
 			);
 		}
+	}
+
+	public TokenReissueResponse reissueToken(String refreshToken) {
+		JwtClaims claims = tokenProvider.parseClaim(JwtTokenValue.of(refreshToken));
+		Long userId = claims.privateClaims().userId();
+
+		String savedRefreshToken = redisTemplate.opsForValue().get("refreshToken" + userId);
+		if (savedRefreshToken == null || !savedRefreshToken.equals(refreshToken)) {
+			throw new CustomException(INVALID_TOKEN);
+		}
+
+		Member member = memberRepository.findById(userId)
+			.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
+
+		AccessToken newAccessToken = tokenProvider.generateAccessToken(member);
+		RefreshToken newRefreshToken = tokenProvider.generateRefreshToken(member);
+
+		redisTemplate.opsForValue().set(
+			"refreshToken" + userId,
+			newRefreshToken.token().value(),
+			Duration.ofMillis(newRefreshToken.expiration())
+		);
+
+		return new TokenReissueResponse(
+			newAccessToken.token().value(),
+			newRefreshToken.token().value()
+		);
 	}
 
 	// public ResponseEntity<?> login(User user) {

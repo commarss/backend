@@ -3,6 +3,7 @@ package com.ll.commars.domain.auth.controller;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ll.commars.domain.auth.dto.SignUpRequest;
 import com.ll.commars.domain.auth.dto.SignUpResponse;
+import com.ll.commars.domain.auth.dto.TokenReissueResponse;
 import com.ll.commars.domain.auth.service.AuthService;
 import com.ll.commars.domain.auth.service.SignUpService;
 import com.ll.commars.domain.auth.token.component.TokenCookieManager;
@@ -30,9 +32,9 @@ public class AuthController {
 
 	@PostMapping("/sign-up")
 	public ResponseEntity<SignUpResponse> signUp(
-		@Valid @RequestBody SignUpRequest signUpRequest
+		@Valid @RequestBody SignUpRequest request
 	) {
-		SignUpResponse response = signUpService.signUp(signUpRequest);
+		SignUpResponse response = signUpService.signUp(request);
 
 		return ResponseEntity.ok(response);
 	}
@@ -51,6 +53,20 @@ public class AuthController {
 		return ResponseEntity.ok()
 			.header(HttpHeaders.SET_COOKIE, expiredCookie.toString())
 			.build();
+	}
+
+	@PostMapping("/reissue")
+	public ResponseEntity<TokenReissueResponse> reissueToken(
+		@CookieValue(TokenCookieManager.REFRESH_TOKEN_COOKIE_NAME) String refreshTokenValue
+	) {
+		TokenReissueResponse response = authService.reissueToken(refreshTokenValue);
+
+		ResponseCookie newRefreshTokenCookie = tokenCookieManager
+			.createRefreshTokenCookie(response.refreshToken());
+
+		return ResponseEntity.ok()
+			.header(HttpHeaders.SET_COOKIE, newRefreshTokenCookie.toString())
+			.body(response);
 	}
 
 	// @PostMapping("/login/google")
@@ -146,44 +162,4 @@ public class AuthController {
 	// }
 	//
 	//
-	// @GetMapping("/refresh")
-	// public ResponseEntity<?> refresh(@AuthenticationPrincipal UserDetails userDetails, HttpServletRequest request) {
-	//
-	// 	String requestToken = extractRefreshTokenFromCookies(request);
-	//
-	// 	if (requestToken == null) {
-	// 		return ResponseEntity.badRequest().body("Refresh Token이 존재하지 않습니다.");
-	// 	}
-	//
-	// 	Optional<User> user = userService.findById(Long.parseLong(userDetails.getUsername()));
-	//
-	// 	if (user.isEmpty()) {
-	// 		return ResponseEntity.badRequest().body("사용자 정보가 존재하지 않습니다.");
-	// 	}
-	//
-	// 	String refreshToken = jwtProvider.generateRefreshToken(user.get());
-	//
-	// 	ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", refreshToken)
-	// 		.httpOnly(true)
-	// 		.secure(true)
-	// 		.path("/")
-	// 		.maxAge(jwtProvider.REFRESH_TOKEN_VALIDITY)
-	// 		.sameSite("Strict")
-	// 		.build();
-	//
-	// 	return ResponseEntity.ok()
-	// 		.header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
-	// 		.body(Map.of("server", "refresh ok"));
-	// }
-	//
-	// private String extractRefreshTokenFromCookies(HttpServletRequest request) {
-	// 	if (request.getCookies() != null) {
-	// 		for (Cookie cookie : request.getCookies()) {
-	// 			if (cookie.getName().equals("refreshToken")) {
-	// 				return cookie.getValue();
-	// 			}
-	// 		}
-	// 	}
-	// 	return null;
-	// }
 }
