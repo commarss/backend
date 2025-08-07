@@ -22,7 +22,7 @@ public class TokenCookieManager {
 			.httpOnly(true)
 			.secure(true)
 			.sameSite("Strict")
-			.path("/api/auth/reissue") // todo: 관련 엔드포인트 작성 예정
+			.path("/")
 			.maxAge(Duration.ofMillis(jwtProperties.refreshTokenExpiration()).getSeconds())
 			.build();
 	}
