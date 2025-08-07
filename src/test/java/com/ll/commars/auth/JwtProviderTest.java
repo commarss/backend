@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -49,12 +50,15 @@ class JwtProviderTest {
         .objectIntrospector(FieldReflectionArbitraryIntrospector.INSTANCE)
         .build();
 
+    private static final String MOCK_SECRET_KEY = "secretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecret";
+    private static final long MOCK_ACCESS_TOKEN_EXPIRATION_MS = Duration.ofHours(1).toMillis(); // 3600000L
+    private static final long MOCK_REFRESH_TOKEN_EXPIRATION_MS = Duration.ofDays(7).toMillis(); // 604800000L
+
     private Member member;
-    private final String SECRET_KEY = "secretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecret";
 
     @BeforeEach
     void setUp() {
-        when(jwtProperties.key()).thenReturn(SECRET_KEY);
+        when(jwtProperties.key()).thenReturn(MOCK_SECRET_KEY);
         jwtProvider = new JwtProvider(jwtProperties);
 
         member = fixtureMonkey.giveMeBuilder(Member.class)
@@ -68,7 +72,7 @@ class JwtProviderTest {
         @Test
         void AccessToken을_성공적으로_생성하고_파싱한다() {
             // given
-            when(jwtProperties.accessTokenExpiration()).thenReturn(3600000L);
+            when(jwtProperties.accessTokenExpiration()).thenReturn(MOCK_ACCESS_TOKEN_EXPIRATION_MS);
 
             // when
             AccessToken accessToken = jwtProvider.generateAccessToken(member);
@@ -87,7 +91,7 @@ class JwtProviderTest {
         @Test
         void RefreshToken을_성공적으로_생성하고_파싱한다() {
             // given
-            when(jwtProperties.refreshTokenExpiration()).thenReturn(604800000L);
+            when(jwtProperties.refreshTokenExpiration()).thenReturn(MOCK_REFRESH_TOKEN_EXPIRATION_MS);
 
             // when
             RefreshToken refreshToken = jwtProvider.generateRefreshToken(member);
@@ -108,7 +112,7 @@ class JwtProviderTest {
         void 만료된_토큰을_파싱하면_ExpiredJwtException이_발생한다() {
             // given
             long expiredMillis = -1000L;
-            JwtTokenValue expiredToken = generateTestToken(member, expiredMillis, Keys.hmacShaKeyFor(SECRET_KEY.getBytes()));
+            JwtTokenValue expiredToken = generateTestToken(member, expiredMillis, Keys.hmacShaKeyFor(MOCK_SECRET_KEY.getBytes()));
 
             // when & then
             assertThatThrownBy(() -> jwtProvider.parseClaim(expiredToken))

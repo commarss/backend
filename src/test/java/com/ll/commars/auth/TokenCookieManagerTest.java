@@ -36,6 +36,8 @@ class TokenCookieManagerTest {
 		.objectIntrospector(FieldReflectionArbitraryIntrospector.INSTANCE)
 		.build();
 
+	private static final long MOCK_REFRESH_TOKEN_EXPIRATION_MS = Duration.ofDays(7).toMillis();
+
 	@BeforeEach
 	void setUp() {
 		tokenCookieManager = new TokenCookieManager(jwtProperties);
@@ -47,9 +49,9 @@ class TokenCookieManagerTest {
 		@Test
 		void RefreshToken_쿠키를_생성한다() {
 			// given
-			long refreshTokenExpirationMillis = Duration.ofDays(7).toMillis();
-			when(jwtProperties.refreshTokenExpiration()).thenReturn(refreshTokenExpirationMillis);
+			when(jwtProperties.refreshTokenExpiration()).thenReturn(MOCK_REFRESH_TOKEN_EXPIRATION_MS);
 
+			// 토큰에 사용될 수 있는 문자열은 US-ASCII 문자로 제한된다.
 			String randomString = fixtureMonkey.giveMeOne(String.class);
 			String refreshToken = Base64.getUrlEncoder()
 				.withoutPadding()
