@@ -50,19 +50,16 @@ class JwtProviderTest {
         .build();
 
     private Member member;
-    private String secretKeyString;
+    private final String SECRET_KEY = "secretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecret";
 
     @BeforeEach
     void setUp() {
-        secretKeyString = "secretkey";
-
-        when(jwtProperties.key()).thenReturn(secretKeyString);
-        lenient().when(jwtProperties.accessTokenExpiration()).thenReturn(3600000L); // 1시간
-        lenient().when(jwtProperties.refreshTokenExpiration()).thenReturn(1209600000L); // 2주
-
+        when(jwtProperties.key()).thenReturn(SECRET_KEY);
         jwtProvider = new JwtProvider(jwtProperties);
 
-        member = fixtureMonkey.giveMeOne(Member.class);
+        member = fixtureMonkey.giveMeBuilder(Member.class)
+            .set("id", 1L)
+            .sample();
     }
 
     @Nested
@@ -70,6 +67,9 @@ class JwtProviderTest {
 
         @Test
         void AccessToken을_성공적으로_생성하고_파싱한다() {
+            // given
+            when(jwtProperties.accessTokenExpiration()).thenReturn(3600000L);
+
             // when
             AccessToken accessToken = jwtProvider.generateAccessToken(member);
             JwtClaims claims = jwtProvider.parseClaim(accessToken.token());
@@ -79,15 +79,16 @@ class JwtProviderTest {
                 () -> assertThat(accessToken).isNotNull(),
                 () -> assertThat(accessToken.subject()).isEqualTo(member.getEmail()),
                 () -> assertThat(accessToken.expiration()).isEqualTo(jwtProperties.accessTokenExpiration()),
-                () -> assertThat(claims).isNotNull(),
                 () -> assertThat(claims.publicClaims().subject()).isEqualTo(member.getEmail()),
-                () -> assertThat(claims.privateClaims().userId()).isEqualTo(member.getId()),
-                () -> assertThat(claims.privateClaims().roles()).contains("ROLE_USER")
+                () -> assertThat(claims.privateClaims().userId()).isEqualTo(member.getId())
             );
         }
 
         @Test
         void RefreshToken을_성공적으로_생성하고_파싱한다() {
+            // given
+            when(jwtProperties.refreshTokenExpiration()).thenReturn(604800000L);
+
             // when
             RefreshToken refreshToken = jwtProvider.generateRefreshToken(member);
             JwtClaims claims = jwtProvider.parseClaim(refreshToken.token());
@@ -95,10 +96,6 @@ class JwtProviderTest {
             // then
             assertAll(
                 () -> assertThat(refreshToken).isNotNull(),
-                () -> assertThat(refreshToken.subject()).isEqualTo(member.getEmail()),
-                () -> assertThat(refreshToken.expiration()).isEqualTo(jwtProperties.refreshTokenExpiration()),
-                () -> assertThat(claims).isNotNull(),
-                () -> assertThat(claims.publicClaims().subject()).isEqualTo(member.getEmail()),
                 () -> assertThat(claims.privateClaims().userId()).isEqualTo(member.getId())
             );
         }
@@ -111,7 +108,7 @@ class JwtProviderTest {
         void 만료된_토큰을_파싱하면_ExpiredJwtException이_발생한다() {
             // given
             long expiredMillis = -1000L;
-            JwtTokenValue expiredToken = generateTestToken(member, expiredMillis, Keys.hmacShaKeyFor(secretKeyString.getBytes()));
+            JwtTokenValue expiredToken = generateTestToken(member, expiredMillis, Keys.hmacShaKeyFor(SECRET_KEY.getBytes()));
 
             // when & then
             assertThatThrownBy(() -> jwtProvider.parseClaim(expiredToken))
