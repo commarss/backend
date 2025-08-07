@@ -1,6 +1,14 @@
 package com.ll.commars.domain.auth.service;
 
+import java.time.Duration;
+import java.time.Instant;
+
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+
+import com.ll.commars.domain.auth.token.TokenProvider;
+import com.ll.commars.domain.auth.token.entity.JwtClaims;
+import com.ll.commars.domain.auth.token.entity.JwtTokenValue;
 
 import lombok.RequiredArgsConstructor;
 
@@ -8,6 +16,24 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthService {
 
+	private final TokenProvider tokenProvider;
+	private final RedisTemplate<String, String> redisTemplate;
+
+	public void signOut(JwtTokenValue accessTokenValue) {
+		JwtClaims claims = tokenProvider.parseClaim(accessTokenValue);
+
+		Instant expiration = claims.publicClaims().expiresAt();
+		Instant now = Instant.now();
+		long remainingMillis = Duration.between(now, expiration).toMillis();
+
+		if (remainingMillis > 0) {
+			redisTemplate.opsForValue().set(
+				accessTokenValue.value(),
+				"logout",
+				Duration.ofMillis(remainingMillis)
+			);
+		}
+	}
 
 	// public ResponseEntity<?> login(User user) {
 	// 	AuthUser authUser = toAuthUser(user);
@@ -206,18 +232,5 @@ public class AuthService {
 	// 		.build();
 	//
 	// 	return userService.accessionCheck(naverUser);
-	// }
-	//
-	// public String logout(String accessToken) {
-	// 	String logoutUrl = "https://nid.naver.com/oauth2.0/token?grant_type=delete"
-	// 		+ "&client_id=" + clientId
-	// 		+ "&client_secret=" + clientSecret
-	// 		+ "&access_token=" + accessToken
-	// 		+ "&service_provider=NAVER";
-	//
-	// 	RestTemplate restTemplate = new RestTemplate();
-	// 	ResponseEntity<Map> response = restTemplate.exchange(logoutUrl, HttpMethod.GET, null, Map.class);
-	//
-	// 	return (String)response.getBody().get("result");
 	// }
 }

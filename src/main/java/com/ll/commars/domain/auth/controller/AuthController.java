@@ -1,14 +1,20 @@
 package com.ll.commars.domain.auth.controller;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ll.commars.domain.auth.dto.SignUpRequest;
 import com.ll.commars.domain.auth.dto.SignUpResponse;
+import com.ll.commars.domain.auth.service.AuthService;
 import com.ll.commars.domain.auth.service.SignUpService;
+import com.ll.commars.domain.auth.token.component.TokenCookieManager;
+import com.ll.commars.domain.auth.token.entity.JwtTokenValue;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +25,8 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
 
 	private final SignUpService signUpService;
+	private final AuthService authService;
+	private final TokenCookieManager tokenCookieManager;
 
 	@PostMapping("/sign-up")
 	public ResponseEntity<SignUpResponse> signUp(
@@ -27,6 +35,22 @@ public class AuthController {
 		SignUpResponse response = signUpService.signUp(signUpRequest);
 
 		return ResponseEntity.ok(response);
+	}
+
+	@PostMapping("sign-out")
+	public ResponseEntity<Void> signOut(
+		@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader
+	) {
+		String tokenString = authHeader.substring("Bearer ".length());
+		JwtTokenValue accessTokenValue = JwtTokenValue.of(tokenString);
+
+		authService.signOut(accessTokenValue);
+
+		ResponseCookie expiredCookie = tokenCookieManager.createExpiredCookie();
+
+		return ResponseEntity.ok()
+			.header(HttpHeaders.SET_COOKIE, expiredCookie.toString())
+			.build();
 	}
 
 	// @PostMapping("/login/google")
@@ -121,20 +145,6 @@ public class AuthController {
 	// 	}
 	// }
 	//
-	// @PostMapping("/logout")
-	// public ResponseEntity<?> logout(HttpServletRequest request) {
-	// 	ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", "")
-	// 		.httpOnly(true)
-	// 		.secure(true)
-	// 		.path("/")
-	// 		.maxAge(0)
-	// 		.sameSite("Strict")
-	// 		.build();
-	//
-	// 	return ResponseEntity.ok()
-	// 		.header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
-	// 		.body(Map.of("server", "logout ok"));
-	// }
 	//
 	// @GetMapping("/refresh")
 	// public ResponseEntity<?> refresh(@AuthenticationPrincipal UserDetails userDetails, HttpServletRequest request) {

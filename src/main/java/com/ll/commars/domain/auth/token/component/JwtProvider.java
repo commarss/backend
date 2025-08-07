@@ -1,4 +1,4 @@
-package com.ll.commars.domain.auth.token;
+package com.ll.commars.domain.auth.token.component;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -7,6 +7,8 @@ import javax.crypto.SecretKey;
 
 import org.springframework.stereotype.Component;
 
+import com.ll.commars.domain.auth.token.JwtProperties;
+import com.ll.commars.domain.auth.token.TokenProvider;
 import com.ll.commars.domain.auth.token.entity.AccessToken;
 import com.ll.commars.domain.auth.token.entity.JwtClaims;
 import com.ll.commars.domain.auth.token.entity.JwtTokenValue;
