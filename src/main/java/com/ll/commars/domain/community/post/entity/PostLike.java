@@ -1,6 +1,6 @@
 package com.ll.commars.domain.community.post.entity;
 
-import com.ll.commars.domain.user.entity.User;
+import com.ll.commars.domain.member.entity.Member;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -32,10 +32,10 @@ public class PostLike {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", nullable = false)
-	private User user;
+	private Member member;
 
-	public PostLike(Post post, User user) {
+	public PostLike(Post post, Member member) {
 		this.post = post;
-		this.user = user;
+		this.member = member;
 	}
 }

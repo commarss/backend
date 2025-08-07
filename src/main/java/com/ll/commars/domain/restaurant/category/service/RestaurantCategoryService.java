@@ -84,7 +84,7 @@ public class RestaurantCategoryService {
 				.reviews(restaurant.getReviews().stream()
 					.map(review -> ReviewDto.ReviewInfo.builder()
 						.restaurantId(review.getRestaurant().getId())
-						.userId(review.getUser().getId())
+						.userId(review.getMember().getId())
 						.id(review.getId())
 						.name(review.getName())
 						.body(review.getBody())

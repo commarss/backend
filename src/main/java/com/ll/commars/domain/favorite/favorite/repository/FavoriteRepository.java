@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.ll.commars.domain.favorite.favorite.entity.Favorite;
-import com.ll.commars.domain.user.entity.User;
+import com.ll.commars.domain.member.entity.Member;
 
 public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
 
@@ -24,9 +24,9 @@ public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
 	// 유저 ID로 찜 목록 조회
 	List<Favorite> findByUserId(Long userId);
 
-	boolean existsByUserAndFavoriteRestaurantsRestaurantId(User user, Long restaurantId);
+	boolean existsByUserAndFavoriteRestaurantsRestaurantId(Member member, Long restaurantId);
 
-	Optional<Favorite> findByUserAndName(User user, String name);
+	Optional<Favorite> findByUserAndName(Member member, String name);
 
-	Optional<Favorite> findByUserAndFavoriteRestaurantsRestaurantId(User user, Long restaurantId);
+	Optional<Favorite> findByUserAndFavoriteRestaurantsRestaurantId(Member member, Long restaurantId);
 }

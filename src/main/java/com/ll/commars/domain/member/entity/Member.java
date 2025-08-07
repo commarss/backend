@@ -1,4 +1,4 @@
-package com.ll.commars.domain.user.entity;
+package com.ll.commars.domain.member.entity;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,15 +20,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
-public class User extends BaseEntity {
+public class Member extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,7 +36,7 @@ public class User extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private SocialProvider socialProvider;
 
-	@Column
+	@Column(unique = true)
 	private String email;
 
 	@Column
@@ -60,23 +58,25 @@ public class User extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private Gender gender;
 
-	// User와 Review: 일대다
 	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	@JsonIgnore
 	private List<Review> reviews;
 
-	// User와 Favorite: 일대다
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	@JsonIgnore
 	private List<Favorite> favorites;
 
-	// User와 Board: 일대다
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonIgnore
 	private List<Post> posts;
 
-	// User와 Comment: 일대다
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	@JsonIgnore
 	private List<Comment> comments;
+
+	public Member (String email, String password, String name) {
+		this.email = email;
+		this.password = password;
+		this.name = name;
+	}
 }

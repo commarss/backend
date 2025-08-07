@@ -1,4 +1,4 @@
-package com.ll.commars.domain.user.entity;
+package com.ll.commars.domain.member.entity;
 
 public enum Gender {
 

@@ -1,28 +1,16 @@
 package com.ll.commars.domain.auth.controller;
 
-import java.io.IOException;
-import java.util.Map;
-import java.util.Optional;
-
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ll.commars.domain.auth.token.JwtProvider;
-import com.ll.commars.domain.user.entity.User;
+import com.ll.commars.domain.auth.dto.SignUpRequest;
+import com.ll.commars.domain.auth.dto.SignUpResponse;
+import com.ll.commars.domain.auth.service.SignUpService;
 
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -30,9 +18,16 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthController {
 
-	private final JwtProvider jwtProvider;
+	private final SignUpService signUpService;
 
 	@PostMapping("/sign-up")
+	public ResponseEntity<SignUpResponse> signUp(
+		@Valid @RequestBody SignUpRequest signUpRequest
+	) {
+		SignUpResponse response = signUpService.signUp(signUpRequest);
+
+		return ResponseEntity.ok(response);
+	}
 
 	// @PostMapping("/login/google")
 	// public ResponseEntity<?> verifyGoogleIdToken(@RequestBody Map<String, String> body) {

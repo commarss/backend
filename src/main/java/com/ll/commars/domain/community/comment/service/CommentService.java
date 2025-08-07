@@ -11,8 +11,8 @@ import com.ll.commars.domain.community.comment.entity.Comment;
 import com.ll.commars.domain.community.comment.repository.CommentRepository;
 import com.ll.commars.domain.community.post.entity.Post;
 import com.ll.commars.domain.community.post.repository.PostRepository;
-import com.ll.commars.domain.user.entity.User;
-import com.ll.commars.domain.user.repository.UserRepository;
+import com.ll.commars.domain.member.entity.Member;
+import com.ll.commars.domain.member.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,7 +22,7 @@ public class CommentService {
 
 	private final CommentRepository commentRepository;
 	private final PostRepository postRepository;
-	private final UserRepository userRepository;
+	private final MemberRepository memberRepository;
 
 	@Transactional
 	public CommentCreateResponse createComment(Long userId, CommentCreateRequest request) {
@@ -30,10 +30,10 @@ public class CommentService {
 		Post post = postRepository.findById(request.id())
 			.orElseThrow(() -> new IllegalArgumentException("Invalid postId: " + request.id()));
 
-		User user = userRepository.findById(userId)
+		Member member = memberRepository.findById(userId)
 			.orElseThrow(() -> new IllegalArgumentException("Invalid userId: " + userId));
 
-		Comment comment = new Comment(request.content(), user, post);
+		Comment comment = new Comment(request.content(), member, post);
 
 		return CommentCreateResponse.from(
 			commentRepository.save(comment)
@@ -45,7 +45,7 @@ public class CommentService {
 		Comment comment = commentRepository.findById(commentId)
 			.orElseThrow(() -> new IllegalArgumentException("Invalid commentId: " + commentId));
 
-		if (!comment.getUser().getId().equals(userId)) {
+		if (!comment.getMember().getId().equals(userId)) {
 			throw new IllegalArgumentException("수정 권한이 없습니다.");
 		}
 
@@ -61,7 +61,7 @@ public class CommentService {
 		Comment comment = commentRepository.findById(commentId)
 			.orElseThrow(() -> new IllegalArgumentException("Invalid commentId: " + commentId));
 
-		if (!comment.getUser().getId().equals(userId)) {
+		if (!comment.getMember().getId().equals(userId)) {
 			throw new IllegalArgumentException("삭제 권한이 없습니다.");
 		}
 

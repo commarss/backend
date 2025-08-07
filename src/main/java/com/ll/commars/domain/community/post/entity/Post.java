@@ -6,7 +6,7 @@ import java.util.List;
 import org.hibernate.annotations.ColumnDefault;
 
 import com.ll.commars.domain.community.comment.entity.Comment;
-import com.ll.commars.domain.user.entity.User;
+import com.ll.commars.domain.member.entity.Member;
 import com.ll.commars.global.BaseEntity;
 
 import jakarta.persistence.CascadeType;
@@ -50,7 +50,7 @@ public class Post extends BaseEntity {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
-	private User user;
+	private Member member;
 
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Comment> comments = new ArrayList<>();
@@ -62,23 +62,23 @@ public class Post extends BaseEntity {
 	private List<PostLike> postLikes = new ArrayList<>();
 
 	public Post(String title, String content, int views, String imageUrl, int likeCount,
-		User user, List<Comment> comments, List<PostHashTag> postHashTags, List<PostLike> postLikes) {
+		Member member, List<Comment> comments, List<PostHashTag> postHashTags, List<PostLike> postLikes) {
 		this.title = title;
 		this.content = content;
 		this.views = views;
 		this.imageUrl = imageUrl;
 		this.likeCount = likeCount;
-		this.user = user;
+		this.member = member;
 		this.comments = comments;
 		this.postHashTags = postHashTags;
 		this.postLikes = postLikes;
 	}
 
-	public Post(String title, String content, String imageUrl, User user) {
+	public Post(String title, String content, String imageUrl, Member member) {
 		this.title = title;
 		this.content = content;
 		this.imageUrl = imageUrl;
-		this.user = user;
+		this.member = member;
 	}
 
 	public void updatePost(String title, String content, String imageUrl, List<PostHashTag> postHashTags) {

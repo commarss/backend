@@ -1,4 +1,4 @@
-package com.ll.commars.domain.user.controller;
+package com.ll.commars.domain.member.controller;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,10 +22,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ll.commars.domain.favorite.favorite.dto.FavoriteDto;
+import com.ll.commars.domain.member.entity.Member;
 import com.ll.commars.domain.review.review.dto.ReviewDto;
-import com.ll.commars.domain.user.dto.UserDto;
-import com.ll.commars.domain.user.entity.User;
-import com.ll.commars.domain.user.service.UserService;
+import com.ll.commars.domain.member.dto.MemberDto;
+import com.ll.commars.domain.member.service.MemberService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -34,60 +34,60 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
-public class UserController {
+public class MemberController {
 
 	// todo: 사용자의 게시글의 개수 세는 엔드포인트 구현
 
-	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
-	private final UserService userService;
+	private static final Logger logger = LoggerFactory.getLogger(MemberController.class);
+	private final MemberService memberService;
 
 	@Value("${custom.ipInfo.token}")
 	private String token;
 
 	@PostMapping("/signup")
-	public ResponseEntity<String> signup(@RequestBody User request) {
-		if (userService.isEmailTaken(request.getEmail())) {
+	public ResponseEntity<String> signup(@RequestBody Member request) {
+		if (memberService.isEmailTaken(request.getEmail())) {
 			return ResponseEntity.badRequest().body("이미 사용 중인 이메일입니다.");
 		}
 
-		User newUser = new User();
+		Member newMember = new Member();
 
-		userService.saveUser(newUser);
+		memberService.saveUser(newMember);
 		return ResponseEntity.ok("회원가입이 완료되었습니다.");
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<?> login(@RequestBody User user, HttpSession session) {
-		logger.info("Login attempt for email: {}", user.getEmail());
-		User authenticatedUser = userService.authenticate(user.getEmail());
+	public ResponseEntity<?> login(@RequestBody Member member, HttpSession session) {
+		logger.info("Login attempt for email: {}", member.getEmail());
+		Member authenticatedMember = memberService.authenticate(member.getEmail());
 
-		if (authenticatedUser != null) {
-			logger.info("Login successful for email: {}", user.getEmail());
+		if (authenticatedMember != null) {
+			logger.info("Login successful for email: {}", member.getEmail());
 
 			// 로그인 정보를 DB에 저장하지 않고, 로그만 기록
-			logger.info("User {} logged in at {}", authenticatedUser.getEmail(), java.time.LocalDateTime.now());
+			logger.info("User {} logged in at {}", authenticatedMember.getEmail(), java.time.LocalDateTime.now());
 
 			// 세션에 사용자 정보 저장
-			session.setAttribute("user", authenticatedUser);
+			session.setAttribute("user", authenticatedMember);
 			// 확인용 로그 추가
-			logger.info("User stored in session: {}", authenticatedUser.getEmail());
+			logger.info("User stored in session: {}", authenticatedMember.getEmail());
 			logger.info("Session user set: {}", session.getAttribute("user"));  // 추가 확인 로그
 			System.out.println("세션정보: " + session.getAttribute("user"));
 
-			return ResponseEntity.ok(authenticatedUser);
+			return ResponseEntity.ok(authenticatedMember);
 		}
 
-		logger.warn("Login failed for email: {}", user.getEmail());
+		logger.warn("Login failed for email: {}", member.getEmail());
 		return ResponseEntity.status(401).body("이메일 또는 비밀번호가 일치하지 않습니다.");
 	}
 
 	@GetMapping("/current-user")
 	public ResponseEntity<?> getCurrentUser(HttpSession session) {
-		User user = (User)session.getAttribute("user");
-		if (user != null) {
+		Member member = (Member)session.getAttribute("user");
+		if (member != null) {
 			// 이메일을 JSON 형식으로 반환
 			Map<String, String> response = new HashMap<>();
-			response.put("email", user.getEmail());
+			response.put("email", member.getEmail());
 			return ResponseEntity.ok(response);
 		}
 		return ResponseEntity.status(401).body("로그인된 사용자가 없습니다.");
@@ -104,14 +104,14 @@ public class UserController {
 	@GetMapping("/favorites")
 	public ResponseEntity<?> getFavoriteLists(
 		@AuthenticationPrincipal UserDetails userDetails) {
-		Optional<User> user = userService.findById(Long.parseLong(userDetails.getUsername()));
+		Optional<Member> user = memberService.findById(Long.parseLong(userDetails.getUsername()));
 		if (user.isEmpty()) {
 			return ResponseEntity
 				.status(401)
 				.body("로그인이 필요합니다.");
 		}
 
-		UserDto.UserFavoriteListsResponse response = userService.getFavoriteLists(user.get());
+		MemberDto.UserFavoriteListsResponse response = memberService.getFavoriteLists(user.get());
 		return ResponseEntity
 			.status(200)
 			.body(response);
@@ -121,14 +121,14 @@ public class UserController {
 	public ResponseEntity<String> addFavorite(
 		@RequestBody FavoriteDto.CreateFavoriteListRequest request,
 		HttpSession session) {
-		User user = (User)session.getAttribute("user");
-		if (user == null) {
+		Member member = (Member)session.getAttribute("user");
+		if (member == null) {
 			return ResponseEntity
 				.status(401)
 				.body("로그인이 필요합니다.");
 		}
 
-		userService.createFavoriteList(user, request);
+		memberService.createFavoriteList(member, request);
 		return ResponseEntity
 			.status(201)
 			.body("찜 리스트가 생성되었습니다.");
@@ -136,14 +136,14 @@ public class UserController {
 
 	@GetMapping("/reviews")
 	public ResponseEntity<?> getReviews(HttpSession session) {
-		User user = (User)session.getAttribute("user");
-		if (user == null) {
+		Member member = (Member)session.getAttribute("user");
+		if (member == null) {
 			return ResponseEntity
 				.status(401)
 				.body("로그인이 필요합니다.");
 		}
 
-		ReviewDto.ShowAllReviewsResponse response = userService.getReviews(user.getId());
+		ReviewDto.ShowAllReviewsResponse response = memberService.getReviews(member.getId());
 
 		return ResponseEntity
 			.status(200)

@@ -1,4 +1,4 @@
-package com.ll.commars.domain.user.dto;
+package com.ll.commars.domain.member.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -8,7 +8,7 @@ import com.ll.commars.domain.favorite.favorite.dto.FavoriteDto;
 import lombok.Builder;
 import lombok.Getter;
 
-public class UserDto {
+public class MemberDto {
 
 	@Getter
 	@Builder

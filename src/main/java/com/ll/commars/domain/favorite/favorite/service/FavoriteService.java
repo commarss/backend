@@ -13,10 +13,10 @@ import com.ll.commars.domain.favorite.favorite.entity.Favorite;
 import com.ll.commars.domain.favorite.favorite.repository.FavoriteRepository;
 import com.ll.commars.domain.favorite.favoriteRestaurant.entity.FavoriteRestaurant;
 import com.ll.commars.domain.favorite.favoriteRestaurant.repository.FavoriteRestaurantRepository;
+import com.ll.commars.domain.member.entity.Member;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantDto;
 import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
 import com.ll.commars.domain.restaurant.restaurant.repository.RestaurantRepository;
-import com.ll.commars.domain.user.entity.User;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,8 +32,8 @@ public class FavoriteService {
 		return favoriteRepository.countByUserEmail(email);
 	}
 
-	public List<Favorite> getFavoritesByUser(User user) {
-		return favoriteRepository.findByUserEmail(user.getEmail());
+	public List<Favorite> getFavoritesByUser(Member member) {
+		return favoriteRepository.findByUserEmail(member.getEmail());
 	}
 
 	public FavoriteDto.FavoriteInfo toFavoriteInfo(Favorite favorite) {
@@ -64,12 +64,12 @@ public class FavoriteService {
 			.build();
 	}
 
-	public void saveFavoriteList(User user, FavoriteDto.CreateFavoriteListRequest createFavoriteListRequest) {
+	public void saveFavoriteList(Member member, FavoriteDto.CreateFavoriteListRequest createFavoriteListRequest) {
 		Boolean isPublicValue = createFavoriteListRequest.getIsPublic();
 		Favorite favorite = Favorite.builder()
 			.name(createFavoriteListRequest.getName())
 			.isPublic(isPublicValue != null ? isPublicValue : true)
-			.user(user)
+			.member(member)
 			.build();
 
 		favoriteRepository.save(favorite);
@@ -124,16 +124,16 @@ public class FavoriteService {
 	}
 
 	@Transactional
-	public Optional<Favorite> isFavorite(User user, Long restaurantId) {
-		return favoriteRepository.findByUserAndFavoriteRestaurantsRestaurantId(user, restaurantId);
+	public Optional<Favorite> isFavorite(Member member, Long restaurantId) {
+		return favoriteRepository.findByUserAndFavoriteRestaurantsRestaurantId(member, restaurantId);
 	}
 
 	public Favorite saveFavorite(Favorite favorite) {
 		return favoriteRepository.save(favorite);
 	}
 
-	public Optional<Favorite> findByUserAndName(User user, String name) {
-		return favoriteRepository.findByUserAndName(user, name);
+	public Optional<Favorite> findByUserAndName(Member member, String name) {
+		return favoriteRepository.findByUserAndName(member, name);
 	}
 
 	@Transactional

@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import com.ll.commars.domain.user.entity.User;
+import com.ll.commars.domain.member.entity.Member;
 
 import io.jsonwebtoken.Claims;
 
@@ -28,15 +28,15 @@ public record JwtClaims(
 		return new JwtClaims(publicClaims, privateClaims);
 	}
 
-	public static JwtClaims from(User user, Instant issuedAt, Instant expiresAt) {
+	public static JwtClaims from(Member member, Instant issuedAt, Instant expiresAt) {
 		PublicClaims publicClaims = new PublicClaims(
 			"commars.com",
-			user.getEmail(),
+			member.getEmail(),
 			issuedAt,
 			expiresAt
 		);
 		PrivateClaims privateClaims = new PrivateClaims(
-			user.getId(),
+			member.getId(),
 			List.of("ROLE_USER") // todo: 매직 상수 별도 관리
 		);
 		return new JwtClaims(publicClaims, privateClaims);

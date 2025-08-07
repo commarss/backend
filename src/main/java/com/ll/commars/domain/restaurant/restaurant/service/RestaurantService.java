@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ll.commars.domain.member.entity.Member;
 import com.ll.commars.domain.restaurant.businessHour.dto.BusinessHourDto;
 import com.ll.commars.domain.restaurant.businessHour.entity.BusinessHour;
 import com.ll.commars.domain.restaurant.businessHour.repository.BusinessHourRepository;
@@ -20,9 +21,8 @@ import com.ll.commars.domain.restaurant.restaurant.repository.RestaurantReposito
 import com.ll.commars.domain.review.review.dto.ReviewDto;
 import com.ll.commars.domain.review.review.entity.Review;
 import com.ll.commars.domain.review.review.repository.ReviewRepository;
-import com.ll.commars.domain.user.entity.User;
-import com.ll.commars.domain.user.repository.UserRepository;
-import com.ll.commars.domain.user.service.UserService;
+import com.ll.commars.domain.member.repository.MemberRepository;
+import com.ll.commars.domain.member.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,10 +32,10 @@ public class RestaurantService {
 
 	private final RestaurantRepository restaurantRepository;
 	private final ReviewRepository reviewRepository;
-	private final UserRepository userRepository;
+	private final MemberRepository memberRepository;
 	private final RestaurantCategoryRepository restaurantCategoryRepository;
 	private final BusinessHourRepository businessHourRepository;
-	private final UserService userService;
+	private final MemberService memberService;
 
 	// 식당 정보 등록
 	@Transactional
@@ -94,7 +94,7 @@ public class RestaurantService {
 
 				List<ReviewDto.ReviewInfo> reviewInfos = restaurant.getReviews().stream()
 					.map(review -> ReviewDto.ReviewInfo.builder()
-						.userId(review.getUser().getId())
+						.userId(review.getMember().getId())
 						.restaurantId(review.getRestaurant().getId())
 						.id(review.getId())
 						.name(review.getName())
@@ -144,11 +144,11 @@ public class RestaurantService {
 		Restaurant restaurant = restaurantRepository.findById(restaurantId)
 			.orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
 
-		Optional<User> user = userService.findById(userId);
+		Optional<Member> user = memberService.findById(userId);
 
 		reviewRepository.save(Review.builder()
 			.restaurant(restaurant)
-			.user(user.get())
+			.member(user.get())
 			.body(request.getBody())
 			.name(request.getReviewName())
 			.rate(request.getRate())
@@ -182,7 +182,7 @@ public class RestaurantService {
 
 		List<ReviewDto.ReviewInfo> reviewInfos = restaurant.getReviews().stream()
 			.map(review -> ReviewDto.ReviewInfo.builder()
-				.userId(review.getUser().getId())
+				.userId(review.getMember().getId())
 				.restaurantId(review.getRestaurant().getId())
 				.id(review.getId())
 				.name(review.getName())
@@ -230,7 +230,7 @@ public class RestaurantService {
 
 		List<ReviewDto.ReviewInfo> reviewInfos = restaurant.getReviews().stream()
 			.map(review -> ReviewDto.ReviewInfo.builder()
-				.userId(review.getUser().getId())
+				.userId(review.getMember().getId())
 				.restaurantId(review.getRestaurant().getId())
 				.id(review.getId())
 				.name(review.getName())

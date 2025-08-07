@@ -1,7 +1,7 @@
 package com.ll.commars.domain.review.review.entity;
 
 import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
-import com.ll.commars.domain.user.entity.User;
+import com.ll.commars.domain.member.entity.Member;
 import com.ll.commars.global.BaseEntity;
 
 import jakarta.persistence.Column;
@@ -52,5 +52,5 @@ public class Review extends BaseEntity {
 	// Review와 User: 다대일
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
-	private User user;
+	private Member member;
 }

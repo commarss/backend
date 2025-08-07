@@ -10,8 +10,8 @@
 <div style="text-align: center; margin-top: 100px;">
     <h1>로그인 성공!</h1>
     <!-- 카카오 유저 정보 출력 -->
-    <p>환영합니다, <span th:text="${user.kakaoAccount.profile.nickName}"></span>님!</p>
-    <img th:src="${user.kakaoAccount.profile.profileImageUrl}" alt="User Profile Image" />
+    <p>환영합니다, <span th:text="${member.kakaoAccount.profile.nickName}"></span>님!</p>
+    <img th:src="${member.kakaoAccount.profile.profileImageUrl}" alt="User Profile Image" />
     <p>프로필 이미지</p>
 
     <!-- 로그아웃 버튼 -->

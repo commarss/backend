@@ -28,7 +28,7 @@ public record PostDetailResponse(
 			post.getViews(),
 			post.getImageUrl(),
 			post.getLikeCount(),
-			post.getUser().getId(),
+			post.getMember().getId(),
 			CommentListResponse.of(comments),
 			PostHashTagListResponse.of(postHashTags),
 			PostLikeCreateListResponse.of(reactions)

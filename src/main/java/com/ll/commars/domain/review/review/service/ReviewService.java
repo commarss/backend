@@ -6,15 +6,15 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ll.commars.domain.member.entity.Member;
 import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
 import com.ll.commars.domain.restaurant.restaurant.repository.RestaurantRepository;
 import com.ll.commars.domain.restaurant.restaurant.service.RestaurantService;
 import com.ll.commars.domain.review.review.dto.ReviewDto;
 import com.ll.commars.domain.review.review.entity.Review;
 import com.ll.commars.domain.review.review.repository.ReviewRepository;
-import com.ll.commars.domain.user.entity.User;
-import com.ll.commars.domain.user.repository.UserRepository;
-import com.ll.commars.domain.user.service.UserService;
+import com.ll.commars.domain.member.repository.MemberRepository;
+import com.ll.commars.domain.member.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,9 +24,9 @@ public class ReviewService {
 
 	private final ReviewRepository reviewRepository;
 	private final RestaurantRepository restaurantRepository;
-	private final UserRepository userRepository;
+	private final MemberRepository memberRepository;
 	private final RestaurantService restaurantService;
-	private final UserService userService;
+	private final MemberService memberService;
 
 	public void truncate() {
 		reviewRepository.deleteAll();
@@ -46,7 +46,7 @@ public class ReviewService {
 			.orElseThrow(() -> new IllegalArgumentException("Review not found"));
 
 		// 매개변수의 reviewId와 request의 userId가 일치하지 않으면 예외를 발생시킨다.
-		if (!review.getUser().getId().equals(request.getUserId())) {
+		if (!review.getMember().getId().equals(request.getUserId())) {
 			throw new IllegalArgumentException("User not matched");
 		}
 
@@ -55,7 +55,7 @@ public class ReviewService {
 		review.setRate(request.getRate());
 
 		return ReviewDto.ReviewWriteResponse.builder()
-			.userName(review.getUser().getName())
+			.userName(review.getMember().getName())
 			.restaurantName(review.getRestaurant().getName())
 			.reviewName(review.getName())
 			.body(review.getBody())
@@ -70,7 +70,7 @@ public class ReviewService {
 			.reviews(reviews.stream()
 				.map(review -> ReviewDto.ReviewInfo.builder()
 					.id(review.getId())
-					.userId(review.getUser().getId())
+					.userId(review.getMember().getId())
 					.restaurantId(review.getRestaurant().getId())
 					.name(review.getName())
 					.body(review.getBody())
@@ -82,14 +82,14 @@ public class ReviewService {
 
 	public Review wirteReview(String restaurantId, String username, String name, String body, int rate) {
 		Restaurant restaurant = restaurantService.findById(Long.valueOf(restaurantId));
-		Optional<User> user = userService.findById(Long.parseLong(username));
+		Optional<Member> user = memberService.findById(Long.parseLong(username));
 
 		Review review = Review.builder()
 			.name(name)
 			.body(body)
 			.rate(rate)
 			.restaurant(restaurant)
-			.user(user.orElseThrow(() -> new IllegalArgumentException("User not found")))
+			.member(user.orElseThrow(() -> new IllegalArgumentException("User not found")))
 			.build();
 
 		reviewRepository.save(review);

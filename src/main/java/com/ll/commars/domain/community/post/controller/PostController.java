@@ -22,8 +22,8 @@ import com.ll.commars.domain.community.post.dto.PostUpdateRequest;
 import com.ll.commars.domain.community.post.dto.PostUpdateResponse;
 import com.ll.commars.domain.community.post.service.PostCommandService;
 import com.ll.commars.domain.community.post.service.PostQueryService;
-import com.ll.commars.domain.user.entity.User;
-import com.ll.commars.domain.user.service.UserService;
+import com.ll.commars.domain.member.entity.Member;
+import com.ll.commars.domain.member.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -34,15 +34,15 @@ public class PostController {
 
 	private final PostCommandService postCommandService;
 	private final PostQueryService postQueryService;
-	private final UserService userService;
+	private final MemberService memberService;
 
 	@PostMapping
 	public ResponseEntity<PostCreateResponse> createPost(
 		@RequestBody PostCreateRequest request,
 		@AuthenticationPrincipal UserDetails userDetails
 	) {
-		User user = getAuthenticatedUser(userDetails);
-		PostCreateResponse response = postCommandService.createPost(user.getId(), request);
+		Member member = getAuthenticatedUser(userDetails);
+		PostCreateResponse response = postCommandService.createPost(member.getId(), request);
 
 		return ResponseEntity.ok(response);
 	}
@@ -69,8 +69,8 @@ public class PostController {
 		@RequestBody PostUpdateRequest request,
 		@AuthenticationPrincipal UserDetails userDetails
 	) {
-		User user = getAuthenticatedUser(userDetails);
-		PostUpdateResponse response = postCommandService.updatePost(user.getId(), postId, request);
+		Member member = getAuthenticatedUser(userDetails);
+		PostUpdateResponse response = postCommandService.updatePost(member.getId(), postId, request);
 
 		return ResponseEntity.ok(response);
 	}
@@ -80,8 +80,8 @@ public class PostController {
 		@PathVariable("post-id") Long postId,
 		@AuthenticationPrincipal UserDetails userDetails
 	) {
-		User user = getAuthenticatedUser(userDetails);
-		postCommandService.deletePost(user.getId(), postId);
+		Member member = getAuthenticatedUser(userDetails);
+		postCommandService.deletePost(member.getId(), postId);
 
 		return ResponseEntity.ok().build();
 	}
@@ -91,9 +91,9 @@ public class PostController {
 		@PathVariable("post-id") Long postId,
 		@AuthenticationPrincipal UserDetails userDetails
 	) {
-		User user = getAuthenticatedUser(userDetails);
+		Member member = getAuthenticatedUser(userDetails);
 
-		PostLikeCreateResponse response = postCommandService.likePost(user.getId(), postId);
+		PostLikeCreateResponse response = postCommandService.likePost(member.getId(), postId);
 		return ResponseEntity.ok(response);
 	}
 
@@ -106,8 +106,8 @@ public class PostController {
 		return ResponseEntity.ok(response);
 	}
 
-	private User getAuthenticatedUser(@AuthenticationPrincipal UserDetails userDetails) {
-		return userService.findById(Long.parseLong(userDetails.getUsername())).orElseThrow(
+	private Member getAuthenticatedUser(@AuthenticationPrincipal UserDetails userDetails) {
+		return memberService.findById(Long.parseLong(userDetails.getUsername())).orElseThrow(
 			() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 	}
 }

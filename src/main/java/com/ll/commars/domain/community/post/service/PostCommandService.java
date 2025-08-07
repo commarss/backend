@@ -14,8 +14,8 @@ import com.ll.commars.domain.community.post.entity.Post;
 import com.ll.commars.domain.community.post.entity.PostHashTag;
 import com.ll.commars.domain.community.post.entity.PostLike;
 import com.ll.commars.domain.community.post.repository.PostRepository;
-import com.ll.commars.domain.user.entity.User;
-import com.ll.commars.domain.user.repository.UserRepository;
+import com.ll.commars.domain.member.entity.Member;
+import com.ll.commars.domain.member.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,14 +24,14 @@ import lombok.RequiredArgsConstructor;
 public class PostCommandService {
 
 	private final PostRepository postRepository;
-	private final UserRepository userRepository;
+	private final MemberRepository memberRepository;
 
 	@Transactional
 	public PostCreateResponse createPost(Long userId, PostCreateRequest request) {
-		User user = userRepository.findById(userId)
+		Member member = memberRepository.findById(userId)
 			.orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
 
-		Post post = new Post(request.title(), request.content(), request.imageUrl(), user);
+		Post post = new Post(request.title(), request.content(), request.imageUrl(), member);
 
 		List<PostHashTag> postHashTags = request.hashTags().stream()
 			.map(PostHashTag::new)
@@ -76,12 +76,12 @@ public class PostCommandService {
 		Post post = postRepository.findById(postId)
 			.orElseThrow(() -> new IllegalArgumentException("Post not found with id: " + postId));
 
-		User user = userRepository.findById(userId)
+		Member member = memberRepository.findById(userId)
 			.orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
 
 		post.addLike();
 
-		PostLike postLike = new PostLike(post, user);
+		PostLike postLike = new PostLike(post, member);
 		post.getPostLikes().add(postLike);
 
 		return PostLikeCreateResponse.from(postLike);

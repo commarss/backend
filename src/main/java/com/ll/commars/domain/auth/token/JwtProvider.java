@@ -11,7 +11,7 @@ import com.ll.commars.domain.auth.token.entity.AccessToken;
 import com.ll.commars.domain.auth.token.entity.JwtClaims;
 import com.ll.commars.domain.auth.token.entity.JwtTokenValue;
 import com.ll.commars.domain.auth.token.entity.RefreshToken;
-import com.ll.commars.domain.user.entity.User;
+import com.ll.commars.domain.member.entity.Member;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
@@ -31,11 +31,11 @@ public class JwtProvider implements TokenProvider {
 		this.jwtParser = Jwts.parser().verifyWith(this.secretKey).build();
 	}
 
-	private JwtTokenValue generateToken(User user, long expirationMillis) {
+	private JwtTokenValue generateToken(Member member, long expirationMillis) {
 		Instant now = Instant.now();
 		Instant expiresAt = now.plus(expirationMillis, ChronoUnit.MILLIS);
 
-		JwtClaims jwtClaims = JwtClaims.from(user, now, expiresAt);
+		JwtClaims jwtClaims = JwtClaims.from(member, now, expiresAt);
 
 		return JwtTokenValue.of(Jwts.builder()
 			.claims(jwtClaims.toClaimsMap())
@@ -44,19 +44,19 @@ public class JwtProvider implements TokenProvider {
 	}
 
 	@Override
-	public AccessToken generateAccessToken(User user) {
+	public AccessToken generateAccessToken(Member member) {
 		long expirationMillis = jwtProperties.accessTokenExpiration();
-		JwtTokenValue tokenValue = generateToken(user, expirationMillis);
+		JwtTokenValue tokenValue = generateToken(member, expirationMillis);
 
-		return new AccessToken(user.getEmail(), tokenValue, expirationMillis);
+		return new AccessToken(member.getEmail(), tokenValue, expirationMillis);
 	}
 
 	@Override
-	public RefreshToken generateRefreshToken(User user) {
+	public RefreshToken generateRefreshToken(Member member) {
 		long expirationMillis = jwtProperties.refreshTokenExpiration();
-		JwtTokenValue tokenValue = generateToken(user, expirationMillis);
+		JwtTokenValue tokenValue = generateToken(member, expirationMillis);
 
-		return new RefreshToken(user.getEmail(), tokenValue, expirationMillis);
+		return new RefreshToken(member.getEmail(), tokenValue, expirationMillis);
 	}
 
 	@Override

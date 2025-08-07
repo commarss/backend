@@ -1,7 +1,7 @@
 package com.ll.commars.domain.community.comment.entity;
 
 import com.ll.commars.domain.community.post.entity.Post;
-import com.ll.commars.domain.user.entity.User;
+import com.ll.commars.domain.member.entity.Member;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -28,15 +28,15 @@ public class Comment {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
-	private User user;
+	private Member member;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "post_id")
 	private Post post;
 
-	public Comment(String content, User user, Post post) {
+	public Comment(String content, Member member, Post post) {
 		this.content = content;
-		this.user = user;
+		this.member = member;
 		this.post = post;
 		post.getComments().add(this);
 	}

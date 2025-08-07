@@ -16,8 +16,8 @@ import com.ll.commars.domain.community.comment.dto.CommentCreateResponse;
 import com.ll.commars.domain.community.comment.dto.CommentUpdateRequest;
 import com.ll.commars.domain.community.comment.dto.CommentUpdateResponse;
 import com.ll.commars.domain.community.comment.service.CommentService;
-import com.ll.commars.domain.user.entity.User;
-import com.ll.commars.domain.user.service.UserService;
+import com.ll.commars.domain.member.entity.Member;
+import com.ll.commars.domain.member.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,10 +27,10 @@ import lombok.RequiredArgsConstructor;
 public class CommentController {
 
 	private final CommentService commentService;
-	private final UserService userService;
+	private final MemberService memberService;
 
-	private User getAuthenticatedUser(@AuthenticationPrincipal UserDetails userDetails) {
-		return userService.findById(Long.parseLong(userDetails.getUsername())).orElseThrow(
+	private Member getAuthenticatedUser(@AuthenticationPrincipal UserDetails userDetails) {
+		return memberService.findById(Long.parseLong(userDetails.getUsername())).orElseThrow(
 			() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 	}
 
@@ -39,8 +39,8 @@ public class CommentController {
 		@RequestBody CommentCreateRequest request,
 		@AuthenticationPrincipal UserDetails userDetails
 	) {
-		User user = getAuthenticatedUser(userDetails);
-		CommentCreateResponse response = commentService.createComment(user.getId(), request);
+		Member member = getAuthenticatedUser(userDetails);
+		CommentCreateResponse response = commentService.createComment(member.getId(), request);
 
 		return ResponseEntity.ok(response);
 	}
@@ -51,8 +51,8 @@ public class CommentController {
 		@RequestBody CommentUpdateRequest request,
 		@AuthenticationPrincipal UserDetails userDetails
 	) {
-		User user = getAuthenticatedUser(userDetails);
-		CommentUpdateResponse response = commentService.updateComment(user.getId(), commentId, request);
+		Member member = getAuthenticatedUser(userDetails);
+		CommentUpdateResponse response = commentService.updateComment(member.getId(), commentId, request);
 
 		return ResponseEntity.ok(response);
 	}
@@ -62,8 +62,8 @@ public class CommentController {
 		@PathVariable("comment-id") Long commentId,
 		@AuthenticationPrincipal UserDetails userDetails
 	) {
-		User user = getAuthenticatedUser(userDetails);
-		commentService.deleteComment(commentId, user.getId());
+		Member member = getAuthenticatedUser(userDetails);
+		commentService.deleteComment(commentId, member.getId());
 
 		return ResponseEntity.ok().build();
 	}
