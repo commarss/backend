@@ -71,6 +71,10 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("com.navercorp.fixturemonkey:fixture-monkey-starter:1.1.14")
+    testImplementation("org.testcontainers:junit-jupiter")
+    testImplementation("org.springframework.boot:spring-boot-testcontainers")
+    testImplementation("org.testcontainers:elasticsearch")
+    testImplementation("org.testcontainers:mysql")
 }
 
 tasks.withType<Test> {

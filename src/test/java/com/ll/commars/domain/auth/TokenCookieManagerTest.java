@@ -1,4 +1,4 @@
-package com.ll.commars.auth;
+package com.ll.commars.domain.auth;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
