@@ -4,6 +4,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -73,9 +74,9 @@ public class AuthController {
 
 	@PostMapping("/reissue")
 	public ResponseEntity<TokenReissueResponse> reissueToken(
-		@CookieValue(TokenCookieManager.REFRESH_TOKEN_COOKIE_NAME) String refreshTokenValue
+		@CookieValue(TokenCookieManager.REFRESH_TOKEN_COOKIE_NAME) String refreshTokenValueString
 	) {
-		TokenReissueResponse response = authService.reissueToken(refreshTokenValue);
+		TokenReissueResponse response = authService.reissueToken(refreshTokenValueString);
 
 		ResponseCookie newRefreshTokenCookie = tokenCookieManager
 			.createRefreshTokenCookie(response.refreshToken());
@@ -83,6 +84,22 @@ public class AuthController {
 		return ResponseEntity.ok()
 			.header(HttpHeaders.SET_COOKIE, newRefreshTokenCookie.toString())
 			.body(response);
+	}
+
+	@DeleteMapping("/withdraw")
+	public ResponseEntity<Void> withdraw(
+		@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader
+	) {
+		String tokenString = authHeader.substring("Bearer ".length());
+		TokenValue accessTokenValue = TokenValue.of(tokenString);
+
+		authService.withdraw(accessTokenValue);
+
+		ResponseCookie expiredCookie = tokenCookieManager.createExpiredCookie();
+
+		return ResponseEntity.ok()
+			.header(HttpHeaders.SET_COOKIE, expiredCookie.toString())
+			.build();
 	}
 
 	// @PostMapping("/login/google")

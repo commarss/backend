@@ -10,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ll.commars.domain.auth.dto.SignInRequest;
 import com.ll.commars.domain.auth.dto.SignInResponse;
@@ -50,12 +51,12 @@ public class AuthService {
 		}
 	}
 
-	public TokenReissueResponse reissueToken(String refreshToken) {
-		JwtClaims claims = tokenProvider.parseClaim(TokenValue.of(refreshToken));
+	public TokenReissueResponse reissueToken(String refreshTokenValueString) {
+		JwtClaims claims = tokenProvider.parseClaim(TokenValue.of(refreshTokenValueString));
 		Long userId = claims.privateClaims().userId();
 
 		String savedRefreshToken = redisTemplate.opsForValue().get("refreshToken" + userId);
-		if (savedRefreshToken == null || !savedRefreshToken.equals(refreshToken)) {
+		if (savedRefreshToken == null || !savedRefreshToken.equals(refreshTokenValueString)) {
 			throw new CustomException(INVALID_TOKEN);
 		}
 
@@ -96,6 +97,21 @@ public class AuthService {
 		);
 
 		return new SignInResponse(accessToken.token().value(), refreshToken.token().value());
+	}
+
+	@Transactional
+	public void withdraw(TokenValue accessTokenValue) {
+		JwtClaims claims = tokenProvider.parseClaim(accessTokenValue);
+		Long userId = claims.privateClaims().userId();
+
+		Member member = memberRepository.findById(userId)
+			.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
+
+		memberRepository.delete(member);
+
+		signOut(accessTokenValue);
+
+		redisTemplate.delete("refreshToken" + userId);
 	}
 
 	// public ResponseEntity<?> login(User user) {
