@@ -12,7 +12,7 @@ import com.ll.commars.domain.community.post.entity.Post;
 public interface PostRepository extends JpaRepository<Post, Long> {
 
 	@Query("SELECT p FROM Post p " +
-		"LEFT JOIN FETCH p.user " +
+		"LEFT JOIN FETCH p.member " +
 		"LEFT JOIN FETCH p.comments " +
 		"LEFT JOIN FETCH p.postHashTags " +
 		"LEFT JOIN FETCH p.postLikes " +

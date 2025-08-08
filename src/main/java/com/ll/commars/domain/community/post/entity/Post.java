@@ -49,7 +49,7 @@ public class Post extends BaseEntity {
 	private int likeCount = 0;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id")
+	@JoinColumn(name = "member_id")
 	private Member member;
 
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)

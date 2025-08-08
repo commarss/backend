@@ -45,7 +45,7 @@ public class TodayRandomService {
 	@Transactional(readOnly = true) // Lazy Loading 방지
 	public List<RestaurantSummaryDTO> getRandomRestaurants(double lat, double lon, Long userId) {
 		// 1. 유저의 찜 목록 가져오기
-		List<Favorite> favorites = favoriteRepository.findByUserId(userId);
+		List<Favorite> favorites = favoriteRepository.findByMemberId(userId);
 		Set<Long> favoriteIds = favorites.stream()
 			.map(Favorite::getId)
 			.collect(Collectors.toSet());

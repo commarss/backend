@@ -33,7 +33,7 @@ public class FavoriteService {
 	}
 
 	public List<Favorite> getFavoritesByUser(Member member) {
-		return favoriteRepository.findByUserEmail(member.getEmail());
+		return favoriteRepository.findByMemberEmail(member.getEmail());
 	}
 
 	public FavoriteDto.FavoriteInfo toFavoriteInfo(Favorite favorite) {
@@ -125,7 +125,7 @@ public class FavoriteService {
 
 	@Transactional
 	public Optional<Favorite> isFavorite(Member member, Long restaurantId) {
-		return favoriteRepository.findByUserAndFavoriteRestaurantsRestaurantId(member, restaurantId);
+		return favoriteRepository.findByMemberAndFavoriteRestaurantsRestaurantId(member, restaurantId);
 	}
 
 	public Favorite saveFavorite(Favorite favorite) {
@@ -133,12 +133,12 @@ public class FavoriteService {
 	}
 
 	public Optional<Favorite> findByUserAndName(Member member, String name) {
-		return favoriteRepository.findByUserAndName(member, name);
+		return favoriteRepository.findByMemberAndName(member, name);
 	}
 
 	@Transactional
 	public List<FavoriteDto.FavoriteInfo> getAllFavoritesByUser(Long userId) {
-		List<Favorite> favorites = favoriteRepository.findByUserId(userId);  // 사용자의 찜 목록 조회
+		List<Favorite> favorites = favoriteRepository.findByMemberId(userId);  // 사용자의 찜 목록 조회
 		return favorites.stream()
 			.map(favorite -> toFavoriteInfo(favorite))  // Favorite 객체를 FavoriteInfo로 변환
 			.collect(Collectors.toList());

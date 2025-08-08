@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "post_like", uniqueConstraints = {
-	@UniqueConstraint(columnNames = {"post_id", "user_id"})
+	@UniqueConstraint(columnNames = {"post_id", "member_id"})
 })
 @Getter
 @NoArgsConstructor
@@ -31,7 +31,7 @@ public class PostLike {
 	private Post post;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id", nullable = false)
+	@JoinColumn(name = "member_id", nullable = false)
 	private Member member;
 
 	public PostLike(Post post, Member member) {

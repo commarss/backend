@@ -43,7 +43,7 @@ public class Favorite extends BaseEntity {
 
 	// Favorite과 User: 다대일
 	@ManyToOne
-	@JoinColumn(name = "user_id", nullable = false)
+	@JoinColumn(name = "member_id", nullable = false)
 	private Member member;
 
 	// Favorite과 FavoriteRestaurant: 일대다

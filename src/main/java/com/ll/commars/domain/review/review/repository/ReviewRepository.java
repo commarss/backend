@@ -15,9 +15,9 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 	List<Review> findByRestaurantId(Long restaurantId);
 
 	// ✅ 상위 10명의 리뷰어 조회 (LIMIT 제거 및 Pageable 추가)
-	@Query("SELECT new com.ll.commars.domain.reviewerRank.dto.ReviewerRank(r.user.id, r.user.name, COUNT(r)) " +
+	@Query("SELECT new com.ll.commars.domain.reviewerRank.dto.ReviewerRank(r.member.id, r.member.name, COUNT(r)) " +
 		"FROM Review r " +
-		"GROUP BY r.user.id, r.user.name " +
+		"GROUP BY r.member.id, r.member.name " +
 		"ORDER BY COUNT(r) DESC")
 	List<ReviewerRank> findTopReviewers(Pageable pageable);
 
