@@ -17,6 +17,7 @@ import com.ll.commars.domain.auth.dto.SignUpRequest;
 import com.ll.commars.domain.auth.dto.SignUpResponse;
 import com.ll.commars.domain.auth.dto.TokenReissueResponse;
 import com.ll.commars.domain.auth.service.AuthService;
+import com.ll.commars.domain.auth.service.SignInService;
 import com.ll.commars.domain.auth.service.SignUpService;
 import com.ll.commars.domain.auth.token.component.TokenCookieManager;
 import com.ll.commars.domain.auth.token.entity.TokenValue;
@@ -30,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
 
 	private final SignUpService signUpService;
+	private final SignInService signInService;
 	private final AuthService authService;
 	private final TokenCookieManager tokenCookieManager;
 
@@ -46,7 +48,7 @@ public class AuthController {
 	public ResponseEntity<SignInResponse> signIn(
 		@Valid @RequestBody SignInRequest request
 	) {
-		SignInResponse response = authService.signIn(request);
+		SignInResponse response = signInService.signIn(request);
 
 		ResponseCookie refreshTokenCookie = tokenCookieManager
 			.createRefreshTokenCookie(response.refreshToken());
