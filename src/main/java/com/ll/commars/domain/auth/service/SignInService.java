@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ll.commars.domain.auth.dto.SignInRequest;
 import com.ll.commars.domain.auth.dto.SignInResponse;
@@ -30,6 +31,7 @@ public class SignInService {
 	private final TokenProvider tokenProvider;
 	private final RedisTemplate<String, String> redisTemplate;
 
+	@Transactional
 	public SignInResponse signIn(SignInRequest request) {
 		Authentication authentication = authenticationManager.authenticate(
 			new UsernamePasswordAuthenticationToken(request.email(), request.password())

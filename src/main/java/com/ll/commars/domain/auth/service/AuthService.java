@@ -29,6 +29,7 @@ public class AuthService {
 	private final MemberRepository memberRepository;
 	private final RedisTemplate<String, String> redisTemplate;
 
+	@Transactional
 	public void signOut(TokenValue accessTokenValue) {
 		JwtClaims claims = tokenProvider.parseClaim(accessTokenValue);
 
@@ -45,6 +46,7 @@ public class AuthService {
 		}
 	}
 
+	@Transactional
 	public TokenReissueResponse reissueToken(String refreshTokenValueString) {
 		JwtClaims claims = tokenProvider.parseClaim(TokenValue.of(refreshTokenValueString));
 		Long userId = claims.privateClaims().userId();

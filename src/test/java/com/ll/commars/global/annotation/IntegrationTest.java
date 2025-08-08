@@ -6,21 +6,17 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ll.commars.global.config.MySQLTestContainerConfig;
-import com.ll.commars.global.config.RedisTestContainerConfig;
+import com.ll.commars.global.config.RedisTestContainer;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-@Import({
-	RedisTestContainerConfig.class,
-	MySQLTestContainerConfig.class
-})
+@ContextConfiguration(initializers = RedisTestContainer.class)
 public @interface IntegrationTest {
 }

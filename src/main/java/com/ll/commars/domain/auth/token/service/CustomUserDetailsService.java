@@ -20,20 +20,19 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		long userId = Long.parseLong(username);
+	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-		return memberRepository.findById(userId)
+		return memberRepository.findByEmail(email)
 			.map(this::createUserDetails)
-			.orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + userId));
+			.orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
 	}
 
 	private UserDetails createUserDetails(Member member) {
 		String[] roles = {"ROLE_USER"};
 
 		return User.builder()
-			.username(String.valueOf(member.getId()))
-			.password("")
+			.username(member.getEmail())
+			.password(member.getPassword())
 			.authorities(roles)
 			.build();
 	}

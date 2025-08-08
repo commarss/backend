@@ -24,3 +24,7 @@ logging:
   level:
     org.hibernate.SQL: debug
     org.springframework.web: info
+
+custom:
+  ipInfo:
+    token: "dummy-ipinfo-token-for-test"
