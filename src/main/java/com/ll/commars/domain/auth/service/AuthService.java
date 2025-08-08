@@ -17,7 +17,7 @@ import com.ll.commars.domain.auth.dto.TokenReissueResponse;
 import com.ll.commars.domain.auth.token.TokenProvider;
 import com.ll.commars.domain.auth.token.entity.AccessToken;
 import com.ll.commars.domain.auth.token.entity.JwtClaims;
-import com.ll.commars.domain.auth.token.entity.JwtTokenValue;
+import com.ll.commars.domain.auth.token.entity.TokenValue;
 import com.ll.commars.domain.auth.token.entity.RefreshToken;
 import com.ll.commars.domain.member.entity.Member;
 import com.ll.commars.domain.member.repository.MemberRepository;
@@ -34,7 +34,7 @@ public class AuthService {
 	private final AuthenticationManager authenticationManager;
 	private final RedisTemplate<String, String> redisTemplate;
 
-	public void signOut(JwtTokenValue accessTokenValue) {
+	public void signOut(TokenValue accessTokenValue) {
 		JwtClaims claims = tokenProvider.parseClaim(accessTokenValue);
 
 		Instant expiration = claims.publicClaims().expiresAt();
@@ -51,7 +51,7 @@ public class AuthService {
 	}
 
 	public TokenReissueResponse reissueToken(String refreshToken) {
-		JwtClaims claims = tokenProvider.parseClaim(JwtTokenValue.of(refreshToken));
+		JwtClaims claims = tokenProvider.parseClaim(TokenValue.of(refreshToken));
 		Long userId = claims.privateClaims().userId();
 
 		String savedRefreshToken = redisTemplate.opsForValue().get("refreshToken" + userId);

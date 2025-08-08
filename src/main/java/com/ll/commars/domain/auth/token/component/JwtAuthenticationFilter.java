@@ -13,7 +13,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.ll.commars.domain.auth.token.JwtAuthenticationToken;
 import com.ll.commars.domain.auth.token.TokenProvider;
 import com.ll.commars.domain.auth.token.entity.JwtClaims;
-import com.ll.commars.domain.auth.token.entity.JwtTokenValue;
+import com.ll.commars.domain.auth.token.entity.TokenValue;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -44,7 +44,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		String tokenValue = authHeader.substring("Bearer ".length());
 
 		if (SecurityContextHolder.getContext().getAuthentication() == null) {
-			JwtTokenValue jwtTokenValue = JwtTokenValue.of(tokenValue);
+			TokenValue jwtTokenValue = TokenValue.of(tokenValue);
 			JwtClaims jwtClaims = tokenProvider.parseClaim(jwtTokenValue);
 
 			UserDetails userDetails = userDetailsService.loadUserByUsername(

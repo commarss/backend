@@ -18,7 +18,7 @@ import com.ll.commars.domain.auth.dto.TokenReissueResponse;
 import com.ll.commars.domain.auth.service.AuthService;
 import com.ll.commars.domain.auth.service.SignUpService;
 import com.ll.commars.domain.auth.token.component.TokenCookieManager;
-import com.ll.commars.domain.auth.token.entity.JwtTokenValue;
+import com.ll.commars.domain.auth.token.entity.TokenValue;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -60,7 +60,7 @@ public class AuthController {
 		@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader
 	) {
 		String tokenString = authHeader.substring("Bearer ".length());
-		JwtTokenValue accessTokenValue = JwtTokenValue.of(tokenString);
+		TokenValue accessTokenValue = TokenValue.of(tokenString);
 
 		authService.signOut(accessTokenValue);
 

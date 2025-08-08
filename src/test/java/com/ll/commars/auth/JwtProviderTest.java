@@ -5,12 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.time.Duration;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.List;
-
-import javax.crypto.SecretKey;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,14 +18,13 @@ import com.ll.commars.domain.auth.token.JwtProperties;
 import com.ll.commars.domain.auth.token.component.JwtProvider;
 import com.ll.commars.domain.auth.token.entity.AccessToken;
 import com.ll.commars.domain.auth.token.entity.JwtClaims;
-import com.ll.commars.domain.auth.token.entity.JwtTokenValue;
 import com.ll.commars.domain.auth.token.entity.RefreshToken;
+import com.ll.commars.domain.auth.token.entity.TokenSubject;
+import com.ll.commars.domain.auth.token.entity.TokenValue;
 import com.ll.commars.domain.member.entity.Member;
 
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 
 import com.navercorp.fixturemonkey.FixtureMonkey;
@@ -50,7 +43,7 @@ class JwtProviderTest {
         .objectIntrospector(FieldReflectionArbitraryIntrospector.INSTANCE)
         .build();
 
-    private static final String MOCK_SECRET_KEY = "secretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecret";
+    private static final String MOCK_SECRET_KEY = "secretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecret";
     private static final long MOCK_ACCESS_TOKEN_EXPIRATION_MS = Duration.ofHours(1).toMillis(); // 3600000L
     private static final long MOCK_REFRESH_TOKEN_EXPIRATION_MS = Duration.ofDays(7).toMillis(); // 604800000L
 
@@ -63,6 +56,7 @@ class JwtProviderTest {
 
         member = fixtureMonkey.giveMeBuilder(Member.class)
             .set("id", 1L)
+            .set("email", "test@example.com")
             .sample();
     }
 
@@ -81,9 +75,8 @@ class JwtProviderTest {
             // then
             assertAll(
                 () -> assertThat(accessToken).isNotNull(),
-                () -> assertThat(accessToken.subject()).isEqualTo(member.getEmail()),
-                () -> assertThat(accessToken.expiration()).isEqualTo(jwtProperties.accessTokenExpiration()),
-                () -> assertThat(claims.publicClaims().subject()).isEqualTo(member.getEmail()),
+                () -> assertThat(accessToken.subject()).isEqualTo(TokenSubject.of(member.getEmail())),
+                () -> assertThat(accessToken.expiration()).isEqualTo(MOCK_ACCESS_TOKEN_EXPIRATION_MS),
                 () -> assertThat(claims.privateClaims().userId()).isEqualTo(member.getId())
             );
         }
@@ -99,8 +92,10 @@ class JwtProviderTest {
 
             // then
             assertAll(
-                () -> assertThat(refreshToken).isNotNull(),
-                () -> assertThat(claims.privateClaims().userId()).isEqualTo(member.getId())
+                () -> assertThat(refreshToken.subject().value()).isEqualTo(member.getEmail()),
+                () -> assertThat(refreshToken.expiration()).isEqualTo(MOCK_REFRESH_TOKEN_EXPIRATION_MS),
+                () -> assertThat(claims.privateClaims().userId()).isEqualTo(member.getId()),
+                () -> assertThat(claims.privateClaims().roles()).isNullOrEmpty()
             );
         }
     }
@@ -111,18 +106,18 @@ class JwtProviderTest {
         @Test
         void 만료된_토큰을_파싱하면_ExpiredJwtException이_발생한다() {
             // given
-            long expiredMillis = -1000L;
-            JwtTokenValue expiredToken = generateTestToken(member, expiredMillis, Keys.hmacShaKeyFor(MOCK_SECRET_KEY.getBytes()));
+            when(jwtProperties.accessTokenExpiration()).thenReturn(-1000L);
+            AccessToken expiredToken = jwtProvider.generateAccessToken(member);
 
             // when & then
-            assertThatThrownBy(() -> jwtProvider.parseClaim(expiredToken))
+            assertThatThrownBy(() -> jwtProvider.parseClaim(expiredToken.token()))
                 .isInstanceOf(ExpiredJwtException.class);
         }
 
         @Test
         void 잘못된_형식의_토큰을_파싱하면_MalformedJwtException이_발생한다() {
             // given
-            JwtTokenValue malformedToken = JwtTokenValue.of("this.is.malformed.token");
+            TokenValue malformedToken = TokenValue.of("this.is.malformed.token");
 
             // when & then
             assertThatThrownBy(() -> jwtProvider.parseClaim(malformedToken))
@@ -132,29 +127,16 @@ class JwtProviderTest {
         @Test
         void 잘못된_서명을_가진_토큰을_파싱하면_SignatureException이_발생한다() {
             // given
-            SecretKey invalidKey = Keys.hmacShaKeyFor("thisIsAnInvalidSecretKeyThatIsDefinitelyNotTheCorrectOne".getBytes());
-            JwtTokenValue tokenWithInvalidSignature = generateTestToken(member, jwtProperties.accessTokenExpiration(), invalidKey);
+            JwtProperties invalidProperties = mock(JwtProperties.class);
+            when(invalidProperties.key()).thenReturn("this-is-an-entirely-different-and-invalid-secret-key-12345-12345-12345-12345-12345");
+            JwtProvider invalidJwtProvider = new JwtProvider(invalidProperties);
+
+            when(jwtProperties.accessTokenExpiration()).thenReturn(MOCK_ACCESS_TOKEN_EXPIRATION_MS);
+            AccessToken token = jwtProvider.generateAccessToken(member);
 
             // when & then
-            assertThatThrownBy(() -> jwtProvider.parseClaim(tokenWithInvalidSignature))
+            assertThatThrownBy(() -> invalidJwtProvider.parseClaim(token.token()))
                 .isInstanceOf(SignatureException.class);
         }
-    }
-
-    private JwtTokenValue generateTestToken(Member member, long expirationMillis, SecretKey key) {
-        Instant now = Instant.now();
-        Instant expiresAt = now.plus(expirationMillis, ChronoUnit.MILLIS);
-
-        String token = Jwts.builder()
-            .claim("iss", "commars.com")
-            .claim("sub", member.getEmail())
-            .claim("iat", Date.from(now))
-            .claim("exp", Date.from(expiresAt))
-            .claim("userId", member.getId())
-            .claim("roles", List.of("ROLE_USER"))
-            .signWith(key)
-            .compact();
-
-        return JwtTokenValue.of(token);
     }
 }

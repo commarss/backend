@@ -2,7 +2,7 @@ package com.ll.commars.domain.auth.token;
 
 import com.ll.commars.domain.auth.token.entity.AccessToken;
 import com.ll.commars.domain.auth.token.entity.JwtClaims;
-import com.ll.commars.domain.auth.token.entity.JwtTokenValue;
+import com.ll.commars.domain.auth.token.entity.TokenValue;
 import com.ll.commars.domain.auth.token.entity.RefreshToken;
 import com.ll.commars.domain.member.entity.Member;
 
@@ -12,5 +12,5 @@ public interface TokenProvider {
 
 	RefreshToken generateRefreshToken(Member member);
 
-	JwtClaims parseClaim(JwtTokenValue tokenValue);
+	JwtClaims parseClaim(TokenValue tokenValue);
 }

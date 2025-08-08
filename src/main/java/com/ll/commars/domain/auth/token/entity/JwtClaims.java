@@ -1,7 +1,9 @@
 package com.ll.commars.domain.auth.token.entity;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +15,18 @@ public record JwtClaims(
 	PublicClaims publicClaims,
 	PrivateClaims privateClaims
 ) {
+
+	public static JwtClaims ofAccessToken(Member member, Instant issuedAt, Instant expiresAt) {
+		PublicClaims publicClaims = new PublicClaims("commars.com", TokenSubject.of(member.getEmail()), issuedAt, expiresAt);
+		PrivateClaims privateClaims = new PrivateClaims(member.getId(), List.of("ROLE_USER"));
+		return new JwtClaims(publicClaims, privateClaims);
+	}
+
+	public static JwtClaims ofRefreshToken(Member member, Instant issuedAt, Instant expiresAt) {
+		PublicClaims publicClaims = new PublicClaims("commars.com", TokenSubject.of(member.getEmail()), issuedAt, expiresAt);
+		PrivateClaims privateClaims = new PrivateClaims(member.getId(), Collections.emptyList());
+		return new JwtClaims(publicClaims, privateClaims);
+	}
 
 	public static JwtClaims from(Claims claims) {
 		PublicClaims publicClaims = new PublicClaims(
@@ -28,28 +42,18 @@ public record JwtClaims(
 		return new JwtClaims(publicClaims, privateClaims);
 	}
 
-	public static JwtClaims from(Member member, Instant issuedAt, Instant expiresAt) {
-		PublicClaims publicClaims = new PublicClaims(
-			"commars.com",
-			member.getEmail(),
-			issuedAt,
-			expiresAt
-		);
-		PrivateClaims privateClaims = new PrivateClaims(
-			member.getId(),
-			List.of("ROLE_USER") // todo: 매직 상수 별도 관리
-		);
-		return new JwtClaims(publicClaims, privateClaims);
-	}
-
 	public Map<String, Object> toClaimsMap() {
-		return Map.of(
-			"iss", publicClaims.issuer(),
-			"sub", publicClaims.subject(),
-			"iat", Date.from(publicClaims.issuedAt()),
-			"exp", Date.from(publicClaims.expiresAt()),
-			"userId", privateClaims.userId(),
-			"roles", privateClaims.roles()
-		);
+		Map<String, Object> claims = new HashMap<>();
+		claims.put("iss", publicClaims.issuer());
+		claims.put("sub", publicClaims.subject().value());
+		claims.put("iat", Date.from(publicClaims.issuedAt()));
+		claims.put("exp", Date.from(publicClaims.expiresAt()));
+		claims.put("userId", privateClaims.userId());
+
+		if (privateClaims.roles() != null && !privateClaims.roles().isEmpty()) {
+			claims.put("roles", privateClaims.roles());
+		}
+
+		return claims;
 	}
 }

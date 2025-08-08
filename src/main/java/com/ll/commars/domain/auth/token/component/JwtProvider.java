@@ -11,7 +11,8 @@ import com.ll.commars.domain.auth.token.JwtProperties;
 import com.ll.commars.domain.auth.token.TokenProvider;
 import com.ll.commars.domain.auth.token.entity.AccessToken;
 import com.ll.commars.domain.auth.token.entity.JwtClaims;
-import com.ll.commars.domain.auth.token.entity.JwtTokenValue;
+import com.ll.commars.domain.auth.token.entity.TokenSubject;
+import com.ll.commars.domain.auth.token.entity.TokenValue;
 import com.ll.commars.domain.auth.token.entity.RefreshToken;
 import com.ll.commars.domain.member.entity.Member;
 
@@ -33,13 +34,8 @@ public class JwtProvider implements TokenProvider {
 		this.jwtParser = Jwts.parser().verifyWith(this.secretKey).build();
 	}
 
-	private JwtTokenValue generateToken(Member member, long expirationMillis) {
-		Instant now = Instant.now();
-		Instant expiresAt = now.plus(expirationMillis, ChronoUnit.MILLIS);
-
-		JwtClaims jwtClaims = JwtClaims.from(member, now, expiresAt);
-
-		return JwtTokenValue.of(Jwts.builder()
+	private TokenValue generateTokenValue(JwtClaims jwtClaims) {
+		return TokenValue.of(Jwts.builder()
 			.claims(jwtClaims.toClaimsMap())
 			.signWith(secretKey)
 			.compact());
@@ -47,22 +43,34 @@ public class JwtProvider implements TokenProvider {
 
 	@Override
 	public AccessToken generateAccessToken(Member member) {
-		long expirationMillis = jwtProperties.accessTokenExpiration();
-		JwtTokenValue tokenValue = generateToken(member, expirationMillis);
+		TokenSubject subject = TokenSubject.of(member.getEmail());
 
-		return new AccessToken(member.getEmail(), tokenValue, expirationMillis);
+		Instant now = Instant.now();
+		long expirationMillis = jwtProperties.accessTokenExpiration();
+		Instant expiresAt = now.plus(expirationMillis, ChronoUnit.MILLIS);
+
+		JwtClaims jwtClaims = JwtClaims.ofAccessToken(member, now, expiresAt);
+		TokenValue tokenValue = generateTokenValue(jwtClaims);
+
+		return new AccessToken(subject, tokenValue, expirationMillis);
 	}
 
 	@Override
 	public RefreshToken generateRefreshToken(Member member) {
-		long expirationMillis = jwtProperties.refreshTokenExpiration();
-		JwtTokenValue tokenValue = generateToken(member, expirationMillis);
+		TokenSubject subject = TokenSubject.of(member.getEmail());
 
-		return new RefreshToken(member.getEmail(), tokenValue, expirationMillis);
+		Instant now = Instant.now();
+		long expirationMillis = jwtProperties.refreshTokenExpiration();
+		Instant expiresAt = now.plus(expirationMillis, ChronoUnit.MILLIS);
+
+		JwtClaims jwtClaims = JwtClaims.ofRefreshToken(member, now, expiresAt);
+		TokenValue tokenValue = generateTokenValue(jwtClaims);
+
+		return new RefreshToken(subject, tokenValue, expirationMillis);
 	}
 
 	@Override
-	public JwtClaims parseClaim(JwtTokenValue tokenValue) {
+	public JwtClaims parseClaim(TokenValue tokenValue) {
 		Claims claims = jwtParser
 			.parseSignedClaims(tokenValue.value())
 			.getPayload();
