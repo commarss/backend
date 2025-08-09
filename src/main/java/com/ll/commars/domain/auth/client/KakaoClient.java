@@ -68,7 +68,7 @@ public class KakaoClient implements OAuthClient {
 			.block();
 
 		if (response == null || response.kakaoAccount() == null) {
-			throw new CustomException(KAKAO_OAUTH_USER_FAILED);
+			throw new CustomException(KAKAO_OAUTH_USER_INFO_FAILED);
 		}
 
 		return response;

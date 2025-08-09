@@ -69,7 +69,7 @@ public class GoogleClient implements OAuthClient {
 			.block();
 
 		if (response == null) {
-			throw new CustomException(GOOGLE_OAUTH_USER_FAILED);
+			throw new CustomException(GOOGLE_OAUTH_USER_INFO_FAILED);
 		}
 
 		return response;

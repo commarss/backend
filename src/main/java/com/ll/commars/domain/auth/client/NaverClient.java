@@ -67,7 +67,7 @@ public class NaverClient implements OAuthClient {
 			.block();
 
 		if (response == null || response.response() == null) {
-			throw new CustomException(NAVER_OAUTH_USER_FAILED);
+			throw new CustomException(NAVER_OAUTH_USER_INFO_FAILED);
 		}
 
 		return response;
