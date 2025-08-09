@@ -1,6 +1,6 @@
 package com.ll.commars.domain.auth.oauth.client;
 
-import com.ll.commars.domain.auth.dto.OAuthResponse;
+import com.ll.commars.domain.auth.dto.OAuthMemberInfoDto;
 import com.ll.commars.domain.member.entity.ProviderType;
 
 public interface OAuthClient {
@@ -9,5 +9,5 @@ public interface OAuthClient {
 
 	String getAccessToken(String authorizationCode);
 
-	OAuthResponse getUserInfo(String accessToken);
+	OAuthMemberInfoDto getUserInfo(String accessToken);
 }

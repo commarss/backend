@@ -17,6 +17,9 @@ public enum ErrorCode {
 
 	// Member
 	MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 회원을 찾을 수 없습니다."),
+
+	// OAuth
+	INVALID_OAUTH_PROVIDER(HttpStatus.BAD_REQUEST.value(), "유효하지 않은 OAuth 제공자입니다."),
 	;
 
 	private final int code;
