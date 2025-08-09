@@ -35,7 +35,7 @@ public class AuthController {
 	private final AuthService authService;
 	private final TokenCookieManager tokenCookieManager;
 
-	@PostMapping("/sign-up")
+	@PostMapping("/email/sign-up")
 	public ResponseEntity<SignUpResponse> signUp(
 		@Valid @RequestBody SignUpRequest request
 	) {
@@ -44,7 +44,7 @@ public class AuthController {
 		return ResponseEntity.ok(response);
 	}
 
-	@PostMapping("email/sign-in")
+	@PostMapping("/email/sign-in")
 	public ResponseEntity<SignInResponse> signIn(
 		@Valid @RequestBody SignInRequest request
 	) {
@@ -58,7 +58,7 @@ public class AuthController {
 			.body(response);
 	}
 
-	@PostMapping("sign-out")
+	@PostMapping("/sign-out")
 	public ResponseEntity<Void> signOut(
 		@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader
 	) {
