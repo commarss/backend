@@ -12,13 +12,13 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-import com.ll.commars.domain.auth.token.JwtProperties;
-import com.ll.commars.domain.auth.token.component.JwtProvider;
-import com.ll.commars.domain.auth.token.entity.AccessToken;
-import com.ll.commars.domain.auth.token.entity.JwtClaims;
-import com.ll.commars.domain.auth.token.entity.RefreshToken;
-import com.ll.commars.domain.auth.token.entity.TokenSubject;
-import com.ll.commars.domain.auth.token.entity.TokenValue;
+import com.ll.commars.global.token.JwtProperties;
+import com.ll.commars.global.token.component.JwtProvider;
+import com.ll.commars.global.token.entity.AccessToken;
+import com.ll.commars.global.token.entity.JwtClaims;
+import com.ll.commars.global.token.entity.RefreshToken;
+import com.ll.commars.global.token.entity.TokenSubject;
+import com.ll.commars.global.token.entity.TokenValue;
 import com.ll.commars.domain.member.entity.Member;
 import com.ll.commars.global.annotation.UnitTest;
 
