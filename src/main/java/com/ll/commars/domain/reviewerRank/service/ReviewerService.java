@@ -6,15 +6,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ll.commars.domain.member.entity.Member;
+import com.ll.commars.domain.member.repository.jpa.MemberRepository;
 import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
-import com.ll.commars.domain.restaurant.restaurant.repository.RestaurantRepository;
-import com.ll.commars.domain.review.review.dto.ReviewDto;
-import com.ll.commars.domain.review.review.entity.Review;
-import com.ll.commars.domain.review.review.repository.ReviewRepository;
+import com.ll.commars.domain.restaurant.restaurant.repository.jpa.RestaurantRepository;
+import com.ll.commars.domain.review.dto.ReviewDto;
+import com.ll.commars.domain.review.entity.Review;
+import com.ll.commars.domain.review.repository.jpa.ReviewRepository;
 import com.ll.commars.domain.reviewerRank.dto.ReviewerRank;
 import com.ll.commars.domain.reviewerRank.dto.ReviewerRankResponse;
-import com.ll.commars.domain.user.entity.User;
-import com.ll.commars.domain.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ReviewerService {
 
-	public final UserRepository userRepository;
+	public final MemberRepository memberRepository;
 	public final RestaurantRepository restaurantRepository;
 	private final ReviewRepository reviewRepository;
 
@@ -30,7 +30,7 @@ public class ReviewerService {
 	// ✅ 리뷰 작성 메서드 추가
 	@Transactional
 	public void writeReview(Long restaurantId, ReviewDto.ReviewWriteRequest request, String userEmail) {
-		User user = userRepository.findByEmail(userEmail)
+		Member member = memberRepository.findByEmail(userEmail)
 			.orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
 
 		Restaurant restaurant = restaurantRepository.findById(restaurantId)
@@ -40,7 +40,7 @@ public class ReviewerService {
 			.name(request.getReviewName())
 			.body(request.getBody())
 			.rate(request.getRate())
-			.user(user)
+			.member(member)
 			.restaurant(restaurant)
 			.build();
 

@@ -10,13 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ll.commars.domain.favorite.favorite.dto.FavoriteDto;
 import com.ll.commars.domain.favorite.favorite.entity.Favorite;
-import com.ll.commars.domain.favorite.favorite.repository.FavoriteRepository;
-import com.ll.commars.domain.favorite.favoriteRestaurant.entity.FavoriteRestaurant;
-import com.ll.commars.domain.favorite.favoriteRestaurant.repository.FavoriteRestaurantRepository;
+import com.ll.commars.domain.favorite.favorite.entity.FavoriteRestaurant;
+import com.ll.commars.domain.favorite.favorite.repository.jpa.FavoriteRepository;
+import com.ll.commars.domain.favorite.favorite.repository.jpa.FavoriteRestaurantRepository;
+import com.ll.commars.domain.member.entity.Member;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantDto;
 import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
-import com.ll.commars.domain.restaurant.restaurant.repository.RestaurantRepository;
-import com.ll.commars.domain.user.entity.User;
+import com.ll.commars.domain.restaurant.restaurant.repository.jpa.RestaurantRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,8 +32,8 @@ public class FavoriteService {
 		return favoriteRepository.countByUserEmail(email);
 	}
 
-	public List<Favorite> getFavoritesByUser(User user) {
-		return favoriteRepository.findByUserEmail(user.getEmail());
+	public List<Favorite> getFavoritesByUser(Member member) {
+		return favoriteRepository.findByMemberEmail(member.getEmail());
 	}
 
 	public FavoriteDto.FavoriteInfo toFavoriteInfo(Favorite favorite) {
@@ -64,12 +64,12 @@ public class FavoriteService {
 			.build();
 	}
 
-	public void saveFavoriteList(User user, FavoriteDto.CreateFavoriteListRequest createFavoriteListRequest) {
+	public void saveFavoriteList(Member member, FavoriteDto.CreateFavoriteListRequest createFavoriteListRequest) {
 		Boolean isPublicValue = createFavoriteListRequest.getIsPublic();
 		Favorite favorite = Favorite.builder()
 			.name(createFavoriteListRequest.getName())
 			.isPublic(isPublicValue != null ? isPublicValue : true)
-			.user(user)
+			.member(member)
 			.build();
 
 		favoriteRepository.save(favorite);
@@ -124,21 +124,21 @@ public class FavoriteService {
 	}
 
 	@Transactional
-	public Optional<Favorite> isFavorite(User user, Long restaurantId) {
-		return favoriteRepository.findByUserAndFavoriteRestaurantsRestaurantId(user, restaurantId);
+	public Optional<Favorite> isFavorite(Member member, Long restaurantId) {
+		return favoriteRepository.findByMemberAndFavoriteRestaurantsRestaurantId(member, restaurantId);
 	}
 
 	public Favorite saveFavorite(Favorite favorite) {
 		return favoriteRepository.save(favorite);
 	}
 
-	public Optional<Favorite> findByUserAndName(User user, String name) {
-		return favoriteRepository.findByUserAndName(user, name);
+	public Optional<Favorite> findByUserAndName(Member member, String name) {
+		return favoriteRepository.findByMemberAndName(member, name);
 	}
 
 	@Transactional
 	public List<FavoriteDto.FavoriteInfo> getAllFavoritesByUser(Long userId) {
-		List<Favorite> favorites = favoriteRepository.findByUserId(userId);  // 사용자의 찜 목록 조회
+		List<Favorite> favorites = favoriteRepository.findByMemberId(userId);  // 사용자의 찜 목록 조회
 		return favorites.stream()
 			.map(favorite -> toFavoriteInfo(favorite))  // Favorite 객체를 FavoriteInfo로 변환
 			.collect(Collectors.toList());

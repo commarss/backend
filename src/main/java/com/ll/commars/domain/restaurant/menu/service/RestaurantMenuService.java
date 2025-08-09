@@ -7,9 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ll.commars.domain.restaurant.menu.dto.RestaurantMenuDto;
 import com.ll.commars.domain.restaurant.menu.entity.RestaurantMenu;
-import com.ll.commars.domain.restaurant.menu.repository.RestaurantMenuRepository;
+import com.ll.commars.domain.restaurant.menu.repository.jpa.RestaurantMenuRepository;
 import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
-import com.ll.commars.domain.restaurant.restaurant.repository.RestaurantRepository;
+import com.ll.commars.domain.restaurant.restaurant.repository.jpa.RestaurantRepository;
 
 import lombok.RequiredArgsConstructor;
 

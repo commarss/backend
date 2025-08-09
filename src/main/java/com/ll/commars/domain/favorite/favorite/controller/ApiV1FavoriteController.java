@@ -19,10 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ll.commars.domain.favorite.favorite.dto.FavoriteDto;
 import com.ll.commars.domain.favorite.favorite.entity.Favorite;
+import com.ll.commars.domain.favorite.favorite.service.FavoriteRestaurantService;
 import com.ll.commars.domain.favorite.favorite.service.FavoriteService;
-import com.ll.commars.domain.favorite.favoriteRestaurant.service.FavoriteRestaurantService;
-import com.ll.commars.domain.user.entity.User;
-import com.ll.commars.domain.user.service.UserService;
+import com.ll.commars.domain.member.entity.Member;
+import com.ll.commars.domain.member.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,7 +32,7 @@ import lombok.RequiredArgsConstructor;
 public class ApiV1FavoriteController {
 
 	private final FavoriteService favoriteService;
-	private final UserService userService;
+	private final MemberService memberService;
 	private final FavoriteRestaurantService favoriteRestaurantService;
 
 	// 찜 목록 개수 조회
@@ -84,7 +84,7 @@ public class ApiV1FavoriteController {
 	) {
 		System.out.println("request = " + request);
 		String userId = userDetails.getUsername();
-		return userService.createFavoriteList(String.valueOf(request.get("name")), userId);
+		return memberService.createFavoriteList(String.valueOf(request.get("name")), userId);
 	}
 
 	@GetMapping("/check")
@@ -92,9 +92,9 @@ public class ApiV1FavoriteController {
 		@RequestParam("restaurantId") Long restaurantId,
 		@AuthenticationPrincipal UserDetails userDetails
 	) {
-		User user = userService.findById(Long.parseLong(userDetails.getUsername()))
+		Member member = memberService.findById(Long.parseLong(userDetails.getUsername()))
 			.orElseThrow(() -> new IllegalArgumentException("User not found"));
-		Optional<Favorite> isFavorite = favoriteService.isFavorite(user, restaurantId);
+		Optional<Favorite> isFavorite = favoriteService.isFavorite(member, restaurantId);
 		Map<String, Long> response = new HashMap<>();
 
 		if (isFavorite.isEmpty()) {

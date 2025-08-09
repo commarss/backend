@@ -28,10 +28,10 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build with Gradle Wrapper
-        run: ./gradlew build -x test # 추후 테스트 코드 추가 시 -x test 옵션 제거
+        run: ./gradlew build
 
-#      - name: Publish Test Report
-#        uses: mikepenz/action-junit-report@v5
-#        if: success() || failure()
-#        with:
-#          report_paths: '**/build/test-results/test/TEST-*.xml'
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v5
+        if: success() || failure()
+        with:
+          report_paths: '**/build/test-results/test/TEST-*.xml'

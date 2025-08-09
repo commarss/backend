@@ -3,8 +3,7 @@ package com.ll.commars.domain.favorite.favorite.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ll.commars.domain.favorite.favoriteRestaurant.entity.FavoriteRestaurant;
-import com.ll.commars.domain.user.entity.User;
+import com.ll.commars.domain.member.entity.Member;
 import com.ll.commars.global.BaseEntity;
 
 import jakarta.persistence.CascadeType;
@@ -43,8 +42,8 @@ public class Favorite extends BaseEntity {
 
 	// Favorite과 User: 다대일
 	@ManyToOne
-	@JoinColumn(name = "user_id", nullable = false)
-	private User user;
+	@JoinColumn(name = "member_id", nullable = false)
+	private Member member;
 
 	// Favorite과 FavoriteRestaurant: 일대다
 	@OneToMany(mappedBy = "favorite", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
