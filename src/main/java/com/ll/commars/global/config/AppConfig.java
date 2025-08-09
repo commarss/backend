@@ -1,4 +1,4 @@
-package com.ll.commars.global.app;
+package com.ll.commars.global.config;
 
 import org.springframework.context.annotation.Configuration;
 

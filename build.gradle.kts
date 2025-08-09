@@ -30,6 +30,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-websocket")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
 
     // Spring Security
     implementation("org.springframework.boot:spring-boot-starter-security")
@@ -75,6 +76,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
     testImplementation("org.testcontainers:elasticsearch")
     testImplementation("org.testcontainers:mysql")
+    testImplementation("io.projectreactor:reactor-test")
 }
 
 tasks.withType<Test> {
