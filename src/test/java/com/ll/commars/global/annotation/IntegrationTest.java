@@ -23,5 +23,6 @@ import com.ll.commars.global.config.RedisTestContainer;
 	RedisTestContainer.class,
 	MySQLTestContainer.class,
 	ElasticsearchTestContainer.class
-})public @interface IntegrationTest {
+})
+public @interface IntegrationTest {
 }

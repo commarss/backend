@@ -1,6 +1,5 @@
 package com.ll.commars.domain.favorite.favorite.entity;
 
-import com.ll.commars.domain.favorite.favorite.entity.Favorite;
 import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
 
 import jakarta.persistence.Entity;

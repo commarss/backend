@@ -17,13 +17,15 @@ public record JwtClaims(
 ) {
 
 	public static JwtClaims ofAccessToken(Member member, Instant issuedAt, Instant expiresAt, String jti) {
-		PublicClaims publicClaims = new PublicClaims("commars.com", TokenSubject.of(member.getEmail()), issuedAt, expiresAt, jti);
+		PublicClaims publicClaims = new PublicClaims("commars.com", TokenSubject.of(member.getEmail()), issuedAt,
+			expiresAt, jti);
 		PrivateClaims privateClaims = new PrivateClaims(member.getId(), List.of("ROLE_USER"));
 		return new JwtClaims(publicClaims, privateClaims);
 	}
 
 	public static JwtClaims ofRefreshToken(Member member, Instant issuedAt, Instant expiresAt, String jti) {
-		PublicClaims publicClaims = new PublicClaims("commars.com", TokenSubject.of(member.getEmail()), issuedAt, expiresAt, jti);
+		PublicClaims publicClaims = new PublicClaims("commars.com", TokenSubject.of(member.getEmail()), issuedAt,
+			expiresAt, jti);
 		PrivateClaims privateClaims = new PrivateClaims(member.getId(), Collections.emptyList());
 		return new JwtClaims(publicClaims, privateClaims);
 	}

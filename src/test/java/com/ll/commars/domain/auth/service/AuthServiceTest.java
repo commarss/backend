@@ -153,8 +153,8 @@ class AuthServiceTest {
 
 			// then
 			assertThatThrownBy(() -> authService.reissueToken(refreshTokenValue))
-			.isInstanceOf(CustomException.class)
-			.hasMessage(INVALID_TOKEN.getMessage());
+				.isInstanceOf(CustomException.class)
+				.hasMessage(INVALID_TOKEN.getMessage());
 
 			assertThat(redisTemplate.opsForValue().get(redisKey)).isEqualTo(first.refreshToken());
 		}

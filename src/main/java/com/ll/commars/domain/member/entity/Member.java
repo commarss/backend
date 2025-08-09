@@ -74,7 +74,7 @@ public class Member extends BaseEntity {
 	@JsonIgnore
 	private List<Comment> comments;
 
-	public Member (String email, String password, String name) {
+	public Member(String email, String password, String name) {
 		this.email = email;
 		this.password = password;
 		this.name = name;

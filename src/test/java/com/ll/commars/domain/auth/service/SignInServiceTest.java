@@ -58,7 +58,7 @@ class SignInServiceTest {
 			.set("comments", new ArrayList<>())
 			.sample();
 
-		member =  memberRepository.save(newMember);
+		member = memberRepository.save(newMember);
 	}
 
 	@Nested

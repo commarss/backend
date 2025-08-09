@@ -27,7 +27,8 @@ public class SignUpService {
 			throw new CustomException(EMAIL_ALREADY_EXISTS);
 		}
 
-		Member member = new Member(signUpRequest.email(), passwordEncoder.encode(signUpRequest.password()), signUpRequest.name());
+		Member member = new Member(signUpRequest.email(), passwordEncoder.encode(signUpRequest.password()),
+			signUpRequest.name());
 		Member savedMember = memberRepository.save(member);
 
 		return new SignUpResponse(savedMember.getId(), savedMember.getEmail());

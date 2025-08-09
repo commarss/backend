@@ -10,8 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ll.commars.domain.favorite.favorite.dto.FavoriteDto;
 import com.ll.commars.domain.favorite.favorite.entity.Favorite;
-import com.ll.commars.domain.favorite.favorite.repository.jpa.FavoriteRepository;
 import com.ll.commars.domain.favorite.favorite.entity.FavoriteRestaurant;
+import com.ll.commars.domain.favorite.favorite.repository.jpa.FavoriteRepository;
 import com.ll.commars.domain.favorite.favorite.repository.jpa.FavoriteRestaurantRepository;
 import com.ll.commars.domain.member.entity.Member;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantDto;

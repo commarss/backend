@@ -23,7 +23,6 @@ public class ElasticsearchTestContainer implements ApplicationContextInitializer
 			.withEnv("xpack.security.enabled", "false")
 			.withReuse(true);
 
-
 	static {
 		ELASTICSEARCH_CONTAINER.start();
 	}

@@ -12,9 +12,9 @@ import com.ll.commars.domain.auth.token.JwtProperties;
 import com.ll.commars.domain.auth.token.TokenProvider;
 import com.ll.commars.domain.auth.token.entity.AccessToken;
 import com.ll.commars.domain.auth.token.entity.JwtClaims;
+import com.ll.commars.domain.auth.token.entity.RefreshToken;
 import com.ll.commars.domain.auth.token.entity.TokenSubject;
 import com.ll.commars.domain.auth.token.entity.TokenValue;
-import com.ll.commars.domain.auth.token.entity.RefreshToken;
 import com.ll.commars.domain.member.entity.Member;
 
 import io.jsonwebtoken.Claims;

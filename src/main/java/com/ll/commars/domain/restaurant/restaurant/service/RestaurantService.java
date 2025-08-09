@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ll.commars.domain.member.entity.Member;
+import com.ll.commars.domain.member.repository.jpa.MemberRepository;
+import com.ll.commars.domain.member.service.MemberService;
 import com.ll.commars.domain.restaurant.businessHour.dto.BusinessHourDto;
 import com.ll.commars.domain.restaurant.businessHour.entity.BusinessHour;
 import com.ll.commars.domain.restaurant.businessHour.repository.jpa.BusinessHourRepository;
@@ -21,8 +23,6 @@ import com.ll.commars.domain.restaurant.restaurant.repository.jpa.RestaurantRepo
 import com.ll.commars.domain.review.dto.ReviewDto;
 import com.ll.commars.domain.review.entity.Review;
 import com.ll.commars.domain.review.repository.jpa.ReviewRepository;
-import com.ll.commars.domain.member.repository.jpa.MemberRepository;
-import com.ll.commars.domain.member.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
 

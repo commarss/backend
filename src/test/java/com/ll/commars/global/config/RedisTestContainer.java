@@ -6,7 +6,6 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.DockerImageName;
 
-
 public class RedisTestContainer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
 	private static final int REDIS_PORT = 6379;

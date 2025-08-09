@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ll.commars.domain.favorite.favorite.entity.Favorite;
-import com.ll.commars.domain.favorite.favorite.repository.jpa.FavoriteRepository;
 import com.ll.commars.domain.favorite.favorite.entity.FavoriteRestaurant;
+import com.ll.commars.domain.favorite.favorite.repository.jpa.FavoriteRepository;
 import com.ll.commars.domain.favorite.favorite.repository.jpa.FavoriteRestaurantRepository;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantSummaryDTO;
 import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
