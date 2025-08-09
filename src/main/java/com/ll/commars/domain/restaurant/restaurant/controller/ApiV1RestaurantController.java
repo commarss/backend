@@ -18,7 +18,7 @@ import com.ll.commars.domain.restaurant.menu.dto.RestaurantMenuDto;
 import com.ll.commars.domain.restaurant.menu.service.RestaurantMenuService;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantDto;
 import com.ll.commars.domain.restaurant.restaurant.service.RestaurantService;
-import com.ll.commars.domain.review.review.dto.ReviewDto;
+import com.ll.commars.domain.review.dto.ReviewDto;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;

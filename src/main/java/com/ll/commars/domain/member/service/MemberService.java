@@ -12,9 +12,9 @@ import com.ll.commars.domain.favorite.favorite.dto.FavoriteDto;
 import com.ll.commars.domain.favorite.favorite.entity.Favorite;
 import com.ll.commars.domain.favorite.favorite.service.FavoriteService;
 import com.ll.commars.domain.member.entity.Member;
-import com.ll.commars.domain.review.review.dto.ReviewDto;
+import com.ll.commars.domain.review.dto.ReviewDto;
 import com.ll.commars.domain.member.dto.MemberDto;
-import com.ll.commars.domain.member.repository.MemberRepository;
+import com.ll.commars.domain.member.repository.jpa.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
 

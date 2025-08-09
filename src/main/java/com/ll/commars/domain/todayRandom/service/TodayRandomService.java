@@ -11,16 +11,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ll.commars.domain.favorite.favorite.entity.Favorite;
-import com.ll.commars.domain.favorite.favorite.repository.FavoriteRepository;
-import com.ll.commars.domain.favorite.favoriteRestaurant.entity.FavoriteRestaurant;
-import com.ll.commars.domain.favorite.favoriteRestaurant.repository.FavoriteRestaurantRepository;
+import com.ll.commars.domain.favorite.favorite.repository.jpa.FavoriteRepository;
+import com.ll.commars.domain.favorite.favorite.entity.FavoriteRestaurant;
+import com.ll.commars.domain.favorite.favorite.repository.jpa.FavoriteRestaurantRepository;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantSummaryDTO;
 import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
-import com.ll.commars.domain.restaurant.restaurant.repository.RestaurantRepository;
-import com.ll.commars.domain.review.review.dto.RestaurantReviewAnalysisDTO;
-import com.ll.commars.domain.review.review.dto.ReviewAnalysisDTO;
-import com.ll.commars.domain.review.review.entity.Review;
-import com.ll.commars.domain.review.review.repository.ReviewRepository;
+import com.ll.commars.domain.restaurant.restaurant.repository.jpa.RestaurantRepository;
+import com.ll.commars.domain.review.dto.RestaurantReviewAnalysisDTO;
+import com.ll.commars.domain.review.dto.ReviewAnalysisDTO;
+import com.ll.commars.domain.review.entity.Review;
+import com.ll.commars.domain.review.repository.jpa.ReviewRepository;
 
 @Service
 

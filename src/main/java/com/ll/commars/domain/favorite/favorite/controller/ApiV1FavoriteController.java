@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ll.commars.domain.favorite.favorite.dto.FavoriteDto;
 import com.ll.commars.domain.favorite.favorite.entity.Favorite;
 import com.ll.commars.domain.favorite.favorite.service.FavoriteService;
-import com.ll.commars.domain.favorite.favoriteRestaurant.service.FavoriteRestaurantService;
+import com.ll.commars.domain.favorite.favorite.service.FavoriteRestaurantService;
 import com.ll.commars.domain.member.entity.Member;
 import com.ll.commars.domain.member.service.MemberService;
 

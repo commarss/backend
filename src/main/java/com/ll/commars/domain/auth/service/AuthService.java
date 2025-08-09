@@ -16,7 +16,7 @@ import com.ll.commars.domain.auth.token.entity.JwtClaims;
 import com.ll.commars.domain.auth.token.entity.RefreshToken;
 import com.ll.commars.domain.auth.token.entity.TokenValue;
 import com.ll.commars.domain.member.entity.Member;
-import com.ll.commars.domain.member.repository.MemberRepository;
+import com.ll.commars.domain.member.repository.jpa.MemberRepository;
 import com.ll.commars.global.exception.CustomException;
 
 import lombok.RequiredArgsConstructor;

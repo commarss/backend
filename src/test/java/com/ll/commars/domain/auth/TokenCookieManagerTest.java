@@ -12,18 +12,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseCookie;
 
 import com.ll.commars.domain.auth.token.JwtProperties;
 import com.ll.commars.domain.auth.token.component.TokenCookieManager;
+import com.ll.commars.global.annotation.UnitTest;
 
 import com.navercorp.fixturemonkey.FixtureMonkey;
 import com.navercorp.fixturemonkey.api.introspector.FieldReflectionArbitraryIntrospector;
 
-@ExtendWith(MockitoExtension.class)
+@UnitTest
 @DisplayName("TokenCookieManager 테스트")
 class TokenCookieManagerTest {
 

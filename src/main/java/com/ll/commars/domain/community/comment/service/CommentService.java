@@ -8,11 +8,11 @@ import com.ll.commars.domain.community.comment.dto.CommentCreateResponse;
 import com.ll.commars.domain.community.comment.dto.CommentUpdateRequest;
 import com.ll.commars.domain.community.comment.dto.CommentUpdateResponse;
 import com.ll.commars.domain.community.comment.entity.Comment;
-import com.ll.commars.domain.community.comment.repository.CommentRepository;
+import com.ll.commars.domain.community.comment.repository.jpa.CommentRepository;
 import com.ll.commars.domain.community.post.entity.Post;
-import com.ll.commars.domain.community.post.repository.PostRepository;
+import com.ll.commars.domain.community.post.repository.jpa.PostRepository;
 import com.ll.commars.domain.member.entity.Member;
-import com.ll.commars.domain.member.repository.MemberRepository;
+import com.ll.commars.domain.member.repository.jpa.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
 

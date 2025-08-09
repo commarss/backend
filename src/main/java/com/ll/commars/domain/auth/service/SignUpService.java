@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ll.commars.domain.auth.dto.SignUpRequest;
 import com.ll.commars.domain.auth.dto.SignUpResponse;
 import com.ll.commars.domain.member.entity.Member;
-import com.ll.commars.domain.member.repository.MemberRepository;
+import com.ll.commars.domain.member.repository.jpa.MemberRepository;
 import com.ll.commars.global.exception.CustomException;
 
 import lombok.RequiredArgsConstructor;

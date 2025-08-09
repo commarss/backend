@@ -13,9 +13,9 @@ import com.ll.commars.domain.community.post.dto.PostUpdateResponse;
 import com.ll.commars.domain.community.post.entity.Post;
 import com.ll.commars.domain.community.post.entity.PostHashTag;
 import com.ll.commars.domain.community.post.entity.PostLike;
-import com.ll.commars.domain.community.post.repository.PostRepository;
+import com.ll.commars.domain.community.post.repository.jpa.PostRepository;
 import com.ll.commars.domain.member.entity.Member;
-import com.ll.commars.domain.member.repository.MemberRepository;
+import com.ll.commars.domain.member.repository.jpa.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
 

@@ -14,8 +14,8 @@ import com.ll.commars.domain.community.post.dto.PostListResponse;
 import com.ll.commars.domain.community.post.dto.PostResponse;
 import com.ll.commars.domain.community.post.entity.Post;
 import com.ll.commars.domain.community.post.entity.PostLike;
-import com.ll.commars.domain.community.post.repository.PostLikeRepository;
-import com.ll.commars.domain.community.post.repository.PostRepository;
+import com.ll.commars.domain.community.post.repository.jpa.PostLikeRepository;
+import com.ll.commars.domain.community.post.repository.jpa.PostRepository;
 
 import lombok.RequiredArgsConstructor;
 

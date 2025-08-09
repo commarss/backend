@@ -2,6 +2,7 @@ package com.ll.commars.domain.auth.token.component;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.UUID;
 
 import javax.crypto.SecretKey;
 
@@ -45,11 +46,13 @@ public class JwtProvider implements TokenProvider {
 	public AccessToken generateAccessToken(Member member) {
 		TokenSubject subject = TokenSubject.of(member.getEmail());
 
+		String jti = UUID.randomUUID().toString();
+
 		Instant now = Instant.now();
 		long expirationMillis = jwtProperties.accessTokenExpiration();
 		Instant expiresAt = now.plus(expirationMillis, ChronoUnit.MILLIS);
 
-		JwtClaims jwtClaims = JwtClaims.ofAccessToken(member, now, expiresAt);
+		JwtClaims jwtClaims = JwtClaims.ofAccessToken(member, now, expiresAt, jti);
 		TokenValue tokenValue = generateTokenValue(jwtClaims);
 
 		return new AccessToken(subject, tokenValue, expirationMillis);
@@ -59,11 +62,13 @@ public class JwtProvider implements TokenProvider {
 	public RefreshToken generateRefreshToken(Member member) {
 		TokenSubject subject = TokenSubject.of(member.getEmail());
 
+		String jti = UUID.randomUUID().toString();
+
 		Instant now = Instant.now();
 		long expirationMillis = jwtProperties.refreshTokenExpiration();
 		Instant expiresAt = now.plus(expirationMillis, ChronoUnit.MILLIS);
 
-		JwtClaims jwtClaims = JwtClaims.ofRefreshToken(member, now, expiresAt);
+		JwtClaims jwtClaims = JwtClaims.ofRefreshToken(member, now, expiresAt, jti);
 		TokenValue tokenValue = generateTokenValue(jwtClaims);
 
 		return new RefreshToken(subject, tokenValue, expirationMillis);

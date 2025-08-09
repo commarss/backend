@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.ll.commars.domain.restaurant.businessHour.dto.BusinessHourDto;
 import com.ll.commars.domain.restaurant.menu.dto.RestaurantMenuDto;
-import com.ll.commars.domain.review.review.dto.ReviewDto;
+import com.ll.commars.domain.review.dto.ReviewDto;
 
 import lombok.Builder;
 import lombok.Getter;

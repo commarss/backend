@@ -3,7 +3,6 @@ package com.ll.commars.domain.favorite.favorite.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ll.commars.domain.favorite.favoriteRestaurant.entity.FavoriteRestaurant;
 import com.ll.commars.domain.member.entity.Member;
 import com.ll.commars.global.BaseEntity;
 

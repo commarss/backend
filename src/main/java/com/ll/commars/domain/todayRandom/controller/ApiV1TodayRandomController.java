@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantSummaryDTO;
-import com.ll.commars.domain.review.review.dto.RestaurantReviewAnalysisDTO;
+import com.ll.commars.domain.review.dto.RestaurantReviewAnalysisDTO;
 import com.ll.commars.domain.todayRandom.service.TodayRandomService;
 
 import lombok.RequiredArgsConstructor;

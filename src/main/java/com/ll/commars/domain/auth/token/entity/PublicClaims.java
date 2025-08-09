@@ -6,10 +6,11 @@ public record PublicClaims(
 	String issuer,
 	TokenSubject subject,
 	Instant issuedAt,
-	Instant expiresAt
+	Instant expiresAt,
+	String jti
 ) {
 
-	public PublicClaims(String issuer, String subject, Instant issuedAt, Instant expiresAt) {
-		this(issuer, TokenSubject.of(subject), issuedAt, expiresAt);
+	public PublicClaims(String issuer, String subject, Instant issuedAt, Instant expiresAt, String jti) {
+		this(issuer, TokenSubject.of(subject), issuedAt, expiresAt, jti);
 	}
 }

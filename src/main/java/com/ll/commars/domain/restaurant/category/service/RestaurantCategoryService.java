@@ -8,12 +8,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ll.commars.domain.restaurant.businessHour.dto.BusinessHourDto;
 import com.ll.commars.domain.restaurant.category.dto.RestaurantCategoryDto;
 import com.ll.commars.domain.restaurant.category.entity.RestaurantCategory;
-import com.ll.commars.domain.restaurant.category.repository.RestaurantCategoryRepository;
+import com.ll.commars.domain.restaurant.category.repository.jpa.RestaurantCategoryRepository;
 import com.ll.commars.domain.restaurant.menu.dto.RestaurantMenuDto;
-import com.ll.commars.domain.restaurant.menu.repository.RestaurantMenuRepository;
+import com.ll.commars.domain.restaurant.menu.repository.jpa.RestaurantMenuRepository;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantDto;
-import com.ll.commars.domain.restaurant.restaurant.repository.RestaurantRepository;
-import com.ll.commars.domain.review.review.dto.ReviewDto;
+import com.ll.commars.domain.restaurant.restaurant.repository.jpa.RestaurantRepository;
+import com.ll.commars.domain.review.dto.ReviewDto;
 
 import lombok.RequiredArgsConstructor;
 

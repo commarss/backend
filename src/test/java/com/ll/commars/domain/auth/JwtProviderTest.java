@@ -10,9 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.ll.commars.domain.auth.token.JwtProperties;
 import com.ll.commars.domain.auth.token.component.JwtProvider;
@@ -22,6 +20,7 @@ import com.ll.commars.domain.auth.token.entity.RefreshToken;
 import com.ll.commars.domain.auth.token.entity.TokenSubject;
 import com.ll.commars.domain.auth.token.entity.TokenValue;
 import com.ll.commars.domain.member.entity.Member;
+import com.ll.commars.global.annotation.UnitTest;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -30,7 +29,7 @@ import io.jsonwebtoken.security.SignatureException;
 import com.navercorp.fixturemonkey.FixtureMonkey;
 import com.navercorp.fixturemonkey.api.introspector.FieldReflectionArbitraryIntrospector;
 
-@ExtendWith(MockitoExtension.class)
+@UnitTest
 @DisplayName("JwtProvider 테스트")
 class JwtProviderTest {
 
