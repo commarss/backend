@@ -1,6 +1,6 @@
 package com.ll.commars.domain.member.entity;
 
-public enum SocialProvider {
+public enum ProviderType {
 
 	GOOGLE,
 	KAKAO,

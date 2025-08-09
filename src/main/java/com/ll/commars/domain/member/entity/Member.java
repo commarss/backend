@@ -34,7 +34,7 @@ public class Member extends BaseEntity {
 
 	@Column
 	@Enumerated(EnumType.STRING)
-	private SocialProvider socialProvider;
+	private ProviderType providerType;
 
 	@Column(unique = true)
 	private String email;
