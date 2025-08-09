@@ -37,8 +37,7 @@ public class OAuthService {
 			throw new CustomException(INVALID_OAUTH_PROVIDER, authType.name());
 		}
 
-		String accessToken = client.getAccessToken(request.authorizationCode());
-		OAuthMemberInfoDto memberInfo = client.getUserInfo(accessToken);
+		OAuthMemberInfoDto memberInfo = client.getUserInfo(request.authorizationCode());
 
 		Optional<Member> foundMember = memberRepository.findByEmailAndAuthType(
 			memberInfo.getEmail(),

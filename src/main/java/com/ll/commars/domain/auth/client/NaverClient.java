@@ -14,11 +14,6 @@ public class NaverClient implements OAuthClient {
 	}
 
 	@Override
-	public String getAccessToken(String authorizationCode) {
-		return null;
-	}
-
-	@Override
 	public OAuthMemberInfoDto getUserInfo(String accessToken) {
 		return null;
 	}
