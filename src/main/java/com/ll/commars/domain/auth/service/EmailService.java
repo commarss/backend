@@ -16,6 +16,7 @@ import com.ll.commars.domain.auth.dto.SignInRequest;
 import com.ll.commars.domain.auth.dto.SignInResponse;
 import com.ll.commars.domain.auth.dto.SignUpRequest;
 import com.ll.commars.domain.auth.dto.SignUpResponse;
+import com.ll.commars.domain.member.entity.AuthType;
 import com.ll.commars.global.token.TokenProvider;
 import com.ll.commars.global.token.entity.AccessToken;
 import com.ll.commars.global.token.entity.RefreshToken;
@@ -63,8 +64,13 @@ public class EmailService {
 			throw new CustomException(EMAIL_ALREADY_EXISTS);
 		}
 
-		Member member = new Member(signUpRequest.email(), passwordEncoder.encode(signUpRequest.password()),
-			signUpRequest.name());
+		Member member = new Member(
+			signUpRequest.email(),
+			signUpRequest.name(),
+			passwordEncoder.encode(signUpRequest.password()),
+			AuthType.EMAIL
+		);
+
 		Member savedMember = memberRepository.save(member);
 
 		return new SignUpResponse(savedMember.getId(), savedMember.getEmail());

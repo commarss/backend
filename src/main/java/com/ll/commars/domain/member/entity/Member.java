@@ -85,4 +85,11 @@ public class Member extends BaseEntity {
 		this.name = name;
 		this.authType = authType;
 	}
+
+	public Member(String email, String name, String password, AuthType authType) {
+		this.email = email;
+		this.name = name;
+		this.password = password;
+		this.authType = authType;
+	}
 }

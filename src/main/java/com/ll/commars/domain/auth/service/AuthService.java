@@ -16,15 +16,15 @@ import com.ll.commars.domain.auth.dto.SignInResponse;
 import com.ll.commars.domain.auth.dto.SignUpRequest;
 import com.ll.commars.domain.auth.dto.SignUpResponse;
 import com.ll.commars.domain.auth.dto.TokenReissueResponse;
+import com.ll.commars.domain.member.entity.AuthType;
+import com.ll.commars.domain.member.entity.Member;
+import com.ll.commars.domain.member.repository.jpa.MemberRepository;
+import com.ll.commars.global.exception.CustomException;
 import com.ll.commars.global.token.TokenProvider;
 import com.ll.commars.global.token.entity.AccessToken;
 import com.ll.commars.global.token.entity.JwtClaims;
 import com.ll.commars.global.token.entity.RefreshToken;
 import com.ll.commars.global.token.entity.TokenValue;
-import com.ll.commars.domain.member.entity.AuthType;
-import com.ll.commars.domain.member.entity.Member;
-import com.ll.commars.domain.member.repository.jpa.MemberRepository;
-import com.ll.commars.global.exception.CustomException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -100,18 +100,15 @@ public class AuthService {
 		redisTemplate.delete("refreshToken" + userId);
 	}
 
-	@Transactional
 	public SignInResponse emailSignIn(SignInRequest request) {
 		return emailService.emailSignIn(request);
 	}
 
-	@Transactional
-	public OAuthResponse processOAuth(AuthType authType, OAuthRequest request) {
-		return oAuthService.processOAuth(authType, request);
-	}
-
-	@Transactional
 	public SignUpResponse emailSignUp(SignUpRequest request) {
 		return emailService.emailSignUp(request);
+	}
+
+	public OAuthResponse processOAuth(AuthType authType, OAuthRequest request) {
+		return oAuthService.processOAuth(authType, request);
 	}
 }
