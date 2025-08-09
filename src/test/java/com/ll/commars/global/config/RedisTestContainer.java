@@ -4,6 +4,7 @@ import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.utility.DockerImageName;
 
 public class RedisTestContainer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
@@ -15,7 +16,8 @@ public class RedisTestContainer implements ApplicationContextInitializer<Configu
 	static {
 		REDIS_CONTAINER = new GenericContainer<>(DockerImageName.parse(REDIS_DOCKER_IMAGE))
 			.withExposedPorts(REDIS_PORT)
-			.withReuse(true);
+			.waitingFor(Wait.forListeningPort())
+			.withReuse(true); // todo: CI 환경에서 불안정하게 동작할 수 있음
 		REDIS_CONTAINER.start();
 	}
 

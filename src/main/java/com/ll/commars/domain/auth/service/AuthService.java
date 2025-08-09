@@ -27,6 +27,8 @@ public class AuthService {
 
 	private final TokenProvider tokenProvider;
 	private final MemberRepository memberRepository;
+
+	// todo: StringRedisTemplate vs. RedisTemplate<String, String>
 	private final RedisTemplate<String, String> redisTemplate;
 
 	@Transactional
