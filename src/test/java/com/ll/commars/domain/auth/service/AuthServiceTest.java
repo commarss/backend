@@ -139,6 +139,25 @@ class AuthServiceTest {
 			assertThatThrownBy(() -> authService.reissueToken(malformedToken))
 				.isInstanceOf(JwtException.class);
 		}
+
+		@Test
+		void 토큰_재발급_후_이전_RefreshToken은_더_이상_유효하지_않다() {
+			// given
+			refreshToken = tokenProvider.generateRefreshToken(member);
+			refreshTokenValue = refreshToken.token().value();
+			redisKey = "refreshToken" + member.getId();
+			redisTemplate.opsForValue().set(redisKey, refreshTokenValue, Duration.ofMillis(refreshToken.expiration()));
+
+			// when
+			TokenReissueResponse first = authService.reissueToken(refreshTokenValue);
+
+			// then
+			assertThatThrownBy(() -> authService.reissueToken(refreshTokenValue))
+			.isInstanceOf(CustomException.class)
+			.hasMessage(INVALID_TOKEN.getMessage());
+
+			assertThat(redisTemplate.opsForValue().get(redisKey)).isEqualTo(first.refreshToken());
+		}
 	}
 
 	@Nested
