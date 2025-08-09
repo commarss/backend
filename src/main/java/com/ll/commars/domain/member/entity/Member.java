@@ -34,7 +34,7 @@ public class Member extends BaseEntity {
 
 	@Column
 	@Enumerated(EnumType.STRING)
-	private ProviderType providerType;
+	private AuthType authType;
 
 	@Column(unique = true)
 	private String email;
@@ -78,5 +78,11 @@ public class Member extends BaseEntity {
 		this.email = email;
 		this.password = password;
 		this.name = name;
+	}
+
+	public Member(String email, String name, AuthType authType) {
+		this.email = email;
+		this.name = name;
+		this.authType = authType;
 	}
 }
