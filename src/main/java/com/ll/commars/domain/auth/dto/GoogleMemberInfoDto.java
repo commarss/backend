@@ -1,7 +1,16 @@
 package com.ll.commars.domain.auth.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public record GoogleMemberInfoDto(
-	String email
+	@JsonProperty("sub")
+	String id,
+
+	@JsonProperty("email")
+	String email,
+
+	@JsonProperty("name")
+	String nickname
 ) implements OAuthMemberInfoDto {
 
 	@Override
@@ -11,6 +20,6 @@ public record GoogleMemberInfoDto(
 
 	@Override
 	public String getNickname() {
-		return "";
+		return nickname;
 	}
 }

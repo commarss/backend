@@ -7,6 +7,7 @@ public record GoogleClientProperties(
 	String tokenUrl,
 	String userInfoUrl,
 	String redirectUrl,
-	String clientId
+	String clientId,
+	String clientSecret
 ) {
 }

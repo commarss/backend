@@ -56,11 +56,6 @@ dependencies {
     implementation(platform("software.amazon.awssdk:bom:2.24.0"))
     implementation("software.amazon.awssdk:s3")
 
-    // Google
-    implementation("com.google.api-client:google-api-client:1.33.0")
-    implementation("com.google.http-client:google-http-client-gson:1.33.0")
-    implementation("com.google.oauth-client:google-oauth-client:1.33.3")
-
     // Util
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
