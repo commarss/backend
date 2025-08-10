@@ -5,7 +5,6 @@ import static com.ll.commars.global.exception.ErrorCode.*;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ll.commars.domain.auth.client.OAuthClient;
@@ -28,7 +27,6 @@ public class OAuthService {
 	private final MemberRepository memberRepository;
 	private final TokenProvider tokenProvider;
 
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public OAuthResponse processOAuth(AuthType authType, OAuthRequest request) {
 		OAuthClient client = clients.get(authType);
 		if (client == null) {
@@ -37,10 +35,12 @@ public class OAuthService {
 
 		OAuthMemberInfoDto memberInfo = client.getUserInfo(request.authorizationCode());
 
-		return memberRepository.findByEmailAndAuthType(
-				memberInfo.getEmail(),
-				authType
-			)
+		return oAuthSignInOrSignUp(memberInfo, authType);
+	}
+
+	@Transactional
+	protected OAuthResponse oAuthSignInOrSignUp(OAuthMemberInfoDto memberInfo, AuthType authType) {
+		return memberRepository.findByEmailAndAuthType(memberInfo.getEmail(), authType)
 			.map(this::oAuthSignIn)
 			.orElseGet(() -> oAuthSignUp(memberInfo, authType));
 	}
