@@ -3,22 +3,22 @@ package com.ll.commars.domain.auth.service;
 import static com.ll.commars.global.exception.ErrorCode.*;
 
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ll.commars.domain.auth.client.OAuthClient;
 import com.ll.commars.domain.auth.dto.OAuthMemberInfoDto;
 import com.ll.commars.domain.auth.dto.OAuthRequest;
 import com.ll.commars.domain.auth.dto.OAuthResponse;
 import com.ll.commars.domain.auth.dto.OAuthSignInResponse;
 import com.ll.commars.domain.auth.dto.OAuthSignUpResponse;
-import com.ll.commars.domain.auth.client.OAuthClient;
-import com.ll.commars.global.token.TokenProvider;
 import com.ll.commars.domain.member.entity.AuthType;
 import com.ll.commars.domain.member.entity.Member;
 import com.ll.commars.domain.member.repository.jpa.MemberRepository;
 import com.ll.commars.global.exception.CustomException;
+import com.ll.commars.global.token.TokenProvider;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,7 +30,7 @@ public class OAuthService {
 	private final MemberRepository memberRepository;
 	private final TokenProvider tokenProvider;
 
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public OAuthResponse processOAuth(AuthType authType, OAuthRequest request) {
 		OAuthClient client = clients.get(authType);
 		if (client == null) {
@@ -39,12 +39,10 @@ public class OAuthService {
 
 		OAuthMemberInfoDto memberInfo = client.getUserInfo(request.authorizationCode());
 
-		Optional<Member> foundMember = memberRepository.findByEmailAndAuthType(
-			memberInfo.getEmail(),
-			authType
-		);
-
-		return foundMember
+		return memberRepository.findByEmailAndAuthType(
+				memberInfo.getEmail(),
+				authType
+			)
 			.map(this::oAuthSignIn)
 			.orElseGet(() -> oAuthSignUp(memberInfo, authType));
 	}
