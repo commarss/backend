@@ -60,6 +60,14 @@ services:
     networks:
         - elastic
 
+  redis:
+    image: redis:latest
+    container_name: local-commars-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis_data_local:/data
+
 networks:
   elastic:
     driver: bridge

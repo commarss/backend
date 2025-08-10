@@ -30,6 +30,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-websocket")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
 
     // Spring Security
     implementation("org.springframework.boot:spring-boot-starter-security")
@@ -55,11 +56,6 @@ dependencies {
     implementation(platform("software.amazon.awssdk:bom:2.24.0"))
     implementation("software.amazon.awssdk:s3")
 
-    // Google
-    implementation("com.google.api-client:google-api-client:1.33.0")
-    implementation("com.google.http-client:google-http-client-gson:1.33.0")
-    implementation("com.google.oauth-client:google-oauth-client:1.33.3")
-
     // Util
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
@@ -75,6 +71,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
     testImplementation("org.testcontainers:elasticsearch")
     testImplementation("org.testcontainers:mysql")
+    testImplementation("io.projectreactor:reactor-test")
 }
 
 tasks.withType<Test> {

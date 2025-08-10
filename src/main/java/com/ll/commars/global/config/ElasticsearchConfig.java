@@ -11,7 +11,6 @@ import com.ll.commars.domain.restaurant.restaurant.entity.RestaurantDoc;
 
 import lombok.RequiredArgsConstructor;
 
-// 인덱스 초기화 후 재설정해야 설정 매핑이 됨. 그 역할을 하기 위한 파일
 @Configuration
 @RequiredArgsConstructor
 public class ElasticsearchConfig {

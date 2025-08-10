@@ -1,6 +1,6 @@
 package com.ll.commars.domain.auth.dto;
 
-public record SignInResponse(
+public record OAuthResponse(
 	String accessToken,
 	String refreshToken,
 	boolean isRegistered

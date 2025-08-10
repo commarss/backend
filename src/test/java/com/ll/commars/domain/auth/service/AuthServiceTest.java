@@ -14,12 +14,18 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.ll.commars.domain.auth.dto.SignInRequest;
+import com.ll.commars.domain.auth.dto.SignInResponse;
+import com.ll.commars.domain.auth.dto.SignUpRequest;
+import com.ll.commars.domain.auth.dto.SignUpResponse;
 import com.ll.commars.domain.auth.dto.TokenReissueResponse;
-import com.ll.commars.domain.auth.token.TokenProvider;
-import com.ll.commars.domain.auth.token.entity.AccessToken;
-import com.ll.commars.domain.auth.token.entity.RefreshToken;
-import com.ll.commars.domain.auth.token.entity.TokenValue;
+import com.ll.commars.global.token.TokenProvider;
+import com.ll.commars.global.token.entity.AccessToken;
+import com.ll.commars.global.token.entity.RefreshToken;
+import com.ll.commars.global.token.entity.TokenValue;
 import com.ll.commars.domain.member.entity.Member;
 import com.ll.commars.domain.member.repository.jpa.MemberRepository;
 import com.ll.commars.global.annotation.IntegrationTest;
@@ -46,9 +52,13 @@ class AuthServiceTest {
 	@Autowired
 	private RedisTemplate<String, String> redisTemplate;
 
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
 	private Member member;
 
 	private static final String USER_EMAIL = "test@example.com";
+	private static final String RAW_PASSWORD = "password123!";
 
 	private final FixtureMonkey fixtureMonkey = FixtureMonkey.builder()
 		.objectIntrospector(FieldReflectionArbitraryIntrospector.INSTANCE)
@@ -56,15 +66,101 @@ class AuthServiceTest {
 
 	@BeforeEach
 	void setUp() {
+		String encodedPassword = passwordEncoder.encode(RAW_PASSWORD);
+
 		Member newMember = fixtureMonkey.giveMeBuilder(Member.class)
 			.set("id", null)
 			.set("email", USER_EMAIL)
+			.set("name", "테스트유저")
+			.set("password", encodedPassword)
 			.set("reviews", new ArrayList<>())
 			.set("favorites", new ArrayList<>())
 			.set("posts", new ArrayList<>())
 			.set("comments", new ArrayList<>())
 			.sample();
 		member = memberRepository.save(newMember);
+	}
+
+	@Nested
+	class 이메일_회원가입_테스트 {
+
+		@Test
+		void 회원가입에_성공한다() {
+			// given
+			String email = "newuser@example.com";
+			String password = "password123!";
+			String name = "신규회원";
+			SignUpRequest request = new SignUpRequest(email, password, name);
+
+			// when
+			SignUpResponse response = authService.emailSignUp(request);
+
+			// then
+			assertThat(response).isNotNull();
+			assertThat(response.email()).isEqualTo(email);
+
+			Member foundMember = memberRepository.findByEmail(email)
+				.orElseThrow(() -> new AssertionError("회원이 데이터베이스에 저장되지 않았습니다."));
+
+			assertThat(foundMember.getName()).isEqualTo(name);
+			assertThat(passwordEncoder.matches(password, foundMember.getPassword())).isTrue();
+		}
+
+		@Test
+		void 이미_존재하는_이메일로_회원가입_시_CustomException이_발생한다() {
+			// given
+			SignUpRequest request = new SignUpRequest(USER_EMAIL, "anypassword", "anyname");
+
+			// when & then
+			assertThatThrownBy(() -> authService.emailSignUp(request))
+				.isInstanceOf(CustomException.class)
+				.hasMessage(EMAIL_ALREADY_EXISTS.getMessage());
+		}
+	}
+
+	@Nested
+	class 이메일_로그인_테스트 {
+
+		@Test
+		void 로그인_성공_시_토큰이_발급되고_redis에_저장된다() {
+			// given
+			SignInRequest request = new SignInRequest(USER_EMAIL, RAW_PASSWORD);
+
+			// when
+			SignInResponse response = authService.emailSignIn(request);
+
+			// then
+			assertThat(response).isNotNull();
+			assertThat(response.accessToken()).isNotBlank();
+			assertThat(response.refreshToken()).isNotBlank();
+
+			String redisKey = "refreshToken" + member.getId();
+			String storedRefreshToken = redisTemplate.opsForValue().get(redisKey);
+
+			assertThat(storedRefreshToken).isEqualTo(response.refreshToken());
+		}
+
+		@Test
+		void 비밀번호가_틀리면_BadCredentialsException이_발생한다() {
+			// given
+			String wrongPassword = "wrong-password";
+			SignInRequest request = new SignInRequest(member.getEmail(), wrongPassword);
+
+			// when & then
+			assertThatThrownBy(() -> authService.emailSignIn(request))
+				.isInstanceOf(BadCredentialsException.class);
+		}
+
+		@Test
+		void 이메일이_틀리면_BadCredentialsException이_발생한다() {
+			// given
+			String nonExistentEmail = "nonexistent@example.com";
+			SignInRequest request = new SignInRequest(nonExistentEmail, "any-password");
+
+			// when & then
+			assertThatThrownBy(() -> authService.emailSignIn(request))
+				.isInstanceOf(BadCredentialsException.class);
+		}
 	}
 
 	@Nested

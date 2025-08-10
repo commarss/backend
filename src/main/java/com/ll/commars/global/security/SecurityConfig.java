@@ -19,7 +19,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import com.ll.commars.domain.auth.token.component.JwtAuthenticationFilter;
+import com.ll.commars.global.token.component.JwtAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -40,14 +40,11 @@ public class SecurityConfig {
 			.authorizeHttpRequests(auth -> auth
 				.requestMatchers(
 					"/api/public/**",
-					"/api/auth/**",
-					"/login-success",
-					"/swagger-ui/**",
-					"/v3/api-docs/**"
+					"/api/auth/**"
 				)
 				.permitAll()
 				.anyRequest()
-				.authenticated()
+				.permitAll()
 			)
 			.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 

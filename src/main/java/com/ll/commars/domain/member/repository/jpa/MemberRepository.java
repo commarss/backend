@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.ll.commars.domain.member.entity.AuthType;
 import com.ll.commars.domain.member.entity.Member;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
@@ -13,5 +14,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 	Optional<Member> findByEmailAndName(String email, String name);
 
 	Optional<Member> findByIdAndEmail(Long id, String email);
+
+	Optional<Member> findByEmailAndAuthType(String email, AuthType authType);
 
 }

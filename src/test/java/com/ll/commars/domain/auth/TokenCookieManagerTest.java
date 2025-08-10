@@ -15,8 +15,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.http.ResponseCookie;
 
-import com.ll.commars.domain.auth.token.JwtProperties;
-import com.ll.commars.domain.auth.token.component.TokenCookieManager;
+import com.ll.commars.global.token.JwtProperties;
+import com.ll.commars.global.token.component.TokenCookieManager;
 import com.ll.commars.global.annotation.UnitTest;
 
 import com.navercorp.fixturemonkey.FixtureMonkey;

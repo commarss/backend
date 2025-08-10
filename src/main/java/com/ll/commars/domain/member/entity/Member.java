@@ -20,12 +20,20 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @NoArgsConstructor
+@Table(name = "member", uniqueConstraints = {
+	@UniqueConstraint(
+		name = "uk_member_email_auth_type",
+		columnNames = {"email", "authType"}
+	)
+})
 public class Member extends BaseEntity {
 
 	@Id
@@ -34,12 +42,12 @@ public class Member extends BaseEntity {
 
 	@Column
 	@Enumerated(EnumType.STRING)
-	private SocialProvider socialProvider;
+	private AuthType authType;
 
-	@Column(unique = true)
+	@Column(nullable = false)
 	private String email;
 
-	@Column
+	@Column(nullable = false)
 	private String name;
 
 	@Column
@@ -78,5 +86,18 @@ public class Member extends BaseEntity {
 		this.email = email;
 		this.password = password;
 		this.name = name;
+	}
+
+	public Member(String email, String name, AuthType authType) {
+		this.email = email;
+		this.name = name;
+		this.authType = authType;
+	}
+
+	public Member(String email, String name, String password, AuthType authType) {
+		this.email = email;
+		this.name = name;
+		this.password = password;
+		this.authType = authType;
 	}
 }
