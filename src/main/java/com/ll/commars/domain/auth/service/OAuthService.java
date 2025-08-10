@@ -57,7 +57,7 @@ public class OAuthService {
 			memberInfo.getEmail(),
 			memberInfo.getNickname(),
 			authType
-			);
+		);
 
 		memberRepository.save(newMember);
 

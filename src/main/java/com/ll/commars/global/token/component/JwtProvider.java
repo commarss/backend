@@ -8,6 +8,7 @@ import javax.crypto.SecretKey;
 
 import org.springframework.stereotype.Component;
 
+import com.ll.commars.domain.member.entity.Member;
 import com.ll.commars.global.token.JwtProperties;
 import com.ll.commars.global.token.TokenProvider;
 import com.ll.commars.global.token.entity.AccessToken;
@@ -15,7 +16,6 @@ import com.ll.commars.global.token.entity.JwtClaims;
 import com.ll.commars.global.token.entity.RefreshToken;
 import com.ll.commars.global.token.entity.TokenSubject;
 import com.ll.commars.global.token.entity.TokenValue;
-import com.ll.commars.domain.member.entity.Member;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;

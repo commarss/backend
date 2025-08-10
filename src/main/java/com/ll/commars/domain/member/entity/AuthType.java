@@ -11,8 +11,7 @@ public enum AuthType {
 	GOOGLE,
 	KAKAO,
 	NAVER,
-	EMAIL
-	;
+	EMAIL;
 
 	public static AuthType from(String provider) {
 		return Arrays.stream(values())
