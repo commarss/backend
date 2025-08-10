@@ -20,12 +20,20 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @NoArgsConstructor
+@Table(name = "member", uniqueConstraints = {
+	@UniqueConstraint(
+		name = "uk_member_email_auth_type",
+		columnNames = {"email", "authType"}
+	)
+})
 public class Member extends BaseEntity {
 
 	@Id
@@ -36,7 +44,7 @@ public class Member extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private AuthType authType;
 
-	@Column(unique = true)
+	@Column
 	private String email;
 
 	@Column
