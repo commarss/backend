@@ -17,6 +17,7 @@ import com.ll.commars.domain.member.entity.AuthType;
 import com.ll.commars.global.exception.CustomException;
 
 import lombok.RequiredArgsConstructor;
+import reactor.core.publisher.Mono;
 
 @Component
 @RequiredArgsConstructor
@@ -49,6 +50,10 @@ public class KakaoClient implements OAuthClient {
 			.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 			.bodyValue(formData)
 			.retrieve()
+			.onStatus(status -> status.is4xxClientError() || status.is5xxServerError(),
+				clientResponse -> clientResponse.bodyToMono(String.class)
+					.flatMap(errorBody -> Mono.error(new CustomException(KAKAO_OAUTH_AUTHORIZATION_FAILED)))
+			)
 			.bodyToMono(KakaoTokenResponse.class)
 			.block();
 
@@ -64,6 +69,10 @@ public class KakaoClient implements OAuthClient {
 			.uri(kakaoClientProperties.userInfoUrl())
 			.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
 			.retrieve()
+			.onStatus(status -> status.is4xxClientError() || status.is5xxServerError(),
+				clientResponse -> clientResponse.bodyToMono(String.class)
+					.flatMap(errorBody -> Mono.error(new CustomException(KAKAO_OAUTH_USER_INFO_FAILED)))
+			)
 			.bodyToMono(KakaoMemberInfoDto.class)
 			.block();
 
