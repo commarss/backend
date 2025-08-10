@@ -44,7 +44,7 @@ public class Member extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private AuthType authType;
 
-	@Column
+	@Column(nullable = false)
 	private String email;
 
 	@Column
