@@ -1,4 +1,8 @@
 package com.ll.commars.domain.auth.dto;
 
-public interface OAuthResponse {
+public record OAuthResponse(
+	String accessToken,
+	String refreshToken,
+	boolean isRegistered
+) {
 }

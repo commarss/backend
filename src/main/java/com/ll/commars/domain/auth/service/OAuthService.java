@@ -12,8 +12,6 @@ import com.ll.commars.domain.auth.client.OAuthClient;
 import com.ll.commars.domain.auth.dto.OAuthMemberInfoDto;
 import com.ll.commars.domain.auth.dto.OAuthRequest;
 import com.ll.commars.domain.auth.dto.OAuthResponse;
-import com.ll.commars.domain.auth.dto.OAuthSignInResponse;
-import com.ll.commars.domain.auth.dto.OAuthSignUpResponse;
 import com.ll.commars.domain.member.entity.AuthType;
 import com.ll.commars.domain.member.entity.Member;
 import com.ll.commars.domain.member.repository.jpa.MemberRepository;
@@ -51,7 +49,7 @@ public class OAuthService {
 		String accessToken = tokenProvider.generateAccessToken(member).token().value();
 		String refreshToken = tokenProvider.generateRefreshToken(member).token().value();
 
-		return new OAuthSignInResponse(accessToken, refreshToken, false);
+		return new OAuthResponse(accessToken, refreshToken, false);
 	}
 
 	private OAuthResponse oAuthSignUp(OAuthMemberInfoDto memberInfo, AuthType authType) {
@@ -66,6 +64,6 @@ public class OAuthService {
 		String accessToken = tokenProvider.generateAccessToken(newMember).token().value();
 		String refreshToken = tokenProvider.generateRefreshToken(newMember).token().value();
 
-		return new OAuthSignUpResponse(accessToken, refreshToken, true);
+		return new OAuthResponse(accessToken, refreshToken, true);
 	}
 }
