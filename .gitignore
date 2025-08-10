@@ -66,3 +66,4 @@ terraform.rc
 .terraform.lock.hcl
 **/.terraform.lock.hcl/*
 /local_mysql/
+/redis_data_local/

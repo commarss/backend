@@ -22,6 +22,9 @@ public record KakaoClientProperties(
 	String redirectUrl,
 
 	@NotBlank
-	String clientId
+	String clientId,
+
+	@NotBlank
+	String clientSecret
 ) {
 }
