@@ -71,6 +71,7 @@ class AuthServiceTest {
 		Member newMember = fixtureMonkey.giveMeBuilder(Member.class)
 			.set("id", null)
 			.set("email", USER_EMAIL)
+			.set("name", "테스트유저")
 			.set("password", encodedPassword)
 			.set("reviews", new ArrayList<>())
 			.set("favorites", new ArrayList<>())
