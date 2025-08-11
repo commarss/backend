@@ -51,27 +51,27 @@ class KakaoClientTest {
 	void authorization_code로_사용자_정보를_성공적으로_가져온다() throws InterruptedException {
 		// given
 		String tokenResponseJson = """
-            {
-                "token_type":"bearer",
-                "access_token":"test-access-token",
-                "expires_in":43199,
-                "refresh_token":"test-refresh-token",
-                "refresh_token_expires_in":5184000,
-                "scope":"account_email profile_nickname"
-            }
-            """;
+			{
+			    "token_type":"bearer",
+			    "access_token":"test-access-token",
+			    "expires_in":43199,
+			    "refresh_token":"test-refresh-token",
+			    "refresh_token_expires_in":5184000,
+			    "scope":"account_email profile_nickname"
+			}
+			""";
 
 		String userInfoResponseJson = """
-            {
-                "id":123456789,
-                "kakao_account": {
-                	"email":"test@kakao.com",
-                    "profile": {
-                        "nickname": "테스트유저"
-                    }
-                }
-            }
-            """;
+			{
+			    "id":123456789,
+			    "kakao_account": {
+			    	"email":"test@kakao.com",
+			        "profile": {
+			            "nickname": "테스트유저"
+			        }
+			    }
+			}
+			""";
 
 		mockWebServer.enqueue(new MockResponse()
 			.setBody(tokenResponseJson)
@@ -93,7 +93,8 @@ class KakaoClientTest {
 		RecordedRequest tokenRequest = mockWebServer.takeRequest();
 		assertThat(tokenRequest.getMethod()).isEqualTo("POST");
 		assertThat(tokenRequest.getHeader("Content-Type")).startsWith("application/x-www-form-urlencoded");
-		assertThat(tokenRequest.getBody().readUtf8()).contains("grant_type=authorization_code", "code=test-authorization-code");
+		assertThat(tokenRequest.getBody().readUtf8()).contains("grant_type=authorization_code",
+			"code=test-authorization-code");
 
 		// 사용자 정보 요청
 		RecordedRequest userInfoRequest = mockWebServer.takeRequest();
@@ -105,8 +106,8 @@ class KakaoClientTest {
 	void 토큰_발급에_실패하면_예외가_발생한다() throws InterruptedException {
 		// given
 		String errorResponseJson = """
-            {"error":"invalid_grant","error_description":"authorization code not found for...","error_code":"KOE320"}
-            """;
+			{"error":"invalid_grant","error_description":"authorization code not found for...","error_code":"KOE320"}
+			""";
 
 		mockWebServer.enqueue(new MockResponse()
 			.setResponseCode(400)
@@ -127,12 +128,12 @@ class KakaoClientTest {
 	void 사용자_정보_조회에_실패하면_예외가_발생한다() throws InterruptedException {
 		// given
 		String tokenResponseJson = """
-        { "access_token": "test-access-token" }
-        """;
+			{ "access_token": "test-access-token" }
+			""";
 
 		String errorResponseJson = """
-        {"msg":"user not found","code":-401}
-        """;
+			{"msg":"user not found","code":-401}
+			""";
 
 		mockWebServer.enqueue(new MockResponse()
 			.setBody(tokenResponseJson)

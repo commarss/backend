@@ -51,20 +51,20 @@ public class NaverClientTest {
 	void authorization_code로_사용자_정보를_성공적으로_가져온다() throws InterruptedException {
 		// given
 		String tokenResponseJson = """
-            { "access_token": "naver-test-access-token" }
-            """;
+			{ "access_token": "naver-test-access-token" }
+			""";
 
 		String userInfoResponseJson = """
-            {
-              "resultcode": "00",
-              "message": "success",
-              "response": {
-                "id": "naver-user-id-123",
-                "nickname": "네이버유저",
-                "email": "test.user@naver.com"
-              }
-            }
-            """;
+			{
+			  "resultcode": "00",
+			  "message": "success",
+			  "response": {
+			    "id": "naver-user-id-123",
+			    "nickname": "네이버유저",
+			    "email": "test.user@naver.com"
+			  }
+			}
+			""";
 
 		mockWebServer.enqueue(new MockResponse()
 			.setBody(tokenResponseJson)
@@ -86,7 +86,8 @@ public class NaverClientTest {
 		RecordedRequest tokenRequest = mockWebServer.takeRequest();
 		assertThat(tokenRequest.getMethod()).isEqualTo("POST");
 		assertThat(tokenRequest.getHeader("Content-Type")).startsWith("application/x-www-form-urlencoded");
-		assertThat(tokenRequest.getBody().readUtf8()).contains("grant_type=authorization_code", "code=naver-test-authorization-code");
+		assertThat(tokenRequest.getBody().readUtf8()).contains("grant_type=authorization_code",
+			"code=naver-test-authorization-code");
 
 		// 사용자 정보 요청 검증
 		RecordedRequest userInfoRequest = mockWebServer.takeRequest();
@@ -98,8 +99,8 @@ public class NaverClientTest {
 	void 토큰_발급에_실패하면_예외가_발생한다() throws InterruptedException {
 		// given
 		String errorResponseJson = """
-            { "error": "invalid_client", "error_description": "유효하지 않은 클라이언트 정보입니다." }
-            """;
+			{ "error": "invalid_client", "error_description": "유효하지 않은 클라이언트 정보입니다." }
+			""";
 
 		mockWebServer.enqueue(new MockResponse()
 			.setResponseCode(401)
@@ -121,12 +122,12 @@ public class NaverClientTest {
 	void 사용자_정보_조회에_실패하면_예외가_발생한다() throws InterruptedException {
 		// given
 		String tokenResponseJson = """
-         { "access_token": "naver-test-access-token" }
-         """;
+			{ "access_token": "naver-test-access-token" }
+			""";
 
 		String errorResponseJson = """
-         { "resultcode": "024", "message": "Authentication failed (인증에 실패했습니다.)" }
-         """;
+			{ "resultcode": "024", "message": "Authentication failed (인증에 실패했습니다.)" }
+			""";
 
 		mockWebServer.enqueue(new MockResponse()
 			.setBody(tokenResponseJson)

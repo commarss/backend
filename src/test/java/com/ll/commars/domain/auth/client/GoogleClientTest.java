@@ -51,17 +51,17 @@ public class GoogleClientTest {
 	void authorization_code로_사용자_정보를_성공적으로_가져온다() throws InterruptedException {
 		// given
 		String tokenResponseJson = """
-            { "access_token": "google-test-access-token" }
-            """;
+			{ "access_token": "google-test-access-token" }
+			""";
 
 		String userInfoResponseJson = """
-            {
-                "sub": "google-user-id-12345",
-                "name": "구글유저",
-                "email": "test.user@google.com",
-                "email_verified": true
-            }
-            """;
+			{
+			    "sub": "google-user-id-12345",
+			    "name": "구글유저",
+			    "email": "test.user@google.com",
+			    "email_verified": true
+			}
+			""";
 
 		mockWebServer.enqueue(new MockResponse()
 			.setBody(tokenResponseJson)
@@ -83,7 +83,8 @@ public class GoogleClientTest {
 		RecordedRequest tokenRequest = mockWebServer.takeRequest();
 		assertThat(tokenRequest.getMethod()).isEqualTo("POST");
 		assertThat(tokenRequest.getHeader("Content-Type")).startsWith("application/x-www-form-urlencoded");
-		assertThat(tokenRequest.getBody().readUtf8()).contains("grant_type=authorization_code", "code=google-test-authorization-code");
+		assertThat(tokenRequest.getBody().readUtf8()).contains("grant_type=authorization_code",
+			"code=google-test-authorization-code");
 
 		// 사용자 정보 요청 검증
 		RecordedRequest userInfoRequest = mockWebServer.takeRequest();
@@ -94,8 +95,8 @@ public class GoogleClientTest {
 	@Test
 	void 토큰_발급에_실패하면_예외가_발생한다() throws InterruptedException {
 		String errorResponseJson = """
-            { "error": "invalid_grant", "error_description": "Bad Request" }
-            """;
+			{ "error": "invalid_grant", "error_description": "Bad Request" }
+			""";
 
 		mockWebServer.enqueue(new MockResponse()
 			.setResponseCode(400)
@@ -116,12 +117,12 @@ public class GoogleClientTest {
 	@Test
 	void 사용자_정보_조회에_실패하면_예외가_발생한다() throws InterruptedException {
 		String tokenResponseJson = """
-         { "access_token": "google-test-access-token" }
-         """;
+			{ "access_token": "google-test-access-token" }
+			""";
 
 		String errorResponseJson = """
-         { "error": { "code": 401, "message": "Request is missing required authentication credential." } }
-         """;
+			{ "error": { "code": 401, "message": "Request is missing required authentication credential." } }
+			""";
 
 		mockWebServer.enqueue(new MockResponse()
 			.setBody(tokenResponseJson)
