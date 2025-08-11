@@ -17,9 +17,12 @@ import com.ll.commars.domain.restaurant.dto.RestaurantCategoryDto;
 import com.ll.commars.domain.restaurant.dto.RestaurantCreateRequest;
 import com.ll.commars.domain.restaurant.dto.RestaurantCreateResponse;
 import com.ll.commars.domain.restaurant.dto.RestaurantDto;
+import com.ll.commars.domain.restaurant.dto.RestaurantFindListResponse;
+import com.ll.commars.domain.restaurant.dto.RestaurantFindResponse;
 import com.ll.commars.domain.restaurant.dto.RestaurantMenuDto;
 import com.ll.commars.domain.restaurant.service.RestaurantMenuService;
 import com.ll.commars.domain.restaurant.service.RestaurantCommandService;
+import com.ll.commars.domain.restaurant.service.RestaurantQueryService;
 import com.ll.commars.domain.review.dto.ReviewDto;
 
 import jakarta.validation.Valid;
@@ -32,6 +35,7 @@ import lombok.RequiredArgsConstructor;
 public class RestaurantController {
 
 	private final RestaurantCommandService restaurantCommandService;
+	private final RestaurantQueryService restaurantQueryService;
 	private final RestaurantMenuService restaurantMenuService;
 
 	@PostMapping
@@ -43,22 +47,21 @@ public class RestaurantController {
 		return ResponseEntity.ok(response);
 	}
 
-	@GetMapping("/")
-	public ResponseEntity<RestaurantDto.RestaurantShowAllResponse> getRestaurants() {
-		RestaurantDto.RestaurantShowAllResponse response = restaurantCommandService.getRestaurants();
-		return ResponseEntity
-			.status(200)
-			.body(response);
+	// todo: 추후 페이징 적용
+	@GetMapping
+	public ResponseEntity<RestaurantFindListResponse> getRestaurants() {
+		RestaurantFindListResponse response = restaurantQueryService.getRestaurants();
+
+		return ResponseEntity.ok().body(response);
 	}
 
-	@GetMapping("/{restaurant_id}")
-	public ResponseEntity<RestaurantDto.RestaurantInfo> getRestaurant(
-		@PathVariable("restaurant_id") @NotNull Long restaurantId
+	@GetMapping("/{restaurant-id}")
+	public ResponseEntity<RestaurantFindResponse> getRestaurant(
+		@PathVariable("restaurant-id") Long restaurantId
 	) {
-		RestaurantDto.RestaurantInfo response = restaurantCommandService.getRestaurant(restaurantId);
-		return ResponseEntity
-			.status(200)
-			.body(response);
+		RestaurantFindResponse response = restaurantQueryService.getRestaurant(restaurantId);
+
+		return ResponseEntity.ok().body(response);
 	}
 
 	@PatchMapping("/{restaurant_id}")

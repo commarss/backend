@@ -14,7 +14,6 @@ import com.ll.commars.domain.favorite.favorite.entity.Favorite;
 import com.ll.commars.domain.favorite.favorite.entity.FavoriteRestaurant;
 import com.ll.commars.domain.favorite.favorite.repository.jpa.FavoriteRepository;
 import com.ll.commars.domain.favorite.favorite.repository.jpa.FavoriteRestaurantRepository;
-import com.ll.commars.domain.restaurant.dto.RestaurantSummaryDTO;
 import com.ll.commars.domain.restaurant.entity.Restaurant;
 import com.ll.commars.domain.restaurant.repository.jpa.RestaurantRepository;
 import com.ll.commars.domain.review.dto.RestaurantReviewAnalysisDTO;

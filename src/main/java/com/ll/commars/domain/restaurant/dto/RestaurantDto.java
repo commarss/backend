@@ -52,34 +52,6 @@ public class RestaurantDto {
 		private Long categoryId;
 	}
 
-	// 식당 등록 및 수정에 필요한 기본 정보
-	// 메뉴, 영업시간 등은 따로 추가
-	@Getter
-	@Builder
-	public static class RestaurantWriteRequest {
-
-		private String name;
-		private String details;
-		private Double averageRate;
-		private String imageUrl;
-		private String contact;
-		private String address;
-		private Double lat;
-		private Double lon;
-		private Boolean runningState;
-		private String summarizedReview;
-		private Long categoryId;
-	}
-
-	// 식당 등록 및 수정 응답
-	@Getter
-	@Builder
-	public static class RestaurantWriteResponse {
-
-		private Long id;
-		private String name;
-	}
-
 	// 모든 식당 조회
 	@Getter
 	@Builder

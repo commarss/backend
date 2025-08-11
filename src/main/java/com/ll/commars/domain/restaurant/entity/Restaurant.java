@@ -3,6 +3,8 @@ package com.ll.commars.domain.restaurant.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.BatchSize;
+
 import com.ll.commars.domain.favorite.favorite.entity.FavoriteRestaurant;
 import com.ll.commars.domain.review.entity.Review;
 import com.ll.commars.global.BaseEntity;
@@ -62,12 +64,15 @@ public class Restaurant extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private RestaurantCategory restaurantCategory;
 
+	@BatchSize(size = 20)
 	@OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<RestaurantMenu> restaurantMenus;
 
+	@BatchSize(size = 20)
 	@OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<BusinessHour> businessHours = new ArrayList<>();
 
+	@BatchSize(size = 20)
 	@OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Review> reviews;
 
@@ -82,16 +87,6 @@ public class Restaurant extends BaseEntity {
 		this.contact = contact;
 		this.address = address;
 		this.restaurantCategory = restaurantCategory;
-	}
-
-	public void setCategory(RestaurantCategory category) {
-		if (this.restaurantCategory != null) {
-			this.restaurantCategory.getRestaurants().remove(this);
-		}
-		this.restaurantCategory = category;
-		if (category != null) {
-			category.getRestaurants().add(this);
-		}
 	}
 
 	public void setBusinessHours(List<BusinessHour> businessHours) {

@@ -1,17 +1,21 @@
 package com.ll.commars.domain.restaurant.service;
 
+import static com.ll.commars.global.exception.ErrorCode.*;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ll.commars.domain.restaurant.dto.BusinessHourDto;
-import com.ll.commars.domain.restaurant.dto.RestaurantDto;
+import com.ll.commars.domain.restaurant.dto.RestaurantFindListResponse;
+import com.ll.commars.domain.restaurant.dto.RestaurantFindResponse;
 import com.ll.commars.domain.restaurant.dto.RestaurantMenuDto;
+import com.ll.commars.domain.restaurant.dto.RestaurantSummaryResponse;
 import com.ll.commars.domain.restaurant.entity.Restaurant;
 import com.ll.commars.domain.restaurant.repository.jpa.RestaurantRepository;
 import com.ll.commars.domain.review.dto.ReviewDto;
+import com.ll.commars.global.exception.CustomException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,64 +25,11 @@ public class RestaurantQueryService {
 
 	private final RestaurantRepository restaurantRepository;
 
-	// 모든 식당 조회
 	@Transactional(readOnly = true)
-	public RestaurantDto.RestaurantShowAllResponse getRestaurants() {
-		List<Restaurant> restaurants = restaurantRepository.findAllWithMenus();
+	public RestaurantFindListResponse getRestaurants() {
+		List<RestaurantSummaryResponse> summarizedRestaurants = restaurantRepository.findAllSummary();
 
-		List<RestaurantDto.RestaurantInfo> restaurantInfos = restaurants.stream()
-			.map(restaurant -> {
-				List<RestaurantMenuDto.MenuInfo> menuInfos = restaurant.getRestaurantMenus().stream()
-					.map(menu -> RestaurantMenuDto.MenuInfo.builder()
-						.name(menu.getName())
-						.price(menu.getPrice())
-						.imageUrl(menu.getImageUrl())
-						.build())
-					.collect(Collectors.toList());
-
-				List<ReviewDto.ReviewInfo> reviewInfos = restaurant.getReviews().stream()
-					.map(review -> ReviewDto.ReviewInfo.builder()
-						.userId(review.getMember().getId())
-						.restaurantId(review.getRestaurant().getId())
-						.id(review.getId())
-						.name(review.getName())
-						.body(review.getBody())
-						.rate(review.getRate())
-						.build())
-					.collect(Collectors.toList());
-
-				List<BusinessHourDto.BusinessHourInfo> businessHourInfos = restaurant.getBusinessHours().stream()
-					.map(businessHour -> BusinessHourDto.BusinessHourInfo.builder()
-						.id(businessHour.getId())
-						.dayOfWeek(businessHour.getDayOfWeek())
-						.openTime(businessHour.getOpenTime())
-						.closeTime(businessHour.getCloseTime())
-						.build())
-					.toList();
-
-				return RestaurantDto.RestaurantInfo.builder()
-					.id(restaurant.getId())
-					.name(restaurant.getName())
-					.details(restaurant.getDetails())
-					.averageRate(restaurant.getAverageRate())
-					.imageUrl(restaurant.getImageUrl())
-					.contact(restaurant.getContact())
-					.address(restaurant.getAddress())
-					.lat(restaurant.getLat())
-					.lon(restaurant.getLon())
-					.runningState(restaurant.getRunningState())
-					.summarizedReview(restaurant.getSummarizedReview())
-					.categoryId(restaurant.getRestaurantCategory().getId())
-					.restaurantMenus(menuInfos)
-					.reviews(reviewInfos)
-					.businessHours(businessHourInfos)
-					.build();
-			})
-			.collect(Collectors.toList());
-
-		return RestaurantDto.RestaurantShowAllResponse.builder()
-			.restaurants(restaurantInfos)
-			.build();
+		return new RestaurantFindListResponse(summarizedRestaurants);
 	}
 
 	@Transactional(readOnly = true)
@@ -121,55 +72,10 @@ public class RestaurantQueryService {
 	}
 
 	@Transactional(readOnly = true)
-	public RestaurantDto.RestaurantInfo getRestaurant(Long restaurantId) {
+	public RestaurantFindResponse getRestaurant(Long restaurantId) {
 		Restaurant restaurant = restaurantRepository.findById(restaurantId)
-			.orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
+			.orElseThrow(() -> new CustomException(RESTAURANT_NOT_FOUND));
 
-		List<RestaurantMenuDto.MenuInfo> menuInfos = restaurant.getRestaurantMenus().stream()
-			.map(menu -> RestaurantMenuDto.MenuInfo.builder()
-				.id(menu.getId())
-				.name(menu.getName())
-				.price(menu.getPrice())
-				.imageUrl(menu.getImageUrl())
-				.build())
-			.collect(Collectors.toList());
-
-		List<ReviewDto.ReviewInfo> reviewInfos = restaurant.getReviews().stream()
-			.map(review -> ReviewDto.ReviewInfo.builder()
-				.userId(review.getMember().getId())
-				.restaurantId(review.getRestaurant().getId())
-				.id(review.getId())
-				.name(review.getName())
-				.body(review.getBody())
-				.rate(review.getRate())
-				.build())
-			.collect(Collectors.toList());
-
-		List<BusinessHourDto.BusinessHourInfo> businessHourInfos = restaurant.getBusinessHours().stream()
-			.map(businessHour -> BusinessHourDto.BusinessHourInfo.builder()
-				.id(businessHour.getId())
-				.dayOfWeek(businessHour.getDayOfWeek())
-				.openTime(businessHour.getOpenTime())
-				.closeTime(businessHour.getCloseTime())
-				.build())
-			.toList();
-
-		return RestaurantDto.RestaurantInfo.builder()
-			.id(restaurant.getId())
-			.name(restaurant.getName())
-			.details(restaurant.getDetails())
-			.averageRate(restaurant.getAverageRate())
-			.imageUrl(restaurant.getImageUrl())
-			.contact(restaurant.getContact())
-			.address(restaurant.getAddress())
-			.lat(restaurant.getLat())
-			.lon(restaurant.getLon())
-			.runningState(restaurant.getRunningState())
-			.summarizedReview(restaurant.getSummarizedReview())
-			.categoryId(restaurant.getRestaurantCategory().getId())
-			.restaurantMenus(menuInfos)
-			.reviews(reviewInfos)
-			.businessHours(businessHourInfos)
-			.build();
+		return RestaurantFindResponse.from(restaurant);
 	}
 }
