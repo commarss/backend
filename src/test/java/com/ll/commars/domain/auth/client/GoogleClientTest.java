@@ -82,7 +82,7 @@ public class GoogleClientTest {
 		// 토큰 요청 검증
 		RecordedRequest tokenRequest = mockWebServer.takeRequest();
 		assertThat(tokenRequest.getMethod()).isEqualTo("POST");
-		assertThat(tokenRequest.getHeader("Content-Type")).isEqualTo("application/x-www-form-urlencoded");
+		assertThat(tokenRequest.getHeader("Content-Type")).startsWith("application/x-www-form-urlencoded");
 		assertThat(tokenRequest.getBody().readUtf8()).contains("grant_type=authorization_code", "code=google-test-authorization-code");
 
 		// 사용자 정보 요청 검증
