@@ -2,7 +2,7 @@ package com.ll.commars.domain.favorite.favorite.dto;
 
 import java.util.List;
 
-import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantDto;
+import com.ll.commars.domain.restaurant.dto.RestaurantDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

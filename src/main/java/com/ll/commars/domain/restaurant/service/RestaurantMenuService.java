@@ -1,0 +1,82 @@
+package com.ll.commars.domain.restaurant.service;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.ll.commars.domain.restaurant.dto.RestaurantMenuDto;
+import com.ll.commars.domain.restaurant.entity.RestaurantMenu;
+import com.ll.commars.domain.restaurant.repository.jpa.RestaurantMenuRepository;
+import com.ll.commars.domain.restaurant.entity.Restaurant;
+import com.ll.commars.domain.restaurant.repository.jpa.RestaurantRepository;
+
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class RestaurantMenuService {
+
+	private final RestaurantRepository restaurantRepository;
+	private final RestaurantMenuRepository restaurantMenuRepository;
+
+	@Transactional
+	public RestaurantMenuDto.MenuWriteResponse write(
+		Long restaurantId,
+		RestaurantMenuDto.MenuInfo request) {
+		Restaurant restaurant = restaurantRepository.findById(restaurantId)
+			.orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
+
+		RestaurantMenu restaurantMenu = RestaurantMenu.builder()
+			.restaurant(restaurant)
+			.name(request.getName())
+			.price(request.getPrice())
+			.imageUrl(request.getImageUrl())
+			.build();
+
+		restaurantMenuRepository.save(restaurantMenu);
+
+		return RestaurantMenuDto.MenuWriteResponse.builder()
+			.restaurantName(restaurant.getName())
+			.name(restaurantMenu.getName())
+			.price(restaurantMenu.getPrice())
+			.build();
+	}
+
+	@Transactional
+	public RestaurantMenuDto.MenuWriteResponse modifyMenu(Long menuId, RestaurantMenuDto.MenuInfo request) {
+		RestaurantMenu restaurantMenu = restaurantMenuRepository.findById(menuId)
+			.orElseThrow(() -> new IllegalArgumentException("Menu not found"));
+
+		restaurantMenu.setName(request.getName());
+		restaurantMenu.setPrice(request.getPrice());
+		restaurantMenu.setImageUrl(request.getImageUrl());
+
+		return RestaurantMenuDto.MenuWriteResponse.builder()
+			.restaurantName(restaurantMenu.getRestaurant().getName())
+			.name(restaurantMenu.getName())
+			.price(restaurantMenu.getPrice())
+			.build();
+	}
+
+	@Transactional
+	public void deleteMenu(Long menuId) {
+		restaurantMenuRepository.findById(menuId)
+			.orElseThrow(() -> new IllegalArgumentException("Menu not found"));
+
+		restaurantMenuRepository.deleteById(menuId);
+	}
+
+	public void truncate() {
+		restaurantMenuRepository.deleteAll();
+	}
+
+	public RestaurantMenuDto.ShowAllMenusResponse findByRestaurantId(Long restaurantId) {
+
+		List<RestaurantMenuDto.MenuInfo> restaurantMenus = restaurantMenuRepository.findByRestaurantId(restaurantId);
+
+		return RestaurantMenuDto.ShowAllMenusResponse.builder()
+			.menus(restaurantMenus)
+			.build();
+	}
+}

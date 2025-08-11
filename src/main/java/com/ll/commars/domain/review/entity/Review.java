@@ -1,7 +1,7 @@
 package com.ll.commars.domain.review.entity;
 
 import com.ll.commars.domain.member.entity.Member;
-import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
+import com.ll.commars.domain.restaurant.entity.Restaurant;
 import com.ll.commars.global.BaseEntity;
 
 import jakarta.persistence.Column;
