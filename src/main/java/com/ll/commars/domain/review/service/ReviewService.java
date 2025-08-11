@@ -11,7 +11,7 @@ import com.ll.commars.domain.member.repository.jpa.MemberRepository;
 import com.ll.commars.domain.member.service.MemberService;
 import com.ll.commars.domain.restaurant.entity.Restaurant;
 import com.ll.commars.domain.restaurant.repository.jpa.RestaurantRepository;
-import com.ll.commars.domain.restaurant.service.RestaurantService;
+import com.ll.commars.domain.restaurant.service.RestaurantCommandService;
 import com.ll.commars.domain.review.dto.ReviewDto;
 import com.ll.commars.domain.review.entity.Review;
 import com.ll.commars.domain.review.repository.jpa.ReviewRepository;
@@ -25,7 +25,7 @@ public class ReviewService {
 	private final ReviewRepository reviewRepository;
 	private final RestaurantRepository restaurantRepository;
 	private final MemberRepository memberRepository;
-	private final RestaurantService restaurantService;
+	private final RestaurantCommandService restaurantCommandService;
 	private final MemberService memberService;
 
 	public void truncate() {
@@ -81,7 +81,7 @@ public class ReviewService {
 	}
 
 	public Review wirteReview(String restaurantId, String username, String name, String body, int rate) {
-		Restaurant restaurant = restaurantService.findById(Long.valueOf(restaurantId));
+		Restaurant restaurant = restaurantCommandService.findById(Long.valueOf(restaurantId));
 		Optional<Member> user = memberService.findById(Long.parseLong(username));
 
 		Review review = Review.builder()

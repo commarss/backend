@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ll.commars.domain.restaurant.dto.BusinessHourDto;
 import com.ll.commars.domain.restaurant.dto.RestaurantCategoryDto;
+import com.ll.commars.domain.restaurant.dto.RestaurantCreateRequest;
+import com.ll.commars.domain.restaurant.dto.RestaurantCreateResponse;
+import com.ll.commars.domain.restaurant.dto.RestaurantDto;
 import com.ll.commars.domain.restaurant.dto.RestaurantMenuDto;
 import com.ll.commars.domain.restaurant.service.RestaurantMenuService;
-import com.ll.commars.domain.restaurant.dto.RestaurantDto;
-import com.ll.commars.domain.restaurant.service.RestaurantService;
+import com.ll.commars.domain.restaurant.service.RestaurantCommandService;
 import com.ll.commars.domain.review.dto.ReviewDto;
 
 import jakarta.validation.Valid;
@@ -29,22 +31,21 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/restaurant")
 public class RestaurantController {
 
-	private final RestaurantService restaurantService;
+	private final RestaurantCommandService restaurantCommandService;
 	private final RestaurantMenuService restaurantMenuService;
 
-	@PostMapping("/")
-	public ResponseEntity<RestaurantDto.RestaurantWriteResponse> write(
-		@RequestBody @Valid RestaurantDto.RestaurantWriteRequest request
+	@PostMapping
+	public ResponseEntity<RestaurantCreateResponse> createRestaurant(
+		@RequestBody @Valid RestaurantCreateRequest request
 	) {
-		RestaurantDto.RestaurantWriteResponse response = restaurantService.write(request);
-		return ResponseEntity
-			.status(201)
-			.body(response);
+		RestaurantCreateResponse response = restaurantCommandService.createRestaurant(request);
+
+		return ResponseEntity.ok(response);
 	}
 
 	@GetMapping("/")
 	public ResponseEntity<RestaurantDto.RestaurantShowAllResponse> getRestaurants() {
-		RestaurantDto.RestaurantShowAllResponse response = restaurantService.getRestaurants();
+		RestaurantDto.RestaurantShowAllResponse response = restaurantCommandService.getRestaurants();
 		return ResponseEntity
 			.status(200)
 			.body(response);
@@ -54,7 +55,7 @@ public class RestaurantController {
 	public ResponseEntity<RestaurantDto.RestaurantInfo> getRestaurant(
 		@PathVariable("restaurant_id") @NotNull Long restaurantId
 	) {
-		RestaurantDto.RestaurantInfo response = restaurantService.getRestaurant(restaurantId);
+		RestaurantDto.RestaurantInfo response = restaurantCommandService.getRestaurant(restaurantId);
 		return ResponseEntity
 			.status(200)
 			.body(response);
@@ -65,7 +66,7 @@ public class RestaurantController {
 		@PathVariable("restaurant_id") @NotNull Long restaurantId,
 		@RequestBody @Valid RestaurantDto.RestaurantWriteRequest request
 	) {
-		RestaurantDto.RestaurantWriteResponse response = restaurantService.modifyRestaurant(restaurantId, request);
+		RestaurantDto.RestaurantWriteResponse response = restaurantCommandService.modifyRestaurant(restaurantId, request);
 		return ResponseEntity
 			.status(200)
 			.body(response);
@@ -75,7 +76,7 @@ public class RestaurantController {
 	public ResponseEntity<String> deleteRestaurant(
 		@PathVariable("restaurant_id") @NotNull Long restaurantId
 	) {
-		restaurantService.deleteRestaurant(restaurantId);
+		restaurantCommandService.deleteRestaurant(restaurantId);
 		return ResponseEntity
 			.status(200)
 			.body("식당 삭제 성공");
@@ -97,7 +98,7 @@ public class RestaurantController {
 	public ResponseEntity<RestaurantMenuDto.ShowAllMenusResponse> getMenus(
 		@PathVariable("restaurant_id") @NotNull Long restaurantId
 	) {
-		RestaurantMenuDto.ShowAllMenusResponse response = restaurantService.getMenus(restaurantId);
+		RestaurantMenuDto.ShowAllMenusResponse response = restaurantCommandService.getMenus(restaurantId);
 		return ResponseEntity
 			.status(200)
 			.body(response);
@@ -110,7 +111,7 @@ public class RestaurantController {
 		@RequestBody @Valid ReviewDto.ReviewWriteRequest request
 	) {
 		Long userId = Long.valueOf(userDetails.getUsername());
-		ReviewDto.ReviewWriteResponse response = restaurantService.writeReview(restaurantId, request, userId);
+		ReviewDto.ReviewWriteResponse response = restaurantCommandService.writeReview(restaurantId, request, userId);
 		return ResponseEntity
 			.status(201)
 			.body(response);
@@ -120,7 +121,7 @@ public class RestaurantController {
 	public ResponseEntity<ReviewDto.ShowAllReviewsResponse> getReviews(
 		@PathVariable("restaurant_id") @NotNull Long restaurantId
 	) {
-		ReviewDto.ShowAllReviewsResponse response = restaurantService.getReviews(restaurantId);
+		ReviewDto.ShowAllReviewsResponse response = restaurantCommandService.getReviews(restaurantId);
 		return ResponseEntity
 			.status(200)
 			.body(response);
@@ -131,7 +132,7 @@ public class RestaurantController {
 		@PathVariable("restaurant_id") @NotNull Long restaurantId,
 		@RequestBody @Valid RestaurantCategoryDto.RestaurantCategoryWriteRequest request
 	) {
-		RestaurantDto.RestaurantCategoryWriteResponse response = restaurantService.writeCategory(restaurantId, request);
+		RestaurantDto.RestaurantCategoryWriteResponse response = restaurantCommandService.writeCategory(restaurantId, request);
 		return ResponseEntity
 			.status(201)
 			.body(response);
@@ -141,7 +142,7 @@ public class RestaurantController {
 	public ResponseEntity<RestaurantCategoryDto.ShowCategoryNameResponse> getCategories(
 		@PathVariable("restaurant_id") @NotNull Long restaurantId
 	) {
-		RestaurantCategoryDto.ShowCategoryNameResponse response = restaurantService.getCategories(restaurantId);
+		RestaurantCategoryDto.ShowCategoryNameResponse response = restaurantCommandService.getCategories(restaurantId);
 		return ResponseEntity
 			.status(200)
 			.body(response);
@@ -152,7 +153,7 @@ public class RestaurantController {
 		@PathVariable("restaurant_id") @NotNull Long restaurantId,
 		@RequestBody @Valid RestaurantCategoryDto.RestaurantCategoryWriteRequest request
 	) {
-		RestaurantDto.RestaurantCategoryWriteResponse response = restaurantService.modifyCategory(restaurantId,
+		RestaurantDto.RestaurantCategoryWriteResponse response = restaurantCommandService.modifyCategory(restaurantId,
 			request);
 		return ResponseEntity
 			.status(200)
@@ -164,7 +165,7 @@ public class RestaurantController {
 		@PathVariable("restaurant_id") @NotNull Long restaurantId,
 		@RequestBody @Valid BusinessHourDto.BusinessHourWriteRequest request
 	) {
-		BusinessHourDto.BusinessHourWriteResponse response = restaurantService.writeBusinessHours(restaurantId,
+		BusinessHourDto.BusinessHourWriteResponse response = restaurantCommandService.writeBusinessHours(restaurantId,
 			request);
 		return ResponseEntity
 			.status(201)
@@ -176,7 +177,7 @@ public class RestaurantController {
 		@PathVariable("restaurant_id") @NotNull Long restaurantId,
 		@RequestBody @Valid BusinessHourDto.BusinessHourWriteRequest request
 	) {
-		BusinessHourDto.BusinessHourWriteResponse response = restaurantService.modifyBusinessHours(restaurantId,
+		BusinessHourDto.BusinessHourWriteResponse response = restaurantCommandService.modifyBusinessHours(restaurantId,
 			request);
 		return ResponseEntity
 			.status(200)

@@ -60,7 +60,7 @@ public class Restaurant extends BaseEntity {
 
 	@Column
 	@Enumerated(EnumType.STRING)
-	private RestaurantCatetory restaurantCategory;
+	private RestaurantCategory restaurantCategory;
 
 	@OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<RestaurantMenu> restaurantMenus;
@@ -73,6 +73,16 @@ public class Restaurant extends BaseEntity {
 
 	@OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<FavoriteRestaurant> favoriteRestaurants;
+
+	public Restaurant(String name, String details, String imageUrl, String contact,
+			String address, RestaurantCategory restaurantCategory) {
+		this.name = name;
+		this.details = details;
+		this.imageUrl = imageUrl;
+		this.contact = contact;
+		this.address = address;
+		this.restaurantCategory = restaurantCategory;
+	}
 
 	public void setCategory(RestaurantCategory category) {
 		if (this.restaurantCategory != null) {
