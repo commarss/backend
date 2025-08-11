@@ -14,8 +14,6 @@ import com.ll.commars.domain.restaurant.dto.BusinessHourDto;
 import com.ll.commars.domain.restaurant.entity.BusinessHour;
 import com.ll.commars.domain.restaurant.repository.jpa.BusinessHourRepository;
 import com.ll.commars.domain.restaurant.dto.RestaurantCategoryDto;
-import com.ll.commars.domain.restaurant.entity.RestaurantCategory;
-import com.ll.commars.domain.restaurant.repository.jpa.RestaurantCategoryRepository;
 import com.ll.commars.domain.restaurant.dto.RestaurantMenuDto;
 import com.ll.commars.domain.restaurant.dto.RestaurantDto;
 import com.ll.commars.domain.restaurant.entity.Restaurant;

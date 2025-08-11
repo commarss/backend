@@ -10,93 +10,67 @@ import com.ll.commars.global.BaseEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
-@Table(name = "restaurants")
 @Getter
-@Setter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 public class Restaurant extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@NotNull
-	@Column(name = "name", nullable = false)
+	@Column(nullable = false)
 	private String name;
 
-	@NotNull
-	@Column(name = "details")
+	@Column(nullable = false)
 	private String details;
 
-	@Column(name = "average_rate")
+	@Column
 	private Double averageRate;
 
-	@Column(name = "image_url")
+	@Column
 	private String imageUrl;
 
-	// 식당 전화 번호
-	@Column(name = "contact")
+	@Column
 	private String contact;
 
-	@NotNull
-	@Column(name = "address", nullable = false)
+	@Column(nullable = false)
 	private String address;
 
-	// 위도
-	@NotNull
-	@Column(name = "lat", nullable = false)
+	@Column(nullable = false)
 	private Double lat;
 
-	// 경도
-	@NotNull
-	@Column(name = "lon", nullable = false)
+	@Column(nullable = false)
 	private Double lon;
 
-	// 식당 영업 여부
-	@Column(name = "running_state")
+	@Column
 	private Boolean runningState;
 
-	// 요약 리뷰
-	@Column(name = "summarized_review")
+	@Column
 	private String summarizedReview;
 
-	// Restaurant와 RestaurantMenu: 일대다
-	@OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	@Column
+	@Enumerated(EnumType.STRING)
+	private RestaurantCatetory restaurantCategory;
+
+	@OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<RestaurantMenu> restaurantMenus;
 
-	// Restaurant와 RestaurantCategory: 다대일
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "restaurant_category_id")
-	private RestaurantCategory restaurantCategory;
-
-	// Restaurant와 RestaurantBusinessHours: 일대다
-	@Builder.Default
 	@OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<BusinessHour> businessHours = new ArrayList<>();
 
-	// Restaurant와 Review: 일대다
 	@OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Review> reviews;
 
-	// Restaurant와 FavoriteRestaurant: 일대다
 	@OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<FavoriteRestaurant> favoriteRestaurants;
 
