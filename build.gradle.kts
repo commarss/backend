@@ -72,6 +72,7 @@ dependencies {
     testImplementation("org.testcontainers:elasticsearch")
     testImplementation("org.testcontainers:mysql")
     testImplementation("io.projectreactor:reactor-test")
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
 }
 
 tasks.withType<Test> {
