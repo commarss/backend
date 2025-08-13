@@ -84,7 +84,7 @@ public class RestaurantController {
 		return ResponseEntity.ok().build();
 	}
 
-	@PostMapping("{restaurant-id}/menu")
+	@PostMapping("/{restaurant-id}/menu")
 	public ResponseEntity<MenuCreateResponse> createMenu(
 		@PathVariable("restaurant-id") Long restaurantId,
 		@RequestBody @Valid MenuCreateRequest request
@@ -95,7 +95,7 @@ public class RestaurantController {
 	}
 
 	// todo: 별도의 menu controller를 구현해야 할지
-	@PatchMapping("{restaurant-id}/menu/{menu-id}")
+	@PatchMapping("/{restaurant-id}/menu/{menu-id}")
 	public ResponseEntity<MenuUpdateResponse> updateMenu(
 		@PathVariable("menu-id") Long menuId,
 		@RequestBody @Valid MenuUpdateRequest request
@@ -105,7 +105,7 @@ public class RestaurantController {
 		return ResponseEntity.ok().body(response);
 	}
 
-	@DeleteMapping("{restaurant-id}/menu/{menu-id}")
+	@DeleteMapping("/{restaurant-id}/menu/{menu-id}")
 	public ResponseEntity<Void> deleteMenu(
 		@PathVariable("menu-id") Long menuId
 	) {
