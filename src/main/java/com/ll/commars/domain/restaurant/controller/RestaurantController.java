@@ -99,16 +99,6 @@ public class RestaurantController {
 			.body(response);
 	}
 
-	@GetMapping("/{restaurant_id}/menu")
-	public ResponseEntity<RestaurantMenuDto.ShowAllMenusResponse> getMenus(
-		@PathVariable("restaurant_id") @NotNull Long restaurantId
-	) {
-		RestaurantMenuDto.ShowAllMenusResponse response = restaurantCommandService.getMenus(restaurantId);
-		return ResponseEntity
-			.status(200)
-			.body(response);
-	}
-
 	@PostMapping("/{restaurant_id}/review")
 	public ResponseEntity<ReviewDto.ReviewWriteResponse> writeReview(
 		@AuthenticationPrincipal UserDetails userDetails,
@@ -137,30 +127,6 @@ public class RestaurantController {
 		@PathVariable("restaurant_id") @NotNull Long restaurantId
 	) {
 		RestaurantCategoryDto.ShowCategoryNameResponse response = restaurantCommandService.getCategories(restaurantId);
-		return ResponseEntity
-			.status(200)
-			.body(response);
-	}
-
-	@PostMapping("/{restaurant_id}/business-hour")
-	public ResponseEntity<BusinessHourDto.BusinessHourWriteResponse> writeBusinessHours(
-		@PathVariable("restaurant_id") @NotNull Long restaurantId,
-		@RequestBody @Valid BusinessHourDto.BusinessHourWriteRequest request
-	) {
-		BusinessHourDto.BusinessHourWriteResponse response = restaurantCommandService.writeBusinessHours(restaurantId,
-			request);
-		return ResponseEntity
-			.status(201)
-			.body(response);
-	}
-
-	@PatchMapping("/{restaurant_id}/business-hour")
-	public ResponseEntity<BusinessHourDto.BusinessHourWriteResponse> modifyBusinessHours(
-		@PathVariable("restaurant_id") @NotNull Long restaurantId,
-		@RequestBody @Valid BusinessHourDto.BusinessHourWriteRequest request
-	) {
-		BusinessHourDto.BusinessHourWriteResponse response = restaurantCommandService.modifyBusinessHours(restaurantId,
-			request);
 		return ResponseEntity
 			.status(200)
 			.body(response);

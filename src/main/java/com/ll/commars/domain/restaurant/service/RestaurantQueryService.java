@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ll.commars.domain.restaurant.dto.RestaurantFindListResponse;
 import com.ll.commars.domain.restaurant.dto.RestaurantFindResponse;
-import com.ll.commars.domain.restaurant.dto.RestaurantMenuDto;
 import com.ll.commars.domain.restaurant.dto.RestaurantSummaryResponse;
 import com.ll.commars.domain.restaurant.entity.Restaurant;
 import com.ll.commars.domain.restaurant.repository.jpa.RestaurantRepository;
@@ -50,24 +49,6 @@ public class RestaurantQueryService {
 
 		return ReviewDto.ShowAllReviewsResponse.builder()
 			.reviews(reviewInfos)
-			.build();
-	}
-
-	@Transactional
-	public RestaurantMenuDto.ShowAllMenusResponse getMenus(Long restaurantId) {
-		Restaurant restaurant = restaurantRepository.findById(restaurantId)
-			.orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
-
-		List<RestaurantMenuDto.MenuInfo> menuInfos = restaurant.getRestaurantMenus().stream()
-			.map(menu -> RestaurantMenuDto.MenuInfo.builder()
-				.name(menu.getName())
-				.price(menu.getPrice())
-				.imageUrl(menu.getImageUrl())
-				.build())
-			.collect(Collectors.toList());
-
-		return RestaurantMenuDto.ShowAllMenusResponse.builder()
-			.menus(menuInfos)
 			.build();
 	}
 
