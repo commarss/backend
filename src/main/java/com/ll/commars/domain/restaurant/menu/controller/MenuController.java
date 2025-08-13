@@ -15,7 +15,7 @@ import com.ll.commars.domain.restaurant.menu.dto.MenuBulkCreateResponse;
 import com.ll.commars.domain.restaurant.menu.dto.MenuFindResponse;
 import com.ll.commars.domain.restaurant.menu.dto.MenuUpdateRequest;
 import com.ll.commars.domain.restaurant.menu.dto.MenuUpdateResponse;
-import com.ll.commars.domain.restaurant.menu.service.RestaurantMenuService;
+import com.ll.commars.domain.restaurant.menu.service.MenuService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,14 +25,14 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/restaurant/{restaurant-id}/menus")
 public class MenuController {
 
-	private final RestaurantMenuService restaurantMenuService;
+	private final MenuService menuService;
 
 	@PostMapping
 	public ResponseEntity<MenuBulkCreateResponse> createMenu(
 		@PathVariable("restaurant-id") Long restaurantId,
 		@RequestBody @Valid MenuBulkCreateRequest request
 	) {
-		MenuBulkCreateResponse response = restaurantMenuService.createMenu(restaurantId, request);
+		MenuBulkCreateResponse response = menuService.createMenu(restaurantId, request);
 
 		return ResponseEntity.ok().body(response);
 	}
@@ -41,7 +41,7 @@ public class MenuController {
 	public ResponseEntity<MenuFindResponse> getMenu(
 		@PathVariable("menu-id") Long menuId
 	) {
-		MenuFindResponse response = restaurantMenuService.getMenu(menuId);
+		MenuFindResponse response = menuService.getMenu(menuId);
 
 		return ResponseEntity.ok().body(response);
 	}
@@ -51,7 +51,7 @@ public class MenuController {
 		@PathVariable("menu-id") Long menuId,
 		@RequestBody @Valid MenuUpdateRequest request
 	) {
-		MenuUpdateResponse response = restaurantMenuService.updateMenu(menuId, request);
+		MenuUpdateResponse response = menuService.updateMenu(menuId, request);
 
 		return ResponseEntity.ok().body(response);
 	}
@@ -60,7 +60,7 @@ public class MenuController {
 	public ResponseEntity<Void> deleteMenu(
 		@PathVariable("menu-id") Long menuId
 	) {
-		restaurantMenuService.deleteMenu(menuId);
+		menuService.deleteMenu(menuId);
 
 		return ResponseEntity.ok().build();
 	}

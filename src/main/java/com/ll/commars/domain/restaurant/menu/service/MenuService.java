@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class RestaurantMenuService {
+public class MenuService {
 
 	private final RestaurantRepository restaurantRepository;
 	private final MenuRepository menuRepository;
