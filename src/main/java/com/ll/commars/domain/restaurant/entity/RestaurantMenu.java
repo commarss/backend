@@ -34,4 +34,14 @@ public class RestaurantMenu extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "restaurant_id")
 	private Restaurant restaurant;
+
+	public RestaurantMenu(String name, String imageUrl, Integer price) {
+		this.name = name;
+		this.price = price;
+		this.imageUrl = imageUrl;
+	}
+
+	public void setRestaurant(Restaurant restaurant) {
+		this.restaurant = restaurant;
+	}
 }

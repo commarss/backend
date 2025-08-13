@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ll.commars.domain.restaurant.dto.BusinessHourDto;
+import com.ll.commars.domain.restaurant.dto.MenuCreateRequest;
+import com.ll.commars.domain.restaurant.dto.MenuCreateResponse;
 import com.ll.commars.domain.restaurant.dto.RestaurantCategoryDto;
 import com.ll.commars.domain.restaurant.dto.RestaurantCreateRequest;
 import com.ll.commars.domain.restaurant.dto.RestaurantCreateResponse;
-import com.ll.commars.domain.restaurant.dto.RestaurantDto;
 import com.ll.commars.domain.restaurant.dto.RestaurantFindListResponse;
 import com.ll.commars.domain.restaurant.dto.RestaurantFindResponse;
 import com.ll.commars.domain.restaurant.dto.RestaurantMenuDto;
@@ -82,20 +82,39 @@ public class RestaurantController {
 		@PathVariable("restaurant-id") Long restaurantId
 	) {
 		restaurantCommandService.deleteRestaurant(restaurantId);
-		
+
 		return ResponseEntity.ok().build();
 	}
 
-	@PostMapping("{restaurant_id}/menu")
-	public ResponseEntity<RestaurantMenuDto.MenuWriteResponse> writeMenu(
-		@PathVariable("restaurant_id") @NotNull Long restaurantId,
+	@PostMapping("{restaurant-id}/menu")
+	public ResponseEntity<MenuCreateResponse> createMenu(
+		@PathVariable("restaurant-id") Long restaurantId,
+		@RequestBody @Valid MenuCreateRequest request
+	) {
+		MenuCreateResponse response = restaurantMenuService.createMenu(restaurantId, request);
+
+		return ResponseEntity.ok().body(response);
+	}
+
+	@PatchMapping("/{menu_id}")
+	public ResponseEntity<RestaurantMenuDto.MenuWriteResponse> modifyMenu(
+		@PathVariable("menu_id") @NotNull Long menuId,
 		@RequestBody @Valid RestaurantMenuDto.MenuInfo request
 	) {
-		RestaurantMenuDto.MenuWriteResponse response = restaurantMenuService.write(restaurantId, request);
-
+		RestaurantMenuDto.MenuWriteResponse response = restaurantMenuService.modifyMenu(menuId, request);
 		return ResponseEntity
-			.status(201)
+			.status(200)
 			.body(response);
+	}
+
+	@DeleteMapping("/{menu_id}")
+	public ResponseEntity<String> deleteMenu(
+		@PathVariable("menu_id") @NotNull Long menuId
+	) {
+		restaurantMenuService.deleteMenu(menuId);
+		return ResponseEntity
+			.status(200)
+			.body("식당 메뉴 삭제 성공");
 	}
 
 	@PostMapping("/{restaurant_id}/review")
