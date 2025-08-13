@@ -3,6 +3,7 @@ package com.ll.commars.domain.restaurant.dto;
 import java.util.Optional;
 
 import com.ll.commars.domain.restaurant.entity.Restaurant;
+import com.ll.commars.domain.restaurant.menu.dto.MenuFindListResponse;
 import com.ll.commars.domain.review.dto.RestaurantReviewListResponse;
 
 public record RestaurantFindResponse(

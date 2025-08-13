@@ -1,4 +1,4 @@
-package com.ll.commars.domain.restaurant.repository.jpa;
+package com.ll.commars.domain.restaurant.menu.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

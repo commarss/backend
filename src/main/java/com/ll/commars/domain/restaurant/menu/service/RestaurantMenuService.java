@@ -1,17 +1,18 @@
-package com.ll.commars.domain.restaurant.service;
+package com.ll.commars.domain.restaurant.menu.service;
 
 import static com.ll.commars.global.exception.ErrorCode.*;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ll.commars.domain.restaurant.dto.MenuCreateRequest;
-import com.ll.commars.domain.restaurant.dto.MenuCreateResponse;
-import com.ll.commars.domain.restaurant.dto.MenuUpdateRequest;
-import com.ll.commars.domain.restaurant.dto.MenuUpdateResponse;
-import com.ll.commars.domain.restaurant.entity.Restaurant;
 import com.ll.commars.domain.restaurant.entity.Menu;
-import com.ll.commars.domain.restaurant.repository.jpa.RestaurantMenuRepository;
+import com.ll.commars.domain.restaurant.entity.Restaurant;
+import com.ll.commars.domain.restaurant.menu.dto.MenuCreateRequest;
+import com.ll.commars.domain.restaurant.menu.dto.MenuCreateResponse;
+import com.ll.commars.domain.restaurant.menu.dto.MenuFindResponse;
+import com.ll.commars.domain.restaurant.menu.dto.MenuUpdateRequest;
+import com.ll.commars.domain.restaurant.menu.dto.MenuUpdateResponse;
+import com.ll.commars.domain.restaurant.menu.repository.RestaurantMenuRepository;
 import com.ll.commars.domain.restaurant.repository.jpa.RestaurantRepository;
 import com.ll.commars.global.exception.CustomException;
 
@@ -35,6 +36,14 @@ public class RestaurantMenuService {
 		menu.setRestaurant(restaurant);
 
 		return MenuCreateResponse.from(restaurantMenuRepository.save(menu));
+	}
+
+	@Transactional(readOnly = true)
+	public MenuFindResponse getMenu(Long menuId) {
+		Menu menu = restaurantMenuRepository.findById(menuId)
+			.orElseThrow(() -> new CustomException(MENU_NOT_FOUND));
+
+		return MenuFindResponse.from(menu);
 	}
 
 	@Transactional

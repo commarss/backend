@@ -1,4 +1,4 @@
-package com.ll.commars.domain.restaurant.dto;
+package com.ll.commars.domain.restaurant.menu.dto;
 
 import java.util.List;
 
