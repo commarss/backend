@@ -1,7 +1,10 @@
 package com.ll.commars.domain.restaurant.restaurant.repository.jpa;
 
+import static com.ll.commars.domain.restaurant.restaurant.entity.QRestaurant.*;
+
 import java.util.List;
 
+import com.ll.commars.domain.restaurant.restaurant.dto.QRestaurantSummaryResponse;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantSummaryResponse;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -20,8 +23,8 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom {
 				restaurant.name,
 				restaurant.imageUrl,
 				restaurant.averageRate,
-				restaurant.restaurantCategory,
-				restaurant.address
+				restaurant.address,
+				restaurant.restaurantCategory
 			))
 			.from(restaurant)
 			.orderBy(restaurant.id.asc())

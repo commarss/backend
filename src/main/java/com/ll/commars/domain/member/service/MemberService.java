@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ll.commars.domain.favorite.favorite.dto.FavoriteDto;
 import com.ll.commars.domain.favorite.favorite.entity.Favorite;
 import com.ll.commars.domain.favorite.favorite.service.FavoriteService;
-import com.ll.commars.domain.member.dto.MemberDto;
 import com.ll.commars.domain.member.entity.Member;
 import com.ll.commars.domain.member.repository.jpa.MemberRepository;
 import com.ll.commars.domain.review.dto.ReviewDto;
@@ -55,18 +54,18 @@ public class MemberService {
 	}
 
 	@Transactional
-	public MemberDto.UserFavoriteListsResponse getFavoriteLists(Member member) {
-		List<FavoriteDto.FavoriteInfo> favorites = favoriteService.getFavoritesByUser(member)
-			.stream()
-			.map(favoriteService::toFavoriteInfo)
-			.collect(Collectors.toList());
-
-		return MemberDto.UserFavoriteListsResponse.builder()
-			.id(member.getId())
-			.name(member.getName())
-			.favoriteLists(favorites)
-			.build();
-	}
+	// public MemberDto.UserFavoriteListsResponse getFavoriteLists(Member member) {
+	// 	List<FavoriteDto.FavoriteInfo> favorites = favoriteService.getFavoritesByUser(member)
+	// 		.stream()
+	// 		.map(favoriteService::toFavoriteInfo)
+	// 		.collect(Collectors.toList());
+	//
+	// 	return MemberDto.UserFavoriteListsResponse.builder()
+	// 		.id(member.getId())
+	// 		.name(member.getName())
+	// 		.favoriteLists(favorites)
+	// 		.build();
+	// }
 
 	public void createFavoriteList(Member member, FavoriteDto.CreateFavoriteListRequest request) {
 		FavoriteDto.CreateFavoriteListRequest createFavoriteListRequest = FavoriteDto.CreateFavoriteListRequest.builder()

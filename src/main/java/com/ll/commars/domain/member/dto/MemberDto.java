@@ -1,9 +1,6 @@
 package com.ll.commars.domain.member.dto;
 
 import java.time.LocalDateTime;
-import java.util.List;
-
-import com.ll.commars.domain.favorite.favorite.dto.FavoriteDto;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -25,13 +22,13 @@ public class MemberDto {
 		private LocalDateTime birthDate;
 	}
 
-	@Getter
-	@Builder
-	public static class UserFavoriteListsResponse {
-
-		private Long id; // 사용자 ID
-		private String name; // 사용자 이름
-		private List<FavoriteDto.FavoriteInfo> favoriteLists;
-	}
+	// @Getter
+	// @Builder
+	// public static class UserFavoriteListsResponse {
+	//
+	// 	private Long id; // 사용자 ID
+	// 	private String name; // 사용자 이름
+	// 	private List<FavoriteDto.FavoriteInfo> favoriteLists;
+	// }
 }
 

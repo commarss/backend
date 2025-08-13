@@ -1,22 +1,16 @@
 package com.ll.commars.domain.review.controller;
 
-import java.util.Map;
-
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ll.commars.domain.review.dto.ReviewDto;
-import com.ll.commars.domain.review.entity.Review;
 import com.ll.commars.domain.review.service.ReviewService;
 
 import jakarta.validation.Valid;
@@ -60,16 +54,16 @@ public class ApiV1ReviewController {
 			.body(response);
 	}
 
-	@PostMapping("/writeReview")
-	public ResponseEntity<?> writeReview(
-		@RequestBody Map<String, Object> body,
-		@AuthenticationPrincipal UserDetails userDetails
-	) {
-		System.out.println("body = " + body);
-		Review review = reviewService.wirteReview(body.get("restaurant_id").toString(), userDetails.getUsername(),
-			body.get("name").toString(), body.get("body").toString(), Integer.parseInt(body.get("rate").toString()));
-		System.out.println("review = " + review);
-		return ResponseEntity.ok()
-			.body("리뷰 작성 성공");
-	}
+	// @PostMapping("/writeReview")
+	// public ResponseEntity<?> writeReview(
+	// 	@RequestBody Map<String, Object> body,
+	// 	@AuthenticationPrincipal UserDetails userDetails
+	// ) {
+	// 	System.out.println("body = " + body);
+	// 	Review review = reviewService.wirteReview(body.get("restaurant_id").toString(), userDetails.getUsername(),
+	// 		body.get("name").toString(), body.get("body").toString(), Integer.parseInt(body.get("rate").toString()));
+	// 	System.out.println("review = " + review);
+	// 	return ResponseEntity.ok()
+	// 		.body("리뷰 작성 성공");
+	// }
 }

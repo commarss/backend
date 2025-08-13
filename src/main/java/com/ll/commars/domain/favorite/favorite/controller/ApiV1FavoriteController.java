@@ -1,7 +1,6 @@
 package com.ll.commars.domain.favorite.favorite.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ll.commars.domain.favorite.favorite.dto.FavoriteDto;
 import com.ll.commars.domain.favorite.favorite.entity.Favorite;
 import com.ll.commars.domain.favorite.favorite.service.FavoriteRestaurantService;
 import com.ll.commars.domain.favorite.favorite.service.FavoriteService;
@@ -44,11 +42,11 @@ public class ApiV1FavoriteController {
 		return ResponseEntity.ok(response);
 	}
 
-	@GetMapping("/{favorite_id}")
-	public ResponseEntity<FavoriteDto.FavoriteInfo> getFavorite(@PathVariable("favorite_id") Long favoriteId) {
-		FavoriteDto.FavoriteInfo response = favoriteService.getFavorite(favoriteId);
-		return ResponseEntity.ok(response);
-	}
+	// @GetMapping("/{favorite_id}")
+	// public ResponseEntity<FavoriteDto.FavoriteInfo> getFavorite(@PathVariable("favorite_id") Long favoriteId) {
+	// 	FavoriteDto.FavoriteInfo response = favoriteService.getFavorite(favoriteId);
+	// 	return ResponseEntity.ok(response);
+	// }
 
 	@DeleteMapping("/{favorite_id}")
 	public ResponseEntity<String> deleteFavorite(@PathVariable("favorite_id") Long favoriteId) {
@@ -56,26 +54,26 @@ public class ApiV1FavoriteController {
 		return ResponseEntity.ok("찜 목록 삭제 성공");
 	}
 
-	@PostMapping("/{favorite_id}/restaurant")
-	public ResponseEntity<FavoriteDto.FavoriteInfo> addRestaurantToFavorite(
-		@PathVariable("favorite_id") Long favoriteId,
-		@RequestBody FavoriteDto.AddRestaurantRequest request
-	) {
-		FavoriteDto.FavoriteInfo response = favoriteService.addRestaurantToFavorite(favoriteId,
-			request.getRestaurantId());
-		return ResponseEntity.ok(response);
-	}
+	// @PostMapping("/{favorite_id}/restaurant")
+	// public ResponseEntity<FavoriteDto.FavoriteInfo> addRestaurantToFavorite(
+	// 	@PathVariable("favorite_id") Long favoriteId,
+	// 	@RequestBody FavoriteDto.AddRestaurantRequest request
+	// ) {
+	// 	FavoriteDto.FavoriteInfo response = favoriteService.addRestaurantToFavorite(favoriteId,
+	// 		request.getRestaurantId());
+	// 	return ResponseEntity.ok(response);
+	// }
 
-	@PostMapping("/restaurant/add")
-	public ResponseEntity<?> addRestaurantToFavoriteList(
-		@RequestBody Map<String, Object> request
-	) {
-		String favoriteId = String.valueOf(request.get("favoriteId"));
-		String restaurantId = String.valueOf(request.get("restaurantId"));
-		FavoriteDto.FavoriteInfo response = favoriteService.addRestaurantToFavorite(Long.parseLong(favoriteId),
-			Long.parseLong(restaurantId));
-		return ResponseEntity.ok(response);
-	}
+	// @PostMapping("/restaurant/add")
+	// public ResponseEntity<?> addRestaurantToFavoriteList(
+	// 	@RequestBody Map<String, Object> request
+	// ) {
+	// 	String favoriteId = String.valueOf(request.get("favoriteId"));
+	// 	String restaurantId = String.valueOf(request.get("restaurantId"));
+	// 	FavoriteDto.FavoriteInfo response = favoriteService.addRestaurantToFavorite(Long.parseLong(favoriteId),
+	// 		Long.parseLong(restaurantId));
+	// 	return ResponseEntity.ok(response);
+	// }
 
 	@PostMapping("/create")
 	public ResponseEntity<?> createFavoriteList(
@@ -105,13 +103,13 @@ public class ApiV1FavoriteController {
 		return ResponseEntity.ok(response);
 	}
 
-	@GetMapping
-	public ResponseEntity<List<FavoriteDto.FavoriteInfo>> getFavorites(
-		@AuthenticationPrincipal UserDetails userDetails) {
-		Long userId = Long.valueOf(userDetails.getUsername()); // 현재 로그인한 사용자 정보 가져오기
-		List<FavoriteDto.FavoriteInfo> favoriteList = favoriteService.getAllFavoritesByUser(userId);
-		return ResponseEntity.ok(favoriteList);
-	}
+	// @GetMapping
+	// public ResponseEntity<List<FavoriteDto.FavoriteInfo>> getFavorites(
+	// 	@AuthenticationPrincipal UserDetails userDetails) {
+	// 	Long userId = Long.valueOf(userDetails.getUsername()); // 현재 로그인한 사용자 정보 가져오기
+	// 	List<FavoriteDto.FavoriteInfo> favoriteList = favoriteService.getAllFavoritesByUser(userId);
+	// 	return ResponseEntity.ok(favoriteList);
+	// }
 
 	@PostMapping("/delete/restaurant")
 	public ResponseEntity<?> deleteRestaurantFromFavorite(
