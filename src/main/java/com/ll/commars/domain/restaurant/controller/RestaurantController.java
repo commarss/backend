@@ -1,8 +1,6 @@
 package com.ll.commars.domain.restaurant.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -21,13 +19,11 @@ import com.ll.commars.domain.restaurant.dto.RestaurantCreateRequest;
 import com.ll.commars.domain.restaurant.dto.RestaurantCreateResponse;
 import com.ll.commars.domain.restaurant.dto.RestaurantFindListResponse;
 import com.ll.commars.domain.restaurant.dto.RestaurantFindResponse;
-import com.ll.commars.domain.restaurant.dto.RestaurantMenuDto;
 import com.ll.commars.domain.restaurant.dto.RestaurantUpdateRequest;
 import com.ll.commars.domain.restaurant.dto.RestaurantUpdateResponse;
 import com.ll.commars.domain.restaurant.service.RestaurantCommandService;
 import com.ll.commars.domain.restaurant.service.RestaurantMenuService;
 import com.ll.commars.domain.restaurant.service.RestaurantQueryService;
-import com.ll.commars.domain.review.dto.ReviewDto;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -116,29 +112,6 @@ public class RestaurantController {
 		restaurantMenuService.deleteMenu(menuId);
 
 		return ResponseEntity.ok().build();
-	}
-
-	@PostMapping("/{restaurant_id}/review")
-	public ResponseEntity<ReviewDto.ReviewWriteResponse> writeReview(
-		@AuthenticationPrincipal UserDetails userDetails,
-		@PathVariable("restaurant_id") @NotNull Long restaurantId,
-		@RequestBody @Valid ReviewDto.ReviewWriteRequest request
-	) {
-		Long userId = Long.valueOf(userDetails.getUsername());
-		ReviewDto.ReviewWriteResponse response = restaurantCommandService.writeReview(restaurantId, request, userId);
-		return ResponseEntity
-			.status(201)
-			.body(response);
-	}
-
-	@GetMapping("/{restaurant_id}/review")
-	public ResponseEntity<ReviewDto.ShowAllReviewsResponse> getReviews(
-		@PathVariable("restaurant_id") @NotNull Long restaurantId
-	) {
-		ReviewDto.ShowAllReviewsResponse response = restaurantCommandService.getReviews(restaurantId);
-		return ResponseEntity
-			.status(200)
-			.body(response);
 	}
 
 	@GetMapping("/{restaurant_id}/category")
