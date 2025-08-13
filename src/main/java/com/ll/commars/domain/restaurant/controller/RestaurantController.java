@@ -20,8 +20,10 @@ import com.ll.commars.domain.restaurant.dto.RestaurantDto;
 import com.ll.commars.domain.restaurant.dto.RestaurantFindListResponse;
 import com.ll.commars.domain.restaurant.dto.RestaurantFindResponse;
 import com.ll.commars.domain.restaurant.dto.RestaurantMenuDto;
-import com.ll.commars.domain.restaurant.service.RestaurantMenuService;
+import com.ll.commars.domain.restaurant.dto.RestaurantUpdateRequest;
+import com.ll.commars.domain.restaurant.dto.RestaurantUpdateResponse;
 import com.ll.commars.domain.restaurant.service.RestaurantCommandService;
+import com.ll.commars.domain.restaurant.service.RestaurantMenuService;
 import com.ll.commars.domain.restaurant.service.RestaurantQueryService;
 import com.ll.commars.domain.review.dto.ReviewDto;
 
@@ -64,15 +66,14 @@ public class RestaurantController {
 		return ResponseEntity.ok().body(response);
 	}
 
-	@PatchMapping("/{restaurant_id}")
-	public ResponseEntity<RestaurantDto.RestaurantWriteResponse> modifyRestaurant(
-		@PathVariable("restaurant_id") @NotNull Long restaurantId,
-		@RequestBody @Valid RestaurantDto.RestaurantWriteRequest request
+	@PatchMapping("/{restaurant-id}")
+	public ResponseEntity<RestaurantUpdateResponse> updateRestaurant(
+		@PathVariable("restaurant-id") Long restaurantId,
+		@RequestBody @Valid RestaurantUpdateRequest request
 	) {
-		RestaurantDto.RestaurantWriteResponse response = restaurantCommandService.modifyRestaurant(restaurantId, request);
-		return ResponseEntity
-			.status(200)
-			.body(response);
+		RestaurantUpdateResponse response = restaurantCommandService.updateRestaurant(restaurantId, request);
+
+		return ResponseEntity.ok().body(response);
 	}
 
 	@DeleteMapping("/{restaurant_id}")

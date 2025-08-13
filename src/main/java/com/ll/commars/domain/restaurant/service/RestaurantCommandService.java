@@ -1,5 +1,7 @@
 package com.ll.commars.domain.restaurant.service;
 
+import static com.ll.commars.global.exception.ErrorCode.*;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -15,6 +17,8 @@ import com.ll.commars.domain.restaurant.dto.RestaurantCategoryDto;
 import com.ll.commars.domain.restaurant.dto.RestaurantCreateRequest;
 import com.ll.commars.domain.restaurant.dto.RestaurantCreateResponse;
 import com.ll.commars.domain.restaurant.dto.RestaurantDto;
+import com.ll.commars.domain.restaurant.dto.RestaurantUpdateRequest;
+import com.ll.commars.domain.restaurant.dto.RestaurantUpdateResponse;
 import com.ll.commars.domain.restaurant.entity.BusinessHour;
 import com.ll.commars.domain.restaurant.entity.Restaurant;
 import com.ll.commars.domain.restaurant.entity.RestaurantCategory;
@@ -23,6 +27,8 @@ import com.ll.commars.domain.restaurant.repository.jpa.RestaurantRepository;
 import com.ll.commars.domain.review.dto.ReviewDto;
 import com.ll.commars.domain.review.entity.Review;
 import com.ll.commars.domain.review.repository.jpa.ReviewRepository;
+import com.ll.commars.global.exception.CustomException;
+import com.ll.commars.global.exception.ErrorCode;
 
 import lombok.RequiredArgsConstructor;
 
@@ -94,28 +100,14 @@ public class RestaurantCommandService {
 	}
 
 	@Transactional
-	public RestaurantDto.RestaurantWriteResponse modifyRestaurant(Long restaurantId,
-		RestaurantDto.RestaurantWriteRequest request) {
+	public RestaurantUpdateResponse updateRestaurant(Long restaurantId,
+		RestaurantUpdateRequest request) {
 		Restaurant restaurant = restaurantRepository.findById(restaurantId)
-			.orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
+			.orElseThrow(() -> new CustomException(RESTAURANT_NOT_FOUND));
 
-		restaurant.setName(request.getName());
-		restaurant.setDetails(request.getDetails());
-		restaurant.setAverageRate(request.getAverageRate());
-		restaurant.setImageUrl(request.getImageUrl());
-		restaurant.setContact(request.getContact());
-		restaurant.setAddress(request.getAddress());
-		restaurant.setLat(request.getLat());
-		restaurant.setLon(request.getLon());
-		restaurant.setRunningState(request.getRunningState());
-		restaurant.setSummarizedReview(request.getSummarizedReview());
-		restaurant.setRestaurantCategory(restaurantCategoryRepository.findById(request.getCategoryId())
-			.orElseThrow(() -> new IllegalArgumentException("Category not found")));
+		restaurant.updateRestaurant(request.restaurantName(), request.category());
 
-		return RestaurantDto.RestaurantWriteResponse.builder()
-			.id(restaurant.getId())
-			.name(request.getName())
-			.build();
+		return RestaurantUpdateResponse.from(restaurantRepository.save(restaurant));
 	}
 
 	@Transactional

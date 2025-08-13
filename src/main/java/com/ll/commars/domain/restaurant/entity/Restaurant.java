@@ -96,4 +96,9 @@ public class Restaurant extends BaseEntity {
 			businessHours.forEach(hour -> hour.setRestaurant(this));
 		}
 	}
+
+	public void updateRestaurant(String name, String category) {
+		this.name = name;
+		this.restaurantCategory = RestaurantCategory.fromString(category);
+	}
 }

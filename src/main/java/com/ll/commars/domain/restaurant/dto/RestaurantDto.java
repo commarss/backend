@@ -51,22 +51,4 @@ public class RestaurantDto {
 		private String summarizedReview;
 		private Long categoryId;
 	}
-
-	// 모든 식당 조회
-	@Getter
-	@Builder
-	public static class RestaurantShowAllResponse {
-
-		private List<RestaurantInfo> restaurants;
-	}
-
-	// 식당 카테고리 등록 및 수정 시의 응답
-	@Getter
-	@Builder
-	public static class RestaurantCategoryWriteResponse {
-
-		private String restaurantName;
-		private String categoryName;
-	}
-
 }
