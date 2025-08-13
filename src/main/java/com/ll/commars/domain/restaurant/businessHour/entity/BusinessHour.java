@@ -48,4 +48,10 @@ public class BusinessHour extends BaseEntity {
 		this.closeTime = closeTime;
 		this.restaurant = restaurant;
 	}
+
+	public void update(DayOfWeek dayOfWeek, LocalTime openTime, LocalTime closeTime) {
+		this.dayOfWeek = dayOfWeek;
+		this.openTime = openTime;
+		this.closeTime = closeTime;
+	}
 }
