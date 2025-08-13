@@ -26,14 +26,17 @@ public enum RestaurantCategory {
 				Function.identity()
 			));
 
+	private static final List<String> ALL_CATEGORY_NAMES =
+		Arrays.stream(values())
+			.map(Enum::name)
+			.toList();
+
 	public static RestaurantCategory fromString(String categoryName) {
 		return Optional.ofNullable(CATEGORY_MAP.get(categoryName.toLowerCase()))
 			.orElseThrow(() -> new CustomException(CATEGORY_NOT_FOUND, categoryName));
 	}
 
 	public static List<String> getAllCategories() {
-		return Arrays.stream(values())
-			.map(Enum::name)
-			.toList();
+		return ALL_CATEGORY_NAMES;
 	}
 }
