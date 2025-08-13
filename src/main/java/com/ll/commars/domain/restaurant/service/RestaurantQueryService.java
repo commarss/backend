@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ll.commars.domain.restaurant.dto.CategoryFindListResponse;
 import com.ll.commars.domain.restaurant.dto.CategoryFindResponse;
 import com.ll.commars.domain.restaurant.dto.RestaurantFindListResponse;
 import com.ll.commars.domain.restaurant.dto.RestaurantFindResponse;
@@ -47,5 +48,12 @@ public class RestaurantQueryService {
 		RestaurantCategory category = restaurant.getRestaurantCategory();
 
 		return new CategoryFindResponse(category.name());
+	}
+
+	@Transactional(readOnly = true)
+	public CategoryFindListResponse getAllCategories() {
+		List<String> categories = RestaurantCategory.getAllCategories();
+
+		return new CategoryFindListResponse(categories);
 	}
 }

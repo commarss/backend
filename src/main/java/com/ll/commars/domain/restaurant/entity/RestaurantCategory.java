@@ -3,6 +3,7 @@ package com.ll.commars.domain.restaurant.entity;
 import static com.ll.commars.global.exception.ErrorCode.*;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
@@ -28,5 +29,11 @@ public enum RestaurantCategory {
 	public static RestaurantCategory fromString(String categoryName) {
 		return Optional.ofNullable(CATEGORY_MAP.get(categoryName.toLowerCase()))
 			.orElseThrow(() -> new CustomException(CATEGORY_NOT_FOUND, categoryName));
+	}
+
+	public static List<String> getAllCategories() {
+		return Arrays.stream(values())
+			.map(Enum::name)
+			.toList();
 	}
 }

@@ -10,11 +10,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ll.commars.domain.restaurant.dto.CategoryFindListResponse;
+import com.ll.commars.domain.restaurant.dto.CategoryFindResponse;
 import com.ll.commars.domain.restaurant.dto.MenuCreateRequest;
 import com.ll.commars.domain.restaurant.dto.MenuCreateResponse;
 import com.ll.commars.domain.restaurant.dto.MenuUpdateRequest;
 import com.ll.commars.domain.restaurant.dto.MenuUpdateResponse;
-import com.ll.commars.domain.restaurant.dto.CategoryFindResponse;
 import com.ll.commars.domain.restaurant.dto.RestaurantCreateRequest;
 import com.ll.commars.domain.restaurant.dto.RestaurantCreateResponse;
 import com.ll.commars.domain.restaurant.dto.RestaurantFindListResponse;
@@ -118,6 +119,13 @@ public class RestaurantController {
 		@PathVariable("restaurant-id") Long restaurantId
 	) {
 		CategoryFindResponse response = restaurantQueryService.getCategoryFromRestaurant(restaurantId);
+
+		return ResponseEntity.ok().body(response);
+	}
+
+	@GetMapping("/category")
+	public ResponseEntity<CategoryFindListResponse> getAllCategories() {
+		CategoryFindListResponse response = restaurantQueryService.getAllCategories();
 
 		return ResponseEntity.ok().body(response);
 	}

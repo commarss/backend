@@ -16,7 +16,7 @@ public record RestaurantFindResponse(
 	Boolean runningState,
 	String summarizedReview,
 	String categoryName,
-	RestaurantMenuListResponse restaurantMenus,
+	MenuFindListResponse restaurantMenus,
 	RestaurantReviewListResponse reviews,
 	BusinessHourListResponse businessHours
 ) {
@@ -33,7 +33,7 @@ public record RestaurantFindResponse(
 			restaurant.getRunningState(),
 			restaurant.getSummarizedReview(),
 			Optional.ofNullable(restaurant.getRestaurantCategory()).map(Enum::name).orElse(null),
-			RestaurantMenuListResponse.from(restaurant.getRestaurantMenus()),
+			MenuFindListResponse.from(restaurant.getRestaurantMenus()),
 			RestaurantReviewListResponse.from(restaurant.getReviews()),
 			BusinessHourListResponse.from(restaurant.getBusinessHours())
 		);
