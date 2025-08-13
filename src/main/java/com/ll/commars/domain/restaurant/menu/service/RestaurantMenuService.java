@@ -2,17 +2,19 @@ package com.ll.commars.domain.restaurant.menu.service;
 
 import static com.ll.commars.global.exception.ErrorCode.*;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ll.commars.domain.restaurant.entity.Menu;
 import com.ll.commars.domain.restaurant.entity.Restaurant;
-import com.ll.commars.domain.restaurant.menu.dto.MenuCreateRequest;
-import com.ll.commars.domain.restaurant.menu.dto.MenuCreateResponse;
+import com.ll.commars.domain.restaurant.menu.dto.MenuBulkCreateRequest;
+import com.ll.commars.domain.restaurant.menu.dto.MenuBulkCreateResponse;
 import com.ll.commars.domain.restaurant.menu.dto.MenuFindResponse;
 import com.ll.commars.domain.restaurant.menu.dto.MenuUpdateRequest;
 import com.ll.commars.domain.restaurant.menu.dto.MenuUpdateResponse;
-import com.ll.commars.domain.restaurant.menu.repository.RestaurantMenuRepository;
+import com.ll.commars.domain.restaurant.menu.repository.MenuRepository;
 import com.ll.commars.domain.restaurant.repository.jpa.RestaurantRepository;
 import com.ll.commars.global.exception.CustomException;
 
@@ -23,24 +25,32 @@ import lombok.RequiredArgsConstructor;
 public class RestaurantMenuService {
 
 	private final RestaurantRepository restaurantRepository;
-	private final RestaurantMenuRepository restaurantMenuRepository;
+	private final MenuRepository menuRepository;
 
 	@Transactional
-	public MenuCreateResponse createMenu(
+	public MenuBulkCreateResponse createMenu(
 		Long restaurantId,
-		MenuCreateRequest request) {
+		MenuBulkCreateRequest request) {
 		Restaurant restaurant = restaurantRepository.findById(restaurantId)
 			.orElseThrow(() -> new CustomException(RESTAURANT_NOT_FOUND));
 
-		Menu menu = new Menu(request.menuName(), request.imageUrl(), request.price());
-		menu.setRestaurant(restaurant);
+		List<Menu> menus = request.menuCreateRequests().stream()
+			.map(menuDto -> new Menu(
+				menuDto.menuName(),
+				menuDto.imageUrl(),
+				menuDto.price(),
+				restaurant
+			))
+			.toList();
 
-		return MenuCreateResponse.from(restaurantMenuRepository.save(menu));
+		List<Menu> savedMenus = menuRepository.saveAll(menus);
+
+		return MenuBulkCreateResponse.from(savedMenus);
 	}
 
 	@Transactional(readOnly = true)
 	public MenuFindResponse getMenu(Long menuId) {
-		Menu menu = restaurantMenuRepository.findById(menuId)
+		Menu menu = menuRepository.findById(menuId)
 			.orElseThrow(() -> new CustomException(MENU_NOT_FOUND));
 
 		return MenuFindResponse.from(menu);
@@ -48,7 +58,7 @@ public class RestaurantMenuService {
 
 	@Transactional
 	public MenuUpdateResponse updateMenu(Long menuId, MenuUpdateRequest request) {
-		Menu menu = restaurantMenuRepository.findById(menuId)
+		Menu menu = menuRepository.findById(menuId)
 			.orElseThrow(() -> new CustomException(MENU_NOT_FOUND));
 
 		menu.update(request.menuName(), request.imageUrl(), request.price());
@@ -58,9 +68,9 @@ public class RestaurantMenuService {
 
 	@Transactional
 	public void deleteMenu(Long menuId) {
-		restaurantMenuRepository.findById(menuId)
+		menuRepository.findById(menuId)
 			.orElseThrow(() -> new CustomException(MENU_NOT_FOUND));
 
-		restaurantMenuRepository.deleteById(menuId);
+		menuRepository.deleteById(menuId);
 	}
 }

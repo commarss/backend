@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ll.commars.domain.restaurant.menu.dto.MenuCreateRequest;
-import com.ll.commars.domain.restaurant.menu.dto.MenuCreateResponse;
+import com.ll.commars.domain.restaurant.menu.dto.MenuBulkCreateRequest;
+import com.ll.commars.domain.restaurant.menu.dto.MenuBulkCreateResponse;
 import com.ll.commars.domain.restaurant.menu.dto.MenuFindResponse;
 import com.ll.commars.domain.restaurant.menu.dto.MenuUpdateRequest;
 import com.ll.commars.domain.restaurant.menu.dto.MenuUpdateResponse;
@@ -28,11 +28,11 @@ public class MenuController {
 	private final RestaurantMenuService restaurantMenuService;
 
 	@PostMapping
-	public ResponseEntity<MenuCreateResponse> createMenu(
+	public ResponseEntity<MenuBulkCreateResponse> createMenu(
 		@PathVariable("restaurant-id") Long restaurantId,
-		@RequestBody @Valid MenuCreateRequest request
+		@RequestBody @Valid MenuBulkCreateRequest request
 	) {
-		MenuCreateResponse response = restaurantMenuService.createMenu(restaurantId, request);
+		MenuBulkCreateResponse response = restaurantMenuService.createMenu(restaurantId, request);
 
 		return ResponseEntity.ok().body(response);
 	}

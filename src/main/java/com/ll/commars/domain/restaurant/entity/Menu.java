@@ -35,13 +35,10 @@ public class Menu extends BaseEntity {
 	@JoinColumn(name = "restaurant_id")
 	private Restaurant restaurant;
 
-	public Menu(String name, String imageUrl, Integer price) {
+	public Menu(String name, String imageUrl, Integer price, Restaurant restaurant) {
 		this.name = name;
-		this.price = price;
 		this.imageUrl = imageUrl;
-	}
-
-	public void setRestaurant(Restaurant restaurant) {
+		this.price = price;
 		this.restaurant = restaurant;
 	}
 
