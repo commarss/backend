@@ -1,6 +1,6 @@
 package com.ll.commars.domain.restaurant.menu.dto;
 
-import com.ll.commars.domain.restaurant.entity.Menu;
+import com.ll.commars.domain.restaurant.menu.entity.Menu;
 
 public record MenuUpdateResponse(
 	Long id // 메뉴 ID

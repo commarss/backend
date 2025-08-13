@@ -7,7 +7,7 @@ import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.IndexOperations;
 import org.springframework.data.elasticsearch.core.document.Document;
 
-import com.ll.commars.domain.restaurant.entity.RestaurantDoc;
+import com.ll.commars.domain.restaurant.restaurant.entity.RestaurantDoc;
 
 import lombok.RequiredArgsConstructor;
 

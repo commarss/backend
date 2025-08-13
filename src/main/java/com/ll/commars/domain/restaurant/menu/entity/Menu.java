@@ -1,6 +1,5 @@
-package com.ll.commars.domain.review.entity;
+package com.ll.commars.domain.restaurant.menu.entity;
 
-import com.ll.commars.domain.member.entity.Member;
 import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
 import com.ll.commars.global.BaseEntity;
 
@@ -12,45 +11,41 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
-@Table(name = "reviews")
 @Getter
-@Setter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
-public class Review extends BaseEntity {
+public class Menu extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@NotNull
-	@Column(name = "name", nullable = false)
+	@Column(nullable = false)
 	private String name;
 
-	@Column(name = "body")
-	private String body;
+	@Column(nullable = false)
+	private Integer price;
 
-	@NotNull
-	@Column(name = "rate")
-	private Integer rate;
+	@Column
+	private String imageUrl;
 
-	// Review와 Restaurant: 다대일
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "restaurant_id")
 	private Restaurant restaurant;
 
-	// Review와 User: 다대일
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "member_id")
-	private Member member;
+	public Menu(String name, String imageUrl, Integer price, Restaurant restaurant) {
+		this.name = name;
+		this.imageUrl = imageUrl;
+		this.price = price;
+		this.restaurant = restaurant;
+	}
+
+	public void update(String name, String imageUrl, Integer price) {
+		this.name = name;
+		this.imageUrl = imageUrl;
+		this.price = price;
+	}
 }

@@ -14,8 +14,8 @@ import com.ll.commars.domain.favorite.favorite.entity.FavoriteRestaurant;
 import com.ll.commars.domain.favorite.favorite.repository.jpa.FavoriteRepository;
 import com.ll.commars.domain.favorite.favorite.repository.jpa.FavoriteRestaurantRepository;
 import com.ll.commars.domain.member.entity.Member;
-import com.ll.commars.domain.restaurant.entity.Restaurant;
-import com.ll.commars.domain.restaurant.repository.jpa.RestaurantRepository;
+import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
+import com.ll.commars.domain.restaurant.restaurant.repository.jpa.RestaurantRepository;
 
 import lombok.RequiredArgsConstructor;
 
