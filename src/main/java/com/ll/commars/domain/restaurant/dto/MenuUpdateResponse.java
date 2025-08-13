@@ -1,14 +1,14 @@
 package com.ll.commars.domain.restaurant.dto;
 
-import com.ll.commars.domain.restaurant.entity.RestaurantMenu;
+import com.ll.commars.domain.restaurant.entity.Menu;
 
 public record MenuUpdateResponse(
 	Long id // 메뉴 ID
 ) {
 
-	public static MenuUpdateResponse from(RestaurantMenu restaurantMenu) {
+	public static MenuUpdateResponse from(Menu menu) {
 		return new MenuUpdateResponse(
-			restaurantMenu.getId()
+			menu.getId()
 		);
 	}
 }

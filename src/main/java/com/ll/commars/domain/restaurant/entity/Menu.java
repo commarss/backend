@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-public class RestaurantMenu extends BaseEntity {
+public class Menu extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,7 +35,7 @@ public class RestaurantMenu extends BaseEntity {
 	@JoinColumn(name = "restaurant_id")
 	private Restaurant restaurant;
 
-	public RestaurantMenu(String name, String imageUrl, Integer price) {
+	public Menu(String name, String imageUrl, Integer price) {
 		this.name = name;
 		this.price = price;
 		this.imageUrl = imageUrl;

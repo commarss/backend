@@ -66,7 +66,7 @@ public class Restaurant extends BaseEntity {
 
 	@BatchSize(size = 20)
 	@OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<RestaurantMenu> restaurantMenus;
+	private List<Menu> menus;
 
 	@BatchSize(size = 20)
 	@OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)

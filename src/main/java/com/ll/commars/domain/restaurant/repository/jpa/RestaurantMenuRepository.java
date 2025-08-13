@@ -2,8 +2,8 @@ package com.ll.commars.domain.restaurant.repository.jpa;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.ll.commars.domain.restaurant.entity.RestaurantMenu;
+import com.ll.commars.domain.restaurant.entity.Menu;
 
-public interface RestaurantMenuRepository extends JpaRepository<RestaurantMenu, Long> {
+public interface RestaurantMenuRepository extends JpaRepository<Menu, Long> {
 
 }

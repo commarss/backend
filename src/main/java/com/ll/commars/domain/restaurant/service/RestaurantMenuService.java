@@ -10,7 +10,7 @@ import com.ll.commars.domain.restaurant.dto.MenuCreateResponse;
 import com.ll.commars.domain.restaurant.dto.MenuUpdateRequest;
 import com.ll.commars.domain.restaurant.dto.MenuUpdateResponse;
 import com.ll.commars.domain.restaurant.entity.Restaurant;
-import com.ll.commars.domain.restaurant.entity.RestaurantMenu;
+import com.ll.commars.domain.restaurant.entity.Menu;
 import com.ll.commars.domain.restaurant.repository.jpa.RestaurantMenuRepository;
 import com.ll.commars.domain.restaurant.repository.jpa.RestaurantRepository;
 import com.ll.commars.global.exception.CustomException;
@@ -31,20 +31,20 @@ public class RestaurantMenuService {
 		Restaurant restaurant = restaurantRepository.findById(restaurantId)
 			.orElseThrow(() -> new CustomException(RESTAURANT_NOT_FOUND));
 
-		RestaurantMenu restaurantMenu = new RestaurantMenu(request.menuName(), request.imageUrl(), request.price());
-		restaurantMenu.setRestaurant(restaurant);
+		Menu menu = new Menu(request.menuName(), request.imageUrl(), request.price());
+		menu.setRestaurant(restaurant);
 
-		return MenuCreateResponse.from(restaurantMenuRepository.save(restaurantMenu));
+		return MenuCreateResponse.from(restaurantMenuRepository.save(menu));
 	}
 
 	@Transactional
 	public MenuUpdateResponse updateMenu(Long menuId, MenuUpdateRequest request) {
-		RestaurantMenu restaurantMenu = restaurantMenuRepository.findById(menuId)
+		Menu menu = restaurantMenuRepository.findById(menuId)
 			.orElseThrow(() -> new CustomException(MENU_NOT_FOUND));
 
-		restaurantMenu.update(request.menuName(), request.imageUrl(), request.price());
+		menu.update(request.menuName(), request.imageUrl(), request.price());
 
-		return MenuUpdateResponse.from(restaurantMenu);
+		return MenuUpdateResponse.from(menu);
 	}
 
 	@Transactional
