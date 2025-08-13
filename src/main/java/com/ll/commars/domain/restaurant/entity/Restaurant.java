@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.ColumnDefault;
 
 import com.ll.commars.domain.favorite.favorite.entity.FavoriteRestaurant;
 import com.ll.commars.domain.review.entity.Review;
@@ -36,8 +37,10 @@ public class Restaurant extends BaseEntity {
 	@Column(nullable = false)
 	private String details;
 
-	@Column
-	private Double averageRate;
+	// todo: 리뷰 리팩터링 시 계산 추후 구현
+	@Column(nullable = false)
+	@ColumnDefault("0.0")
+	private double averageRate = 0.0;
 
 	@Column
 	private String imageUrl;
@@ -54,9 +57,11 @@ public class Restaurant extends BaseEntity {
 	@Column(nullable = false)
 	private Double lon;
 
-	@Column
-	private Boolean runningState;
+	@Column(nullable = false)
+	@ColumnDefault("true")
+	private boolean runningState = true;
 
+	// todo: 추후 구현
 	@Column
 	private String summarizedReview;
 
