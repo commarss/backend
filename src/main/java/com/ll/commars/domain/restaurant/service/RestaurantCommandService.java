@@ -110,25 +110,6 @@ public class RestaurantCommandService {
 		return RestaurantUpdateResponse.from(restaurantRepository.save(restaurant));
 	}
 
-	@Transactional
-	public RestaurantDto.RestaurantCategoryWriteResponse writeCategory(Long restaurantId,
-		RestaurantCategoryDto.RestaurantCategoryWriteRequest request) {
-		Restaurant restaurant = restaurantRepository.findById(restaurantId)
-			.orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
-
-		RestaurantCategory category = restaurantCategoryRepository.findById(request.getId())
-			.orElseThrow(() -> new IllegalArgumentException("Category not found"));
-
-		restaurant.setCategory(category);
-
-		restaurantRepository.save(restaurant);
-
-		return RestaurantDto.RestaurantCategoryWriteResponse.builder()
-			.restaurantName(restaurant.getName())
-			.categoryName(category.getName())
-			.build();
-	}
-
 	@Transactional(readOnly = true)
 	public RestaurantCategoryDto.ShowCategoryNameResponse getCategories(Long restaurantId) {
 		Restaurant restaurant = restaurantRepository.findById(restaurantId)
@@ -137,23 +118,6 @@ public class RestaurantCommandService {
 		RestaurantCategory category = restaurant.getRestaurantCategory();
 
 		return RestaurantCategoryDto.ShowCategoryNameResponse.builder()
-			.categoryName(category.getName())
-			.build();
-	}
-
-	@Transactional
-	public RestaurantDto.RestaurantCategoryWriteResponse modifyCategory(Long restaurantId,
-		RestaurantCategoryDto.RestaurantCategoryWriteRequest request) {
-		Restaurant restaurant = restaurantRepository.findById(restaurantId)
-			.orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
-
-		RestaurantCategory category = restaurantCategoryRepository.findById(request.getId())
-			.orElseThrow(() -> new IllegalArgumentException("Category not found"));
-
-		restaurant.setRestaurantCategory(category);
-
-		return RestaurantDto.RestaurantCategoryWriteResponse.builder()
-			.restaurantName(restaurant.getName())
 			.categoryName(category.getName())
 			.build();
 	}

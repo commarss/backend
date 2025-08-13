@@ -66,6 +66,7 @@ public class RestaurantController {
 		return ResponseEntity.ok().body(response);
 	}
 
+	// todo: 추후 메뉴, 영업시간 등 다양한 정보를 수정할 수 있도록
 	@PatchMapping("/{restaurant-id}")
 	public ResponseEntity<RestaurantUpdateResponse> updateRestaurant(
 		@PathVariable("restaurant-id") Long restaurantId,
@@ -131,34 +132,11 @@ public class RestaurantController {
 			.body(response);
 	}
 
-	@PostMapping("/{restaurant_id}/category")
-	public ResponseEntity<RestaurantDto.RestaurantCategoryWriteResponse> writeCategory(
-		@PathVariable("restaurant_id") @NotNull Long restaurantId,
-		@RequestBody @Valid RestaurantCategoryDto.RestaurantCategoryWriteRequest request
-	) {
-		RestaurantDto.RestaurantCategoryWriteResponse response = restaurantCommandService.writeCategory(restaurantId, request);
-		return ResponseEntity
-			.status(201)
-			.body(response);
-	}
-
 	@GetMapping("/{restaurant_id}/category")
 	public ResponseEntity<RestaurantCategoryDto.ShowCategoryNameResponse> getCategories(
 		@PathVariable("restaurant_id") @NotNull Long restaurantId
 	) {
 		RestaurantCategoryDto.ShowCategoryNameResponse response = restaurantCommandService.getCategories(restaurantId);
-		return ResponseEntity
-			.status(200)
-			.body(response);
-	}
-
-	@PatchMapping("/{restaurant_id}/category")
-	public ResponseEntity<RestaurantDto.RestaurantCategoryWriteResponse> modifyCategory(
-		@PathVariable("restaurant_id") @NotNull Long restaurantId,
-		@RequestBody @Valid RestaurantCategoryDto.RestaurantCategoryWriteRequest request
-	) {
-		RestaurantDto.RestaurantCategoryWriteResponse response = restaurantCommandService.modifyCategory(restaurantId,
-			request);
 		return ResponseEntity
 			.status(200)
 			.body(response);
