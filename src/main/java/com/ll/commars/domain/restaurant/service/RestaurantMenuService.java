@@ -2,17 +2,16 @@ package com.ll.commars.domain.restaurant.service;
 
 import static com.ll.commars.global.exception.ErrorCode.*;
 
-import java.util.List;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ll.commars.domain.restaurant.dto.MenuCreateRequest;
 import com.ll.commars.domain.restaurant.dto.MenuCreateResponse;
-import com.ll.commars.domain.restaurant.dto.RestaurantMenuDto;
+import com.ll.commars.domain.restaurant.dto.MenuUpdateRequest;
+import com.ll.commars.domain.restaurant.dto.MenuUpdateResponse;
+import com.ll.commars.domain.restaurant.entity.Restaurant;
 import com.ll.commars.domain.restaurant.entity.RestaurantMenu;
 import com.ll.commars.domain.restaurant.repository.jpa.RestaurantMenuRepository;
-import com.ll.commars.domain.restaurant.entity.Restaurant;
 import com.ll.commars.domain.restaurant.repository.jpa.RestaurantRepository;
 import com.ll.commars.global.exception.CustomException;
 
@@ -39,19 +38,13 @@ public class RestaurantMenuService {
 	}
 
 	@Transactional
-	public RestaurantMenuDto.MenuWriteResponse modifyMenu(Long menuId, RestaurantMenuDto.MenuInfo request) {
+	public MenuUpdateResponse updateMenu(Long menuId, MenuUpdateRequest request) {
 		RestaurantMenu restaurantMenu = restaurantMenuRepository.findById(menuId)
-			.orElseThrow(() -> new IllegalArgumentException("Menu not found"));
+			.orElseThrow(() -> new CustomException(MENU_NOT_FOUND));
 
-		restaurantMenu.setName(request.getName());
-		restaurantMenu.setPrice(request.getPrice());
-		restaurantMenu.setImageUrl(request.getImageUrl());
+		restaurantMenu.update(request.menuName(), request.imageUrl(), request.price());
 
-		return RestaurantMenuDto.MenuWriteResponse.builder()
-			.restaurantName(restaurantMenu.getRestaurant().getName())
-			.name(restaurantMenu.getName())
-			.price(restaurantMenu.getPrice())
-			.build();
+		return MenuUpdateResponse.from(restaurantMenu);
 	}
 
 	@Transactional

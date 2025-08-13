@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ll.commars.domain.restaurant.dto.MenuCreateRequest;
 import com.ll.commars.domain.restaurant.dto.MenuCreateResponse;
+import com.ll.commars.domain.restaurant.dto.MenuUpdateRequest;
+import com.ll.commars.domain.restaurant.dto.MenuUpdateResponse;
 import com.ll.commars.domain.restaurant.dto.RestaurantCategoryDto;
 import com.ll.commars.domain.restaurant.dto.RestaurantCreateRequest;
 import com.ll.commars.domain.restaurant.dto.RestaurantCreateResponse;
@@ -96,15 +98,15 @@ public class RestaurantController {
 		return ResponseEntity.ok().body(response);
 	}
 
-	@PatchMapping("/{menu_id}")
-	public ResponseEntity<RestaurantMenuDto.MenuWriteResponse> modifyMenu(
-		@PathVariable("menu_id") @NotNull Long menuId,
-		@RequestBody @Valid RestaurantMenuDto.MenuInfo request
+	// todo: 별도의 menu controller를 구현해야 할지
+	@PatchMapping("{restaurant-id}/menu/{menu-id}")
+	public ResponseEntity<MenuUpdateResponse> updateMenu(
+		@PathVariable("menu-id") Long menuId,
+		@RequestBody @Valid MenuUpdateRequest request
 	) {
-		RestaurantMenuDto.MenuWriteResponse response = restaurantMenuService.modifyMenu(menuId, request);
-		return ResponseEntity
-			.status(200)
-			.body(response);
+		MenuUpdateResponse response = restaurantMenuService.updateMenu(menuId, request);
+
+		return ResponseEntity.ok().body(response);
 	}
 
 	@DeleteMapping("/{menu_id}")
