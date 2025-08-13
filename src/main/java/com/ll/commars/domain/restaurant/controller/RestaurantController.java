@@ -12,10 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ll.commars.domain.restaurant.dto.CategoryFindListResponse;
 import com.ll.commars.domain.restaurant.dto.CategoryFindResponse;
-import com.ll.commars.domain.restaurant.dto.MenuCreateRequest;
-import com.ll.commars.domain.restaurant.dto.MenuCreateResponse;
-import com.ll.commars.domain.restaurant.dto.MenuUpdateRequest;
-import com.ll.commars.domain.restaurant.dto.MenuUpdateResponse;
 import com.ll.commars.domain.restaurant.dto.RestaurantCreateRequest;
 import com.ll.commars.domain.restaurant.dto.RestaurantCreateResponse;
 import com.ll.commars.domain.restaurant.dto.RestaurantFindListResponse;
@@ -23,7 +19,6 @@ import com.ll.commars.domain.restaurant.dto.RestaurantFindResponse;
 import com.ll.commars.domain.restaurant.dto.RestaurantUpdateRequest;
 import com.ll.commars.domain.restaurant.dto.RestaurantUpdateResponse;
 import com.ll.commars.domain.restaurant.service.RestaurantCommandService;
-import com.ll.commars.domain.restaurant.service.RestaurantMenuService;
 import com.ll.commars.domain.restaurant.service.RestaurantQueryService;
 
 import jakarta.validation.Valid;
@@ -31,12 +26,11 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/restaurant")
+@RequestMapping("/api/restaurants")
 public class RestaurantController {
 
 	private final RestaurantCommandService restaurantCommandService;
 	private final RestaurantQueryService restaurantQueryService;
-	private final RestaurantMenuService restaurantMenuService;
 
 	@PostMapping
 	public ResponseEntity<RestaurantCreateResponse> createRestaurant(
@@ -80,36 +74,6 @@ public class RestaurantController {
 		@PathVariable("restaurant-id") Long restaurantId
 	) {
 		restaurantCommandService.deleteRestaurant(restaurantId);
-
-		return ResponseEntity.ok().build();
-	}
-
-	@PostMapping("/{restaurant-id}/menu")
-	public ResponseEntity<MenuCreateResponse> createMenu(
-		@PathVariable("restaurant-id") Long restaurantId,
-		@RequestBody @Valid MenuCreateRequest request
-	) {
-		MenuCreateResponse response = restaurantMenuService.createMenu(restaurantId, request);
-
-		return ResponseEntity.ok().body(response);
-	}
-
-	// todo: 별도의 menu controller를 구현해야 할지
-	@PatchMapping("/{restaurant-id}/menu/{menu-id}")
-	public ResponseEntity<MenuUpdateResponse> updateMenu(
-		@PathVariable("menu-id") Long menuId,
-		@RequestBody @Valid MenuUpdateRequest request
-	) {
-		MenuUpdateResponse response = restaurantMenuService.updateMenu(menuId, request);
-
-		return ResponseEntity.ok().body(response);
-	}
-
-	@DeleteMapping("/{restaurant-id}/menu/{menu-id}")
-	public ResponseEntity<Void> deleteMenu(
-		@PathVariable("menu-id") Long menuId
-	) {
-		restaurantMenuService.deleteMenu(menuId);
 
 		return ResponseEntity.ok().build();
 	}
