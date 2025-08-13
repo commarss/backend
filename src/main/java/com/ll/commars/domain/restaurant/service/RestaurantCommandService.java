@@ -110,16 +110,4 @@ public class RestaurantCommandService {
 			.rate(request.getRate())
 			.build();
 	}
-
-	@Transactional(readOnly = true)
-	public RestaurantCategoryDto.ShowCategoryNameResponse getCategories(Long restaurantId) {
-		Restaurant restaurant = restaurantRepository.findById(restaurantId)
-			.orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
-
-		RestaurantCategory category = restaurant.getRestaurantCategory();
-
-		return RestaurantCategoryDto.ShowCategoryNameResponse.builder()
-			.categoryName(category.getName())
-			.build();
-	}
 }

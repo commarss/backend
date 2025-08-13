@@ -14,7 +14,7 @@ import com.ll.commars.domain.restaurant.dto.MenuCreateRequest;
 import com.ll.commars.domain.restaurant.dto.MenuCreateResponse;
 import com.ll.commars.domain.restaurant.dto.MenuUpdateRequest;
 import com.ll.commars.domain.restaurant.dto.MenuUpdateResponse;
-import com.ll.commars.domain.restaurant.dto.RestaurantCategoryDto;
+import com.ll.commars.domain.restaurant.dto.RestaurantCategoryFindResponse;
 import com.ll.commars.domain.restaurant.dto.RestaurantCreateRequest;
 import com.ll.commars.domain.restaurant.dto.RestaurantCreateResponse;
 import com.ll.commars.domain.restaurant.dto.RestaurantFindListResponse;
@@ -26,7 +26,6 @@ import com.ll.commars.domain.restaurant.service.RestaurantMenuService;
 import com.ll.commars.domain.restaurant.service.RestaurantQueryService;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -114,13 +113,12 @@ public class RestaurantController {
 		return ResponseEntity.ok().build();
 	}
 
-	@GetMapping("/{restaurant_id}/category")
-	public ResponseEntity<RestaurantCategoryDto.ShowCategoryNameResponse> getCategories(
-		@PathVariable("restaurant_id") @NotNull Long restaurantId
+	@GetMapping("/{restaurant-id}/category")
+	public ResponseEntity<RestaurantCategoryFindResponse> getCategoryFromRestaurant(
+		@PathVariable("restaurant-id") Long restaurantId
 	) {
-		RestaurantCategoryDto.ShowCategoryNameResponse response = restaurantCommandService.getCategories(restaurantId);
-		return ResponseEntity
-			.status(200)
-			.body(response);
+		RestaurantCategoryFindResponse response = restaurantQueryService.getCategoryFromRestaurant(restaurantId);
+
+		return ResponseEntity.ok().body(response);
 	}
 }
