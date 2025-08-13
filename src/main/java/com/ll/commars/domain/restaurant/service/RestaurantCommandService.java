@@ -54,6 +54,25 @@ public class RestaurantCommandService {
 		return RestaurantCreateResponse.from(restaurantRepository.save(restaurant));
 	}
 
+	@Transactional
+	public RestaurantUpdateResponse updateRestaurant(Long restaurantId,
+		RestaurantUpdateRequest request) {
+		Restaurant restaurant = restaurantRepository.findById(restaurantId)
+			.orElseThrow(() -> new CustomException(RESTAURANT_NOT_FOUND));
+
+		restaurant.updateRestaurant(request.restaurantName(), request.category());
+
+		return RestaurantUpdateResponse.from(restaurantRepository.save(restaurant));
+	}
+
+	@Transactional
+	public void deleteRestaurant(Long restaurantId) {
+		restaurantRepository.findById(restaurantId)
+			.orElseThrow(() -> new CustomException(RESTAURANT_NOT_FOUND));
+
+		restaurantRepository.deleteById(restaurantId);
+	}
+
 	// 식당 리뷰 작성
 	@Transactional
 	public ReviewDto.ReviewWriteResponse writeReview(Long restaurantId, ReviewDto.ReviewWriteRequest request,
@@ -90,24 +109,6 @@ public class RestaurantCommandService {
 			.body(request.getBody())
 			.rate(request.getRate())
 			.build();
-	}
-
-	public void deleteRestaurant(Long restaurantId) {
-		restaurantRepository.findById(restaurantId)
-			.orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
-
-		restaurantRepository.deleteById(restaurantId);
-	}
-
-	@Transactional
-	public RestaurantUpdateResponse updateRestaurant(Long restaurantId,
-		RestaurantUpdateRequest request) {
-		Restaurant restaurant = restaurantRepository.findById(restaurantId)
-			.orElseThrow(() -> new CustomException(RESTAURANT_NOT_FOUND));
-
-		restaurant.updateRestaurant(request.restaurantName(), request.category());
-
-		return RestaurantUpdateResponse.from(restaurantRepository.save(restaurant));
 	}
 
 	@Transactional(readOnly = true)
