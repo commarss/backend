@@ -32,7 +32,7 @@ public record RestaurantFindResponse(
 			restaurant.getImageUrl(),
 			restaurant.getContact(),
 			restaurant.getAddress(),
-			restaurant.getRunningState(),
+			restaurant.isRunningState(),
 			restaurant.getSummarizedReview(),
 			Optional.ofNullable(restaurant.getRestaurantCategory()).map(Enum::name).orElse(null),
 			MenuFindListResponse.from(restaurant.getMenus()),

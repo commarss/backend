@@ -73,7 +73,7 @@ public class Restaurant extends BaseEntity {
 
 	@BatchSize(size = 20)
 	@OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Menu> menus;
+	private List<Menu> menus = new ArrayList<>();
 
 	@BatchSize(size = 20)
 	@OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -81,10 +81,10 @@ public class Restaurant extends BaseEntity {
 
 	@BatchSize(size = 20)
 	@OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Review> reviews;
+	private List<Review> reviews = new ArrayList<>();
 
 	@OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<FavoriteRestaurant> favoriteRestaurants;
+	private List<FavoriteRestaurant> favoriteRestaurants = new ArrayList<>();
 
 	public Restaurant(String name, String details, String imageUrl, String contact,
 			String address, RestaurantCategory restaurantCategory) {
@@ -96,11 +96,10 @@ public class Restaurant extends BaseEntity {
 		this.restaurantCategory = restaurantCategory;
 	}
 
-	public void setBusinessHours(List<BusinessHour> businessHours) {
+	public void updateBusinessHours(List<BusinessHour> newBusinessHours) {
 		this.businessHours.clear();
-		if (businessHours != null) {
-			this.businessHours.addAll(businessHours);
-			businessHours.forEach(hour -> hour.setRestaurant(this));
+		if (newBusinessHours != null) {
+			this.businessHours.addAll(newBusinessHours);
 		}
 	}
 
