@@ -50,7 +50,7 @@ public class RestaurantMenuService {
 	@Transactional
 	public void deleteMenu(Long menuId) {
 		restaurantMenuRepository.findById(menuId)
-			.orElseThrow(() -> new IllegalArgumentException("Menu not found"));
+			.orElseThrow(() -> new CustomException(MENU_NOT_FOUND));
 
 		restaurantMenuRepository.deleteById(menuId);
 	}

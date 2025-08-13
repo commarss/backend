@@ -109,14 +109,13 @@ public class RestaurantController {
 		return ResponseEntity.ok().body(response);
 	}
 
-	@DeleteMapping("/{menu_id}")
-	public ResponseEntity<String> deleteMenu(
-		@PathVariable("menu_id") @NotNull Long menuId
+	@DeleteMapping("{restaurant-id}/menu/{menu-id}")
+	public ResponseEntity<Void> deleteMenu(
+		@PathVariable("menu-id") Long menuId
 	) {
 		restaurantMenuService.deleteMenu(menuId);
-		return ResponseEntity
-			.status(200)
-			.body("식당 메뉴 삭제 성공");
+
+		return ResponseEntity.ok().build();
 	}
 
 	@PostMapping("/{restaurant_id}/review")
