@@ -10,8 +10,6 @@ import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
 
 public interface RestaurantRepository extends JpaRepository<Restaurant, Long>, RestaurantRepositoryCustom {
 
-	List<Restaurant> findByRestaurantCategoryId(Long categoryId);
-
 	@Query(value = """
 		    SELECT r FROM Restaurant r
 		    WHERE (6371 * ACOS(
