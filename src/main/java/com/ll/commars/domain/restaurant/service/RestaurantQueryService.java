@@ -7,7 +7,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ll.commars.domain.restaurant.dto.RestaurantCategoryFindResponse;
+import com.ll.commars.domain.restaurant.dto.CategoryFindResponse;
 import com.ll.commars.domain.restaurant.dto.RestaurantFindListResponse;
 import com.ll.commars.domain.restaurant.dto.RestaurantFindResponse;
 import com.ll.commars.domain.restaurant.dto.RestaurantSummaryResponse;
@@ -40,12 +40,12 @@ public class RestaurantQueryService {
 	}
 
 	@Transactional(readOnly = true)
-	public RestaurantCategoryFindResponse getCategoryFromRestaurant(Long restaurantId) {
+	public CategoryFindResponse getCategoryFromRestaurant(Long restaurantId) {
 		Restaurant restaurant = restaurantRepository.findById(restaurantId)
 			.orElseThrow(() -> new CustomException(RESTAURANT_NOT_FOUND));
 
 		RestaurantCategory category = restaurant.getRestaurantCategory();
 
-		return new RestaurantCategoryFindResponse(category.name());
+		return new CategoryFindResponse(category.name());
 	}
 }

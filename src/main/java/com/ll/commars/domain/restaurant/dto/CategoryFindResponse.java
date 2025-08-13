@@ -1,6 +1,6 @@
 package com.ll.commars.domain.restaurant.dto;
 
-public record RestaurantCategoryFindResponse(
+public record CategoryFindResponse(
 		String category
 ) {
 }

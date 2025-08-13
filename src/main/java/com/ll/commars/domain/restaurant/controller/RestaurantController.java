@@ -14,7 +14,7 @@ import com.ll.commars.domain.restaurant.dto.MenuCreateRequest;
 import com.ll.commars.domain.restaurant.dto.MenuCreateResponse;
 import com.ll.commars.domain.restaurant.dto.MenuUpdateRequest;
 import com.ll.commars.domain.restaurant.dto.MenuUpdateResponse;
-import com.ll.commars.domain.restaurant.dto.RestaurantCategoryFindResponse;
+import com.ll.commars.domain.restaurant.dto.CategoryFindResponse;
 import com.ll.commars.domain.restaurant.dto.RestaurantCreateRequest;
 import com.ll.commars.domain.restaurant.dto.RestaurantCreateResponse;
 import com.ll.commars.domain.restaurant.dto.RestaurantFindListResponse;
@@ -114,10 +114,10 @@ public class RestaurantController {
 	}
 
 	@GetMapping("/{restaurant-id}/category")
-	public ResponseEntity<RestaurantCategoryFindResponse> getCategoryFromRestaurant(
+	public ResponseEntity<CategoryFindResponse> getCategoryFromRestaurant(
 		@PathVariable("restaurant-id") Long restaurantId
 	) {
-		RestaurantCategoryFindResponse response = restaurantQueryService.getCategoryFromRestaurant(restaurantId);
+		CategoryFindResponse response = restaurantQueryService.getCategoryFromRestaurant(restaurantId);
 
 		return ResponseEntity.ok().body(response);
 	}
