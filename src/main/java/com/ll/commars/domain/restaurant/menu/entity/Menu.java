@@ -32,8 +32,8 @@ public class Menu extends BaseEntity {
 	@Column
 	private String imageUrl;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "restaurant_id")
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "restaurant_id", nullable = false)
 	private Restaurant restaurant;
 
 	public Menu(String name, String imageUrl, Integer price, Restaurant restaurant) {
