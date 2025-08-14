@@ -87,7 +87,7 @@ public class Restaurant extends BaseEntity {
 	private List<FavoriteRestaurant> favoriteRestaurants = new ArrayList<>();
 
 	public Restaurant(String name, String details, String imageUrl, String contact,
-			String address, RestaurantCategory restaurantCategory) {
+		String address, RestaurantCategory restaurantCategory) {
 		this.name = name;
 		this.details = details;
 		this.imageUrl = imageUrl;
@@ -104,7 +104,7 @@ public class Restaurant extends BaseEntity {
 	}
 
 	public void updateRestaurant(String name, String details, String imageUrl,
-			String contact, String address, String category) {
+		String contact, String address, String category) {
 		this.name = name;
 		this.details = details;
 		this.imageUrl = imageUrl;

@@ -3,8 +3,8 @@ package com.ll.commars.domain.restaurant.restaurant.dto;
 import java.util.Optional;
 
 import com.ll.commars.domain.restaurant.businessHour.dto.BusinessHourListResponse;
-import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
 import com.ll.commars.domain.restaurant.menu.dto.MenuFindListResponse;
+import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
 import com.ll.commars.domain.review.dto.RestaurantReviewListResponse;
 
 public record RestaurantFindResponse(

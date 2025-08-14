@@ -13,7 +13,8 @@ public record RestaurantSummaryResponse(
 ) {
 
 	@QueryProjection
-	public RestaurantSummaryResponse(Long id, String name, String imageUrl, Double averageRate, String address, RestaurantCategory category) {
+	public RestaurantSummaryResponse(Long id, String name, String imageUrl, Double averageRate, String address,
+		RestaurantCategory category) {
 		this(
 			id,
 			name,

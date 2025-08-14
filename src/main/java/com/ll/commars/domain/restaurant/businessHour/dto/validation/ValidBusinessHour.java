@@ -13,6 +13,8 @@ import jakarta.validation.Payload;
 @Constraint(validatedBy = ValidBusinessHourValidator.class)
 public @interface ValidBusinessHour {
 	String message() default "유효하지 않은 영업시간입니다.";
+
 	Class<?>[] groups() default {};
+
 	Class<? extends Payload>[] payload() default {};
 }

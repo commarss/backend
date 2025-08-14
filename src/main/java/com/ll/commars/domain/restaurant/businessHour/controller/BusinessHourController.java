@@ -25,7 +25,7 @@ public class BusinessHourController {
 	private final BusinessHourService businessHourService;
 
 	@PostMapping
-	public ResponseEntity<BusinessHourBulkCreateResponse> createBusinessHours (
+	public ResponseEntity<BusinessHourBulkCreateResponse> createBusinessHours(
 		@RequestBody @Valid BusinessHourBulkCreateRequest request
 	) {
 		BusinessHourBulkCreateResponse response = businessHourService.createBusinessHours(request);

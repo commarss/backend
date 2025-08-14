@@ -5,6 +5,8 @@ import java.time.LocalTime;
 
 public interface BusinessHourData {
 	DayOfWeek dayOfWeek();
+
 	LocalTime openTime();
+
 	LocalTime closeTime();
 }
