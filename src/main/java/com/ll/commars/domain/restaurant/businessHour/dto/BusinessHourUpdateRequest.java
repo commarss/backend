@@ -17,5 +17,5 @@ public record BusinessHourUpdateRequest(
 
 	@NotNull(message = "마감 시간을 입력해주세요.")
 	LocalTime closeTime
-) {
+) implements BusinessHourData {
 }
