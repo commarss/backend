@@ -19,38 +19,35 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/restaurant/{restaurant-id}/business-hours")
+@RequestMapping("/api/business-hours")
 public class BusinessHourController {
 
 	private final BusinessHourService businessHourService;
 
 	@PostMapping
 	public ResponseEntity<BusinessHourBulkCreateResponse> createBusinessHours (
-		@PathVariable("restaurant-id") Long restaurantId,
 		@RequestBody @Valid BusinessHourBulkCreateRequest request
 	) {
-		BusinessHourBulkCreateResponse response = businessHourService.createBusinessHours(restaurantId, request);
+		BusinessHourBulkCreateResponse response = businessHourService.createBusinessHours(request);
 
 		return ResponseEntity.ok().body(response);
 	}
 
 	@PatchMapping("/{business-hour-id}")
 	public ResponseEntity<Void> updateBusinessHour(
-		@PathVariable("restaurant-id") Long restaurantId,
 		@PathVariable("business-hour-id") Long businessHourId,
 		@RequestBody @Valid BusinessHourUpdateRequest request
 	) {
-		businessHourService.updateBusinessHour(restaurantId, businessHourId, request);
+		businessHourService.updateBusinessHour(businessHourId, request);
 
 		return ResponseEntity.ok().build();
 	}
 
 	@DeleteMapping("/{business-hour-id}")
 	public ResponseEntity<Void> deleteBusinessHour(
-		@PathVariable("restaurant-id") Long restaurantId,
 		@PathVariable("business-hour-id") Long businessHourId
 	) {
-		businessHourService.deleteBusinessHour(restaurantId, businessHourId);
+		businessHourService.deleteBusinessHour(businessHourId);
 
 		return ResponseEntity.ok().build();
 	}

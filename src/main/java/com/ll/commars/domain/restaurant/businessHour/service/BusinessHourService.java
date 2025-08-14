@@ -26,8 +26,8 @@ public class BusinessHourService {
 	private final BusinessHourRepository businessHourRepository;
 
 	@Transactional
-	public BusinessHourBulkCreateResponse createBusinessHours(Long restaurantId, BusinessHourBulkCreateRequest request) {
-		Restaurant restaurant = restaurantRepository.findById(restaurantId)
+	public BusinessHourBulkCreateResponse createBusinessHours(BusinessHourBulkCreateRequest request) {
+		Restaurant restaurant = restaurantRepository.findById(request.restaurantId())
 			.orElseThrow(() -> new CustomException(RESTAURANT_NOT_FOUND));
 
 		List<BusinessHour> newHours = request.businessHours().stream()
@@ -45,28 +45,19 @@ public class BusinessHourService {
 	}
 
 	@Transactional
-	public void updateBusinessHour(Long restaurantId, Long businessHourId, BusinessHourUpdateRequest request) {
-		Restaurant restaurant = restaurantRepository.findById(restaurantId)
-			.orElseThrow(() -> new CustomException(RESTAURANT_NOT_FOUND));
-
-		BusinessHour businessHour = restaurant.getBusinessHours().stream()
-			.filter(bh -> bh.getId().equals(businessHourId))
-			.findFirst()
+	public void updateBusinessHour(Long businessHourId, BusinessHourUpdateRequest request) {
+		BusinessHour businessHour = businessHourRepository.findById(businessHourId)
 			.orElseThrow(() -> new CustomException(BUSINESS_HOUR_NOT_FOUND));
 
 		businessHour.update(request.dayOfWeek(), request.openTime(), request.closeTime());
 	}
 
 	@Transactional
-	public void deleteBusinessHour(Long restaurantId, Long businessHourId) {
-		Restaurant restaurant = restaurantRepository.findById(restaurantId)
-			.orElseThrow(() -> new CustomException(RESTAURANT_NOT_FOUND));
+	public void deleteBusinessHour(Long businessHourId) {
+		if (!businessHourRepository.existsById(businessHourId)) {
+			throw new CustomException(BUSINESS_HOUR_NOT_FOUND);
+		}
 
-		BusinessHour businessHour = restaurant.getBusinessHours().stream()
-			.filter(bh -> bh.getId().equals(businessHourId))
-			.findFirst()
-			.orElseThrow(() -> new CustomException(BUSINESS_HOUR_NOT_FOUND));
-
-		businessHourRepository.delete(businessHour);
+		businessHourRepository.deleteById(businessHourId);
 	}
 }
