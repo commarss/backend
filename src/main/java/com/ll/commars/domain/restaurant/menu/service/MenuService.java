@@ -36,7 +36,7 @@ public class MenuService {
 
 		List<Menu> menus = request.menuCreateRequests().stream()
 			.map(menuDto -> new Menu(
-				menuDto.menuName(),
+				menuDto.name(),
 				menuDto.imageUrl(),
 				menuDto.price(),
 				restaurant
@@ -61,7 +61,7 @@ public class MenuService {
 		Menu menu = menuRepository.findById(menuId)
 			.orElseThrow(() -> new CustomException(MENU_NOT_FOUND));
 
-		menu.update(request.menuName(), request.imageUrl(), request.price());
+		menu.update(request.name(), request.imageUrl(), request.price());
 
 		return MenuUpdateResponse.from(menu);
 	}
