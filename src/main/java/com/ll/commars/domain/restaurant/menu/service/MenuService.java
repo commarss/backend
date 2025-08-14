@@ -28,9 +28,8 @@ public class MenuService {
 
 	@Transactional
 	public MenuBulkCreateResponse createMenu(
-		Long restaurantId,
 		MenuBulkCreateRequest request) {
-		Restaurant restaurant = restaurantRepository.findById(restaurantId)
+		Restaurant restaurant = restaurantRepository.findById(request.restaurantId())
 			.orElseThrow(() -> new CustomException(RESTAURANT_NOT_FOUND));
 
 		List<Menu> menus = request.menuCreateRequests().stream()
