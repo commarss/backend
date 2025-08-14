@@ -2,13 +2,14 @@ package com.ll.commars.domain.review.dto;
 
 import java.util.List;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 
 public class RestaurantReviewAnalysisDTO {
 

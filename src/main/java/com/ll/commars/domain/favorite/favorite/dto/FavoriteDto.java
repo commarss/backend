@@ -1,12 +1,13 @@
 package com.ll.commars.domain.favorite.favorite.dto;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FavoriteDto {
 
 	// 찜 리스트 정보
@@ -43,7 +44,7 @@ public class FavoriteDto {
 
 	@Getter
 	@Builder
-	@NoArgsConstructor
+	@NoArgsConstructor(access = AccessLevel.PROTECTED)
 	@AllArgsConstructor
 	public static class AddRestaurantRequest {
 
