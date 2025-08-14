@@ -1,5 +1,7 @@
 package com.ll.commars.domain.restaurant.restaurant.dto;
 
+import org.hibernate.validator.constraints.URL;
+
 import jakarta.validation.constraints.NotBlank;
 
 public record RestaurantUpdateRequest(
@@ -9,6 +11,8 @@ public record RestaurantUpdateRequest(
 
 	@NotBlank(message = "식당 설명은 필수입니다.")
 	String details,
+
+	@URL
 	String imageUrl,
 	String contact,
 
