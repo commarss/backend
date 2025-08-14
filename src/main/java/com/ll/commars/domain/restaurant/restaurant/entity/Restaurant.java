@@ -113,4 +113,9 @@ public class Restaurant extends BaseEntity {
 		this.address = address;
 		this.restaurantCategory = RestaurantCategory.fromString(category);
 	}
+
+	public void updateLocation(Double lat, Double lon) {
+		this.lat = lat;
+		this.lon = lon;
+	}
 }
