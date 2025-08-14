@@ -40,7 +40,8 @@ public class RestaurantCommandService {
 		Restaurant restaurant = restaurantRepository.findById(restaurantId)
 			.orElseThrow(() -> new CustomException(RESTAURANT_NOT_FOUND));
 
-		restaurant.updateRestaurant(request.restaurantName(), request.category());
+		restaurant.updateRestaurant(request.name(), request.details(), request.imageUrl(),
+			request.contact(), request.address(), request.category());
 
 		return RestaurantUpdateResponse.from(restaurantRepository.save(restaurant));
 	}

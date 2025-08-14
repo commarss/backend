@@ -103,8 +103,13 @@ public class Restaurant extends BaseEntity {
 		}
 	}
 
-	public void updateRestaurant(String name, String category) {
+	public void updateRestaurant(String name, String details, String imageUrl,
+			String contact, String address, String category) {
 		this.name = name;
+		this.details = details;
+		this.imageUrl = imageUrl;
+		this.contact = contact;
+		this.address = address;
 		this.restaurantCategory = RestaurantCategory.fromString(category);
 	}
 }
