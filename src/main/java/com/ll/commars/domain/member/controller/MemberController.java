@@ -2,12 +2,9 @@ package com.ll.commars.domain.member.controller;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,7 +14,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import com.ll.commars.domain.favorite.favorite.dto.FavoriteDto;
-import com.ll.commars.domain.member.dto.MemberDto;
 import com.ll.commars.domain.member.entity.Member;
 import com.ll.commars.domain.member.service.MemberService;
 import com.ll.commars.domain.review.dto.ReviewDto;
@@ -55,21 +51,21 @@ public class MemberController {
 
 	// 내 위치 기반 식당 찾기
 
-	@GetMapping("/favorites")
-	public ResponseEntity<?> getFavoriteLists(
-		@AuthenticationPrincipal UserDetails userDetails) {
-		Optional<Member> user = memberService.findById(Long.parseLong(userDetails.getUsername()));
-		if (user.isEmpty()) {
-			return ResponseEntity
-				.status(401)
-				.body("로그인이 필요합니다.");
-		}
-
-		MemberDto.UserFavoriteListsResponse response = memberService.getFavoriteLists(user.get());
-		return ResponseEntity
-			.status(200)
-			.body(response);
-	}
+	// @GetMapping("/favorites")
+	// public ResponseEntity<?> getFavoriteLists(
+	// 	@AuthenticationPrincipal UserDetails userDetails) {
+	// 	Optional<Member> user = memberService.findById(Long.parseLong(userDetails.getUsername()));
+	// 	if (user.isEmpty()) {
+	// 		return ResponseEntity
+	// 			.status(401)
+	// 			.body("로그인이 필요합니다.");
+	// 	}
+	//
+	// 	MemberDto.UserFavoriteListsResponse response = memberService.getFavoriteLists(user.get());
+	// 	return ResponseEntity
+	// 		.status(200)
+	// 		.body(response);
+	// }
 
 	@PostMapping("/favorite")
 	public ResponseEntity<String> addFavorite(

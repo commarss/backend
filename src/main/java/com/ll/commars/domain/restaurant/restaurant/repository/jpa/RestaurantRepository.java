@@ -1,7 +1,6 @@
 package com.ll.commars.domain.restaurant.restaurant.repository.jpa;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -9,14 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
 
-public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
-
-	@Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.restaurantMenus")
-	List<Restaurant> findAllWithMenus();
-
-	Optional<Restaurant> findByName(String name);
-
-	List<Restaurant> findByRestaurantCategoryId(Long categoryId);
+public interface RestaurantRepository extends JpaRepository<Restaurant, Long>, RestaurantRepositoryCustom {
 
 	@Query(value = """
 		    SELECT r FROM Restaurant r

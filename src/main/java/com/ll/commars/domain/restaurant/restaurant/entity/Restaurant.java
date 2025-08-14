@@ -3,121 +3,113 @@ package com.ll.commars.domain.restaurant.restaurant.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.ColumnDefault;
+
 import com.ll.commars.domain.favorite.favorite.entity.FavoriteRestaurant;
 import com.ll.commars.domain.restaurant.businessHour.entity.BusinessHour;
-import com.ll.commars.domain.restaurant.category.entity.RestaurantCategory;
-import com.ll.commars.domain.restaurant.menu.entity.RestaurantMenu;
+import com.ll.commars.domain.restaurant.menu.entity.Menu;
 import com.ll.commars.domain.review.entity.Review;
 import com.ll.commars.global.BaseEntity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
-@Table(name = "restaurants")
 @Getter
-@Setter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 public class Restaurant extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@NotNull
-	@Column(name = "name", nullable = false)
+	@Column(nullable = false)
 	private String name;
 
-	@NotNull
-	@Column(name = "details")
+	@Column(nullable = false)
 	private String details;
 
-	@Column(name = "average_rate")
-	private Double averageRate;
+	// todo: 리뷰 리팩터링 시 계산 추후 구현
+	@Column(nullable = false)
+	@ColumnDefault("0.0")
+	private double averageRate = 0.0;
 
-	@Column(name = "image_url")
+	@Column
 	private String imageUrl;
 
-	// 식당 전화 번호
-	@Column(name = "contact")
+	@Column
 	private String contact;
 
-	@NotNull
-	@Column(name = "address", nullable = false)
+	@Column(nullable = false)
 	private String address;
 
-	// 위도
-	@NotNull
-	@Column(name = "lat", nullable = false)
+	@Column(nullable = false)
 	private Double lat;
 
-	// 경도
-	@NotNull
-	@Column(name = "lon", nullable = false)
+	@Column(nullable = false)
 	private Double lon;
 
-	// 식당 영업 여부
-	@Column(name = "running_state")
-	private Boolean runningState;
+	@Column(nullable = false)
+	@ColumnDefault("true")
+	private boolean runningState = true;
 
-	// 요약 리뷰
-	@Column(name = "summarized_review")
+	// todo: 추후 구현
+	@Column
 	private String summarizedReview;
 
-	// Restaurant와 RestaurantMenu: 일대다
-	@OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-	private List<RestaurantMenu> restaurantMenus;
-
-	// Restaurant와 RestaurantCategory: 다대일
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "restaurant_category_id")
+	@Column
+	@Enumerated(EnumType.STRING)
 	private RestaurantCategory restaurantCategory;
 
-	// Restaurant와 RestaurantBusinessHours: 일대다
-	@Builder.Default
+	@BatchSize(size = 20)
+	@OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Menu> menus = new ArrayList<>();
+
+	@BatchSize(size = 20)
 	@OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<BusinessHour> businessHours = new ArrayList<>();
 
-	// Restaurant와 Review: 일대다
+	@BatchSize(size = 20)
 	@OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Review> reviews;
+	private List<Review> reviews = new ArrayList<>();
 
-	// Restaurant와 FavoriteRestaurant: 일대다
 	@OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<FavoriteRestaurant> favoriteRestaurants;
+	private List<FavoriteRestaurant> favoriteRestaurants = new ArrayList<>();
 
-	public void setCategory(RestaurantCategory category) {
-		if (this.restaurantCategory != null) {
-			this.restaurantCategory.getRestaurants().remove(this);
-		}
-		this.restaurantCategory = category;
-		if (category != null) {
-			category.getRestaurants().add(this);
+	public Restaurant(String name, String details, String imageUrl, String contact,
+		String address, RestaurantCategory restaurantCategory) {
+		this.name = name;
+		this.details = details;
+		this.imageUrl = imageUrl;
+		this.contact = contact;
+		this.address = address;
+		this.restaurantCategory = restaurantCategory;
+	}
+
+	public void updateBusinessHours(List<BusinessHour> newBusinessHours) {
+		this.businessHours.clear();
+		if (newBusinessHours != null) {
+			this.businessHours.addAll(newBusinessHours);
 		}
 	}
 
-	public void setBusinessHours(List<BusinessHour> businessHours) {
-		this.businessHours.clear();
-		if (businessHours != null) {
-			this.businessHours.addAll(businessHours);
-			businessHours.forEach(hour -> hour.setRestaurant(this));
-		}
+	public void updateRestaurant(String name, String details, String imageUrl,
+		String contact, String address, String category) {
+		this.name = name;
+		this.details = details;
+		this.imageUrl = imageUrl;
+		this.contact = contact;
+		this.address = address;
+		this.restaurantCategory = RestaurantCategory.fromString(category);
 	}
 }

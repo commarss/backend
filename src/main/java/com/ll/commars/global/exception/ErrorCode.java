@@ -29,6 +29,12 @@ public enum ErrorCode {
 	NAVER_OAUTH_AUTHORIZATION_FAILED(HttpStatus.BAD_REQUEST.value(), "네이버 OAuth 인증에 실패했습니다."),
 	NAVER_OAUTH_USER_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "네이버 OAuth 사용자 정보를 찾을 수 없습니다."),
 	NAVER_OAUTH_USER_INFO_FAILED(HttpStatus.INTERNAL_SERVER_ERROR.value(), "네이버 OAuth 사용자 정보 조회에 실패했습니다."),
+
+	// Restaurant
+	CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 카테고리를 찾을 수 없습니다."),
+	RESTAURANT_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 식당을 찾을 수 없습니다."),
+	MENU_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 메뉴를 찾을 수 없습니다."),
+	BUSINESS_HOUR_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 영업시간을 찾을 수 없습니다."),
 	;
 
 	private final int code;

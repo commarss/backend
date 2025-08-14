@@ -11,42 +11,41 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
-@Table(name = "restaurants_menus")
 @Getter
-@Setter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
-public class RestaurantMenu extends BaseEntity {
+public class Menu extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	// 메뉴 이름
-	@NotNull
-	@Column(name = "name", nullable = false)
+	@Column(nullable = false)
 	private String name;
 
-	@NotNull
-	@Column(name = "price", nullable = false)
+	@Column(nullable = false)
 	private Integer price;
 
-	// 메뉴 사진
-	@Column(name = "image_url")
+	@Column
 	private String imageUrl;
 
-	// RestaurantMenu와 Restaurant: 다대일
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "restaurant_id")
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "restaurant_id", nullable = false)
 	private Restaurant restaurant;
+
+	public Menu(String name, String imageUrl, Integer price, Restaurant restaurant) {
+		this.name = name;
+		this.imageUrl = imageUrl;
+		this.price = price;
+		this.restaurant = restaurant;
+	}
+
+	public void update(String name, String imageUrl, Integer price) {
+		this.name = name;
+		this.imageUrl = imageUrl;
+		this.price = price;
+	}
 }
