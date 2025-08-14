@@ -1,6 +1,7 @@
 package com.ll.commars.domain.restaurant.menu.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public record MenuCreateRequest(
 
@@ -8,7 +9,7 @@ public record MenuCreateRequest(
 	String name,
 	String imageUrl,
 
-	@NotBlank(message = "메뉴 가격은 필수입니다.")
+	@NotNull(message = "메뉴 가격은 필수입니다.")
 	Integer price
 ) {
 }
