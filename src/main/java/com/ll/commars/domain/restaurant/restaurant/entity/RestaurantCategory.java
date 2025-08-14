@@ -4,6 +4,7 @@ import static com.ll.commars.global.exception.ErrorCode.*;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
@@ -22,7 +23,7 @@ public enum RestaurantCategory {
 	private static final Map<String, RestaurantCategory> CATEGORY_MAP =
 		Arrays.stream(values())
 			.collect(Collectors.toUnmodifiableMap(
-				category -> category.name().toLowerCase(),
+				category -> normalizeCategory(category.name()),
 				Function.identity()
 			));
 
@@ -32,8 +33,18 @@ public enum RestaurantCategory {
 			.toList();
 
 	public static RestaurantCategory fromString(String categoryName) {
-		return Optional.ofNullable(CATEGORY_MAP.get(categoryName.toLowerCase()))
-			.orElseThrow(() -> new CustomException(CATEGORY_NOT_FOUND, categoryName));
+		if (categoryName == null || categoryName.trim().isEmpty()) {
+			throw new CustomException(CATEGORY_NOT_FOUND, "카테고리 이름이 비어있습니다.");
+		}
+
+		String normalizedInput = normalizeCategory(categoryName);
+		return Optional.ofNullable(CATEGORY_MAP.get(normalizedInput))
+			.orElseThrow(() -> new CustomException(CATEGORY_NOT_FOUND,
+				"존재하지 않는 카테고리입니다: " + categoryName));
+	}
+
+	private static String normalizeCategory(String input) {
+		return input.trim().toLowerCase(Locale.ROOT);
 	}
 
 	public static List<String> getAllCategories() {
