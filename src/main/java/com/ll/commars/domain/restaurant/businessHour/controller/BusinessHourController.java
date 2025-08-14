@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ll.commars.domain.restaurant.businessHour.dto.BusinessHourBulkCreateRequest;
 import com.ll.commars.domain.restaurant.businessHour.dto.BusinessHourBulkCreateResponse;
 import com.ll.commars.domain.restaurant.businessHour.dto.BusinessHourUpdateRequest;
-import com.ll.commars.domain.restaurant.businessHour.dto.BusinessHourUpdateResponse;
 import com.ll.commars.domain.restaurant.businessHour.service.BusinessHourService;
 
 import jakarta.validation.Valid;
@@ -36,14 +35,14 @@ public class BusinessHourController {
 	}
 
 	@PatchMapping("/{business-hour-id}")
-	public ResponseEntity<BusinessHourUpdateResponse> updateBusinessHour(
+	public ResponseEntity<Void> updateBusinessHour(
 		@PathVariable("restaurant-id") Long restaurantId,
 		@PathVariable("business-hour-id") Long businessHourId,
 		@RequestBody @Valid BusinessHourUpdateRequest request
 	) {
-		BusinessHourUpdateResponse response = businessHourService.updateBusinessHour(restaurantId, businessHourId, request);
+		businessHourService.updateBusinessHour(restaurantId, businessHourId, request);
 
-		return ResponseEntity.ok().body(response);
+		return ResponseEntity.ok().build();
 	}
 
 	@DeleteMapping("/{business-hour-id}")

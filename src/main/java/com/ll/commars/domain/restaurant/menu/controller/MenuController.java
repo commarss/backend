@@ -14,7 +14,6 @@ import com.ll.commars.domain.restaurant.menu.dto.MenuBulkCreateRequest;
 import com.ll.commars.domain.restaurant.menu.dto.MenuBulkCreateResponse;
 import com.ll.commars.domain.restaurant.menu.dto.MenuFindResponse;
 import com.ll.commars.domain.restaurant.menu.dto.MenuUpdateRequest;
-import com.ll.commars.domain.restaurant.menu.dto.MenuUpdateResponse;
 import com.ll.commars.domain.restaurant.menu.service.MenuService;
 
 import jakarta.validation.Valid;
@@ -47,13 +46,13 @@ public class MenuController {
 	}
 
 	@PatchMapping("/{menu-id}")
-	public ResponseEntity<MenuUpdateResponse> updateMenu(
+	public ResponseEntity<Void> updateMenu(
 		@PathVariable("menu-id") Long menuId,
 		@RequestBody @Valid MenuUpdateRequest request
 	) {
-		MenuUpdateResponse response = menuService.updateMenu(menuId, request);
+		menuService.updateMenu(menuId, request);
 
-		return ResponseEntity.ok().body(response);
+		return ResponseEntity.ok().build();
 	}
 
 	@DeleteMapping("/{menu-id}")

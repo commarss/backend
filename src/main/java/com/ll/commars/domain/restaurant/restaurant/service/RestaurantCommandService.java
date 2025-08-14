@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantCreateRequest;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantCreateResponse;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantUpdateRequest;
-import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantUpdateResponse;
 import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
 import com.ll.commars.domain.restaurant.restaurant.entity.RestaurantCategory;
 import com.ll.commars.domain.restaurant.restaurant.repository.jpa.RestaurantRepository;
@@ -35,15 +34,13 @@ public class RestaurantCommandService {
 	}
 
 	@Transactional
-	public RestaurantUpdateResponse updateRestaurant(Long restaurantId,
+	public void updateRestaurant(Long restaurantId,
 		RestaurantUpdateRequest request) {
 		Restaurant restaurant = restaurantRepository.findById(restaurantId)
 			.orElseThrow(() -> new CustomException(RESTAURANT_NOT_FOUND));
 
 		restaurant.updateRestaurant(request.name(), request.details(), request.imageUrl(),
 			request.contact(), request.address(), request.category());
-
-		return RestaurantUpdateResponse.from(restaurantRepository.save(restaurant));
 	}
 
 	@Transactional

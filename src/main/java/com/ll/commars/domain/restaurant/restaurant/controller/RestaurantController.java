@@ -21,7 +21,6 @@ import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantCreateResponse;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantFindListResponse;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantFindResponse;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantUpdateRequest;
-import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantUpdateResponse;
 import com.ll.commars.domain.restaurant.restaurant.service.RestaurantCommandService;
 import com.ll.commars.domain.restaurant.restaurant.service.RestaurantDocService;
 import com.ll.commars.domain.restaurant.restaurant.service.RestaurantQueryService;
@@ -66,13 +65,13 @@ public class RestaurantController {
 
 	// todo: 추후 메뉴, 영업시간 등 다양한 정보를 수정할 수 있도록
 	@PatchMapping("/{restaurant-id}")
-	public ResponseEntity<RestaurantUpdateResponse> updateRestaurant(
+	public ResponseEntity<Void> updateRestaurant(
 		@PathVariable("restaurant-id") Long restaurantId,
 		@RequestBody @Valid RestaurantUpdateRequest request
 	) {
-		RestaurantUpdateResponse response = restaurantCommandService.updateRestaurant(restaurantId, request);
+		restaurantCommandService.updateRestaurant(restaurantId, request);
 
-		return ResponseEntity.ok().body(response);
+		return ResponseEntity.ok().build();
 	}
 
 	@DeleteMapping("/{restaurant-id}")

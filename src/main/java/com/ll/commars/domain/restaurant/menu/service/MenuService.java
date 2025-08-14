@@ -13,7 +13,6 @@ import com.ll.commars.domain.restaurant.menu.dto.MenuBulkCreateRequest;
 import com.ll.commars.domain.restaurant.menu.dto.MenuBulkCreateResponse;
 import com.ll.commars.domain.restaurant.menu.dto.MenuFindResponse;
 import com.ll.commars.domain.restaurant.menu.dto.MenuUpdateRequest;
-import com.ll.commars.domain.restaurant.menu.dto.MenuUpdateResponse;
 import com.ll.commars.domain.restaurant.menu.repository.jpa.MenuRepository;
 import com.ll.commars.domain.restaurant.restaurant.repository.jpa.RestaurantRepository;
 import com.ll.commars.global.exception.CustomException;
@@ -57,13 +56,11 @@ public class MenuService {
 	}
 
 	@Transactional
-	public MenuUpdateResponse updateMenu(Long menuId, MenuUpdateRequest request) {
+	public void updateMenu(Long menuId, MenuUpdateRequest request) {
 		Menu menu = menuRepository.findById(menuId)
 			.orElseThrow(() -> new CustomException(MENU_NOT_FOUND));
 
 		menu.update(request.name(), request.imageUrl(), request.price());
-
-		return MenuUpdateResponse.from(menu);
 	}
 
 	@Transactional
