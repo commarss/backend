@@ -1,7 +1,5 @@
 package com.ll.commars.domain.restaurant.restaurant.controller;
 
-import java.util.List;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +19,6 @@ import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantFindListRespons
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantFindResponse;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantSearchResponse;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantUpdateRequest;
-import com.ll.commars.domain.restaurant.restaurant.entity.RestaurantDoc;
 import com.ll.commars.domain.restaurant.restaurant.service.RestaurantCommandService;
 import com.ll.commars.domain.restaurant.restaurant.service.RestaurantDocService;
 import com.ll.commars.domain.restaurant.restaurant.service.RestaurantQueryService;
@@ -127,16 +124,20 @@ public class RestaurantController {
 	}
 
 	@GetMapping("/sort/rate")
-	public List<RestaurantDoc> showSortByRate() {
-		return restaurantDocService.showSortByRate();
+	public ResponseEntity<RestaurantSearchResponse> sortByRate() {
+		RestaurantSearchResponse response = restaurantDocService.sortByRate();
+
+		return ResponseEntity.ok().body(response);
 	}
 
 	@GetMapping("/nearby")
-	public List<RestaurantDoc> findNearbyRestaurants(
-		@RequestParam(value = "lat", defaultValue = "37.5665") Double lat,
-		@RequestParam(value = "lng", defaultValue = "126.9780") Double lng,
+	public ResponseEntity<RestaurantSearchResponse> getNearbyRestaurants(
+		@RequestParam(value = "lat") Double lat,
+		@RequestParam(value = "lng") Double lng,
 		@RequestParam(value = "distance", defaultValue = "2.0") Double distance
 	) {
-		return restaurantDocService.findNearbyRestaurants(lat, lng, distance);
+		RestaurantSearchResponse response = restaurantDocService.getNearbyRestaurants(lat, lng, distance);
+
+		return ResponseEntity.ok().body(response);
 	}
 }

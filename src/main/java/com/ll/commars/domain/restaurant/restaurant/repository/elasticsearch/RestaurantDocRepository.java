@@ -55,20 +55,33 @@ public interface RestaurantDocRepository extends ElasticsearchRepository<Restaur
 	List<RestaurantDoc> findTop5ByOrderByAverageRateDesc();
 
 	@Query("""
-		        {
-		            "bool": {
-		                "must": {
-		                    "geo_distance": {
-		                        "distance": "?0km",
-		                        "location": {
-		                            "lat": ?1,
-		                            "lon": ?2
-		                        }
-		                    }
-		                }
-		            },
-		            "size": 10
-		        }
-		""")
-	List<RestaurantDoc> findByLocationNear(Double distance, Double lat, Double lng);
+          {
+              "query": {
+                  "bool": {
+                      "filter": {
+                          "geo_distance": {
+                              "distance": "?2km",
+                              "location": {
+                                  "lat": ?0,
+                                  "lon": ?1
+                              }
+                          }
+                      }
+                  }
+              },
+              "sort": [
+                  {
+                      "_geo_distance": {
+                          "location": {
+                              "lat": ?0,
+                              "lon": ?1
+                          },
+                          "order": "asc",
+                          "unit": "km"
+                      }
+                  }
+              ]
+          }
+      """)
+	List<RestaurantDoc> findNearbyRestaurantsSortedByDistance(Double lat, Double lng, Double distance);
 }
