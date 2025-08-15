@@ -133,10 +133,10 @@ public class RestaurantController {
 	@GetMapping("/nearby")
 	public ResponseEntity<RestaurantSearchResponse> getNearbyRestaurants(
 		@RequestParam(value = "lat") Double lat,
-		@RequestParam(value = "lng") Double lng,
+		@RequestParam(value = "lon") Double lon,
 		@RequestParam(value = "distance", defaultValue = "2.0") Double distance
 	) {
-		RestaurantSearchResponse response = restaurantDocService.getNearbyRestaurants(lat, lng, distance);
+		RestaurantSearchResponse response = restaurantDocService.getNearbyRestaurants(lat, lon, distance);
 
 		return ResponseEntity.ok().body(response);
 	}
