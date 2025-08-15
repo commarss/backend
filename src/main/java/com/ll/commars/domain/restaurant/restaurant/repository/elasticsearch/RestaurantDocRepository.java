@@ -50,7 +50,7 @@ public interface RestaurantDocRepository extends ElasticsearchRepository<Restaur
 		        }
 		    }
 		""")
-	List<RestaurantDoc> searchByKeywordAndLocation(String keyword, double lat, double lon, String distance);
+	List<RestaurantDoc> searchByKeywordAndLocation(String keyword, double lat, double lon, double distance);
 
 	List<RestaurantDoc> findTop5ByOrderByAverageRateDesc();
 

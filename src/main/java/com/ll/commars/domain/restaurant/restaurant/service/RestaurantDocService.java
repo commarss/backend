@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantSearchResponse;
 import com.ll.commars.domain.restaurant.restaurant.entity.RestaurantDoc;
 import com.ll.commars.domain.restaurant.restaurant.repository.elasticsearch.RestaurantDocRepository;
 
@@ -23,37 +25,16 @@ public class RestaurantDocService {
 	private final RestaurantDocRepository restaurantDocRepository;
 	private final ElasticsearchClient elasticsearchClient;
 
-	public RestaurantDoc write(String name, String details, Double averageRate, Double lat, Double lon) {
-		RestaurantDoc restaurantDoc = RestaurantDoc.builder()
-			.name(name)
-			.details(details)
-			.averageRate(averageRate)
-			.location(lat + "," + lon)
-			.build();
+	@Transactional(readOnly = true)
+	public RestaurantSearchResponse searchRestaurants(String keyword, Double lat, Double lon, Double distance) {
+		List<RestaurantDoc> restaurantDocs = restaurantDocRepository.searchByKeywordAndLocation(
+			keyword,
+			lat,
+			lon,
+			distance
+		);
 
-		return restaurantDocRepository.save(restaurantDoc);
-	}
-
-	public void truncate() {
-		restaurantDocRepository.deleteAll();
-	}
-
-	public List<RestaurantDoc> searchByKeyword(String keyword, double userLat, double userLng, String distance) {
-		try {
-			if (keyword == null || keyword.trim().isEmpty()) {
-				System.out.println("empty keyword");
-				return List.of();
-			}
-			return restaurantDocRepository.searchByKeywordAndLocation(
-				keyword.trim(),
-				userLat,
-				userLng,
-				distance
-			);
-		} catch (Exception e) {
-			System.out.println("e = " + e);
-			return List.of();
-		}
+		return RestaurantSearchResponse.from(restaurantDocs);
 	}
 
 	public List<RestaurantDoc> showSortByRate() {

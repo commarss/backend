@@ -19,6 +19,7 @@ import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantCreateRequest;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantCreateResponse;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantFindListResponse;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantFindResponse;
+import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantSearchResponse;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantUpdateRequest;
 import com.ll.commars.domain.restaurant.restaurant.entity.RestaurantDoc;
 import com.ll.commars.domain.restaurant.restaurant.service.RestaurantCommandService;
@@ -26,6 +27,10 @@ import com.ll.commars.domain.restaurant.restaurant.service.RestaurantDocService;
 import com.ll.commars.domain.restaurant.restaurant.service.RestaurantQueryService;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -108,33 +113,17 @@ public class RestaurantController {
 	}
 
 	@GetMapping("/search")
-	public ResponseEntity<List<RestaurantDoc>> search(
-		@RequestParam("keyword") String keyword,
-		@RequestParam("lat") String lat,
-		@RequestParam("lon") String lon,
-		@RequestParam(value = "distance", defaultValue = "50") String distance
+	public ResponseEntity<RestaurantSearchResponse> searchRestaurants(
+		@RequestParam("keyword") @NotBlank String keyword,
+		@RequestParam("lat") @Valid @DecimalMin("-90") @DecimalMax("90") Double lat,
+		@RequestParam("lon") @Valid @DecimalMin("-180") @DecimalMax("180") Double lon,
+		@RequestParam(value = "distance", defaultValue = "50.0") @Valid @Positive Double distance
 	) {
-		try {
-			if (keyword == null || keyword.trim().isEmpty()) {
-				return ResponseEntity.badRequest().build();
-			}
+		RestaurantSearchResponse response = restaurantDocService.searchRestaurants(
+			keyword, lat, lon, distance
+		);
 
-			double latitude = Double.parseDouble(lat);
-			double longitude = Double.parseDouble(lon);
-
-			List<RestaurantDoc> results = restaurantDocService.searchByKeyword(
-				keyword.trim(),
-				latitude,
-				longitude,
-				distance + "km"
-			);
-			System.out.println("results = " + results);
-			return ResponseEntity.ok(results);
-		} catch (NumberFormatException e) {
-			return ResponseEntity.badRequest().build();
-		} catch (Exception e) {
-			return ResponseEntity.ok(List.of()); // 빈 결과 반환
-		}
+		return ResponseEntity.ok(response);
 	}
 
 	@GetMapping("/sort/rate")

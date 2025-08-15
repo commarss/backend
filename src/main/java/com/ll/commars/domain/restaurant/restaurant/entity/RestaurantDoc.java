@@ -36,6 +36,12 @@ public class RestaurantDoc {
 	@Field(name = "average_rate", type = FieldType.Double)
 	private Double averageRate;
 
+	@Field(type = FieldType.Text)
+	private String address;
+
+	@Field(type = FieldType.Text)
+	private String category;
+
 	@GeoPointField
 	private String location;
 
