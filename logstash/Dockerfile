@@ -2,9 +2,6 @@ FROM docker.elastic.co/logstash/logstash:8.17.2
 
 USER root
 
-# JDBC 플러그인 설치
-RUN bin/logstash-plugin install logstash-input-jdbc
-
 # MySQL JDBC Driver 설치
 RUN mkdir -p /opt/jdbc && \
     curl -L -o /opt/jdbc/mysql-connector.jar \
