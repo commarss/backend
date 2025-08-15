@@ -9,7 +9,6 @@ import org.springframework.data.elasticsearch.annotations.Mapping;
 import org.springframework.data.elasticsearch.annotations.Setting;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -26,28 +25,27 @@ public class RestaurantDoc {
 	@Id
 	private String id;
 
-	@Field(type = FieldType.Text)
+	@Field(name = "name", type = FieldType.Text)
 	private String name;
 
-	@Field(type = FieldType.Text)
+	@Field(name = "details", type = FieldType.Text)
 	private String details;
 
-	@JsonProperty("average_rate")
 	@Field(name = "average_rate", type = FieldType.Double)
 	private Double averageRate;
 
-	@Field(type = FieldType.Text)
+	@Field(name = "address", type = FieldType.Text)
 	private String address;
 
-	@Field(type = FieldType.Text)
+	@Field(name = "category", type = FieldType.Text)
 	private String category;
 
 	@GeoPointField
 	private String location;
 
-	@Field(type = FieldType.Double)
+	@Field(name = "lat", type = FieldType.Double)
 	private Double lat;
 
-	@Field(type = FieldType.Double)
+	@Field(name = "lon", type = FieldType.Double)
 	private Double lon;
 }
