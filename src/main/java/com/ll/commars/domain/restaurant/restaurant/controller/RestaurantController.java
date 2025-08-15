@@ -48,8 +48,16 @@ public class RestaurantController {
 
 	// todo: 추후 페이징 적용
 	@GetMapping
-	public ResponseEntity<RestaurantFindListResponse> getRestaurants() {
-		RestaurantFindListResponse response = restaurantQueryService.getRestaurants();
+	public ResponseEntity<RestaurantFindListResponse> getRestaurants(
+		@RequestParam(value = "category", required = false) String category
+	) {
+		RestaurantFindListResponse response;
+
+		if (category != null && !category.trim().isEmpty()) {
+			response = restaurantQueryService.getRestaurantsByCategory(category);
+		} else {
+			response = restaurantQueryService.getRestaurants();
+		}
 
 		return ResponseEntity.ok().body(response);
 	}

@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.ll.commars.domain.restaurant.restaurant.dto.QRestaurantSummaryResponse;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantSummaryResponse;
+import com.ll.commars.domain.restaurant.restaurant.entity.RestaurantCategory;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,23 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom {
 				restaurant.restaurantCategory
 			))
 			.from(restaurant)
+			.orderBy(restaurant.id.asc())
+			.fetch();
+	}
+
+	@Override
+	public List<RestaurantSummaryResponse> findByCategorySummary(RestaurantCategory category) {
+		return queryFactory
+			.select(new QRestaurantSummaryResponse(
+				restaurant.id,
+				restaurant.name,
+				restaurant.imageUrl,
+				restaurant.averageRate,
+				restaurant.address,
+				restaurant.restaurantCategory
+			))
+			.from(restaurant)
+			.where(restaurant.restaurantCategory.eq(category))
 			.orderBy(restaurant.id.asc())
 			.fetch();
 	}

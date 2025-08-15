@@ -41,6 +41,15 @@ public class RestaurantQueryService {
 	}
 
 	@Transactional(readOnly = true)
+	public RestaurantFindListResponse getRestaurantsByCategory(String category) {
+		RestaurantCategory restaurantCategory = RestaurantCategory.fromString(category);
+
+		List<RestaurantSummaryResponse> restaurants = restaurantRepository.findByCategorySummary(restaurantCategory);
+
+		return new RestaurantFindListResponse(restaurants);
+	}
+
+	@Transactional(readOnly = true)
 	public CategoryFindResponse getCategoryFromRestaurant(Long restaurantId) {
 		Restaurant restaurant = restaurantRepository.findById(restaurantId)
 			.orElseThrow(() -> new CustomException(RESTAURANT_NOT_FOUND));
