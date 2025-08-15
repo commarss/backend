@@ -46,12 +46,12 @@ public class RestaurantQueryServiceTest {
 	private Restaurant 중식_식당;
 	private Restaurant 양식_식당;
 
-	private static final FixtureMonkey ENTITY_FIXTURE_MONKEY = FixtureMonkey.builder()
+	private final FixtureMonkey entityFixtureMonkey = FixtureMonkey.builder()
 		.objectIntrospector(FieldReflectionArbitraryIntrospector.INSTANCE)
 		.build();
 
 	private Restaurant createTestRestaurant(RestaurantCategory category, String name) {
-		Restaurant restaurant = ENTITY_FIXTURE_MONKEY.giveMeBuilder(Restaurant.class)
+		Restaurant restaurant = entityFixtureMonkey.giveMeBuilder(Restaurant.class)
 			.set("id", null)
 			.set("restaurantCategory", category)
 			.set("name", name)
