@@ -12,21 +12,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Document(indexName = "es_restaurants", createIndex = true)
+@Document(indexName = "es_restaurants")
 @Setting(settingPath = "elasticsearch/settings.json")
 @Mapping(mappingPath = "elasticsearch/mappings.json")
 @Getter
-@Setter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class RestaurantDoc {
 
 	@Id
