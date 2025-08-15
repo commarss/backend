@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import com.ll.commars.domain.restaurant.restaurant.entity.RestaurantCategory;
 import com.ll.commars.domain.restaurant.restaurant.entity.RestaurantDoc;
 
 public record RestaurantSearchResponse(
@@ -29,7 +30,9 @@ public record RestaurantSearchResponse(
 		return new RestaurantSearchInfo(
 			Optional.ofNullable(doc.getName()).orElse("이름 없음"),
 			Optional.ofNullable(doc.getAddress()).orElse("주소 없음"),
-			Optional.ofNullable(doc.getCategory()).orElse("미분류")
+			Optional.ofNullable(doc.getRestaurantCategory())
+				.map(RestaurantCategory::name)
+				.orElse("카테고리 없음")
 		);
 	}
 
