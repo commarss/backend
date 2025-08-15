@@ -31,17 +31,17 @@ services:
 
   logstash:
     build:
-      context: ./logstash
+      context: .
+      dockerfile: ./logstash/Dockerfile
     container_name: local-commars-logstash
     environment:
       - LS_JAVA_OPTS=-Xms512m -Xmx512m
-    volumes:
-      - ./src/main/resources/secret/pipeline:/usr/share/logstash/pipeline:ro
     ports:
       - "5001:5001"
       - "5044:5044"
     depends_on:
       - elasticsearch
+      - mysql
     networks:
       - elastic
 
