@@ -11,6 +11,10 @@ services:
         bin/elasticsearch-plugin install analysis-nori;
         /usr/local/bin/docker-entrypoint.sh elasticsearch
       '
+    healthcheck:
+      test: ["CMD", "curl", "-fs", "http://localhost:9200/_cluster/health"]
+      interval: 10s
+      retries: 5
     ports:
       - "9200:9200"
     networks:
@@ -40,8 +44,10 @@ services:
       - "5001:5001"
       - "5044:5044"
     depends_on:
-      - elasticsearch
-      - mysql
+      elasticsearch:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
     networks:
       - elastic
 
@@ -53,6 +59,10 @@ services:
       MYSQL_DATABASE: commars
       MYSQL_USER: local_commars_username
       MYSQL_PASSWORD: local_commars_password
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-plocal_commars_password" ]
+      interval: 10s
+      retries: 5
     ports:
       - "3306:3306"
     volumes:
