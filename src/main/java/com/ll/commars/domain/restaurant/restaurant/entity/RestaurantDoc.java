@@ -37,8 +37,8 @@ public class RestaurantDoc {
 	@Field(name = "address", type = FieldType.Text)
 	private String address;
 
-	@Field(name = "category", type = FieldType.Text)
-	private String category;
+	@Field(name = "restaurant_category", type = FieldType.Keyword)
+	private RestaurantCategory restaurantCategory;
 
 	@GeoPointField
 	private String location;

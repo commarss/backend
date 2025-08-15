@@ -29,6 +29,13 @@
     },
     "lon": {
       "type": "double"
+    },
+    "address": {
+      "type": "text",
+      "analyzer": "korean"
+    },
+    "restaurant_category": {
+      "type": "keyword"
     }
   }
 }
