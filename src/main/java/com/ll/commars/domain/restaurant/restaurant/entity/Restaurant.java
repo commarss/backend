@@ -55,10 +55,12 @@ public class Restaurant extends BaseEntity {
 	private String address;
 
 	@Column(nullable = false)
-	private Double lat;
+	@ColumnDefault("37.0")
+	private double lat = 37.0;
 
 	@Column(nullable = false)
-	private Double lon;
+	@ColumnDefault("128.0")
+	private double lon = 128.0;
 
 	@Column(nullable = false)
 	@ColumnDefault("true")

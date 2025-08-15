@@ -29,7 +29,6 @@ public class RestaurantCommandService {
 			request.imageUrl(), request.contact(), request.address(), restaurantCategory);
 
 		// todo: 추후 주소를 토대로 lat, lng을 계산하는 API 호출 로직 구현 - 스프링 이벤트 사용
-		restaurant.updateLocation(37.0, 128.0); // 임시 좌표
 
 		return RestaurantCreateResponse.from(restaurantRepository.save(restaurant));
 	}

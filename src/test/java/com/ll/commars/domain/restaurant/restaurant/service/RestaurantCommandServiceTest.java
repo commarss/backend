@@ -57,8 +57,6 @@ public class RestaurantCommandServiceTest {
             .set("name", name)
             .set("details", name + " 설명")
             .set("address", "서울시 강남구")
-            .set("lat", 37.0)
-            .set("lon", 128.0)
             .setNull("reviews")
             .setNull("menus")
             .setNull("favoriteRestaurants")
