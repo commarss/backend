@@ -11,24 +11,21 @@
       "type": "text",
       "analyzer": "korean"
     },
-    "body": {
-      "type": "text",
-      "analyzer": "korean"
-    },
-    "rate": {
-      "type": "integer"
-    },
     "average_rate": {
       "type": "double"
-    },
-    "location": {
-      "type": "geo_point"
     },
     "lat": {
       "type": "double"
     },
     "lon": {
       "type": "double"
+    },
+    "address": {
+      "type": "text",
+      "analyzer": "korean"
+    },
+    "restaurant_category": {
+      "type": "keyword"
     }
   }
 }

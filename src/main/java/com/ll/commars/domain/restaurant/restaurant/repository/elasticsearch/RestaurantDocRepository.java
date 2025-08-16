@@ -9,7 +9,7 @@ import com.ll.commars.domain.restaurant.restaurant.entity.RestaurantDoc;
 
 public interface RestaurantDocRepository extends ElasticsearchRepository<RestaurantDoc, String> {
 
-	// name에 2배 가중치
+	// todo: 추후 TF-IDF, BM25 등으로 검색 알고리즘 개선
 	@Query("""
 		    {
 		        "function_score": {
@@ -27,7 +27,7 @@ public interface RestaurantDocRepository extends ElasticsearchRepository<Restaur
 		                    ],
 		                    "filter": {
 		                        "geo_distance": {
-		                            "distance": "?3",
+		                            "distance": ?3,
 		                            "location": {
 		                                "lat": ?1,
 		                                "lon": ?2
@@ -50,25 +50,38 @@ public interface RestaurantDocRepository extends ElasticsearchRepository<Restaur
 		        }
 		    }
 		""")
-	List<RestaurantDoc> searchByKeywordAndLocation(String keyword, double lat, double lon, String distance);
+	List<RestaurantDoc> searchByKeywordAndLocation(String keyword, double lat, double lon, double distance);
 
 	List<RestaurantDoc> findTop5ByOrderByAverageRateDesc();
 
 	@Query("""
-		        {
-		            "bool": {
-		                "must": {
-		                    "geo_distance": {
-		                        "distance": "?0km",
-		                        "location": {
-		                            "lat": ?1,
-		                            "lon": ?2
-		                        }
-		                    }
-		                }
-		            },
-		            "size": 10
-		        }
-		""")
-	List<RestaurantDoc> findByLocationNear(Double distance, Double lat, Double lng);
+    {
+        "query": {
+            "bool": {
+                "filter": {
+                    "geo_distance": {
+                        "distance": ?2,
+                        "location": {
+                            "lat": ?0,
+                            "lon": ?1
+                        }
+                    }
+                }
+            }
+        },
+        "sort": [
+            {
+                "_geo_distance": {
+                    "location": {
+                        "lat": ?0,
+                        "lon": ?1
+                    },
+                    "order": "asc",
+                    "unit": "m"
+                }
+            }
+        ]
+    }
+""")
+	List<RestaurantDoc> findNearbyRestaurantsSortedByDistance(double lat, double lon, double distance);
 }
