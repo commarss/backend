@@ -18,6 +18,7 @@ import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantCreateRequest;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantCreateResponse;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantFindListResponse;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantFindResponse;
+import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantNearByRequest;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantSearchRequest;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantSearchResponse;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantUpdateRequest;
@@ -125,11 +126,9 @@ public class RestaurantController {
 
 	@GetMapping("/nearby")
 	public ResponseEntity<RestaurantSearchResponse> getNearbyRestaurants(
-		@RequestParam(value = "lat") Double lat,
-		@RequestParam(value = "lon") Double lon,
-		@RequestParam(value = "distance", defaultValue = "2.0") Double distance
+		@Valid @ModelAttribute RestaurantNearByRequest request
 	) {
-		RestaurantSearchResponse response = restaurantDocService.getNearbyRestaurants(lat, lon, distance);
+		RestaurantSearchResponse response = restaurantDocService.getNearbyRestaurants(request);
 
 		return ResponseEntity.ok().body(response);
 	}

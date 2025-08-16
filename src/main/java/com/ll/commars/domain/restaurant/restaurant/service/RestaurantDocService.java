@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantNearByRequest;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantSearchRequest;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantSearchResponse;
 import com.ll.commars.domain.restaurant.restaurant.entity.RestaurantDoc;
@@ -38,9 +39,13 @@ public class RestaurantDocService {
 	}
 
 	@Transactional(readOnly = true)
-	public RestaurantSearchResponse getNearbyRestaurants(Double lat, Double lon, Double distance) {
+	public RestaurantSearchResponse getNearbyRestaurants(RestaurantNearByRequest request) {
 		List<RestaurantDoc> nearbyRestaurants = restaurantDocRepository
-			.findNearbyRestaurantsSortedByDistance(lat, lon, distance);
+			.findNearbyRestaurantsSortedByDistance(
+				request.lat(),
+				request.lon(),
+				request.distance()
+			);
 
 		return RestaurantSearchResponse.from(nearbyRestaurants);
 	}
