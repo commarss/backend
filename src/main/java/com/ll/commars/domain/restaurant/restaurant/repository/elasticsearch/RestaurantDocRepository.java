@@ -9,7 +9,7 @@ import com.ll.commars.domain.restaurant.restaurant.entity.RestaurantDoc;
 
 public interface RestaurantDocRepository extends ElasticsearchRepository<RestaurantDoc, String> {
 
-	// name에 2배 가중치
+	// todo: 추후 TF-IDF, BM25 등으로 검색 알고리즘 개선
 	@Query("""
 		    {
 		        "function_score": {
