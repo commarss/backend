@@ -60,7 +60,7 @@ services:
       MYSQL_USER: local_commars_username
       MYSQL_PASSWORD: local_commars_password
     healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-plocal_commars_password" ]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-ulocal_commars_username", "-plocal_commars_password" ]
       interval: 10s
       retries: 5
     ports:
