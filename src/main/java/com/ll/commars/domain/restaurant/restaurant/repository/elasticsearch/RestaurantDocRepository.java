@@ -27,7 +27,7 @@ public interface RestaurantDocRepository extends ElasticsearchRepository<Restaur
 		                    ],
 		                    "filter": {
 		                        "geo_distance": {
-		                            "distance": "?3",
+		                            "distance": ?3,
 		                            "location": {
 		                                "lat": ?1,
 		                                "lon": ?2
@@ -60,7 +60,7 @@ public interface RestaurantDocRepository extends ElasticsearchRepository<Restaur
             "bool": {
                 "filter": {
                     "geo_distance": {
-                        "distance": "?2",
+                        "distance": ?2,
                         "location": {
                             "lat": ?0,
                             "lon": ?1
