@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantSearchRequest;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantSearchResponse;
 import com.ll.commars.domain.restaurant.restaurant.entity.RestaurantDoc;
 import com.ll.commars.domain.restaurant.restaurant.repository.elasticsearch.RestaurantDocRepository;
@@ -18,12 +19,12 @@ public class RestaurantDocService {
 	private final RestaurantDocRepository restaurantDocRepository;
 
 	@Transactional(readOnly = true)
-	public RestaurantSearchResponse searchRestaurants(String keyword, Double lat, Double lon, Double distance) {
+	public RestaurantSearchResponse searchRestaurants(RestaurantSearchRequest request) {
 		List<RestaurantDoc> restaurantDocs = restaurantDocRepository.searchByKeywordAndLocation(
-			keyword,
-			lat,
-			lon,
-			distance
+			request.keyword(),
+			request.lat(),
+			request.lon(),
+			request.distance()
 		);
 
 		return RestaurantSearchResponse.from(restaurantDocs);
