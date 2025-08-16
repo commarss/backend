@@ -83,5 +83,5 @@ public interface RestaurantDocRepository extends ElasticsearchRepository<Restaur
         ]
     }
 """)
-	List<RestaurantDoc> findNearbyRestaurantsSortedByDistance(Double lat, Double lon, Double distance);
+	List<RestaurantDoc> findNearbyRestaurantsSortedByDistance(double lat, double lon, double distance);
 }

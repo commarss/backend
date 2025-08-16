@@ -7,6 +7,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.data.elasticsearch.annotations.GeoPointField;
 import org.springframework.data.elasticsearch.annotations.Mapping;
 import org.springframework.data.elasticsearch.annotations.Setting;
+import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -40,8 +41,9 @@ public class RestaurantDoc {
 	@Field(name = "restaurant_category", type = FieldType.Keyword)
 	private RestaurantCategory restaurantCategory;
 
+	// todo: 추후 lat, lon 대신 GeoPoint 사용
 	@GeoPointField
-	private String location;
+	private GeoPoint location;
 
 	@Field(name = "lat", type = FieldType.Double)
 	private Double lat;

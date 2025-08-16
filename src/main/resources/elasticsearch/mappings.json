@@ -11,13 +11,6 @@
       "type": "text",
       "analyzer": "korean"
     },
-    "body": {
-      "type": "text",
-      "analyzer": "korean"
-    },
-    "rate": {
-      "type": "integer"
-    },
     "average_rate": {
       "type": "double"
     },
