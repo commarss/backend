@@ -19,4 +19,10 @@ public record RestaurantNearByRequest(
 	@Positive(message = "거리는 양수여야 합니다.")
 	Double distance
 ) {
+
+	public RestaurantNearByRequest {
+		if (distance == null) {
+			distance = 50000.0;
+		}
+	}
 }
