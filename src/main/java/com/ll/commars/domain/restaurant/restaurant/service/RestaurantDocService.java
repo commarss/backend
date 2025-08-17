@@ -2,6 +2,7 @@ package com.ll.commars.domain.restaurant.restaurant.service;
 
 import java.util.List;
 
+import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,10 +22,10 @@ public class RestaurantDocService {
 
 	@Transactional(readOnly = true)
 	public RestaurantSearchResponse searchRestaurants(RestaurantSearchRequest request) {
+		GeoPoint location = new GeoPoint(request.lat(), request.lon());
 		List<RestaurantDoc> restaurantDocs = restaurantDocRepository.searchByKeywordAndLocation(
 			request.keyword(),
-			request.lat(),
-			request.lon(),
+			location,
 			request.distance()
 		);
 
@@ -40,10 +41,10 @@ public class RestaurantDocService {
 
 	@Transactional(readOnly = true)
 	public RestaurantSearchResponse getNearbyRestaurants(RestaurantNearByRequest request) {
+		GeoPoint location = new GeoPoint(request.lat(), request.lon());
 		List<RestaurantDoc> nearbyRestaurants = restaurantDocRepository
 			.findNearbyRestaurantsSortedByDistance(
-				request.lat(),
-				request.lon(),
+				location,
 				request.distance()
 			);
 

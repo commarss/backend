@@ -20,6 +20,19 @@ services:
     networks:
       - elastic
 
+  elasticsearch-setup:
+    image: curlimages/curl:8.7.1
+    container_name: local-commars-es-setup
+    volumes:
+      - ./src/main/resources/elasticsearch/es-setup.sh:/usr/local/bin/es-setup.sh
+      - ./src/main/resources/elasticsearch/restaurants_template.json:/tmp/restaurants_template.json
+    command: ["/usr/local/bin/es-setup.sh"]
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - elastic
+
   kibana:
     image: docker.elastic.co/kibana/kibana:8.17.2
     container_name: local-commars-kibana
@@ -44,8 +57,8 @@ services:
       - "5001:5001"
       - "5044:5044"
     depends_on:
-      elasticsearch:
-        condition: service_healthy
+      elasticsearch-setup:
+        condition: service_completed_successfully
       mysql:
         condition: service_healthy
     networks:
