@@ -12,6 +12,8 @@ import org.springframework.stereotype.Repository;
 import com.ll.commars.domain.restaurant.restaurant.entity.RestaurantDoc;
 
 import co.elastic.clients.elasticsearch._types.DistanceUnit;
+import co.elastic.clients.elasticsearch._types.GeoLocation;
+import co.elastic.clients.elasticsearch._types.SortOptions;
 import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.FieldValueFactorModifier;
@@ -75,26 +77,31 @@ public class RestaurantDocRepositoryImpl implements RestaurantDocRepositoryCusto
 
     @Override
     public List<RestaurantDoc> findNearbyRestaurantsSortedByDistance(GeoPoint location, double distance) {
+        GeoLocation geoLocation = GeoLocation.of(g -> g
+            .latlon(l -> l.lat(location.getLat()).lon(location.getLon()))
+        );
+
+        // 필터 조건
+        GeoDistanceQuery geoFilter = GeoDistanceQuery.of(g -> g
+            .field("location")
+            .location(geoLocation)
+            .distance(String.format("%.0fm", distance))
+        );
+
+        // 정렬 조건
+        SortOptions distanceSort = SortOptions.of(s -> s
+            .geoDistance(g -> g
+                .field("location")
+                .location(geoLocation)
+                .order(SortOrder.Asc)
+                .unit(DistanceUnit.Meters)
+            )
+        );
+
+        // 최종 쿼리
         Query query = NativeQuery.builder()
-            .withQuery(q -> q
-                .bool(b -> b
-                    .filter(f -> f
-                        .geoDistance(g -> g
-                            .field("location")
-                            .location(l -> l.latlon(d -> d.lat(location.getLat()).lon(location.getLon())))
-                            .distance(String.format("%.0fm", distance))
-                        )
-                    )
-                )
-            )
-            .withSort(s -> s
-                .geoDistance(g -> g
-                    .field("location")
-                    .location(l -> l.latlon(d -> d.lat(location.getLat()).lon(location.getLon())))
-                    .order(SortOrder.Asc)
-                    .unit(DistanceUnit.Meters)
-                )
-            )
+            .withQuery(q -> q.bool(b -> b.filter(geoFilter._toQuery())))
+            .withSort(distanceSort)
             .build();
 
         return operations.search(query, RestaurantDoc.class)
