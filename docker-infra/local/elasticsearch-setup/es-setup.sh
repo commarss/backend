@@ -10,7 +10,7 @@ done
 echo "Elasticsearch is up!"
 
 # 인덱스 템플릿 생성
-curl -X PUT "http://elasticsearch:9200/_index_template/restaurants_template" \
+curl -fs -X PUT "http://elasticsearch:9200/_index_template/restaurants_template" \
      -H "Content-Type: application/json" \
      -d "@/tmp/restaurants_template.json"
 
@@ -18,6 +18,6 @@ curl -X PUT "http://elasticsearch:9200/_index_template/restaurants_template" \
 if [ $? -eq 0 ]; then
   echo "Index template created successfully."
 else
-  echo "Failed to create index template."
+  echo "Failed to create index template. Check Elasticsearch logs and template file."
   exit 1
 fi
