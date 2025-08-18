@@ -20,11 +20,11 @@ public class ReviewService {
 	private final ReviewRepository reviewRepository;
 
 	@Transactional
-	public void updateReview(Long reviewId, ReviewUpdateRequest request) {
+	public void updateReview(long memberId, Long reviewId, ReviewUpdateRequest request) {
 		Review review = reviewRepository.findById(reviewId)
 			.orElseThrow(() -> new CustomException(REVIEW_NOT_FOUND));
 
-		validateReviewOwnership(review, request.userId());
+		validateReviewOwnership(review, memberId);
 
 		int oldRate = review.getRate();
 
@@ -34,22 +34,23 @@ public class ReviewService {
 		restaurant.updateReviewAndUpdateAverageRate(oldRate, review.getRate());
 	}
 
-	private void validateReviewOwnership(Review review, Long userId) {
-		if (!review.getMember().getId().equals(userId)) {
-			throw new CustomException(REVIEW_NOT_UNAUTHORIZED);
-		}
-	}
-
 	@Transactional
-	public void deleteReview(Long reviewId) {
-		// todo: 리뷰 삭제 권한 검증 필요
+	public void deleteReview(Long reviewId, long memberId) {
 		Review review = reviewRepository.findById(reviewId)
 			.orElseThrow(() -> new CustomException(REVIEW_NOT_FOUND));
+
+		validateReviewOwnership(review, memberId);
 
 		Restaurant restaurant = review.getRestaurant();
 		int oldRate = review.getRate();
 
 		reviewRepository.delete(review);
 		restaurant.removeReviewAndUpdateAverageRate(oldRate);
+	}
+
+	private void validateReviewOwnership(Review review, long memberId) {
+		if (!review.getMember().getId().equals(memberId)) {
+			throw new CustomException(REVIEW_NOT_UNAUTHORIZED);
+		}
 	}
 }
