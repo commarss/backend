@@ -15,6 +15,8 @@ import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantSummaryResponse
 import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
 import com.ll.commars.domain.restaurant.restaurant.entity.RestaurantCategory;
 import com.ll.commars.domain.restaurant.restaurant.repository.jpa.RestaurantRepository;
+import com.ll.commars.domain.review.dto.ReviewFindListResponse;
+import com.ll.commars.domain.review.dto.ReviewFindResponse;
 import com.ll.commars.global.exception.CustomException;
 
 import lombok.RequiredArgsConstructor;
@@ -64,5 +66,17 @@ public class RestaurantQueryService {
 		List<String> categories = RestaurantCategory.getAllCategories();
 
 		return new CategoryFindListResponse(categories);
+	}
+
+	@Transactional(readOnly = true)
+	public ReviewFindListResponse getReviews(Long restaurantId) {
+		Restaurant restaurant = restaurantRepository.findById(restaurantId)
+			.orElseThrow(() -> new CustomException(RESTAURANT_NOT_FOUND));
+
+		List<ReviewFindResponse> reviews = restaurant.getReviews().stream()
+			.map(ReviewFindResponse::from)
+			.toList();
+
+		return new ReviewFindListResponse(reviews);
 	}
 }

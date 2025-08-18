@@ -65,28 +65,6 @@ public class ReviewController {
 			.body(response);
 	}
 
-	@GetMapping("/showAllReviews")
-	public ResponseEntity<ReviewDto.ShowAllReviewsResponse> showAllReviews(
-		@RequestParam("restaurant_id") @NotNull Long restaurantId) {
-		ReviewDto.ShowAllReviewsResponse response = reviewService.showAllReviews(restaurantId);
-		return ResponseEntity
-			.status(200)
-			.body(response);
-	}
-
-	// @PostMapping("/writeReview")
-	// public ResponseEntity<?> writeReview(
-	// 	@RequestBody Map<String, Object> body,
-	// 	@AuthenticationPrincipal UserDetails userDetails
-	// ) {
-	// 	System.out.println("body = " + body);
-	// 	Review review = reviewService.wirteReview(body.get("restaurant_id").toString(), userDetails.getUsername(),
-	// 		body.get("name").toString(), body.get("body").toString(), Integer.parseInt(body.get("rate").toString()));
-	// 	System.out.println("review = " + review);
-	// 	return ResponseEntity.ok()
-	// 		.body("리뷰 작성 성공");
-	// }
-
 	@GetMapping("/search")
 	public List<ReviewDoc> search(@RequestParam("keyword") String keyword) {
 		List<ReviewDoc> results = reviewDocService.searchByKeyword(keyword);
