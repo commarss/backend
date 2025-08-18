@@ -6,25 +6,22 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Document(indexName = "es_reviews", createIndex = true)
 @Getter
-@Setter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class ReviewDoc {
 
 	@Id
 	private String id;
 
+	@Field(type = FieldType.Long)
+	private Long memberId;
+
 	@Field(type = FieldType.Text)
-	private String name;
+	private String title;
 
 	@Field(type = FieldType.Text)
 	private String body;

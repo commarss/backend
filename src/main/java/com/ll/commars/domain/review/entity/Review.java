@@ -12,22 +12,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
-@Table(name = "reviews")
 @Getter
-@Setter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class Review extends BaseEntity {
 
 	@Id
@@ -35,23 +27,35 @@ public class Review extends BaseEntity {
 	private Long id;
 
 	@NotNull
-	@Column(name = "name", nullable = false)
-	private String name;
+	@Column(name = "title", nullable = false)
+	private String title;
 
-	@Column(name = "body")
+	@Column(name = "body", nullable = false)
 	private String body;
 
 	@NotNull
-	@Column(name = "rate")
+	@Column(name = "rate", nullable = false)
 	private Integer rate;
 
-	// Review와 Restaurant: 다대일
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "restaurant_id")
 	private Restaurant restaurant;
 
-	// Review와 User: 다대일
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_id")
 	private Member member;
+
+	public Review(String title, String body, Integer rate, Restaurant restaurant, Member member) {
+		this.title = title;
+		this.body = body;
+		this.rate = rate;
+		this.restaurant = restaurant;
+		this.member = member;
+	}
+
+	public void update(String title, String body, Integer rate) {
+		this.title = title;
+		this.body = body;
+		this.rate = rate;
+	}
 }

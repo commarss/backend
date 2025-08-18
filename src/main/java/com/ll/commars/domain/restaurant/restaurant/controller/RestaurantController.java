@@ -25,6 +25,9 @@ import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantUpdateRequest;
 import com.ll.commars.domain.restaurant.restaurant.service.RestaurantCommandService;
 import com.ll.commars.domain.restaurant.restaurant.service.RestaurantDocService;
 import com.ll.commars.domain.restaurant.restaurant.service.RestaurantQueryService;
+import com.ll.commars.domain.review.dto.ReviewCreateRequest;
+import com.ll.commars.domain.review.dto.ReviewCreateResponse;
+import com.ll.commars.domain.review.dto.ReviewFindListResponse;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -129,6 +132,25 @@ public class RestaurantController {
 		@Valid @ModelAttribute RestaurantNearByRequest request
 	) {
 		RestaurantSearchResponse response = restaurantDocService.getNearbyRestaurants(request);
+
+		return ResponseEntity.ok().body(response);
+	}
+
+	@PostMapping("/{restaurant-id}/reviews")
+	public ResponseEntity<ReviewCreateResponse> createReview(
+		@PathVariable("restaurant-id") Long restaurantId,
+		@RequestBody @Valid ReviewCreateRequest request
+	) {
+		ReviewCreateResponse response = restaurantCommandService.createReview(restaurantId, request);
+
+		return ResponseEntity.ok().body(response);
+	}
+
+	@GetMapping("/{restaurant-id}/reviews")
+	public ResponseEntity<ReviewFindListResponse> getReviews(
+		@PathVariable("restaurant-id") Long restaurantId
+	) {
+		ReviewFindListResponse response = restaurantQueryService.getReviews(restaurantId);
 
 		return ResponseEntity.ok().body(response);
 	}
