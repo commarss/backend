@@ -42,6 +42,7 @@ public class ReviewService {
 
 	@Transactional
 	public void deleteReview(Long reviewId) {
+		// todo: 리뷰 삭제 권한 검증 필요
 		Review review = reviewRepository.findById(reviewId)
 			.orElseThrow(() -> new CustomException(REVIEW_NOT_FOUND));
 
