@@ -40,10 +40,18 @@ public class Restaurant extends BaseEntity {
 	@Column(name = "details", nullable = false)
 	private String details;
 
-	// todo: 리뷰 리팩터링 시 계산 추후 구현
+	// todo: averageRate 필드를 유지할지
 	@Column(name = "average_rate", nullable = false)
 	@ColumnDefault("0.0")
 	private double averageRate = 0.0;
+
+	@Column(name = "review_count", nullable = false)
+	@ColumnDefault("0")
+	private int reviewCount = 0;
+
+	@Column(name = "total_rate_sum", nullable = false)
+	@ColumnDefault("0")
+	private long totalRateSum = 0;
 
 	@Column(name = "image_url")
 	private String imageUrl;
@@ -119,5 +127,25 @@ public class Restaurant extends BaseEntity {
 	public void updateLocation(Double lat, Double lon) {
 		this.lat = lat;
 		this.lon = lon;
+	}
+
+	public void addReviewAndUpdateAverageRate(int newRate) {
+		this.totalRateSum += newRate;
+		this.reviewCount++;
+		updateAverageRate();
+	}
+
+	public void removeReviewAndUpdateAverageRate(int deletedRate) {
+		this.totalRateSum -= deletedRate;
+		this.reviewCount--;
+		updateAverageRate();
+	}
+
+	private void updateAverageRate() {
+		if (this.reviewCount > 0) {
+			this.averageRate = Math.round(((double) this.totalRateSum / this.reviewCount) * 10) / 10.0;
+		} else {
+			this.averageRate = 0.0;
+		}
 	}
 }

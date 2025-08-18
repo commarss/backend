@@ -20,14 +20,6 @@ import lombok.RequiredArgsConstructor;
 public class ReviewService {
 
 	private final ReviewRepository reviewRepository;
-	private final RestaurantRepository restaurantRepository;
-	private final MemberRepository memberRepository;
-	private final RestaurantCommandService restaurantCommandService;
-	private final MemberService memberService;
-
-	public void truncate() {
-		reviewRepository.deleteAll();
-	}
 
 	@Transactional
 	public void deleteReview(Long reviewId) {
@@ -76,35 +68,4 @@ public class ReviewService {
 				.toList())
 			.build();
 	}
-
-	// public Review wirteReview(String restaurantId, String username, String name, String body, int rate) {
-	// 	Restaurant restaurant = restaurantCommandService.findById(Long.valueOf(restaurantId));
-	// 	Optional<Member> user = memberService.findById(Long.parseLong(username));
-	//
-	// 	Review review = Review.builder()
-	// 		.name(name)
-	// 		.body(body)
-	// 		.rate(rate)
-	// 		.restaurant(restaurant)
-	// 		.member(user.orElseThrow(() -> new IllegalArgumentException("User not found")))
-	// 		.build();
-	//
-	// 	reviewRepository.save(review);
-	//
-	// 	Long restaurantId2Long = Long.valueOf(restaurantId);
-	//
-	// 	// 해당 식당의 모든 리뷰 평점 평균 계산
-	// 	List<Review> allReviews = reviewRepository.findByRestaurantId(restaurantId2Long);
-	// 	double newAverageRate = allReviews.stream()
-	// 		.mapToInt(Review::getRate)
-	// 		.average()
-	// 		.orElse(0.0);
-	// 	System.out.println("newAverageRate = " + newAverageRate);
-	//
-	// 	// 식당의 평균 평점 업데이트
-	// 	restaurant.setAverageRate(newAverageRate);
-	// 	restaurantRepository.save(restaurant);
-	//
-	// 	return review;
-	// }
 }
