@@ -1,5 +1,7 @@
 package com.ll.commars.domain.review.controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ll.commars.domain.review.dto.ReviewDto;
+import com.ll.commars.domain.review.entity.ReviewDoc;
+import com.ll.commars.domain.review.service.ReviewDocService;
 import com.ll.commars.domain.review.service.ReviewService;
 
 import jakarta.validation.Valid;
@@ -19,10 +23,11 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/review")
-public class ApiV1ReviewController {
+@RequestMapping("/api/reviews")
+public class ReviewController {
 
 	private final ReviewService reviewService;
+	private final ReviewDocService reviewDocService;
 
 	@DeleteMapping("/{review_id}")
 	public ResponseEntity<String> deleteReview(
@@ -66,4 +71,12 @@ public class ApiV1ReviewController {
 	// 	return ResponseEntity.ok()
 	// 		.body("리뷰 작성 성공");
 	// }
+
+	@GetMapping("/search")
+	public List<ReviewDoc> search(@RequestParam("keyword") String keyword) {
+		List<ReviewDoc> results = reviewDocService.searchByKeyword(keyword);
+		System.out.println("results = " + results);
+
+		return results;
+	}
 }
