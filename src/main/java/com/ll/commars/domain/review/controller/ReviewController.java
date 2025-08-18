@@ -15,12 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ll.commars.domain.review.dto.ReviewCreateRequest;
 import com.ll.commars.domain.review.dto.ReviewCreateResponse;
-import com.ll.commars.domain.review.dto.ReviewDto;
+import com.ll.commars.domain.review.dto.ReviewUpdateRequest;
 import com.ll.commars.domain.review.entity.ReviewDoc;
-import com.ll.commars.domain.review.service.ReviewCommandService;
-import com.ll.commars.domain.review.service.ReviewDocService;
-import com.ll.commars.domain.review.service.ReviewQueryService;
 import com.ll.commars.domain.review.service.ReviewService;
+import com.ll.commars.domain.review.service.ReviewDocService;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -31,17 +29,26 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/reviews")
 public class ReviewController {
 
-	private final ReviewCommandService reviewCommandService;
-	private final ReviewQueryService reviewQueryService;
+	private final ReviewService reviewService;
 	private final ReviewDocService reviewDocService;
 
 	@PostMapping
 	public ResponseEntity<ReviewCreateResponse> createReview(
 		@RequestBody @Valid ReviewCreateRequest request
 	) {
-		ReviewCreateResponse response = reviewCommandService.createReview(request);
+		ReviewCreateResponse response = reviewService.createReview(request);
 
 		return ResponseEntity.ok().body(response);
+	}
+
+	@PatchMapping("/{review-id}")
+	public ResponseEntity<Void> updateReview(
+		@PathVariable("review-id") Long reviewId,
+		@RequestBody @Valid ReviewUpdateRequest request
+	) {
+		reviewService.updateReview(reviewId, request);
+
+		return ResponseEntity.ok().build();
 	}
 
 	@DeleteMapping("/{review_id}")
@@ -52,17 +59,6 @@ public class ReviewController {
 		return ResponseEntity
 			.status(200)
 			.body("리뷰 삭제 성공");
-	}
-
-	@PatchMapping("/{review_id}")
-	public ResponseEntity<ReviewDto.ReviewWriteResponse> modifyReview(
-		@PathVariable("review_id") @NotNull Long reviewId,
-		@RequestBody @Valid ReviewDto.ReviewWriteRequest request
-	) {
-		ReviewDto.ReviewWriteResponse response = reviewService.modifyReview(reviewId, request);
-		return ResponseEntity
-			.status(200)
-			.body(response);
 	}
 
 	@GetMapping("/search")

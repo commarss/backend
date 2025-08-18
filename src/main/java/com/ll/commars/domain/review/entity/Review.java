@@ -52,4 +52,10 @@ public class Review extends BaseEntity {
 		this.restaurant = restaurant;
 		this.member = member;
 	}
+
+	public void update(String title, String body, Integer rate) {
+		this.title = title;
+		this.body = body;
+		this.rate = rate;
+	}
 }
