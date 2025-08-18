@@ -11,20 +11,26 @@ import org.testcontainers.utility.DockerImageName;
 
 public class ElasticsearchTestContainer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
-	private static final String ELASTIC_OFFICIAL_IMAGE = "docker.elastic.co/elasticsearch/elasticsearch:8.3.3";
+	private static final String ELASTIC_OFFICIAL_IMAGE_NAME = "docker.elastic.co/elasticsearch/elasticsearch:8.3.3";
+	private static final String CUSTOM_IMAGE_NAME = "commars-nori:8.3.3";
+	private static final String DOCKERFILE_PATH = "src/test/resources/Dockerfile";
+	private static final ElasticsearchContainer ELASTICSEARCH_CONTAINER = createAndStartContainer();
 
-	private static final ElasticsearchContainer ELASTICSEARCH_CONTAINER =
-		new ElasticsearchContainer(
-			DockerImageName.parse(new ImageFromDockerfile("commars-nori", false)
-					.withDockerfile(Path.of("src/test/resources/Dockerfile"))
-					.get())
-				.asCompatibleSubstituteFor(ELASTIC_OFFICIAL_IMAGE)
-		)
+	private static ElasticsearchContainer createAndStartContainer() {
+		// nori 플러그인이 존재하는 커스텀 도커 이미지 정의
+		ImageFromDockerfile customImage = new ImageFromDockerfile(CUSTOM_IMAGE_NAME, false)
+			.withDockerfile(Path.of(DOCKERFILE_PATH));
+
+		DockerImageName compatibleImageName = DockerImageName.parse(customImage.get())
+			.asCompatibleSubstituteFor(ELASTIC_OFFICIAL_IMAGE_NAME);
+
+		ElasticsearchContainer container = new ElasticsearchContainer(compatibleImageName)
 			.withEnv("xpack.security.enabled", "false")
 			.withReuse(true);
 
-	static {
-		ELASTICSEARCH_CONTAINER.start();
+		container.start();
+
+		return container;
 	}
 
 	@Override
