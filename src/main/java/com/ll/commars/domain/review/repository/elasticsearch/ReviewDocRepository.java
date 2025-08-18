@@ -18,7 +18,7 @@ public interface ReviewDocRepository extends ElasticsearchRepository<ReviewDoc, 
 		                        {
 		                            "multi_match": {
 		                                "query": "?0",
-		                                "fields": ["name^2", "body"],
+		                                "fields": ["title^2", "body"],
 		                                "operator": "or",
 		                                "fuzziness": "AUTO"
 		                            }
