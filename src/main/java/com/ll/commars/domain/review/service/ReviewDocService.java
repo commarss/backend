@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.ll.commars.domain.review.dto.ReviewSearchResponse;
 import com.ll.commars.domain.review.entity.ReviewDoc;
 import com.ll.commars.domain.review.repository.elasticsearch.ReviewDocRepository;
 
@@ -15,20 +16,9 @@ public class ReviewDocService {
 
 	private final ReviewDocRepository reviewDocRepository;
 
-	public ReviewDoc write(String content, Integer rate) {
-		ReviewDoc reviewDoc = ReviewDoc.builder()
-			.name(content)
-			.rate(rate)
-			.build();
+	public ReviewSearchResponse searchByKeyword(String keyword) {
+		List<ReviewDoc> reviewDocs = reviewDocRepository.searchByKeyword(keyword);
 
-		return reviewDocRepository.save(reviewDoc);
-	}
-
-	public void truncate() {
-		reviewDocRepository.deleteAll();
-	}
-
-	public List<ReviewDoc> searchByKeyword(String keyword) {
-		return reviewDocRepository.searchByKeyword(keyword);
+		return ReviewSearchResponse.from(reviewDocs);
 	}
 }

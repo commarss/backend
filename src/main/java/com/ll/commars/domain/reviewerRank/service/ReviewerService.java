@@ -6,12 +6,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ll.commars.domain.member.entity.Member;
 import com.ll.commars.domain.member.repository.jpa.MemberRepository;
-import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
 import com.ll.commars.domain.restaurant.restaurant.repository.jpa.RestaurantRepository;
-import com.ll.commars.domain.review.dto.ReviewDto;
-import com.ll.commars.domain.review.entity.Review;
 import com.ll.commars.domain.review.repository.jpa.ReviewRepository;
 import com.ll.commars.domain.reviewerRank.dto.ReviewerRank;
 import com.ll.commars.domain.reviewerRank.dto.ReviewerRankResponse;
@@ -25,27 +21,6 @@ public class ReviewerService {
 	public final MemberRepository memberRepository;
 	public final RestaurantRepository restaurantRepository;
 	private final ReviewRepository reviewRepository;
-
-	// 상위 10명의 리뷰어 조회
-	// ✅ 리뷰 작성 메서드 추가
-	@Transactional
-	public void writeReview(Long restaurantId, ReviewDto.ReviewWriteRequest request, String userEmail) {
-		Member member = memberRepository.findByEmail(userEmail)
-			.orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
-
-		Restaurant restaurant = restaurantRepository.findById(restaurantId)
-			.orElseThrow(() -> new IllegalArgumentException("레스토랑을 찾을 수 없습니다."));
-
-		Review review = Review.builder()
-			.name(request.getReviewName())
-			.body(request.getBody())
-			.rate(request.getRate())
-			.member(member)
-			.restaurant(restaurant)
-			.build();
-
-		reviewRepository.saveAndFlush(review); // 🔥 즉시 저장!
-	}
 
 	// ✅ 상위 10명의 리뷰어 조회 후 top3, others 분리
 	public ReviewerRankResponse getTopReviewers() {

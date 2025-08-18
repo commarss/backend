@@ -1,7 +1,5 @@
 package com.ll.commars.domain.review.controller;
 
-import java.util.List;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ll.commars.domain.review.dto.ReviewCreateRequest;
 import com.ll.commars.domain.review.dto.ReviewCreateResponse;
+import com.ll.commars.domain.review.dto.ReviewSearchResponse;
 import com.ll.commars.domain.review.dto.ReviewUpdateRequest;
-import com.ll.commars.domain.review.entity.ReviewDoc;
 import com.ll.commars.domain.review.service.ReviewDocService;
 import com.ll.commars.domain.review.service.ReviewService;
 
@@ -60,10 +58,11 @@ public class ReviewController {
 	}
 
 	@GetMapping("/search")
-	public List<ReviewDoc> search(@RequestParam("keyword") String keyword) {
-		List<ReviewDoc> results = reviewDocService.searchByKeyword(keyword);
-		System.out.println("results = " + results);
+	public ResponseEntity<ReviewSearchResponse> searchByKeyword(
+		@RequestParam("keyword") String keyword
+	) {
+		ReviewSearchResponse response = reviewDocService.searchByKeyword(keyword);
 
-		return results;
+		return ResponseEntity.ok().body(response);
 	}
 }
