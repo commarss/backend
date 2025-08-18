@@ -14,6 +14,7 @@ public enum ErrorCode {
 
 	// Authentication
 	EMAIL_ALREADY_EXISTS(HttpStatus.BAD_REQUEST.value(), "이미 존재하는 이메일입니다."),
+	MEMBER_NOT_AUTHENTICATED(HttpStatus.UNAUTHORIZED.value(), "인증되지 않은 회원입니다."),
 
 	// Member
 	MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 회원을 찾을 수 없습니다."),
