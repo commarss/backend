@@ -1,6 +1,7 @@
 package com.ll.commars.domain.restaurant.restaurant.service;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -87,8 +88,10 @@ public class RestaurantDocServiceTest {
             RestaurantSearchResponse response = restaurantDocService.searchRestaurants(request);
 
             // then
-            assertThat(response.restaurants()).hasSize(1);
-            assertThat(response.restaurants().get(0).name()).isEqualTo("강남 교자");
+            assertAll(
+                () -> assertThat(response.restaurants()).hasSize(1),
+                () -> assertThat(response.restaurants().get(0).name()).isEqualTo("강남 교자")
+            );
         }
 
         @Test
@@ -139,12 +142,15 @@ public class RestaurantDocServiceTest {
 
             // then
             List<RestaurantSearchResponse.RestaurantSearchInfo> restaurants = response.restaurants();
-            assertThat(restaurants).hasSize(5);
-            assertThat(restaurants.get(0).name()).isEqualTo("식당D");
-            assertThat(restaurants.get(1).name()).isEqualTo("식당B");
-            assertThat(restaurants.get(2).name()).isEqualTo("식당A");
-            assertThat(restaurants.get(3).name()).isEqualTo("식당E");
-            assertThat(restaurants.get(4).name()).isEqualTo("식당C");
+
+            assertAll(
+                () -> assertThat(restaurants).hasSize(5),
+                () -> assertThat(restaurants.get(0).name()).isEqualTo("식당D"),
+                () -> assertThat(restaurants.get(1).name()).isEqualTo("식당B"),
+                () -> assertThat(restaurants.get(2).name()).isEqualTo("식당A"),
+                () -> assertThat(restaurants.get(3).name()).isEqualTo("식당E"),
+                () -> assertThat(restaurants.get(4).name()).isEqualTo("식당C")
+            );
         }
 
         @Test
@@ -186,9 +192,12 @@ public class RestaurantDocServiceTest {
 
             // then
             List<RestaurantSearchResponse.RestaurantSearchInfo> restaurants = response.restaurants();
-            assertThat(restaurants).hasSize(2);
-            assertThat(restaurants.get(0).name()).isEqualTo(restaurantNear.getName());
-            assertThat(restaurants.get(1).name()).isEqualTo(restaurantMid.getName());
+
+            assertAll(
+                () -> assertThat(restaurants).hasSize(2),
+                () -> assertThat(restaurants.get(0).name()).isEqualTo(restaurantNear.getName()),
+                () -> assertThat(restaurants.get(1).name()).isEqualTo(restaurantMid.getName())
+            );
         }
 
         @Test

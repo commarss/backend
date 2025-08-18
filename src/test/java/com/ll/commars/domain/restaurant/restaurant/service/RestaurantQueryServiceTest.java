@@ -2,6 +2,7 @@ package com.ll.commars.domain.restaurant.restaurant.service;
 
 import static com.ll.commars.global.exception.ErrorCode.*;
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -85,9 +86,11 @@ public class RestaurantQueryServiceTest {
 				.toList();
 
 			// then
-			assertThat(response).isNotNull();
-			assertThat(response.restaurants()).isNotNull();
-			assertThat(restaurantIds).contains(한식_식당.getId(), 중식_식당.getId(), 양식_식당.getId());
+			assertAll(
+				() -> assertThat(response).isNotNull(),
+				() -> assertThat(response.restaurants()).isNotNull(),
+				() -> assertThat(restaurantIds).contains(한식_식당.getId(), 중식_식당.getId(), 양식_식당.getId())
+			);
 		}
 
 		@Test
@@ -99,8 +102,10 @@ public class RestaurantQueryServiceTest {
 			RestaurantFindListResponse response = restaurantQueryService.getRestaurants();
 
 			// then
-			assertThat(response).isNotNull();
-			assertThat(response.restaurants()).isEmpty();
+			assertAll(
+				() -> assertThat(response).isNotNull(),
+				() -> assertThat(response.restaurants()).isEmpty()
+			);
 		}
 	}
 
@@ -120,12 +125,14 @@ public class RestaurantQueryServiceTest {
 			RestaurantFindResponse response = restaurantQueryService.getRestaurant(한식_식당.getId());
 
 			// then
-			assertThat(response).isNotNull();
-			assertThat(response.id()).isEqualTo(한식_식당.getId());
-			assertThat(response.name()).isEqualTo(한식_식당.getName());
-			assertThat(response.details()).isEqualTo(한식_식당.getDetails());
-			assertThat(response.address()).isEqualTo(한식_식당.getAddress());
-			assertThat(response.categoryName()).isEqualTo(한식_식당.getRestaurantCategory().name());
+			assertAll(
+				() -> assertThat(response).isNotNull(),
+				() -> assertThat(response.id()).isEqualTo(한식_식당.getId()),
+				() -> assertThat(response.name()).isEqualTo(한식_식당.getName()),
+				() -> assertThat(response.details()).isEqualTo(한식_식당.getDetails()),
+				() -> assertThat(response.address()).isEqualTo(한식_식당.getAddress()),
+				() -> assertThat(response.categoryName()).isEqualTo(한식_식당.getRestaurantCategory().name())
+			);
 		}
 
 		@Test
@@ -153,14 +160,11 @@ public class RestaurantQueryServiceTest {
 			RestaurantFindListResponse response = restaurantQueryService.getRestaurantsByCategory("한식");
 
 			// then
-			assertThat(response).isNotNull();
-			assertThat(response.restaurants()).isNotEmpty();
-
-			// 모든 결과가 한식 카테고리인지
-			assertThat(response.restaurants())
-				.allSatisfy(restaurant ->
-					assertThat(restaurant.categoryName()).isEqualTo("한식")
-				);
+			assertAll(
+				() -> assertThat(response).isNotNull(),
+				() -> assertThat(response.restaurants()).isNotEmpty(),
+				() -> assertThat(response.restaurants()).allSatisfy(restaurant -> assertThat(restaurant.categoryName()).isEqualTo("한식"))
+			);
 		}
 
 		@Test
@@ -177,8 +181,10 @@ public class RestaurantQueryServiceTest {
 			RestaurantFindListResponse response = restaurantQueryService.getRestaurantsByCategory("일식");
 
 			// then
-			assertThat(response).isNotNull();
-			assertThat(response.restaurants()).isEmpty();
+			assertAll(
+				() -> assertThat(response).isNotNull(),
+				() -> assertThat(response.restaurants()).isEmpty()
+			);
 		}
 	}
 
@@ -198,8 +204,10 @@ public class RestaurantQueryServiceTest {
 			CategoryFindResponse response = restaurantQueryService.getCategoryFromRestaurant(한식_식당.getId());
 
 			// then
-			assertThat(response).isNotNull();
-			assertThat(response.category()).isEqualTo("한식");
+			assertAll(
+				() -> assertThat(response).isNotNull(),
+				() -> assertThat(response.category()).isEqualTo(한식_식당.getRestaurantCategory().name())
+			);
 		}
 
 		@Test
@@ -224,8 +232,6 @@ public class RestaurantQueryServiceTest {
 				.toList();
 
 			// then
-			assertThat(response).isNotNull();
-			assertThat(response.categories()).isNotEmpty();
 			assertThat(response.categories()).containsExactlyInAnyOrderElementsOf(expectedCategories);
 		}
 

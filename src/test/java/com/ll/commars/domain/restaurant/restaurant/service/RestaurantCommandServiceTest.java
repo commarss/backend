@@ -2,6 +2,7 @@ package com.ll.commars.domain.restaurant.restaurant.service;
 
 import static com.ll.commars.global.exception.ErrorCode.*;
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -89,9 +90,11 @@ public class RestaurantCommandServiceTest {
 			RestaurantCreateResponse response = restaurantCommandService.createRestaurant(request);
 
 			// then
-			assertThat(response).isNotNull();
-			assertThat(response.id()).isNotNull();
-			assertThat(restaurantRepository.findById(response.id())).isPresent();
+			assertAll(
+				() -> assertThat(response).isNotNull(),
+				() -> assertThat(response.id()).isNotNull(),
+				() -> assertThat(restaurantRepository.findById(response.id())).isPresent()
+			);
 		}
 	}
 
@@ -115,8 +118,11 @@ public class RestaurantCommandServiceTest {
 
 			// then
 			Restaurant updatedRestaurant = restaurantRepository.findById(한식_식당.getId()).get();
-			assertThat(updatedRestaurant.getName()).isEqualTo(request.name());
-			assertThat(updatedRestaurant.getRestaurantCategory()).isEqualTo(RestaurantCategory.일식);
+
+			assertAll(
+				() -> assertThat(updatedRestaurant.getName()).isEqualTo(request.name()),
+				() -> assertThat(updatedRestaurant.getRestaurantCategory()).isEqualTo(RestaurantCategory.일식)
+			);
 		}
 
 		@Test
