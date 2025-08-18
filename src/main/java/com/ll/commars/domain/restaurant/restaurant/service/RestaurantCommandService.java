@@ -5,12 +5,18 @@ import static com.ll.commars.global.exception.ErrorCode.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ll.commars.domain.member.entity.Member;
+import com.ll.commars.domain.member.repository.jpa.MemberRepository;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantCreateRequest;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantCreateResponse;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantUpdateRequest;
 import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
 import com.ll.commars.domain.restaurant.restaurant.entity.RestaurantCategory;
 import com.ll.commars.domain.restaurant.restaurant.repository.jpa.RestaurantRepository;
+import com.ll.commars.domain.review.dto.ReviewCreateRequest;
+import com.ll.commars.domain.review.dto.ReviewCreateResponse;
+import com.ll.commars.domain.review.entity.Review;
+import com.ll.commars.domain.review.repository.jpa.ReviewRepository;
 import com.ll.commars.global.exception.CustomException;
 
 import lombok.RequiredArgsConstructor;
@@ -20,6 +26,8 @@ import lombok.RequiredArgsConstructor;
 public class RestaurantCommandService {
 
 	private final RestaurantRepository restaurantRepository;
+	private final MemberRepository memberRepository;
+	private final ReviewRepository reviewRepository;
 
 	@Transactional
 	public RestaurantCreateResponse createRestaurant(RestaurantCreateRequest request) {
@@ -49,5 +57,26 @@ public class RestaurantCommandService {
 			.orElseThrow(() -> new CustomException(RESTAURANT_NOT_FOUND));
 
 		restaurantRepository.deleteById(restaurantId);
+	}
+
+	@Transactional
+	public ReviewCreateResponse createReview(Long restaurantId, ReviewCreateRequest request) {
+		Restaurant restaurant = restaurantRepository.findById(restaurantId)
+			.orElseThrow(() -> new CustomException(RESTAURANT_NOT_FOUND));
+
+		Member member = memberRepository.findById(request.userId())
+			.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
+
+		Review review = new Review(
+			request.title(),
+			request.body(),
+			request.rate(),
+			restaurant,
+			member
+		);
+
+		restaurant.addReviewAndUpdateAverageRate(review.getRate());
+
+		return ReviewCreateResponse.from(reviewRepository.save(review));
 	}
 }
