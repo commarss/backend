@@ -133,7 +133,7 @@ public class TodayRandomService {
 
 		// 리뷰 정보 DTO 변환
 		List<ReviewAnalysisDTO> reviewDTOList = reviews.stream()
-			.map(review -> new ReviewAnalysisDTO(review.getName(), review.getBody(), review.getRate()))
+			.map(review -> new ReviewAnalysisDTO(review.getTitle(), review.getBody(), review.getRate()))
 			.collect(Collectors.toList());
 
 		return new RestaurantReviewAnalysisDTO(
@@ -172,7 +172,7 @@ public class TodayRandomService {
 				// DTO 반환 (순위는 나중에 설정)
 				// 리뷰 정보 DTO 변환
 				List<ReviewAnalysisDTO> reviewDTOList = reviews.stream()
-					.map(review -> new ReviewAnalysisDTO(review.getName(), review.getBody(), review.getRate()))
+					.map(review -> new ReviewAnalysisDTO(review.getTitle(), review.getBody(), review.getRate()))
 					.collect(Collectors.toList());
 
 				return new RestaurantReviewAnalysisDTO(
