@@ -1,10 +1,9 @@
 package com.ll.commars.domain.restaurant.restaurant.controller;
 
-import java.util.List;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,8 +18,10 @@ import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantCreateRequest;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantCreateResponse;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantFindListResponse;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantFindResponse;
+import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantNearByRequest;
+import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantSearchRequest;
+import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantSearchResponse;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantUpdateRequest;
-import com.ll.commars.domain.restaurant.restaurant.entity.RestaurantDoc;
 import com.ll.commars.domain.restaurant.restaurant.service.RestaurantCommandService;
 import com.ll.commars.domain.restaurant.restaurant.service.RestaurantDocService;
 import com.ll.commars.domain.restaurant.restaurant.service.RestaurantQueryService;
@@ -108,46 +109,27 @@ public class RestaurantController {
 	}
 
 	@GetMapping("/search")
-	public ResponseEntity<List<RestaurantDoc>> search(
-		@RequestParam("keyword") String keyword,
-		@RequestParam("lat") String lat,
-		@RequestParam("lon") String lon,
-		@RequestParam(value = "distance", defaultValue = "50") String distance
+	public ResponseEntity<RestaurantSearchResponse> searchRestaurants(
+		@Valid @ModelAttribute RestaurantSearchRequest request
 	) {
-		try {
-			if (keyword == null || keyword.trim().isEmpty()) {
-				return ResponseEntity.badRequest().build();
-			}
+		RestaurantSearchResponse response = restaurantDocService.searchRestaurants(request);
 
-			double latitude = Double.parseDouble(lat);
-			double longitude = Double.parseDouble(lon);
-
-			List<RestaurantDoc> results = restaurantDocService.searchByKeyword(
-				keyword.trim(),
-				latitude,
-				longitude,
-				distance + "km"
-			);
-			System.out.println("results = " + results);
-			return ResponseEntity.ok(results);
-		} catch (NumberFormatException e) {
-			return ResponseEntity.badRequest().build();
-		} catch (Exception e) {
-			return ResponseEntity.ok(List.of()); // 빈 결과 반환
-		}
+		return ResponseEntity.ok(response);
 	}
 
 	@GetMapping("/sort/rate")
-	public List<RestaurantDoc> showSortByRate() {
-		return restaurantDocService.showSortByRate();
+	public ResponseEntity<RestaurantSearchResponse> sortByRate() {
+		RestaurantSearchResponse response = restaurantDocService.sortByRate();
+
+		return ResponseEntity.ok().body(response);
 	}
 
 	@GetMapping("/nearby")
-	public List<RestaurantDoc> findNearbyRestaurants(
-		@RequestParam(value = "lat", defaultValue = "37.5665") Double lat,
-		@RequestParam(value = "lng", defaultValue = "126.9780") Double lng,
-		@RequestParam(value = "distance", defaultValue = "2.0") Double distance
+	public ResponseEntity<RestaurantSearchResponse> getNearbyRestaurants(
+		@Valid @ModelAttribute RestaurantNearByRequest request
 	) {
-		return restaurantDocService.findNearbyRestaurants(lat, lng, distance);
+		RestaurantSearchResponse response = restaurantDocService.getNearbyRestaurants(request);
+
+		return ResponseEntity.ok().body(response);
 	}
 }

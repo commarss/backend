@@ -4,8 +4,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
-import org.springframework.data.elasticsearch.annotations.Mapping;
-import org.springframework.data.elasticsearch.annotations.Setting;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -15,8 +13,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Document(indexName = "es_reviews", createIndex = true)
-@Setting(settingPath = "elasticsearch/settings.json")
-@Mapping(mappingPath = "elasticsearch/mappings.json")
 @Getter
 @Setter
 @Builder

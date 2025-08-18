@@ -34,43 +34,43 @@ public class Restaurant extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(nullable = false)
+	@Column(name = "name", nullable = false)
 	private String name;
 
-	@Column(nullable = false)
+	@Column(name = "details", nullable = false)
 	private String details;
 
 	// todo: 리뷰 리팩터링 시 계산 추후 구현
-	@Column(nullable = false)
+	@Column(name = "average_rate", nullable = false)
 	@ColumnDefault("0.0")
 	private double averageRate = 0.0;
 
-	@Column
+	@Column(name = "image_url")
 	private String imageUrl;
 
-	@Column
+	@Column(name = "contact")
 	private String contact;
 
-	@Column(nullable = false)
+	@Column(name = "address", nullable = false)
 	private String address;
 
-	@Column(nullable = false)
+	@Column(name = "lat", nullable = false)
 	@ColumnDefault("37.0")
 	private double lat = 37.0;
 
-	@Column(nullable = false)
+	@Column(name = "lon", nullable = false)
 	@ColumnDefault("128.0")
 	private double lon = 128.0;
 
-	@Column(nullable = false)
+	@Column(name = "running_state", nullable = false)
 	@ColumnDefault("true")
 	private boolean runningState = true;
 
 	// todo: 추후 구현
-	@Column
+	@Column(name = "summarized_review")
 	private String summarizedReview;
 
-	@Column
+	@Column(name = "restaurant_category")
 	@Enumerated(EnumType.STRING)
 	private RestaurantCategory restaurantCategory;
 
