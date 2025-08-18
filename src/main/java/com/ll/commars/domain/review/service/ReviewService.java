@@ -67,4 +67,16 @@ public class ReviewService {
 			throw new CustomException(REIVIEW_NOT_UNAUTHORIZED);
 		}
 	}
+
+	@Transactional
+	public void deleteReview(Long reviewId) {
+		Review review = reviewRepository.findById(reviewId)
+			.orElseThrow(() -> new CustomException(REVIEW_NOT_FOUND));
+
+		Restaurant restaurant = review.getRestaurant();
+		int oldRate = review.getRate();
+
+		reviewRepository.delete(review);
+		restaurant.removeReviewAndUpdateAverageRate(oldRate);
+	}
 }

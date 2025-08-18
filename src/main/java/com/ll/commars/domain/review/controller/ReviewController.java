@@ -17,11 +17,10 @@ import com.ll.commars.domain.review.dto.ReviewCreateRequest;
 import com.ll.commars.domain.review.dto.ReviewCreateResponse;
 import com.ll.commars.domain.review.dto.ReviewUpdateRequest;
 import com.ll.commars.domain.review.entity.ReviewDoc;
-import com.ll.commars.domain.review.service.ReviewService;
 import com.ll.commars.domain.review.service.ReviewDocService;
+import com.ll.commars.domain.review.service.ReviewService;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -51,14 +50,13 @@ public class ReviewController {
 		return ResponseEntity.ok().build();
 	}
 
-	@DeleteMapping("/{review_id}")
-	public ResponseEntity<String> deleteReview(
-		@PathVariable("review_id") @NotNull Long reviewId
+	@DeleteMapping("/{review-id}")
+	public ResponseEntity<Void> deleteReview(
+		@PathVariable("review-id") Long reviewId
 	) {
 		reviewService.deleteReview(reviewId);
-		return ResponseEntity
-			.status(200)
-			.body("리뷰 삭제 성공");
+
+		return ResponseEntity.ok().build();
 	}
 
 	@GetMapping("/search")
