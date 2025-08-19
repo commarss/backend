@@ -1,5 +1,6 @@
 package com.ll.commars.domain.auth.service;
 
+import static com.ll.commars.domain.member.entity.AuthType.*;
 import static com.ll.commars.global.exception.ErrorCode.*;
 import static org.assertj.core.api.Assertions.*;
 
@@ -73,6 +74,7 @@ class AuthServiceTest {
 			.set("email", USER_EMAIL)
 			.set("name", "테스트유저")
 			.set("password", encodedPassword)
+			.set("authType", EMAIL)
 			.set("reviews", new ArrayList<>())
 			.set("favorites", new ArrayList<>())
 			.set("posts", new ArrayList<>())
