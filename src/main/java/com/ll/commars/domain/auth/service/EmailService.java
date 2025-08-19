@@ -42,8 +42,8 @@ public class EmailService {
 			new UsernamePasswordAuthenticationToken(request.email(), request.password())
 		);
 
-		String email = authentication.getName();
-		Member member = memberRepository.findByEmail(email)
+		Long memberId = Long.parseLong(authentication.getName());
+		Member member = memberRepository.findById(memberId)
 			.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
 
 		AccessToken accessToken = tokenProvider.generateAccessToken(member);

@@ -37,9 +37,9 @@ public class TodayRandomService {
 	}
 
 	// @Transactional(readOnly = true) // Lazy Loading 방지
-	// public List<RestaurantSummaryDTO> getRandomRestaurants(double lat, double lon, Long userId) {
+	// public List<RestaurantSummaryDTO> getRandomRestaurants(double lat, double lon, Long memberId) {
 	// 	// 1. 유저의 찜 목록 가져오기
-	// 	List<Favorite> favorites = favoriteRepository.findByMemberId(userId);
+	// 	List<Favorite> favorites = favoriteRepository.findByMemberId(memberId);
 	// 	Set<Long> favoriteIds = favorites.stream()
 	// 		.map(Favorite::getId)
 	// 		.collect(Collectors.toSet());
@@ -67,8 +67,8 @@ public class TodayRandomService {
 	// }
 
     /*@Transactional(readOnly = true) //랜덤으로 1개 선택
-    public Optional<RestaurantSummaryDTO> getRandomRestaurantDetails(double lat, double lon, Long userId) {
-        List<RestaurantSummaryDTO> randomRestaurants = getRandomRestaurants(lat, lon, userId);
+    public Optional<RestaurantSummaryDTO> getRandomRestaurantDetails(double lat, double lon, Long memberId) {
+        List<RestaurantSummaryDTO> randomRestaurants = getRandomRestaurants(lat, lon, memberId);
 
         if (randomRestaurants.isEmpty()) {
             return Optional.empty();

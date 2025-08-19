@@ -35,7 +35,6 @@ public class AuthMemberIdArgumentResolver implements HandlerMethodArgumentResolv
 			throw new CustomException(MEMBER_NOT_AUTHENTICATED);
 		}
 
-		CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-		return userDetails.getMemberId();
+		return ((CustomUserDetails)authentication.getPrincipal()).getMemberId();
 	}
 }

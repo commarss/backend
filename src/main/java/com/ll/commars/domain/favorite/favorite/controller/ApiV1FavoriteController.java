@@ -106,8 +106,8 @@ public class ApiV1FavoriteController {
 	// @GetMapping
 	// public ResponseEntity<List<FavoriteDto.FavoriteInfo>> getFavorites(
 	// 	@AuthenticationPrincipal UserDetails userDetails) {
-	// 	Long userId = Long.valueOf(userDetails.getUsername()); // 현재 로그인한 사용자 정보 가져오기
-	// 	List<FavoriteDto.FavoriteInfo> favoriteList = favoriteService.getAllFavoritesByUser(userId);
+	// 	Long memberId = Long.valueOf(userDetails.getUsername()); // 현재 로그인한 사용자 정보 가져오기
+	// 	List<FavoriteDto.FavoriteInfo> favoriteList = favoriteService.getAllFavoritesByUser(memberId);
 	// 	return ResponseEntity.ok(favoriteList);
 	// }
 

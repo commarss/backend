@@ -11,6 +11,7 @@ import lombok.Getter;
 public class CustomUserDetails extends User {
 
 	private final Long memberId;
+	private final String email; // todo: email 불필요 시 제거
 
 	public CustomUserDetails(
 		Long memberId,
@@ -18,7 +19,8 @@ public class CustomUserDetails extends User {
 		String password,
 		Collection<? extends GrantedAuthority> authorities
 	) {
-		super(email, password, authorities);
+		super(String.valueOf(memberId), password, authorities);
 		this.memberId = memberId;
+		this.email = email;
 	}
 }

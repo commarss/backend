@@ -31,7 +31,7 @@ public class CommentService {
 			.orElseThrow(() -> new IllegalArgumentException("Invalid postId: " + request.id()));
 
 		Member member = memberRepository.findById(userId)
-			.orElseThrow(() -> new IllegalArgumentException("Invalid userId: " + userId));
+			.orElseThrow(() -> new IllegalArgumentException("Invalid memberId: " + userId));
 
 		Comment comment = new Comment(request.content(), member, post);
 

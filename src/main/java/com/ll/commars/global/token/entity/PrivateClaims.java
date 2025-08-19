@@ -3,7 +3,7 @@ package com.ll.commars.global.token.entity;
 import java.util.List;
 
 public record PrivateClaims(
-	Long userId,
+	Long memberId,
 	List<String> roles
 ) {
 }

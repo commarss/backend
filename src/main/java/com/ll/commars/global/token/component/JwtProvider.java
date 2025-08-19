@@ -44,7 +44,7 @@ public class JwtProvider implements TokenProvider {
 
 	@Override
 	public AccessToken generateAccessToken(Member member) {
-		TokenSubject subject = TokenSubject.of(member.getEmail());
+		TokenSubject subject = TokenSubject.of(String.valueOf(member.getId()));
 
 		String jti = UUID.randomUUID().toString();
 
@@ -60,7 +60,7 @@ public class JwtProvider implements TokenProvider {
 
 	@Override
 	public RefreshToken generateRefreshToken(Member member) {
-		TokenSubject subject = TokenSubject.of(member.getEmail());
+		TokenSubject subject = TokenSubject.of(String.valueOf(member.getId()));
 
 		String jti = UUID.randomUUID().toString();
 

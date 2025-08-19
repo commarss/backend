@@ -60,7 +60,7 @@ public class AuthService {
 	@Transactional
 	public TokenReissueResponse reissueToken(String refreshTokenValueString) {
 		JwtClaims claims = tokenProvider.parseClaim(TokenValue.of(refreshTokenValueString));
-		Long userId = claims.privateClaims().userId();
+		Long userId = claims.privateClaims().memberId();
 
 		String savedRefreshToken = redisTemplate.opsForValue().get("refreshToken" + userId);
 		if (savedRefreshToken == null || !savedRefreshToken.equals(refreshTokenValueString)) {
@@ -88,7 +88,7 @@ public class AuthService {
 	@Transactional
 	public void withdraw(TokenValue accessTokenValue) {
 		JwtClaims claims = tokenProvider.parseClaim(accessTokenValue);
-		Long userId = claims.privateClaims().userId();
+		Long userId = claims.privateClaims().memberId();
 
 		Member member = memberRepository.findById(userId)
 			.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));

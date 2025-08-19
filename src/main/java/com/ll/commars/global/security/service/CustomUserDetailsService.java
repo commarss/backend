@@ -27,8 +27,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 	@Override
 	@Transactional(readOnly = true)
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		// 로그인 시점에서 username은 email
-		Member member = memberRepository.findByEmail(username)
+		long memberId = getMemberId(username);
+
+		Member member = memberRepository.findById(memberId)
 			.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
 
 		return new CustomUserDetails(
@@ -37,5 +38,13 @@ public class CustomUserDetailsService implements UserDetailsService {
 			member.getPassword(),
 			Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
 		);
+	}
+
+	private long getMemberId(String username) {
+		try {
+			return Long.parseLong(username);
+		} catch (NumberFormatException e) {
+			throw new CustomException(INVALID_TOKEN, "인증 정보가 지정된 형식과 일치하지 않습니다.");
+		}
 	}
 }

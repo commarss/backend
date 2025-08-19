@@ -24,8 +24,8 @@ public class ApiV1TodayRandomController {
 	// 	@RequestParam("lat") double lat,
 	// 	@RequestParam("lon") double lon,
 	// 	@AuthenticationPrincipal UserDetails userDetails) {
-	// 	Long userId = Long.valueOf(userDetails.getUsername());
-	// 	return todayRandomService.getRandomRestaurants(lat, lon, userId);
+	// 	Long memberId = Long.valueOf(userDetails.getUsername());
+	// 	return todayRandomService.getRandomRestaurants(lat, lon, memberId);
 	// }
 	//
 	// // 프론트에서 선택한 1개의 식당 상세 정보 가져오기

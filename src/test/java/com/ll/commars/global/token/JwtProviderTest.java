@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-import com.ll.commars.global.token.JwtProperties;
 import com.ll.commars.global.token.component.JwtProvider;
 import com.ll.commars.global.token.entity.AccessToken;
 import com.ll.commars.global.token.entity.JwtClaims;
@@ -76,7 +75,7 @@ class JwtProviderTest {
 				() -> assertThat(accessToken).isNotNull(),
 				() -> assertThat(accessToken.subject()).isEqualTo(TokenSubject.of(member.getEmail())),
 				() -> assertThat(accessToken.expiration()).isEqualTo(MOCK_ACCESS_TOKEN_EXPIRATION_MS),
-				() -> assertThat(claims.privateClaims().userId()).isEqualTo(member.getId())
+				() -> assertThat(claims.privateClaims().memberId()).isEqualTo(member.getId())
 			);
 		}
 
@@ -93,7 +92,7 @@ class JwtProviderTest {
 			assertAll(
 				() -> assertThat(refreshToken.subject().value()).isEqualTo(member.getEmail()),
 				() -> assertThat(refreshToken.expiration()).isEqualTo(MOCK_REFRESH_TOKEN_EXPIRATION_MS),
-				() -> assertThat(claims.privateClaims().userId()).isEqualTo(member.getId()),
+				() -> assertThat(claims.privateClaims().memberId()).isEqualTo(member.getId()),
 				() -> assertThat(claims.privateClaims().roles()).isNullOrEmpty()
 			);
 		}
