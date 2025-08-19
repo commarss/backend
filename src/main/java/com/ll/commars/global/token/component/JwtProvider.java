@@ -49,13 +49,13 @@ public class JwtProvider implements TokenProvider {
 		String jti = UUID.randomUUID().toString();
 
 		Instant now = Instant.now();
-		long expirationMillis = jwtProperties.accessTokenExpiration();
-		Instant expiresAt = now.plus(expirationMillis, ChronoUnit.MILLIS);
+		long expirationSeconds = jwtProperties.accessTokenExpiration();
+		Instant expiresAt = now.plus(expirationSeconds, ChronoUnit.SECONDS);
 
 		JwtClaims jwtClaims = JwtClaims.ofAccessToken(member, now, expiresAt, jti);
 		TokenValue tokenValue = generateTokenValue(jwtClaims);
 
-		return new AccessToken(subject, tokenValue, expirationMillis);
+		return new AccessToken(subject, tokenValue, expirationSeconds * 1000);
 	}
 
 	@Override
@@ -65,13 +65,13 @@ public class JwtProvider implements TokenProvider {
 		String jti = UUID.randomUUID().toString();
 
 		Instant now = Instant.now();
-		long expirationMillis = jwtProperties.refreshTokenExpiration();
-		Instant expiresAt = now.plus(expirationMillis, ChronoUnit.MILLIS);
+		long expirationSeconds = jwtProperties.refreshTokenExpiration();
+		Instant expiresAt = now.plus(expirationSeconds, ChronoUnit.SECONDS);
 
 		JwtClaims jwtClaims = JwtClaims.ofRefreshToken(member, now, expiresAt, jti);
 		TokenValue tokenValue = generateTokenValue(jwtClaims);
 
-		return new RefreshToken(subject, tokenValue, expirationMillis);
+		return new RefreshToken(subject, tokenValue, expirationSeconds * 1000);
 	}
 
 	@Override
