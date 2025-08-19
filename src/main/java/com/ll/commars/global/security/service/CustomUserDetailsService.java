@@ -3,7 +3,6 @@ package com.ll.commars.global.security.service;
 import static com.ll.commars.global.exception.ErrorCode.*;
 
 import java.util.Collections;
-import java.util.List;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,21 +26,16 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-		Member member = memberRepository.findByEmail(email)
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		// 로그인 시점에서 username은 email
+		Member member = memberRepository.findByEmail(username)
 			.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
-
-		return createCustomUserDetails(member);
-	}
-
-	private CustomUserDetails createCustomUserDetails(Member member) {
-		List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
 
 		return new CustomUserDetails(
 			member.getId(),
 			member.getEmail(),
 			member.getPassword(),
-			authorities
+			Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
 		);
 	}
 }
