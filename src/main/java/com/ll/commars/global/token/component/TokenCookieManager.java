@@ -1,7 +1,5 @@
 package com.ll.commars.global.token.component;
 
-import java.time.Duration;
-
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +21,7 @@ public class TokenCookieManager {
 			.secure(true)
 			.sameSite("Strict")
 			.path("/")
-			.maxAge(Duration.ofMillis(jwtProperties.refreshTokenExpiration()).getSeconds())
+			.maxAge(jwtProperties.refreshTokenExpiration())
 			.build();
 	}
 
