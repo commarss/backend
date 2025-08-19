@@ -1,6 +1,7 @@
 package com.ll.commars.global.security.service;
 
 import java.util.Collections;
+import java.util.Optional;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,10 +39,12 @@ public class CustomUserDetailsService implements UserDetailsService {
 				.orElseThrow(() -> new UsernameNotFoundException("이메일 " + username + "에 해당하는 사용자를 찾을 수 없습니다."));
 		}
 
+		String password = Optional.ofNullable(member.getPassword()).orElse("");
+
 		return new CustomUserDetails(
 			member.getId(),
 			member.getEmail(),
-			member.getPassword(),
+			password,
 			Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
 		);
 	}
