@@ -42,8 +42,8 @@ class JwtProviderTest {
 		.build();
 
 	private static final String MOCK_SECRET_KEY = "secretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecret";
-	private static final long MOCK_ACCESS_TOKEN_EXPIRATION_MS = Duration.ofHours(1).toMillis(); // 3600000L
-	private static final long MOCK_REFRESH_TOKEN_EXPIRATION_MS = Duration.ofDays(7).toMillis(); // 604800000L
+	private static final long MOCK_ACCESS_TOKEN_EXPIRATION = Duration.ofHours(1).getSeconds();
+	private static final long MOCK_REFRESH_TOKEN_EXPIRATION = Duration.ofDays(7).getSeconds();
 
 	private Member member;
 
@@ -64,7 +64,7 @@ class JwtProviderTest {
 		@Test
 		void AccessToken을_성공적으로_생성하고_파싱한다() {
 			// given
-			when(jwtProperties.accessTokenExpiration()).thenReturn(MOCK_ACCESS_TOKEN_EXPIRATION_MS);
+			when(jwtProperties.accessTokenExpiration()).thenReturn(MOCK_ACCESS_TOKEN_EXPIRATION);
 
 			// when
 			AccessToken accessToken = jwtProvider.generateAccessToken(member);
@@ -73,8 +73,8 @@ class JwtProviderTest {
 			// then
 			assertAll(
 				() -> assertThat(accessToken).isNotNull(),
-				() -> assertThat(accessToken.subject()).isEqualTo(TokenSubject.of(member.getEmail())),
-				() -> assertThat(accessToken.expiration()).isEqualTo(MOCK_ACCESS_TOKEN_EXPIRATION_MS),
+				() -> assertThat(accessToken.subject()).isEqualTo(TokenSubject.of(String.valueOf(member.getId()))),
+				() -> assertThat(accessToken.expiration()).isEqualTo(MOCK_ACCESS_TOKEN_EXPIRATION * 1000),
 				() -> assertThat(claims.privateClaims().memberId()).isEqualTo(member.getId())
 			);
 		}
@@ -82,7 +82,7 @@ class JwtProviderTest {
 		@Test
 		void RefreshToken을_성공적으로_생성하고_파싱한다() {
 			// given
-			when(jwtProperties.refreshTokenExpiration()).thenReturn(MOCK_REFRESH_TOKEN_EXPIRATION_MS);
+			when(jwtProperties.refreshTokenExpiration()).thenReturn(MOCK_REFRESH_TOKEN_EXPIRATION);
 
 			// when
 			RefreshToken refreshToken = jwtProvider.generateRefreshToken(member);
@@ -90,8 +90,8 @@ class JwtProviderTest {
 
 			// then
 			assertAll(
-				() -> assertThat(refreshToken.subject().value()).isEqualTo(member.getEmail()),
-				() -> assertThat(refreshToken.expiration()).isEqualTo(MOCK_REFRESH_TOKEN_EXPIRATION_MS),
+				() -> assertThat(refreshToken.subject().value()).isEqualTo(String.valueOf(member.getId())),
+				() -> assertThat(refreshToken.expiration()).isEqualTo(MOCK_REFRESH_TOKEN_EXPIRATION * 1000),
 				() -> assertThat(claims.privateClaims().memberId()).isEqualTo(member.getId()),
 				() -> assertThat(claims.privateClaims().roles()).isNullOrEmpty()
 			);
@@ -130,7 +130,7 @@ class JwtProviderTest {
 				"this-is-an-entirely-different-and-invalid-secret-key-12345-12345-12345-12345-12345");
 			JwtProvider invalidJwtProvider = new JwtProvider(invalidProperties);
 
-			when(jwtProperties.accessTokenExpiration()).thenReturn(MOCK_ACCESS_TOKEN_EXPIRATION_MS);
+			when(jwtProperties.accessTokenExpiration()).thenReturn(MOCK_ACCESS_TOKEN_EXPIRATION);
 			AccessToken token = jwtProvider.generateAccessToken(member);
 
 			// when & then

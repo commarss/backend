@@ -15,9 +15,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.http.ResponseCookie;
 
-import com.ll.commars.global.token.JwtProperties;
-import com.ll.commars.global.token.component.TokenCookieManager;
 import com.ll.commars.global.annotation.UnitTest;
+import com.ll.commars.global.token.component.TokenCookieManager;
 
 import com.navercorp.fixturemonkey.FixtureMonkey;
 import com.navercorp.fixturemonkey.api.introspector.FieldReflectionArbitraryIntrospector;
@@ -35,7 +34,7 @@ class TokenCookieManagerTest {
 		.objectIntrospector(FieldReflectionArbitraryIntrospector.INSTANCE)
 		.build();
 
-	private static final long MOCK_REFRESH_TOKEN_EXPIRATION_MS = Duration.ofDays(7).toMillis();
+	private static final long MOCK_REFRESH_TOKEN_EXPIRATION = Duration.ofDays(7).getSeconds();
 
 	@BeforeEach
 	void setUp() {
@@ -48,7 +47,7 @@ class TokenCookieManagerTest {
 		@Test
 		void RefreshToken_쿠키를_생성한다() {
 			// given
-			when(jwtProperties.refreshTokenExpiration()).thenReturn(MOCK_REFRESH_TOKEN_EXPIRATION_MS);
+			when(jwtProperties.refreshTokenExpiration()).thenReturn(MOCK_REFRESH_TOKEN_EXPIRATION);
 
 			// 토큰에 사용될 수 있는 문자열은 US-ASCII 문자로 제한된다.
 			String randomString = fixtureMonkey.giveMeOne(String.class);
