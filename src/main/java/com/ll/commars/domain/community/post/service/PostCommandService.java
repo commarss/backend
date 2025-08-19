@@ -33,7 +33,8 @@ public class PostCommandService {
 
 		Post post = new Post(request.title(), request.content(), request.imageUrl(), member);
 
-		List<PostHashTag> postHashTags = request.hashTags().stream()
+		List<PostHashTag> postHashTags = java.util.stream.Stream.ofNullable(request.hashTags())
+			.flatMap(java.util.Collection::stream)
 			.map(PostHashTag::new)
 			.toList();
 
