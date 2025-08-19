@@ -148,7 +148,7 @@ public class Restaurant extends BaseEntity {
 
 	private void updateAverageRate() {
 		if (this.reviewCount > 0) {
-			this.averageRate = Math.round(((double) this.totalRateSum / this.reviewCount) * 10) / 10.0;
+			this.averageRate = Math.round(((double)this.totalRateSum / this.reviewCount) * 10) / 10.0;
 		} else {
 			this.averageRate = 0.0;
 		}

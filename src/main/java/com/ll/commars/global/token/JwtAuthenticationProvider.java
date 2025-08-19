@@ -27,7 +27,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-		String accessToken = (String) authentication.getPrincipal();
+		String accessToken = (String)authentication.getPrincipal();
 
 		Object isBlacklisted = redisTemplate.opsForValue().get(accessToken);
 		if (!ObjectUtils.isEmpty(isBlacklisted)) {

@@ -32,7 +32,8 @@ public class AuthMemberIdArgumentResolver implements HandlerMethodArgumentResolv
 
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-		if (authentication == null || !authentication.isAuthenticated() || !(authentication.getPrincipal() instanceof CustomUserDetails)) {
+		if (authentication == null || !authentication.isAuthenticated()
+			|| !(authentication.getPrincipal() instanceof CustomUserDetails)) {
 			throw new CustomException(MEMBER_NOT_AUTHENTICATED);
 		}
 

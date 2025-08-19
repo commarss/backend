@@ -8,5 +8,6 @@ import com.ll.commars.domain.restaurant.restaurant.entity.RestaurantCategory;
 public interface RestaurantRepositoryCustom {
 
 	List<RestaurantSummaryResponse> findAllSummary();
+
 	List<RestaurantSummaryResponse> findByCategorySummary(RestaurantCategory category);
 }
