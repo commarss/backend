@@ -42,6 +42,7 @@ public class EmailService {
 			new UsernamePasswordAuthenticationToken(request.email(), request.password())
 		);
 
+		// todo: 불필요한 DB 조회 대신 UserDetails를 사용하도록
 		Long memberId = Long.parseLong(authentication.getName());
 		Member member = memberRepository.findById(memberId)
 			.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));

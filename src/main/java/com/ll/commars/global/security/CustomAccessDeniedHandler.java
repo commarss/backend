@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+// 관심사: 인가가 실패하면 관련 응답을 작성한다.
 @Component
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 

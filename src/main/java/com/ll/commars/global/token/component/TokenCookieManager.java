@@ -7,6 +7,7 @@ import com.ll.commars.global.token.JwtProperties;
 
 import lombok.RequiredArgsConstructor;
 
+// 관심사: RefreshToken을 담을 쿠키 생성에 관련한 모든 로직을 담당
 @Component
 @RequiredArgsConstructor
 public class TokenCookieManager {

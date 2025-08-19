@@ -17,7 +17,7 @@ import com.ll.commars.global.security.CustomUserDetails;
 
 import lombok.RequiredArgsConstructor;
 
-// username을 기반으로 사용자 정보를 조회
+// 관심사: username을 기반으로 사용자 정보를 조회
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {

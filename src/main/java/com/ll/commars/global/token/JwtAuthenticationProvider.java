@@ -16,7 +16,7 @@ import com.ll.commars.global.token.entity.TokenValue;
 
 import lombok.RequiredArgsConstructor;
 
-// JwtAuthenticationToken의 인증을 처리
+// 관심사: JwtAuthenticationToken의 인증을 처리
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationProvider implements AuthenticationProvider {

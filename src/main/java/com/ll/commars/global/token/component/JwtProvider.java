@@ -22,6 +22,7 @@ import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
+// 관심사: JWT 생성 및 파싱에 대한 모든 로직 담당
 @Component
 public class JwtProvider implements TokenProvider {
 

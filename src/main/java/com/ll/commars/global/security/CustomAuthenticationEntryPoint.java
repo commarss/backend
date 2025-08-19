@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+// 관심사: 인증되지 않은 사용자가 인가가 필요한 리소스에 접근 시 관련 응답을 작성한다
 @Component
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
 

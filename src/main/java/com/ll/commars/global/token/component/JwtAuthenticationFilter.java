@@ -19,7 +19,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
-// 토큰을 추출하고 AuthenticationManager에게 인증을 위임
+// 관심사: 토큰을 추출하고 AuthenticationManager에게 인증을 위임
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {

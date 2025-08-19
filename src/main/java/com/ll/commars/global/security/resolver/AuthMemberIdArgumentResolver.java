@@ -15,6 +15,7 @@ import com.ll.commars.global.exception.CustomException;
 import com.ll.commars.global.security.CustomUserDetails;
 import com.ll.commars.global.security.annotation.AuthMemberId;
 
+// 관심사: @AuthMemberId가 붙은 Long 또는 long 타입의 파라미터에 인증된 사용자의 memberId를 주입
 @Component
 public class AuthMemberIdArgumentResolver implements HandlerMethodArgumentResolver {
 
