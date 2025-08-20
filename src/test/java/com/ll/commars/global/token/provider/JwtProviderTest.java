@@ -37,7 +37,7 @@ class JwtProviderTest {
 	@Mock
 	private JwtProperties jwtProperties;
 
-	private final FixtureMonkey fixtureMonkey = FixtureMonkey.builder()
+	private static final FixtureMonkey fixtureMonkey = FixtureMonkey.builder()
 		.objectIntrospector(FieldReflectionArbitraryIntrospector.INSTANCE)
 		.build();
 
@@ -52,10 +52,7 @@ class JwtProviderTest {
 		when(jwtProperties.key()).thenReturn(SECRET_KEY);
 		jwtProvider = new JwtProvider(jwtProperties);
 
-		member = fixtureMonkey.giveMeBuilder(Member.class)
-			.set("id", 1L)
-			.set("email", "test@example.com")
-			.sample();
+		member = createMember();
 	}
 
 	@Nested
@@ -137,5 +134,12 @@ class JwtProviderTest {
 			assertThatThrownBy(() -> invalidJwtProvider.parseClaim(token.token()))
 				.isInstanceOf(SignatureException.class);
 		}
+	}
+
+	private Member createMember() {
+		return fixtureMonkey.giveMeBuilder(Member.class)
+			.set("id", 1L)
+			.set("email", "test@example.com")
+			.sample();
 	}
 }

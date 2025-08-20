@@ -2,6 +2,7 @@ package com.ll.commars.domain.restaurant.restaurant.fixture;
 
 import java.util.UUID;
 
+import org.springframework.boot.test.context.TestComponent;
 import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 
 import com.ll.commars.domain.restaurant.restaurant.entity.RestaurantCategory;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 import com.navercorp.fixturemonkey.FixtureMonkey;
 
+@TestComponent
 @RequiredArgsConstructor
 public class RestaurantDocFixture {
 

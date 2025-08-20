@@ -22,7 +22,6 @@ import com.ll.commars.domain.restaurant.restaurant.repository.elasticsearch.Rest
 import com.ll.commars.global.annotation.IntegrationTest;
 
 import com.navercorp.fixturemonkey.FixtureMonkey;
-import com.navercorp.fixturemonkey.api.introspector.FieldReflectionArbitraryIntrospector;
 
 @IntegrationTest
 @DisplayName("RestaurantDocService 테스트")
@@ -44,11 +43,11 @@ public class RestaurantDocServiceTest {
 	@Autowired
 	private RestaurantDocRepository restaurantDocRepository;
 
+	@Autowired
 	private RestaurantDocFixture restaurantDocFixture;
 
-	private static final FixtureMonkey fixtureMonkey = FixtureMonkey.builder()
-		.objectIntrospector(FieldReflectionArbitraryIntrospector.INSTANCE)
-		.build();
+	@Autowired
+	private FixtureMonkey fixtureMonkey;
 
 	@BeforeEach
 	void setUp() {

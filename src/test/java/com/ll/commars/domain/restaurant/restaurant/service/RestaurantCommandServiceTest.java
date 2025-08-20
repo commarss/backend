@@ -21,7 +21,6 @@ import com.ll.commars.global.annotation.IntegrationTest;
 import com.ll.commars.global.exception.CustomException;
 
 import com.navercorp.fixturemonkey.FixtureMonkey;
-import com.navercorp.fixturemonkey.api.introspector.FieldReflectionArbitraryIntrospector;
 
 @IntegrationTest
 @DisplayName("RestaurantCommandService 테스트")
@@ -33,7 +32,11 @@ public class RestaurantCommandServiceTest {
 	@Autowired
 	private RestaurantRepository restaurantRepository;
 
+	@Autowired
 	private RestaurantFixture restaurantFixture;
+
+	@Autowired
+	private FixtureMonkey fixtureMonkey;
 
 	private Restaurant koreanRestaurant;
 
@@ -41,10 +44,6 @@ public class RestaurantCommandServiceTest {
 	private Restaurant restaurant;
 
 	private static final long INVALID_RESTAURANT_ID = 99999L;
-
-	private final FixtureMonkey fixtureMonkey = FixtureMonkey.builder()
-		.objectIntrospector(FieldReflectionArbitraryIntrospector.INSTANCE)
-		.build();
 
 	@BeforeEach
 	void setUp() {

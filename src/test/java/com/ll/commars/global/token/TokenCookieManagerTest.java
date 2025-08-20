@@ -4,42 +4,30 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import java.nio.charset.StandardCharsets;
 import java.time.Duration;
-import java.util.Base64;
+import java.util.UUID;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.ResponseCookie;
 
 import com.ll.commars.global.annotation.UnitTest;
 import com.ll.commars.global.token.component.TokenCookieManager;
 
-import com.navercorp.fixturemonkey.FixtureMonkey;
-import com.navercorp.fixturemonkey.api.introspector.FieldReflectionArbitraryIntrospector;
-
 @UnitTest
 @DisplayName("TokenCookieManager 테스트")
 class TokenCookieManagerTest {
 
+	@InjectMocks
 	private TokenCookieManager tokenCookieManager;
 
 	@Mock
 	private JwtProperties jwtProperties;
 
-	private final FixtureMonkey fixtureMonkey = FixtureMonkey.builder()
-		.objectIntrospector(FieldReflectionArbitraryIntrospector.INSTANCE)
-		.build();
-
 	private static final long REFRESH_TOKEN_EXPIRATION = Duration.ofDays(7).getSeconds();
-
-	@BeforeEach
-	void setUp() {
-		tokenCookieManager = new TokenCookieManager(jwtProperties);
-	}
 
 	@Nested
 	class RefreshToken_쿠키_생성_테스트 {
@@ -49,11 +37,7 @@ class TokenCookieManagerTest {
 			// given
 			when(jwtProperties.refreshTokenExpiration()).thenReturn(REFRESH_TOKEN_EXPIRATION);
 
-			// 토큰에 사용될 수 있는 문자열은 US-ASCII 문자로 제한된다.
-			String randomString = fixtureMonkey.giveMeOne(String.class);
-			String refreshToken = Base64.getUrlEncoder()
-				.withoutPadding()
-				.encodeToString(randomString.getBytes(StandardCharsets.UTF_8));
+			String refreshToken = UUID.randomUUID().toString();
 
 			long expectedMaxAgeInSeconds = Duration.ofDays(7).getSeconds();
 

@@ -2,6 +2,8 @@ package com.ll.commars.domain.restaurant.restaurant.fixture;
 
 import static com.ll.commars.domain.restaurant.restaurant.entity.RestaurantCategory.*;
 
+import org.springframework.boot.test.context.TestComponent;
+
 import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
 import com.ll.commars.domain.restaurant.restaurant.repository.jpa.RestaurantRepository;
 
@@ -9,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 
 import com.navercorp.fixturemonkey.FixtureMonkey;
 
+@TestComponent
 @RequiredArgsConstructor
 public class RestaurantFixture {
 

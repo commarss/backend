@@ -35,7 +35,6 @@ import com.ll.commars.global.token.provider.TokenProvider;
 import io.jsonwebtoken.JwtException;
 
 import com.navercorp.fixturemonkey.FixtureMonkey;
-import com.navercorp.fixturemonkey.api.introspector.FieldReflectionArbitraryIntrospector;
 
 @IntegrationTest
 @DisplayName("AuthService 테스트")
@@ -56,16 +55,16 @@ class AuthServiceTest {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
+	@Autowired
 	private MemberFixture memberFixture;
+
+	@Autowired
+	private FixtureMonkey fixtureMonkey;
 
 	private Member member;
 
 	private static final String USER_EMAIL = "test@example.com";
 	private static final String RAW_PASSWORD = "password123!";
-
-	private final FixtureMonkey fixtureMonkey = FixtureMonkey.builder()
-		.objectIntrospector(FieldReflectionArbitraryIntrospector.INSTANCE)
-		.build();
 
 	@BeforeEach
 	void setUp() {

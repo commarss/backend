@@ -4,6 +4,8 @@ import static com.ll.commars.domain.member.entity.AuthType.*;
 
 import java.util.ArrayList;
 
+import org.springframework.boot.test.context.TestComponent;
+
 import com.ll.commars.domain.member.entity.AuthType;
 import com.ll.commars.domain.member.entity.Member;
 import com.ll.commars.domain.member.repository.jpa.MemberRepository;
@@ -12,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 
 import com.navercorp.fixturemonkey.FixtureMonkey;
 
+@TestComponent
 @RequiredArgsConstructor
 public class MemberFixture {
 
