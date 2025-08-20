@@ -1,11 +1,9 @@
 package com.ll.commars.domain.auth.service;
 
-import static com.ll.commars.domain.member.entity.AuthType.*;
 import static com.ll.commars.global.exception.ErrorCode.*;
 import static org.assertj.core.api.Assertions.*;
 
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -24,13 +22,14 @@ import com.ll.commars.domain.auth.dto.SignUpRequest;
 import com.ll.commars.domain.auth.dto.SignUpResponse;
 import com.ll.commars.domain.auth.dto.TokenReissueResponse;
 import com.ll.commars.domain.member.entity.Member;
+import com.ll.commars.domain.member.fixture.MemberFixture;
 import com.ll.commars.domain.member.repository.jpa.MemberRepository;
 import com.ll.commars.global.annotation.IntegrationTest;
 import com.ll.commars.global.exception.CustomException;
-import com.ll.commars.global.token.provider.TokenProvider;
 import com.ll.commars.global.token.entity.AccessToken;
 import com.ll.commars.global.token.entity.RefreshToken;
 import com.ll.commars.global.token.entity.TokenValue;
+import com.ll.commars.global.token.provider.TokenProvider;
 
 import io.jsonwebtoken.JwtException;
 
@@ -56,6 +55,8 @@ class AuthServiceTest {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
+	private MemberFixture memberFixture;
+
 	private Member member;
 
 	private static final String USER_EMAIL = "test@example.com";
@@ -67,20 +68,10 @@ class AuthServiceTest {
 
 	@BeforeEach
 	void setUp() {
-		String encodedPassword = passwordEncoder.encode(RAW_PASSWORD);
+		memberFixture = new MemberFixture(fixtureMonkey, memberRepository);
 
-		Member newMember = fixtureMonkey.giveMeBuilder(Member.class)
-			.set("id", null)
-			.set("email", USER_EMAIL)
-			.set("name", "테스트유저")
-			.set("password", encodedPassword)
-			.set("authType", EMAIL)
-			.set("reviews", new ArrayList<>())
-			.set("favorites", new ArrayList<>())
-			.set("posts", new ArrayList<>())
-			.set("comments", new ArrayList<>())
-			.sample();
-		member = memberRepository.save(newMember);
+		String encodedPassword = passwordEncoder.encode(RAW_PASSWORD);
+		member = memberFixture.이메일_사용자(USER_EMAIL, encodedPassword);
 	}
 
 	@Nested
