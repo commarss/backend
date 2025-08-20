@@ -15,12 +15,12 @@ import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantCreateResponse;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantUpdateRequest;
 import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
 import com.ll.commars.domain.restaurant.restaurant.entity.RestaurantCategory;
+import com.ll.commars.domain.restaurant.restaurant.fixture.RestaurantFixture;
 import com.ll.commars.domain.restaurant.restaurant.repository.jpa.RestaurantRepository;
 import com.ll.commars.global.annotation.IntegrationTest;
 import com.ll.commars.global.exception.CustomException;
 
 import com.navercorp.fixturemonkey.FixtureMonkey;
-import com.navercorp.fixturemonkey.api.introspector.ConstructorPropertiesArbitraryIntrospector;
 import com.navercorp.fixturemonkey.api.introspector.FieldReflectionArbitraryIntrospector;
 
 @IntegrationTest
@@ -33,42 +33,26 @@ public class RestaurantCommandServiceTest {
 	@Autowired
 	private RestaurantRepository restaurantRepository;
 
-	private Restaurant 한식_식당;
+	private RestaurantFixture restaurantFixture;
 
-	private Restaurant 중식_식당;
+	private Restaurant koreanRestaurant;
 
-	private static final String TEST_KOREAN_RESTAURANT_NAME = "테스트 한식당";
-	private static final String TEST_CHINESE_RESTAURANT_NAME = "테스트 중식당";
-	private static final String DEFAULT_TEST_ADDRESS = "서울시 강남구";
+	private Restaurant chineseRestaurant;
+	private Restaurant restaurant;
+
 	private static final long INVALID_RESTAURANT_ID = 99999L;
 
-	private final FixtureMonkey entityFixtureMonkey = FixtureMonkey.builder()
+	private final FixtureMonkey fixtureMonkey = FixtureMonkey.builder()
 		.objectIntrospector(FieldReflectionArbitraryIntrospector.INSTANCE)
-		.build();
-
-	private final FixtureMonkey dtoFixtureMonkey = FixtureMonkey.builder()
-		.objectIntrospector(ConstructorPropertiesArbitraryIntrospector.INSTANCE)
 		.build();
 
 	@BeforeEach
 	void setUp() {
-		한식_식당 = createTestRestaurant(RestaurantCategory.한식, TEST_KOREAN_RESTAURANT_NAME);
-		중식_식당 = createTestRestaurant(RestaurantCategory.중식, TEST_CHINESE_RESTAURANT_NAME);
-	}
+		restaurantFixture = new RestaurantFixture(fixtureMonkey, restaurantRepository);
 
-	private Restaurant createTestRestaurant(RestaurantCategory category, String name) {
-		Restaurant restaurant = entityFixtureMonkey.giveMeBuilder(Restaurant.class)
-			.set("id", null)
-			.set("restaurantCategory", category)
-			.set("name", name)
-			.set("details", name + " 설명")
-			.set("address", DEFAULT_TEST_ADDRESS)
-			.setNull("reviews")
-			.setNull("menus")
-			.setNull("favoriteRestaurants")
-			.setNull("businessHours")
-			.sample();
-		return restaurantRepository.save(restaurant);
+		koreanRestaurant = restaurantFixture.한식_식당();
+		chineseRestaurant = restaurantFixture.중식_식당();
+		restaurant = restaurantFixture.양식_식당();
 	}
 
 	@Nested
@@ -77,14 +61,14 @@ public class RestaurantCommandServiceTest {
 		@Test
 		void 성공적으로_레스토랑을_생성한다() {
 			// given
-			RestaurantCreateRequest request = dtoFixtureMonkey.giveMeBuilder(RestaurantCreateRequest.class)
-				.set("name", TEST_KOREAN_RESTAURANT_NAME)
-				.set("details", "맛있는 한식당입니다")
-				.set("address", DEFAULT_TEST_ADDRESS)
-				.set("category", "한식")
-				.set("imageUrl", "https://example.com/image.jpg")
-				.set("contact", "02-123-4567")
-				.sample();
+			RestaurantCreateRequest request = new RestaurantCreateRequest(
+				koreanRestaurant.getName(),
+				koreanRestaurant.getDetails(),
+				koreanRestaurant.getImageUrl(),
+				koreanRestaurant.getContact(),
+				koreanRestaurant.getAddress(),
+				koreanRestaurant.getRestaurantCategory().name()
+			);
 
 			// when
 			RestaurantCreateResponse response = restaurantCommandService.createRestaurant(request);
@@ -104,20 +88,20 @@ public class RestaurantCommandServiceTest {
 		@Test
 		void 성공적으로_레스토랑_정보를_수정한다() {
 			// given
-			RestaurantUpdateRequest request = dtoFixtureMonkey.giveMeBuilder(RestaurantUpdateRequest.class)
-				.set("name", "수정된 맛집")
-				.set("details", "수정된 식당입니다")
-				.set("address", DEFAULT_TEST_ADDRESS)
-				.set("category", "일식")
-				.set("imageUrl", "https://example.com/updated-image.jpg")
-				.set("contact", "02-987-6543")
-				.sample();
+			RestaurantUpdateRequest request = new RestaurantUpdateRequest(
+				"수정된 식당",
+				"수정된 식당 설명",
+				null,
+				null,
+				"수정된 주소",
+				"일식"
+			);
 
 			// when
-			restaurantCommandService.updateRestaurant(한식_식당.getId(), request);
+			restaurantCommandService.updateRestaurant(restaurant.getId(), request);
 
 			// then
-			Restaurant updatedRestaurant = restaurantRepository.findById(한식_식당.getId()).get();
+			Restaurant updatedRestaurant = restaurantRepository.findById(restaurant.getId()).get();
 
 			assertAll(
 				() -> assertThat(updatedRestaurant.getName()).isEqualTo(request.name()),
@@ -126,9 +110,16 @@ public class RestaurantCommandServiceTest {
 		}
 
 		@Test
-		void 존재하지_않는_레스토랑을_수정하면_CustomException이_발생한다() {
+		void 존재하지_않는_레스토랑을_수정하면_예외가_발생한다() {
 			// given
-			RestaurantUpdateRequest request = dtoFixtureMonkey.giveMeOne(RestaurantUpdateRequest.class);
+			RestaurantUpdateRequest request = new RestaurantUpdateRequest(
+				"수정된 식당",
+				"수정된 식당 설명",
+				null,
+				null,
+				"수정된 주소",
+				"일식"
+			);
 
 			// when & then
 			assertThatThrownBy(() -> restaurantCommandService.updateRestaurant(INVALID_RESTAURANT_ID, request))
@@ -143,16 +134,14 @@ public class RestaurantCommandServiceTest {
 		@Test
 		void 성공적으로_레스토랑을_삭제한다() {
 			// when
-			restaurantCommandService.deleteRestaurant(중식_식당.getId());
+			restaurantCommandService.deleteRestaurant(chineseRestaurant.getId());
 
 			// then
-			assertThat(restaurantRepository.findById(중식_식당.getId())).isEmpty();
+			assertThat(restaurantRepository.findById(chineseRestaurant.getId())).isEmpty();
 		}
 
 		@Test
-		void 존재하지_않는_레스토랑을_삭제하면_CustomException이_발생한다() {
-			// given
-
+		void 존재하지_않는_레스토랑을_삭제하면_예외가_발생한다() {
 			// when & then
 			assertThatThrownBy(() -> restaurantCommandService.deleteRestaurant(INVALID_RESTAURANT_ID))
 				.isInstanceOf(CustomException.class)
