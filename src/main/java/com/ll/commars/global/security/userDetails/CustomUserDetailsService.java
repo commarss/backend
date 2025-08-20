@@ -1,4 +1,4 @@
-package com.ll.commars.global.security.service;
+package com.ll.commars.global.security.userDetails;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ll.commars.domain.member.entity.AuthType;
 import com.ll.commars.domain.member.entity.Member;
 import com.ll.commars.domain.member.repository.jpa.MemberRepository;
-import com.ll.commars.global.security.CustomUserDetails;
 
 import lombok.RequiredArgsConstructor;
 

@@ -1,4 +1,4 @@
-package com.ll.commars.global.security;
+package com.ll.commars.global.security.userDetails;
 
 import java.util.Collection;
 

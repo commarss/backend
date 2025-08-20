@@ -1,4 +1,4 @@
-package com.ll.commars.global.token;
+package com.ll.commars.global.token.entity;
 
 import java.util.Collection;
 

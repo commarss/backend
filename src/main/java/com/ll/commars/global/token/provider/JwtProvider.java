@@ -1,4 +1,4 @@
-package com.ll.commars.global.token.component;
+package com.ll.commars.global.token.provider;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import com.ll.commars.domain.member.entity.Member;
 import com.ll.commars.global.token.JwtProperties;
-import com.ll.commars.global.token.TokenProvider;
 import com.ll.commars.global.token.entity.AccessToken;
 import com.ll.commars.global.token.entity.JwtClaims;
 import com.ll.commars.global.token.entity.RefreshToken;

@@ -1,4 +1,4 @@
-package com.ll.commars.global.security;
+package com.ll.commars.global.security.config;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,8 +20,10 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import com.ll.commars.global.security.service.CustomUserDetailsService;
-import com.ll.commars.global.token.JwtAuthenticationProvider;
+import com.ll.commars.global.security.exception.CustomAccessDeniedHandler;
+import com.ll.commars.global.security.exception.CustomAuthenticationEntryPoint;
+import com.ll.commars.global.security.userDetails.CustomUserDetailsService;
+import com.ll.commars.global.token.provider.JwtAuthenticationProvider;
 import com.ll.commars.global.token.component.JwtAuthenticationFilter;
 
 import lombok.RequiredArgsConstructor;

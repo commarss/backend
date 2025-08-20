@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.ll.commars.global.token.JwtAuthenticationToken;
+import com.ll.commars.global.token.entity.JwtAuthenticationToken;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

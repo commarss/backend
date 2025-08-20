@@ -1,4 +1,4 @@
-package com.ll.commars.global.token;
+package com.ll.commars.global.token.provider;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -9,8 +9,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
-import com.ll.commars.global.security.service.CustomUserDetailsService;
-import com.ll.commars.global.token.component.JwtProvider;
+import com.ll.commars.global.security.userDetails.CustomUserDetailsService;
+import com.ll.commars.global.token.entity.JwtAuthenticationToken;
 import com.ll.commars.global.token.entity.JwtClaims;
 import com.ll.commars.global.token.entity.TokenValue;
 

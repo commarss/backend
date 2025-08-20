@@ -20,7 +20,7 @@ import com.ll.commars.domain.member.entity.AuthType;
 import com.ll.commars.domain.member.entity.Member;
 import com.ll.commars.domain.member.repository.jpa.MemberRepository;
 import com.ll.commars.global.exception.CustomException;
-import com.ll.commars.global.token.TokenProvider;
+import com.ll.commars.global.token.provider.TokenProvider;
 import com.ll.commars.global.token.entity.AccessToken;
 import com.ll.commars.global.token.entity.JwtClaims;
 import com.ll.commars.global.token.entity.RefreshToken;
