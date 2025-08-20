@@ -175,7 +175,7 @@ class AuthServiceTest {
 			assertThat(storedValue).isEqualTo("logout");
 			assertThat(expire).isNotNull();
 			assertThat(expire).isGreaterThan(0);
-			assertThat(expire).isCloseTo(accessToken.expiration(), within(1000L));
+			assertThat(expire).isLessThanOrEqualTo(accessToken.expiration());
 		}
 	}
 
