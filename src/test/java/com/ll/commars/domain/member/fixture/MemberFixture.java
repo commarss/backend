@@ -4,6 +4,7 @@ import static com.ll.commars.domain.member.entity.AuthType.*;
 
 import java.util.ArrayList;
 
+import com.ll.commars.domain.member.entity.AuthType;
 import com.ll.commars.domain.member.entity.Member;
 import com.ll.commars.domain.member.repository.jpa.MemberRepository;
 
@@ -24,6 +25,22 @@ public class MemberFixture {
 			.set("name", "테스트유저")
 			.set("password", encodedPassword)
 			.set("authType", EMAIL)
+			.set("reviews", new ArrayList<>())
+			.set("favorites", new ArrayList<>())
+			.set("posts", new ArrayList<>())
+			.set("comments", new ArrayList<>())
+			.sample();
+
+		return memberRepository.save(member);
+	}
+
+	public Member 사용자(String email, String encodedPassword, AuthType authType) {
+		Member member = fixtureMonkey.giveMeBuilder(Member.class)
+			.set("id", null)
+			.set("email", email)
+			.set("name", "테스트유저")
+			.set("password", encodedPassword)
+			.set("authType", authType)
 			.set("reviews", new ArrayList<>())
 			.set("favorites", new ArrayList<>())
 			.set("posts", new ArrayList<>())
