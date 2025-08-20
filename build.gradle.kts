@@ -73,6 +73,8 @@ dependencies {
     testImplementation("org.testcontainers:mysql")
     testImplementation("io.projectreactor:reactor-test")
     testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
+    testAnnotationProcessor("org.projectlombok:lombok")
+    testImplementation("org.projectlombok:lombok")
 
     // QueryDSL
     implementation("io.github.openfeign.querydsl:querydsl-jpa:6.11")
