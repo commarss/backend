@@ -1,8 +1,6 @@
 package com.ll.commars.domain.community.post.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -22,8 +20,8 @@ import com.ll.commars.domain.community.post.dto.PostUpdateRequest;
 import com.ll.commars.domain.community.post.dto.PostUpdateResponse;
 import com.ll.commars.domain.community.post.service.PostCommandService;
 import com.ll.commars.domain.community.post.service.PostQueryService;
-import com.ll.commars.domain.member.entity.Member;
 import com.ll.commars.domain.member.service.MemberService;
+import com.ll.commars.global.security.annotation.AuthMemberId;
 
 import lombok.RequiredArgsConstructor;
 
@@ -39,10 +37,9 @@ public class PostController {
 	@PostMapping
 	public ResponseEntity<PostCreateResponse> createPost(
 		@RequestBody PostCreateRequest request,
-		@AuthenticationPrincipal UserDetails userDetails
+		@AuthMemberId long memberId
 	) {
-		Member member = getAuthenticatedUser(userDetails);
-		PostCreateResponse response = postCommandService.createPost(member.getId(), request);
+		PostCreateResponse response = postCommandService.createPost(memberId, request);
 
 		return ResponseEntity.ok(response);
 	}
@@ -67,10 +64,9 @@ public class PostController {
 	public ResponseEntity<PostUpdateResponse> updatePost(
 		@PathVariable("post-id") Long postId,
 		@RequestBody PostUpdateRequest request,
-		@AuthenticationPrincipal UserDetails userDetails
+		@AuthMemberId long memberId
 	) {
-		Member member = getAuthenticatedUser(userDetails);
-		PostUpdateResponse response = postCommandService.updatePost(member.getId(), postId, request);
+		PostUpdateResponse response = postCommandService.updatePost(memberId, postId, request);
 
 		return ResponseEntity.ok(response);
 	}
@@ -78,10 +74,9 @@ public class PostController {
 	@DeleteMapping("/{post-id}")
 	public ResponseEntity<Void> deletePost(
 		@PathVariable("post-id") Long postId,
-		@AuthenticationPrincipal UserDetails userDetails
+		@AuthMemberId long memberId
 	) {
-		Member member = getAuthenticatedUser(userDetails);
-		postCommandService.deletePost(member.getId(), postId);
+		postCommandService.deletePost(memberId, postId);
 
 		return ResponseEntity.ok().build();
 	}
@@ -89,11 +84,9 @@ public class PostController {
 	@PostMapping("/{post-id}/like")
 	public ResponseEntity<PostLikeCreateResponse> likePost(
 		@PathVariable("post-id") Long postId,
-		@AuthenticationPrincipal UserDetails userDetails
+		@AuthMemberId long memberId
 	) {
-		Member member = getAuthenticatedUser(userDetails);
-
-		PostLikeCreateResponse response = postCommandService.likePost(member.getId(), postId);
+		PostLikeCreateResponse response = postCommandService.likePost(memberId, postId);
 		return ResponseEntity.ok(response);
 	}
 
@@ -104,10 +97,5 @@ public class PostController {
 		PostLikeResponse response = postQueryService.getLikes(postId);
 
 		return ResponseEntity.ok(response);
-	}
-
-	private Member getAuthenticatedUser(@AuthenticationPrincipal UserDetails userDetails) {
-		return memberService.findById(Long.parseLong(userDetails.getUsername())).orElseThrow(
-			() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 	}
 }

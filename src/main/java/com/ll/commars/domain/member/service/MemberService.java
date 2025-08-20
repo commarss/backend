@@ -86,7 +86,7 @@ public class MemberService {
 				.userId(review.getMember().getId())
 				.restaurantId(review.getRestaurant().getId())
 				.id(review.getId())
-				.name(review.getName())
+				.name(review.getTitle())
 				.body(review.getBody())
 				.rate(review.getRate())
 				.build())

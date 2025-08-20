@@ -163,7 +163,8 @@ public class RestaurantQueryServiceTest {
 			assertAll(
 				() -> assertThat(response).isNotNull(),
 				() -> assertThat(response.restaurants()).isNotEmpty(),
-				() -> assertThat(response.restaurants()).allSatisfy(restaurant -> assertThat(restaurant.categoryName()).isEqualTo("한식"))
+				() -> assertThat(response.restaurants()).allSatisfy(
+					restaurant -> assertThat(restaurant.categoryName()).isEqualTo("한식"))
 			);
 		}
 

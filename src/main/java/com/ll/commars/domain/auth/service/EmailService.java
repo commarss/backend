@@ -20,7 +20,7 @@ import com.ll.commars.domain.member.entity.AuthType;
 import com.ll.commars.domain.member.entity.Member;
 import com.ll.commars.domain.member.repository.jpa.MemberRepository;
 import com.ll.commars.global.exception.CustomException;
-import com.ll.commars.global.token.TokenProvider;
+import com.ll.commars.global.token.provider.TokenProvider;
 import com.ll.commars.global.token.entity.AccessToken;
 import com.ll.commars.global.token.entity.RefreshToken;
 
@@ -42,8 +42,9 @@ public class EmailService {
 			new UsernamePasswordAuthenticationToken(request.email(), request.password())
 		);
 
-		String email = authentication.getName();
-		Member member = memberRepository.findByEmail(email)
+		// todo: 불필요한 DB 조회 대신 UserDetails를 사용하도록
+		Long memberId = Long.parseLong(authentication.getName());
+		Member member = memberRepository.findById(memberId)
 			.orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND));
 
 		AccessToken accessToken = tokenProvider.generateAccessToken(member);

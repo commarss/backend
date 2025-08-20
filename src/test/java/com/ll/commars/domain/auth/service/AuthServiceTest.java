@@ -1,5 +1,6 @@
 package com.ll.commars.domain.auth.service;
 
+import static com.ll.commars.domain.member.entity.AuthType.*;
 import static com.ll.commars.global.exception.ErrorCode.*;
 import static org.assertj.core.api.Assertions.*;
 
@@ -22,14 +23,14 @@ import com.ll.commars.domain.auth.dto.SignInResponse;
 import com.ll.commars.domain.auth.dto.SignUpRequest;
 import com.ll.commars.domain.auth.dto.SignUpResponse;
 import com.ll.commars.domain.auth.dto.TokenReissueResponse;
-import com.ll.commars.global.token.TokenProvider;
-import com.ll.commars.global.token.entity.AccessToken;
-import com.ll.commars.global.token.entity.RefreshToken;
-import com.ll.commars.global.token.entity.TokenValue;
 import com.ll.commars.domain.member.entity.Member;
 import com.ll.commars.domain.member.repository.jpa.MemberRepository;
 import com.ll.commars.global.annotation.IntegrationTest;
 import com.ll.commars.global.exception.CustomException;
+import com.ll.commars.global.token.provider.TokenProvider;
+import com.ll.commars.global.token.entity.AccessToken;
+import com.ll.commars.global.token.entity.RefreshToken;
+import com.ll.commars.global.token.entity.TokenValue;
 
 import io.jsonwebtoken.JwtException;
 
@@ -73,6 +74,7 @@ class AuthServiceTest {
 			.set("email", USER_EMAIL)
 			.set("name", "테스트유저")
 			.set("password", encodedPassword)
+			.set("authType", EMAIL)
 			.set("reviews", new ArrayList<>())
 			.set("favorites", new ArrayList<>())
 			.set("posts", new ArrayList<>())

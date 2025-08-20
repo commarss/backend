@@ -1,4 +1,4 @@
-package com.ll.commars.global.token;
+package com.ll.commars.global.token.provider;
 
 import com.ll.commars.domain.member.entity.Member;
 import com.ll.commars.global.token.entity.AccessToken;

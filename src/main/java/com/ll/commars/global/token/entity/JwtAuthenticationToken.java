@@ -1,4 +1,4 @@
-package com.ll.commars.global.token;
+package com.ll.commars.global.token.entity;
 
 import java.util.Collection;
 
@@ -6,6 +6,7 @@ import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+// 관심사: JWT 관련 데이터를 상태에 맞게 전달
 public class JwtAuthenticationToken extends AbstractAuthenticationToken {
 
 	private final Object principal;

@@ -37,9 +37,9 @@ public class TodayRandomService {
 	}
 
 	// @Transactional(readOnly = true) // Lazy Loading 방지
-	// public List<RestaurantSummaryDTO> getRandomRestaurants(double lat, double lon, Long userId) {
+	// public List<RestaurantSummaryDTO> getRandomRestaurants(double lat, double lon, Long memberId) {
 	// 	// 1. 유저의 찜 목록 가져오기
-	// 	List<Favorite> favorites = favoriteRepository.findByMemberId(userId);
+	// 	List<Favorite> favorites = favoriteRepository.findByMemberId(memberId);
 	// 	Set<Long> favoriteIds = favorites.stream()
 	// 		.map(Favorite::getId)
 	// 		.collect(Collectors.toSet());
@@ -67,8 +67,8 @@ public class TodayRandomService {
 	// }
 
     /*@Transactional(readOnly = true) //랜덤으로 1개 선택
-    public Optional<RestaurantSummaryDTO> getRandomRestaurantDetails(double lat, double lon, Long userId) {
-        List<RestaurantSummaryDTO> randomRestaurants = getRandomRestaurants(lat, lon, userId);
+    public Optional<RestaurantSummaryDTO> getRandomRestaurantDetails(double lat, double lon, Long memberId) {
+        List<RestaurantSummaryDTO> randomRestaurants = getRandomRestaurants(lat, lon, memberId);
 
         if (randomRestaurants.isEmpty()) {
             return Optional.empty();
@@ -133,7 +133,7 @@ public class TodayRandomService {
 
 		// 리뷰 정보 DTO 변환
 		List<ReviewAnalysisDTO> reviewDTOList = reviews.stream()
-			.map(review -> new ReviewAnalysisDTO(review.getName(), review.getBody(), review.getRate()))
+			.map(review -> new ReviewAnalysisDTO(review.getTitle(), review.getBody(), review.getRate()))
 			.collect(Collectors.toList());
 
 		return new RestaurantReviewAnalysisDTO(
@@ -172,7 +172,7 @@ public class TodayRandomService {
 				// DTO 반환 (순위는 나중에 설정)
 				// 리뷰 정보 DTO 변환
 				List<ReviewAnalysisDTO> reviewDTOList = reviews.stream()
-					.map(review -> new ReviewAnalysisDTO(review.getName(), review.getBody(), review.getRate()))
+					.map(review -> new ReviewAnalysisDTO(review.getTitle(), review.getBody(), review.getRate()))
 					.collect(Collectors.toList());
 
 				return new RestaurantReviewAnalysisDTO(

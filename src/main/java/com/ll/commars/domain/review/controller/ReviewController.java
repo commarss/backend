@@ -14,6 +14,7 @@ import com.ll.commars.domain.review.dto.ReviewSearchResponse;
 import com.ll.commars.domain.review.dto.ReviewUpdateRequest;
 import com.ll.commars.domain.review.service.ReviewDocService;
 import com.ll.commars.domain.review.service.ReviewService;
+import com.ll.commars.global.security.annotation.AuthMemberId;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,18 +30,20 @@ public class ReviewController {
 	@PatchMapping("/{review-id}")
 	public ResponseEntity<Void> updateReview(
 		@PathVariable("review-id") Long reviewId,
+		@AuthMemberId long memberId,
 		@RequestBody @Valid ReviewUpdateRequest request
 	) {
-		reviewService.updateReview(reviewId, request);
+		reviewService.updateReview(memberId, reviewId, request);
 
 		return ResponseEntity.ok().build();
 	}
 
 	@DeleteMapping("/{review-id}")
 	public ResponseEntity<Void> deleteReview(
-		@PathVariable("review-id") Long reviewId
+		@PathVariable("review-id") Long reviewId,
+		@AuthMemberId long memberId
 	) {
-		reviewService.deleteReview(reviewId);
+		reviewService.deleteReview(reviewId, memberId);
 
 		return ResponseEntity.ok().build();
 	}

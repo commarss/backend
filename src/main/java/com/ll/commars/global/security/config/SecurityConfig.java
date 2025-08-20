@@ -1,4 +1,4 @@
-package com.ll.commars.global.security;
+package com.ll.commars.global.security.config;
 
 import java.util.Arrays;
 import java.util.List;
@@ -6,7 +6,8 @@ import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -19,20 +20,28 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.ll.commars.global.security.exception.CustomAccessDeniedHandler;
+import com.ll.commars.global.security.exception.CustomAuthenticationEntryPoint;
+import com.ll.commars.global.security.userDetails.CustomUserDetailsService;
+import com.ll.commars.global.token.provider.JwtAuthenticationProvider;
 import com.ll.commars.global.token.component.JwtAuthenticationFilter;
+
+import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
-	private final JwtAuthenticationFilter jwtAuthenticationFilter;
-
-	public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
-		this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-	}
+	private final JwtAuthenticationProvider jwtAuthenticationProvider;
+	private final CustomAccessDeniedHandler customAccessDeniedHandler;
+	private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+	private final CustomUserDetailsService customUserDetailsService;
 
 	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+	public SecurityFilterChain securityFilterChain(
+		HttpSecurity http,
+		JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
 		http
 			.cors(cors -> cors.configurationSource(corsConfigurationSource()))
 			.csrf(AbstractHttpConfigurer::disable)
@@ -44,9 +53,13 @@ public class SecurityConfig {
 				)
 				.permitAll()
 				.anyRequest()
-				.permitAll()
+				.authenticated()
 			)
-			.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+			.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+			.exceptionHandling(ex -> ex
+				.authenticationEntryPoint(customAuthenticationEntryPoint)
+				.accessDeniedHandler(customAccessDeniedHandler)
+			);
 
 		return http.build();
 	}
@@ -75,8 +88,11 @@ public class SecurityConfig {
 	}
 
 	@Bean
-	public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws
-		Exception {
-		return authenticationConfiguration.getAuthenticationManager();
+	public AuthenticationManager authenticationManager() {
+		DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+		daoAuthenticationProvider.setUserDetailsService(customUserDetailsService);
+		daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+
+		return new ProviderManager(daoAuthenticationProvider, jwtAuthenticationProvider);
 	}
 }

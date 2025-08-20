@@ -132,8 +132,8 @@ public class FavoriteService {
 	}
 
 	// @Transactional
-	// public List<FavoriteDto.FavoriteInfo> getAllFavoritesByUser(Long userId) {
-	// 	List<Favorite> favorites = favoriteRepository.findByMemberId(userId);  // 사용자의 찜 목록 조회
+	// public List<FavoriteDto.FavoriteInfo> getAllFavoritesByUser(Long memberId) {
+	// 	List<Favorite> favorites = favoriteRepository.findByMemberId(memberId);  // 사용자의 찜 목록 조회
 	// 	return favorites.stream()
 	// 		.map(favorite -> toFavoriteInfo(favorite))  // Favorite 객체를 FavoriteInfo로 변환
 	// 		.collect(Collectors.toList());

@@ -1,4 +1,4 @@
-package com.ll.commars.global.token.component;
+package com.ll.commars.global.token.provider;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import com.ll.commars.domain.member.entity.Member;
 import com.ll.commars.global.token.JwtProperties;
-import com.ll.commars.global.token.TokenProvider;
 import com.ll.commars.global.token.entity.AccessToken;
 import com.ll.commars.global.token.entity.JwtClaims;
 import com.ll.commars.global.token.entity.RefreshToken;
@@ -22,6 +21,7 @@ import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
+// 관심사: JWT 생성 및 파싱에 대한 모든 로직 담당
 @Component
 public class JwtProvider implements TokenProvider {
 
@@ -44,34 +44,34 @@ public class JwtProvider implements TokenProvider {
 
 	@Override
 	public AccessToken generateAccessToken(Member member) {
-		TokenSubject subject = TokenSubject.of(member.getEmail());
+		TokenSubject subject = TokenSubject.of(String.valueOf(member.getId()));
 
 		String jti = UUID.randomUUID().toString();
 
 		Instant now = Instant.now();
-		long expirationMillis = jwtProperties.accessTokenExpiration();
-		Instant expiresAt = now.plus(expirationMillis, ChronoUnit.MILLIS);
+		long expirationSeconds = jwtProperties.accessTokenExpiration();
+		Instant expiresAt = now.plus(expirationSeconds, ChronoUnit.SECONDS);
 
 		JwtClaims jwtClaims = JwtClaims.ofAccessToken(member, now, expiresAt, jti);
 		TokenValue tokenValue = generateTokenValue(jwtClaims);
 
-		return new AccessToken(subject, tokenValue, expirationMillis);
+		return new AccessToken(subject, tokenValue, expirationSeconds * 1000);
 	}
 
 	@Override
 	public RefreshToken generateRefreshToken(Member member) {
-		TokenSubject subject = TokenSubject.of(member.getEmail());
+		TokenSubject subject = TokenSubject.of(String.valueOf(member.getId()));
 
 		String jti = UUID.randomUUID().toString();
 
 		Instant now = Instant.now();
-		long expirationMillis = jwtProperties.refreshTokenExpiration();
-		Instant expiresAt = now.plus(expirationMillis, ChronoUnit.MILLIS);
+		long expirationSeconds = jwtProperties.refreshTokenExpiration();
+		Instant expiresAt = now.plus(expirationSeconds, ChronoUnit.SECONDS);
 
 		JwtClaims jwtClaims = JwtClaims.ofRefreshToken(member, now, expiresAt, jti);
 		TokenValue tokenValue = generateTokenValue(jwtClaims);
 
-		return new RefreshToken(subject, tokenValue, expirationMillis);
+		return new RefreshToken(subject, tokenValue, expirationSeconds * 1000);
 	}
 
 	@Override

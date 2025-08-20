@@ -17,14 +17,16 @@ public record JwtClaims(
 ) {
 
 	public static JwtClaims ofAccessToken(Member member, Instant issuedAt, Instant expiresAt, String jti) {
-		PublicClaims publicClaims = new PublicClaims("commars.com", TokenSubject.of(member.getEmail()), issuedAt,
+		PublicClaims publicClaims = new PublicClaims("commars.com", TokenSubject.of(String.valueOf(member.getId())),
+			issuedAt,
 			expiresAt, jti);
 		PrivateClaims privateClaims = new PrivateClaims(member.getId(), List.of("ROLE_USER"));
 		return new JwtClaims(publicClaims, privateClaims);
 	}
 
 	public static JwtClaims ofRefreshToken(Member member, Instant issuedAt, Instant expiresAt, String jti) {
-		PublicClaims publicClaims = new PublicClaims("commars.com", TokenSubject.of(member.getEmail()), issuedAt,
+		PublicClaims publicClaims = new PublicClaims("commars.com", TokenSubject.of(String.valueOf(member.getId())),
+			issuedAt,
 			expiresAt, jti);
 		PrivateClaims privateClaims = new PrivateClaims(member.getId(), Collections.emptyList());
 		return new JwtClaims(publicClaims, privateClaims);
@@ -39,7 +41,7 @@ public record JwtClaims(
 			claims.getId()
 		);
 		PrivateClaims privateClaims = new PrivateClaims(
-			claims.get("userId", Long.class),
+			claims.get("memberId", Long.class),
 			(List<String>)claims.get("roles")
 		);
 		return new JwtClaims(publicClaims, privateClaims);
@@ -51,7 +53,7 @@ public record JwtClaims(
 		claims.put("sub", publicClaims.subject().value());
 		claims.put("iat", Date.from(publicClaims.issuedAt()));
 		claims.put("exp", Date.from(publicClaims.expiresAt()));
-		claims.put("userId", privateClaims.userId());
+		claims.put("memberId", privateClaims.memberId());
 		claims.put("jti", publicClaims.jti());
 
 		if (privateClaims.roles() != null && !privateClaims.roles().isEmpty()) {
