@@ -3,6 +3,8 @@ package com.ll.commars.domain.favorite.favorite.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import com.ll.commars.domain.member.entity.Member;
 import com.ll.commars.global.BaseEntity;
 
@@ -17,36 +19,29 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class Favorite extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	// 찜 리스트 이름
 	@Column(name = "name")
 	private String name;
 
-	// 찜 리스트 공개 여부
 	@Column(name = "is_public", nullable = false)
-	private Boolean isPublic = true;
+	@ColumnDefault("true")
+	private boolean isPublic = true;
 
-	// Favorite과 User: 다대일
 	@ManyToOne
 	@JoinColumn(name = "member_id", nullable = false)
 	private Member member;
 
-	// Favorite과 FavoriteRestaurant: 일대다
 	@OneToMany(mappedBy = "favorite", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-	private List<FavoriteRestaurant> favoriteRestaurants = new ArrayList<>();  // ✅ 초기화 추가!
+	private List<FavoriteRestaurant> favoriteRestaurants = new ArrayList<>();
 }
