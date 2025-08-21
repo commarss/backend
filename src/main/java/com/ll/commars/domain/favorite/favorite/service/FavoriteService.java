@@ -25,8 +25,6 @@ import lombok.RequiredArgsConstructor;
 public class FavoriteService {
 
 	private final FavoriteRepository favoriteRepository;
-	private final RestaurantRepository restaurantRepository;
-	private final FavoriteRestaurantRepository favoriteRestaurantRepository;
 
 	@Transactional(readOnly = true)
 	public FavoriteFindListResponse getFavorites(Long memberId) {
@@ -63,40 +61,6 @@ public class FavoriteService {
 		return new FavoriteRestaurantsResponse(restaurantInfos, restaurantInfos.size());
 	}
 
-	private void validateFavoriteOwnership(Favorite favorite, Long memberId) {
-		if (!favorite.getMember().getId().equals(memberId)) {
-			throw new CustomException(ErrorCode.FAVORITE_NOT_UNAUTHORIZED);
-		}
-	}
-
-	// public FavoriteDto.FavoriteInfo toFavoriteInfo(Favorite favorite) {
-	// 	List<RestaurantDto.RestaurantBasicInfo> restaurants = Optional.ofNullable(favorite.getFavoriteRestaurants())
-	// 		.orElse(Collections.emptyList()) // Null이면 빈 리스트 반환
-	// 		.stream()
-	// 		.map(fr -> RestaurantDto.RestaurantBasicInfo.builder()
-	// 			.id(fr.getRestaurant().getId())
-	// 			.name(fr.getRestaurant().getName())
-	// 			.details(fr.getRestaurant().getDetails())
-	// 			.averageRate(fr.getRestaurant().getAverageRate())
-	// 			.imageUrl(fr.getRestaurant().getImageUrl())
-	// 			.contact(fr.getRestaurant().getContact())
-	// 			.lat(fr.getRestaurant().getLat())
-	// 			.lon(fr.getRestaurant().getLon())
-	// 			.runningState(fr.getRestaurant().getRunningState())
-	// 			.summarizedReview(fr.getRestaurant().getSummarizedReview())
-	// 			.categoryId(fr.getRestaurant().getRestaurantCategory().getId())
-	// 			.address(fr.getRestaurant().getAddress())
-	// 			.build())
-	// 		.collect(Collectors.toList());
-	//
-	// 	return FavoriteDto.FavoriteInfo.builder()
-	// 		.id(favorite.getId())
-	// 		.name(favorite.getName())
-	// 		.isPublic(favorite.getIsPublic() != null ? favorite.getIsPublic() : true)
-	// 		.restaurantLists(restaurants)
-	// 		.build();
-	// }
-
 	public void saveFavoriteList(Member member, FavoriteDto.CreateFavoriteListRequest createFavoriteListRequest) {
 		Boolean isPublicValue = createFavoriteListRequest.getIsPublic();
 		Favorite favorite = Favorite.builder()
@@ -108,52 +72,19 @@ public class FavoriteService {
 		favoriteRepository.save(favorite);
 	}
 
-	// @Transactional
-	// public FavoriteDto.FavoriteInfo getFavorite(Long favoriteId) {
-	// 	Favorite favorite = favoriteRepository.findById(favoriteId)
-	// 		.orElseThrow(() -> new RuntimeException("찜 목록을 찾을 수 없습니다."));
-	// 	return toFavoriteInfo(favorite);
-	// }
-
-	// @Transactional
-	// public FavoriteDto.FavoriteInfo addRestaurantToFavorite(Long favoriteId, Long restaurantId) {
-	// 	// 찜 목록 조회
-	// 	Favorite favorite = favoriteRepository.findById(favoriteId)
-	// 		.orElseThrow(() -> new IllegalArgumentException("Favorite not found"));
-	//
-	// 	// 레스토랑 조회
-	// 	Restaurant restaurant = restaurantRepository.findById(restaurantId)
-	// 		.orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
-	//
-	// 	// 이미 추가된 레스토랑인지 확인
-	// 	boolean isExists = favorite.getFavoriteRestaurants().stream()
-	// 		.anyMatch(fr -> fr.getRestaurant().getId().equals(restaurantId));
-	//
-	// 	if (isExists) {
-	// 		throw new IllegalStateException("Restaurant already exists in favorite list");
-	// 	}
-	//
-	// 	// FavoriteRestaurant 생성 및 저장
-	// 	FavoriteRestaurant favoriteRestaurant = FavoriteRestaurant.builder()
-	// 		.favorite(favorite)
-	// 		.restaurant(restaurant)
-	// 		.build();
-	//
-	// 	favoriteRestaurantRepository.save(favoriteRestaurant);
-	//
-	// 	// 업데이트된 찜 목록 정보 반환
-	// 	return toFavoriteInfo(favorite);
-	// }
-
 	@Transactional
-	public void deleteFavorite(Long favoriteId) {
-		favoriteRestaurantRepository.deleteByFavoriteId(favoriteId);
-		favoriteRepository.deleteById(favoriteId);
+	public void deleteFavorite(Long favoriteId, Long memberId) {
+		Favorite favorite = favoriteRepository.findById(favoriteId)
+			.orElseThrow(() -> new CustomException(ErrorCode.FAVORITE_NOT_FOUND));
+
+		validateFavoriteOwnership(favorite, memberId);
+		favoriteRepository.delete(favorite);
 	}
 
-	@Transactional
-	public void truncate() {
-		favoriteRepository.deleteAll();
+	private void validateFavoriteOwnership(Favorite favorite, Long memberId) {
+		if (!favorite.getMember().getId().equals(memberId)) {
+			throw new CustomException(ErrorCode.FAVORITE_NOT_UNAUTHORIZED);
+		}
 	}
 
 	@Transactional
@@ -168,13 +99,4 @@ public class FavoriteService {
 	public Optional<Favorite> findByUserAndName(Member member, String name) {
 		return favoriteRepository.findByMemberAndName(member, name);
 	}
-
-	// @Transactional
-	// public List<FavoriteDto.FavoriteInfo> getAllFavoritesByUser(Long memberId) {
-	// 	List<Favorite> favorites = favoriteRepository.findByMemberId(memberId);  // 사용자의 찜 목록 조회
-	// 	return favorites.stream()
-	// 		.map(favorite -> toFavoriteInfo(favorite))  // Favorite 객체를 FavoriteInfo로 변환
-	// 		.collect(Collectors.toList());
-	// }
-
 }

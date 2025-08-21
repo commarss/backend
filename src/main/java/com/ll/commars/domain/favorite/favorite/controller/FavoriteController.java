@@ -54,11 +54,14 @@ public class FavoriteController {
 		return ResponseEntity.ok(response);
 	}
 
+	@DeleteMapping("/{favorite-id}")
+	public ResponseEntity<Void> deleteFavorite(
+		@PathVariable("favorite-id") Long favoriteId,
+		@AuthMemberId Long memberId
+	) {
+		favoriteService.deleteFavorite(favoriteId, memberId);
 
-	@DeleteMapping("/{favorite_id}")
-	public ResponseEntity<String> deleteFavorite(@PathVariable("favorite_id") Long favoriteId) {
-		favoriteService.deleteFavorite(favoriteId);
-		return ResponseEntity.ok("찜 목록 삭제 성공");
+		return ResponseEntity.ok().build();
 	}
 
 	// @PostMapping("/{favorite_id}/restaurant")
