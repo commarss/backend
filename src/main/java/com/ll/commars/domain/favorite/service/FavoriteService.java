@@ -65,19 +65,7 @@ public class FavoriteService {
 
 		validateFavoriteOwnership(favorite, memberId);
 
-		List<FavoriteRestaurantsResponse.FavoriteRestaurantInfo> restaurantInfos = favorite.getFavoriteRestaurants()
-			.stream()
-			.map(favoriteRestaurant -> new FavoriteRestaurantsResponse.FavoriteRestaurantInfo(
-				favoriteRestaurant.getRestaurant().getId(),
-				favoriteRestaurant.getRestaurant().getName(),
-				favoriteRestaurant.getRestaurant().getAddress(),
-				favoriteRestaurant.getRestaurant().getRestaurantCategory().name(),
-				favoriteRestaurant.getRestaurant().getAverageRate(),
-				favoriteRestaurant.getRestaurant().getImageUrl()
-			))
-			.toList();
-
-		return new FavoriteRestaurantsResponse(restaurantInfos, restaurantInfos.size());
+		return FavoriteRestaurantsResponse.from(favorite.getFavoriteRestaurants());
 	}
 
 	@Transactional
