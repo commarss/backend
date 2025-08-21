@@ -1,6 +1,7 @@
 package com.ll.commars.global.token.provider;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
 import java.time.Instant;
@@ -33,9 +34,6 @@ import com.ll.commars.global.token.entity.TokenValue;
 
 import io.jsonwebtoken.JwtException;
 
-import com.navercorp.fixturemonkey.FixtureMonkey;
-import com.navercorp.fixturemonkey.api.introspector.ConstructorPropertiesArbitraryIntrospector;
-
 @UnitTest
 @DisplayName("JwtAuthenticationProvider 테스트")
 class JwtAuthenticationProviderTest {
@@ -55,18 +53,13 @@ class JwtAuthenticationProviderTest {
 	@Mock
 	private ValueOperations<String, String> valueOperations;
 
-	private final FixtureMonkey fixtureMonkey = FixtureMonkey.builder()
-		.objectIntrospector(ConstructorPropertiesArbitraryIntrospector.INSTANCE)
-		.build();
-
 	@BeforeEach
 	void setUp() {
 		when(redisTemplate.opsForValue()).thenReturn(valueOperations);
 	}
 
 	@Nested
-	@DisplayName("authenticate 메서드 테스트")
-	class AuthenticateTest {
+	class authenticate_메서드_테스트 {
 
 		private final String accessToken = "valid.access.token";
 		private final TokenValue accessTokenValue = TokenValue.of(accessToken);
@@ -90,12 +83,14 @@ class JwtAuthenticationProviderTest {
 			Authentication result = jwtAuthenticationProvider.authenticate(unauthenticatedToken);
 
 			// then
-			assertThat(result).isInstanceOf(JwtAuthenticationToken.class);
-			assertThat(result.isAuthenticated()).isTrue();
-			assertThat(result.getPrincipal()).isEqualTo(mockUserDetails);
-			assertThat(result.getAuthorities())
-				.extracting(GrantedAuthority::getAuthority)
-				.containsExactly("ROLE_USER");
+			assertAll(
+				() -> assertThat(result).isInstanceOf(JwtAuthenticationToken.class),
+				() -> assertThat(result.isAuthenticated()).isTrue(),
+				() -> assertThat(result.getPrincipal()).isEqualTo(mockUserDetails),
+				() -> assertThat(result.getAuthorities())
+					.extracting(GrantedAuthority::getAuthority)
+					.containsExactly("ROLE_USER")
+			);
 
 			// 각 의존성이 정확히 1번씩 호출되었는지 검증
 			verify(valueOperations).get(accessToken);

@@ -50,12 +50,12 @@ public class JwtProvider implements TokenProvider {
 
 		Instant now = Instant.now();
 		long expirationSeconds = jwtProperties.accessTokenExpiration();
-		Instant expiresAt = now.plus(expirationSeconds, ChronoUnit.SECONDS);
+		Instant expiresAt = now.plus(expirationSeconds, ChronoUnit.MILLIS);
 
 		JwtClaims jwtClaims = JwtClaims.ofAccessToken(member, now, expiresAt, jti);
 		TokenValue tokenValue = generateTokenValue(jwtClaims);
 
-		return new AccessToken(subject, tokenValue, expirationSeconds * 1000);
+		return new AccessToken(subject, tokenValue, expirationSeconds);
 	}
 
 	@Override
@@ -66,12 +66,12 @@ public class JwtProvider implements TokenProvider {
 
 		Instant now = Instant.now();
 		long expirationSeconds = jwtProperties.refreshTokenExpiration();
-		Instant expiresAt = now.plus(expirationSeconds, ChronoUnit.SECONDS);
+		Instant expiresAt = now.plus(expirationSeconds, ChronoUnit.MILLIS);
 
 		JwtClaims jwtClaims = JwtClaims.ofRefreshToken(member, now, expiresAt, jti);
 		TokenValue tokenValue = generateTokenValue(jwtClaims);
 
-		return new RefreshToken(subject, tokenValue, expirationSeconds * 1000);
+		return new RefreshToken(subject, tokenValue, expirationSeconds);
 	}
 
 	@Override

@@ -37,13 +37,13 @@ class JwtProviderTest {
 	@Mock
 	private JwtProperties jwtProperties;
 
-	private final FixtureMonkey fixtureMonkey = FixtureMonkey.builder()
+	private static final FixtureMonkey fixtureMonkey = FixtureMonkey.builder()
 		.objectIntrospector(FieldReflectionArbitraryIntrospector.INSTANCE)
 		.build();
 
 	private static final String SECRET_KEY = "secretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecret";
-	private static final long ACCESS_TOKEN_EXPIRATION = Duration.ofHours(1).getSeconds();
-	private static final long REFRESH_TOKEN_EXPIRATION = Duration.ofDays(7).getSeconds();
+	private static final long ACCESS_TOKEN_EXPIRATION = Duration.ofHours(1).toMillis();
+	private static final long REFRESH_TOKEN_EXPIRATION = Duration.ofDays(7).toMillis();
 
 	private Member member;
 
@@ -52,10 +52,7 @@ class JwtProviderTest {
 		when(jwtProperties.key()).thenReturn(SECRET_KEY);
 		jwtProvider = new JwtProvider(jwtProperties);
 
-		member = fixtureMonkey.giveMeBuilder(Member.class)
-			.set("id", 1L)
-			.set("email", "test@example.com")
-			.sample();
+		member = createMember();
 	}
 
 	@Nested
@@ -74,7 +71,7 @@ class JwtProviderTest {
 			assertAll(
 				() -> assertThat(accessToken).isNotNull(),
 				() -> assertThat(accessToken.subject()).isEqualTo(TokenSubject.of(String.valueOf(member.getId()))),
-				() -> assertThat(accessToken.expiration()).isEqualTo(ACCESS_TOKEN_EXPIRATION * 1000),
+				() -> assertThat(accessToken.expiration()).isEqualTo(ACCESS_TOKEN_EXPIRATION),
 				() -> assertThat(claims.privateClaims().memberId()).isEqualTo(member.getId())
 			);
 		}
@@ -91,7 +88,7 @@ class JwtProviderTest {
 			// then
 			assertAll(
 				() -> assertThat(refreshToken.subject().value()).isEqualTo(String.valueOf(member.getId())),
-				() -> assertThat(refreshToken.expiration()).isEqualTo(REFRESH_TOKEN_EXPIRATION * 1000),
+				() -> assertThat(refreshToken.expiration()).isEqualTo(REFRESH_TOKEN_EXPIRATION),
 				() -> assertThat(claims.privateClaims().memberId()).isEqualTo(member.getId()),
 				() -> assertThat(claims.privateClaims().roles()).isNullOrEmpty()
 			);
@@ -115,10 +112,10 @@ class JwtProviderTest {
 		@Test
 		void 잘못된_형식의_토큰을_파싱하면_MalformedJwtException이_발생한다() {
 			// given
-			TokenValue malformedToken = TokenValue.of("this.is.malformed.token");
+			TokenValue invalidToken = TokenValue.of("invalid.token.format");
 
 			// when & then
-			assertThatThrownBy(() -> jwtProvider.parseClaim(malformedToken))
+			assertThatThrownBy(() -> jwtProvider.parseClaim(invalidToken))
 				.isInstanceOf(MalformedJwtException.class);
 		}
 
@@ -137,5 +134,12 @@ class JwtProviderTest {
 			assertThatThrownBy(() -> invalidJwtProvider.parseClaim(token.token()))
 				.isInstanceOf(SignatureException.class);
 		}
+	}
+
+	private Member createMember() {
+		return fixtureMonkey.giveMeBuilder(Member.class)
+			.set("id", 1L)
+			.set("email", "test@example.com")
+			.sample();
 	}
 }

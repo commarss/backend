@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,18 +11,17 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantNearByRequest;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantSearchRequest;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantSearchResponse;
 import com.ll.commars.domain.restaurant.restaurant.entity.RestaurantCategory;
 import com.ll.commars.domain.restaurant.restaurant.entity.RestaurantDoc;
+import com.ll.commars.domain.restaurant.restaurant.fixture.RestaurantDocFixture;
 import com.ll.commars.domain.restaurant.restaurant.repository.elasticsearch.RestaurantDocRepository;
 import com.ll.commars.global.annotation.IntegrationTest;
 
 import com.navercorp.fixturemonkey.FixtureMonkey;
-import com.navercorp.fixturemonkey.api.introspector.FieldReflectionArbitraryIntrospector;
 
 @IntegrationTest
 @DisplayName("RestaurantDocService 테스트")
@@ -45,37 +43,36 @@ public class RestaurantDocServiceTest {
 	@Autowired
 	private RestaurantDocRepository restaurantDocRepository;
 
-	private static final FixtureMonkey fixtureMonkey = FixtureMonkey.builder()
-		.objectIntrospector(FieldReflectionArbitraryIntrospector.INSTANCE)
-		.build();
+	private RestaurantDocFixture restaurantDocFixture;
+
+	@Autowired
+	private FixtureMonkey fixtureMonkey;
+
+	@BeforeEach
+	void setUp() {
+		restaurantDocFixture = new RestaurantDocFixture(fixtureMonkey, restaurantDocRepository);
+	}
 
 	@AfterEach
 	void tearDown() {
 		restaurantDocRepository.deleteAll();
 	}
 
-	private RestaurantDoc createRestaurantDoc(String name, String details, RestaurantCategory category, double lat,
-		double lon, double averageRate) {
-		return fixtureMonkey.giveMeBuilder(RestaurantDoc.class)
-			.set("id", UUID.randomUUID().toString())
-			.set("name", name)
-			.set("details", details)
-			.set("restaurantCategory", category)
-			.set("location", new GeoPoint(lat, lon))
-			.set("averageRate", averageRate)
-			.sample();
-	}
-
 	@Nested
 	class 식당_검색_테스트 {
 
+		private RestaurantDoc restaurant1;
+		private RestaurantDoc restaurant2;
+		private RestaurantDoc restaurant3;
+
 		@BeforeEach
 		void setUp() {
-			restaurantDocRepository.saveAll(List.of(
-				createRestaurantDoc("강남 교자", "맛있는 교자 전문점", RestaurantCategory.한식, GANGNAM_LAT, GANGNAM_LON, 4.5),
-				createRestaurantDoc("판교 카츠", "바삭한 돈카츠", RestaurantCategory.일식, PANGYO_LAT, PANGYO_LON, 4.8),
-				createRestaurantDoc("홍대 짜장면", "맛있는 짜장면", RestaurantCategory.중식, HONGDAE_LAT, HONGDAE_LON, 4.2)
-			));
+			restaurant1 = restaurantDocFixture.식당("강남 교자", "맛있는 교자 전문점",
+				RestaurantCategory.한식, GANGNAM_LAT, GANGNAM_LON, 4.5);
+			restaurant2 = restaurantDocFixture.식당("판교 카츠", "바삭한 돈카츠",
+				RestaurantCategory.일식, PANGYO_LAT, PANGYO_LON, 4.8);
+			restaurant3 = restaurantDocFixture.식당("홍대 짜장면", "맛있는 짜장면",
+				RestaurantCategory.중식, HONGDAE_LAT, HONGDAE_LON, 4.2);
 		}
 
 		@Test
@@ -124,16 +121,21 @@ public class RestaurantDocServiceTest {
 	@Nested
 	class 식당_평점_정렬_테스트 {
 
+		private RestaurantDoc restaurant1;
+		private RestaurantDoc restaurant2;
+		private RestaurantDoc restaurant3;
+		private RestaurantDoc restaurant4;
+		private RestaurantDoc restaurant5;
+		private RestaurantDoc restaurant6;
+
 		@BeforeEach
 		void setUp() {
-			restaurantDocRepository.saveAll(List.of(
-				createRestaurantDoc("식당A", "설명", RestaurantCategory.한식, 37.1, 127.1, 4.5),
-				createRestaurantDoc("식당B", "설명", RestaurantCategory.일식, 37.2, 127.2, 4.8),
-				createRestaurantDoc("식당C", "설명", RestaurantCategory.중식, 37.3, 127.3, 3.9),
-				createRestaurantDoc("식당D", "설명", RestaurantCategory.양식, 37.4, 127.4, 4.9),
-				createRestaurantDoc("식당E", "설명", RestaurantCategory.한식, 37.5, 127.5, 4.2),
-				createRestaurantDoc("식당F", "설명", RestaurantCategory.한식, 37.6, 127.6, 3.5)
-			));
+			restaurant1 = restaurantDocFixture.식당("식당A", DEFAULT_DESCRIPTION, RestaurantCategory.한식, 37.1, 127.1, 4.5);
+			restaurant2 = restaurantDocFixture.식당("식당B", DEFAULT_DESCRIPTION, RestaurantCategory.일식, 37.2, 127.2, 4.8);
+			restaurant3 = restaurantDocFixture.식당("식당C", DEFAULT_DESCRIPTION, RestaurantCategory.중식, 37.3, 127.3, 3.9);
+			restaurant4 = restaurantDocFixture.식당("식당D", DEFAULT_DESCRIPTION, RestaurantCategory.양식, 37.4, 127.4, 4.9);
+			restaurant5 = restaurantDocFixture.식당("식당E", DEFAULT_DESCRIPTION, RestaurantCategory.한식, 37.5, 127.5, 4.2);
+			restaurant6 = restaurantDocFixture.식당("식당F", DEFAULT_DESCRIPTION, RestaurantCategory.한식, 37.6, 127.6, 3.5);
 		}
 
 		@Test
@@ -177,13 +179,12 @@ public class RestaurantDocServiceTest {
 		@BeforeEach
 		void setUp() {
 			// 기준점: 강남역
-			restaurantNear = createRestaurantDoc("가까운 식당", DEFAULT_DESCRIPTION, RestaurantCategory.한식, 37.498, 127.027,
+			restaurantNear = restaurantDocFixture.식당("가까운 식당", DEFAULT_DESCRIPTION, RestaurantCategory.한식, 37.498, 127.027,
 				4.0); // 약 200m
-			restaurantMid = createRestaurantDoc("중간 식당", DEFAULT_DESCRIPTION, RestaurantCategory.일식, 37.500, 127.030,
+			restaurantMid = restaurantDocFixture.식당("중간 식당", DEFAULT_DESCRIPTION, RestaurantCategory.일식, 37.500, 127.030,
 				4.5); // 약 400m
-			restaurantFar = createRestaurantDoc("먼 식당", DEFAULT_DESCRIPTION, RestaurantCategory.중식, 37.505, 127.032,
+			restaurantFar = restaurantDocFixture.식당("먼 식당", DEFAULT_DESCRIPTION, RestaurantCategory.중식, 37.505, 127.032,
 				5.0); // 약 1km
-			restaurantDocRepository.saveAll(List.of(restaurantFar, restaurantNear, restaurantMid));
 		}
 
 		@Test

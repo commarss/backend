@@ -6,11 +6,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ll.commars.global.config.ElasticsearchTestContainer;
+import com.ll.commars.global.config.FixtureMonkeyConfig;
 import com.ll.commars.global.config.MySQLTestContainer;
 import com.ll.commars.global.config.RedisTestContainer;
 
@@ -18,6 +20,7 @@ import com.ll.commars.global.config.RedisTestContainer;
 @Retention(RetentionPolicy.RUNTIME)
 @SpringBootTest
 @Transactional
+@Import(FixtureMonkeyConfig.class)
 @ActiveProfiles("test")
 @ContextConfiguration(initializers = {
 	RedisTestContainer.class,
