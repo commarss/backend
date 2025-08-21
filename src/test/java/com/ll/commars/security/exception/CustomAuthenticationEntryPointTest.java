@@ -47,7 +47,7 @@ class CustomAuthenticationEntryPointTest {
 		authenticationEntryPoint.commence(request, response, authException);
 
 		// then
-		String responseBody = response.getContentAsString(StandardCharsets.UTF_8);
+		String responseBody = response.getContentAsString();
 		Map<String, Object> errorDetails = objectMapper.readValue(responseBody, new TypeReference<>() {});
 
 		assertAll(
