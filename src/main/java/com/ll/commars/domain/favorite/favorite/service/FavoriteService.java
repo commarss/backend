@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ll.commars.domain.favorite.favorite.dto.FavoriteDto;
+import com.ll.commars.domain.favorite.favorite.dto.FavoriteFindListResponse;
 import com.ll.commars.domain.favorite.favorite.entity.Favorite;
 import com.ll.commars.domain.favorite.favorite.repository.jpa.FavoriteRepository;
 import com.ll.commars.domain.favorite.favorite.repository.jpa.FavoriteRestaurantRepository;
@@ -23,8 +24,17 @@ public class FavoriteService {
 	private final RestaurantRepository restaurantRepository;
 	private final FavoriteRestaurantRepository favoriteRestaurantRepository;
 
-	public int getFavoriteCount(String email) {
-		return favoriteRepository.countByUserEmail(email);
+	@Transactional(readOnly = true)
+	public FavoriteFindListResponse getFavorites(Long memberId) {
+		List<Favorite> favorites = favoriteRepository.findByMemberId(memberId);
+		List<FavoriteFindListResponse.FavoriteFindResponse> favoriteResponses = favorites.stream()
+			.map(favorite -> new FavoriteFindListResponse.FavoriteFindResponse(
+				favorite.getId(),
+				favorite.getName(),
+				favorite.getIsPublic()))
+			.toList();
+
+		return new FavoriteFindListResponse(favoriteResponses);
 	}
 
 	public List<Favorite> getFavoritesByUser(Member member) {

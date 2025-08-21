@@ -16,37 +16,33 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ll.commars.domain.favorite.favorite.dto.FavoriteFindListResponse;
 import com.ll.commars.domain.favorite.favorite.entity.Favorite;
 import com.ll.commars.domain.favorite.favorite.service.FavoriteRestaurantService;
 import com.ll.commars.domain.favorite.favorite.service.FavoriteService;
 import com.ll.commars.domain.member.entity.Member;
 import com.ll.commars.domain.member.service.MemberService;
+import com.ll.commars.global.security.annotation.AuthMemberId;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/favorite")
-public class ApiV1FavoriteController {
+@RequestMapping("/api/favorite")
+public class FavoriteController {
 
 	private final FavoriteService favoriteService;
 	private final MemberService memberService;
 	private final FavoriteRestaurantService favoriteRestaurantService;
 
-	// 찜 목록 개수 조회
-	@GetMapping("/count")
-	public ResponseEntity<Map<String, Integer>> getFavoriteCount(@RequestParam String email) {
-		int count = favoriteService.getFavoriteCount(email);
-		Map<String, Integer> response = new HashMap<>();
-		response.put("count", count);
-		return ResponseEntity.ok(response);
-	}
+	@GetMapping
+	public ResponseEntity<FavoriteFindListResponse> getFavorites(
+		@AuthMemberId Long memberId
+	) {
+		FavoriteFindListResponse response = favoriteService.getFavorites(memberId);
 
-	// @GetMapping("/{favorite_id}")
-	// public ResponseEntity<FavoriteDto.FavoriteInfo> getFavorite(@PathVariable("favorite_id") Long favoriteId) {
-	// 	FavoriteDto.FavoriteInfo response = favoriteService.getFavorite(favoriteId);
-	// 	return ResponseEntity.ok(response);
-	// }
+		return ResponseEntity.ok().body(response);
+	}
 
 	@DeleteMapping("/{favorite_id}")
 	public ResponseEntity<String> deleteFavorite(@PathVariable("favorite_id") Long favoriteId) {
