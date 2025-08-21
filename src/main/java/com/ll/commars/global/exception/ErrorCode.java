@@ -37,11 +37,11 @@ public enum ErrorCode {
 	MENU_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 메뉴를 찾을 수 없습니다."),
 	BUSINESS_HOUR_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 영업시간을 찾을 수 없습니다."),
 	REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 리뷰를 찾을 수 없습니다."),
-	REVIEW_NOT_UNAUTHORIZED(HttpStatus.FORBIDDEN.value(), "해당 리뷰에 대한 권한이 없습니다."),
+	REVIEW_FORBIDDEN(HttpStatus.FORBIDDEN.value(), "해당 리뷰에 대한 권한이 없습니다."),
 
 	// Favorite
 	FAVORITE_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 찜 리스트를 찾을 수 없습니다."),
-	FAVORITE_NOT_UNAUTHORIZED(HttpStatus.FORBIDDEN.value(), "해당 찜 리스트에 대한 권한이 없습니다."),
+	FAVORITE_FORBIDDEN(HttpStatus.FORBIDDEN.value(), "해당 찜 리스트에 대한 권한이 없습니다."),
 	FAVORITE_RESTAURANT_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 찜 리스트의 식당을 찾을 수 없습니다."),
 	FAVORITE_RESTAURANT_ALREADY_EXISTS(HttpStatus.BAD_REQUEST.value(), "이미 찜한 식당입니다.")
 	;

@@ -153,7 +153,7 @@ class FavoriteServiceTest {
 			// when & then
 			assertThatThrownBy(() -> favoriteService.getFavoriteRestaurants(favorite.getId(), member2.getId()))
 				.isInstanceOf(CustomException.class)
-				.hasMessage(FAVORITE_NOT_UNAUTHORIZED.getMessage());
+				.hasMessage(FAVORITE_FORBIDDEN.getMessage());
 		}
 	}
 
@@ -181,7 +181,7 @@ class FavoriteServiceTest {
 			// when & then
 			assertThatThrownBy(() -> favoriteService.deleteFavorite(favorite.getId(), member2.getId()))
 				.isInstanceOf(CustomException.class)
-				.hasMessage(FAVORITE_NOT_UNAUTHORIZED.getMessage());
+				.hasMessage(FAVORITE_FORBIDDEN.getMessage());
 		}
 	}
 

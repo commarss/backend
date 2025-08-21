@@ -120,7 +120,7 @@ public class FavoriteService {
 
 	private void validateFavoriteOwnership(Favorite favorite, Long memberId) {
 		if (!favorite.getMember().getId().equals(memberId)) {
-			throw new CustomException(ErrorCode.FAVORITE_NOT_UNAUTHORIZED);
+			throw new CustomException(ErrorCode.FAVORITE_FORBIDDEN);
 		}
 	}
 }
