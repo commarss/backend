@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import com.ll.commars.domain.favorite.favorite.dto.FavoriteDto;
 import com.ll.commars.domain.member.entity.Member;
 import com.ll.commars.domain.member.service.MemberService;
 import com.ll.commars.domain.review.dto.ReviewDto;

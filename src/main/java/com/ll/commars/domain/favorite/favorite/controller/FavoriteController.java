@@ -64,6 +64,16 @@ public class FavoriteController {
 		return ResponseEntity.ok().build();
 	}
 
+	@DeleteMapping("/{favorite-id}/restaurants/{restauran-id}")
+	public ResponseEntity<Void> deleteFavoriteRestaurant(
+		@PathVariable("favorite-id") Long favoriteId,
+		@PathVariable("restaurant-id") Long restaurantId,
+		@AuthMemberId Long memberId
+	) {
+		favoriteService.deleteFavoriteRestaurant(favoriteId, restaurantId, memberId);
+		return ResponseEntity.noContent().build();
+	}
+
 	// @PostMapping("/{favorite_id}/restaurant")
 	// public ResponseEntity<FavoriteDto.FavoriteInfo> addRestaurantToFavorite(
 	// 	@PathVariable("favorite_id") Long favoriteId,

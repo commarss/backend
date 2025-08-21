@@ -6,15 +6,13 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ll.commars.domain.favorite.favorite.dto.FavoriteDto;
 import com.ll.commars.domain.favorite.favorite.dto.FavoriteFindListResponse;
 import com.ll.commars.domain.favorite.favorite.dto.FavoriteRestaurantsResponse;
 import com.ll.commars.domain.favorite.favorite.entity.Favorite;
+import com.ll.commars.domain.favorite.favorite.entity.FavoriteRestaurant;
 import com.ll.commars.domain.favorite.favorite.repository.jpa.FavoriteRepository;
 import com.ll.commars.domain.favorite.favorite.repository.jpa.FavoriteRestaurantRepository;
 import com.ll.commars.domain.member.entity.Member;
-import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantSearchResponse;
-import com.ll.commars.domain.restaurant.restaurant.repository.jpa.RestaurantRepository;
 import com.ll.commars.global.exception.CustomException;
 import com.ll.commars.global.exception.ErrorCode;
 
@@ -25,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class FavoriteService {
 
 	private final FavoriteRepository favoriteRepository;
+	private final FavoriteRestaurantRepository favoriteRestaurantRepository;
 
 	@Transactional(readOnly = true)
 	public FavoriteFindListResponse getFavorites(Long memberId) {
@@ -61,17 +60,6 @@ public class FavoriteService {
 		return new FavoriteRestaurantsResponse(restaurantInfos, restaurantInfos.size());
 	}
 
-	public void saveFavoriteList(Member member, FavoriteDto.CreateFavoriteListRequest createFavoriteListRequest) {
-		Boolean isPublicValue = createFavoriteListRequest.getIsPublic();
-		Favorite favorite = Favorite.builder()
-			.name(createFavoriteListRequest.getName())
-			.isPublic(isPublicValue != null ? isPublicValue : true)
-			.member(member)
-			.build();
-
-		favoriteRepository.save(favorite);
-	}
-
 	@Transactional
 	public void deleteFavorite(Long favoriteId, Long memberId) {
 		Favorite favorite = favoriteRepository.findById(favoriteId)
@@ -79,6 +67,22 @@ public class FavoriteService {
 
 		validateFavoriteOwnership(favorite, memberId);
 		favoriteRepository.delete(favorite);
+	}
+
+	@Transactional
+	public void deleteFavoriteRestaurant(Long favoriteId, Long restaurantId, Long memberId) {
+		Favorite favorite = favoriteRepository.findById(favoriteId)
+			.orElseThrow(() -> new CustomException(ErrorCode.FAVORITE_NOT_FOUND));
+
+		validateFavoriteOwnership(favorite, memberId);
+
+		FavoriteRestaurant favoriteRestaurant = favorite.getFavoriteRestaurants().stream()
+			.filter(fr -> fr.getRestaurant().getId().equals(restaurantId))
+			.findFirst()
+			.orElseThrow(() -> new CustomException(ErrorCode.FAVORITE_RESTAURANT_NOT_FOUND));
+
+		favorite.getFavoriteRestaurants().remove(favoriteRestaurant);
+		favoriteRestaurantRepository.delete(favoriteRestaurant);
 	}
 
 	private void validateFavoriteOwnership(Favorite favorite, Long memberId) {

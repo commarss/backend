@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ll.commars.domain.favorite.favorite.dto.FavoriteDto;
 import com.ll.commars.domain.favorite.favorite.entity.Favorite;
 import com.ll.commars.domain.favorite.favorite.service.FavoriteService;
 import com.ll.commars.domain.member.entity.Member;
