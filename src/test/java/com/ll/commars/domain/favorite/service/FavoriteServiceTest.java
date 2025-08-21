@@ -104,6 +104,22 @@ class FavoriteServiceTest {
 				.isInstanceOf(CustomException.class)
 				.hasMessage(MEMBER_NOT_FOUND.getMessage());
 		}
+
+		@Test
+		void 공개_여부를_설정하지_않으면_기본값_trre로_설정된다() {
+			// given
+			FavoriteCreateRequest request = new FavoriteCreateRequest("나의 맛집 리스트", null);
+
+			// when
+			FavoriteCreateResponse response = favoriteService.createFavorite(request, member1.getId());
+
+			// then
+			assertAll(
+				() -> assertThat(response).isNotNull(),
+				() -> assertThat(response.isPublic()).isTrue(),
+				() -> assertThat(favoriteRepository.findById(response.id())).isPresent()
+			);
+		}
 	}
 
 	@Nested
