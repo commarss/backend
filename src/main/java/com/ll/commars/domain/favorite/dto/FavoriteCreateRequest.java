@@ -6,6 +6,11 @@ public record FavoriteCreateRequest(
 	@NotBlank(message = "찜 리스트 이름은 필수입니다.")
 	String name,
 
-	boolean isPublic
+	Boolean isPublic
 ) {
+	public FavoriteCreateRequest {
+		if (isPublic == null) {
+			isPublic = true;
+		}
+	}
 }
