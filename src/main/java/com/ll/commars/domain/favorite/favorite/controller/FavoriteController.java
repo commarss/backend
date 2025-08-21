@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ll.commars.domain.favorite.favorite.dto.FavoriteFindListResponse;
+import com.ll.commars.domain.favorite.favorite.dto.FavoriteRestaurantsResponse;
 import com.ll.commars.domain.favorite.favorite.entity.Favorite;
 import com.ll.commars.domain.favorite.favorite.service.FavoriteRestaurantService;
 import com.ll.commars.domain.favorite.favorite.service.FavoriteService;
@@ -43,6 +44,16 @@ public class FavoriteController {
 
 		return ResponseEntity.ok().body(response);
 	}
+
+	@GetMapping("/{favorite-id}")
+	public ResponseEntity<FavoriteRestaurantsResponse> getFavoriteRestaurants(
+		@PathVariable("favorite-id") Long favoriteId,
+		@AuthMemberId Long memberId
+	) {
+		FavoriteRestaurantsResponse response = favoriteService.getFavoriteRestaurants(favoriteId, memberId);
+		return ResponseEntity.ok(response);
+	}
+
 
 	@DeleteMapping("/{favorite_id}")
 	public ResponseEntity<String> deleteFavorite(@PathVariable("favorite_id") Long favoriteId) {

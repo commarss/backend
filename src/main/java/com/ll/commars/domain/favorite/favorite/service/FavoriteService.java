@@ -8,11 +8,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ll.commars.domain.favorite.favorite.dto.FavoriteDto;
 import com.ll.commars.domain.favorite.favorite.dto.FavoriteFindListResponse;
+import com.ll.commars.domain.favorite.favorite.dto.FavoriteRestaurantsResponse;
 import com.ll.commars.domain.favorite.favorite.entity.Favorite;
 import com.ll.commars.domain.favorite.favorite.repository.jpa.FavoriteRepository;
 import com.ll.commars.domain.favorite.favorite.repository.jpa.FavoriteRestaurantRepository;
 import com.ll.commars.domain.member.entity.Member;
+import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantSearchResponse;
 import com.ll.commars.domain.restaurant.restaurant.repository.jpa.RestaurantRepository;
+import com.ll.commars.global.exception.CustomException;
+import com.ll.commars.global.exception.ErrorCode;
 
 import lombok.RequiredArgsConstructor;
 
@@ -31,14 +35,38 @@ public class FavoriteService {
 			.map(favorite -> new FavoriteFindListResponse.FavoriteFindResponse(
 				favorite.getId(),
 				favorite.getName(),
-				favorite.getIsPublic()))
+				favorite.isPublic()))
 			.toList();
 
 		return new FavoriteFindListResponse(favoriteResponses);
 	}
 
-	public List<Favorite> getFavoritesByUser(Member member) {
-		return favoriteRepository.findByMemberEmail(member.getEmail());
+	@Transactional(readOnly = true)
+	public FavoriteRestaurantsResponse getFavoriteRestaurants(Long favoriteId, Long memberId) {
+		Favorite favorite = favoriteRepository.findById(favoriteId)
+			.orElseThrow(() -> new CustomException(ErrorCode.FAVORITE_NOT_FOUND));
+
+		validateFavoriteOwnership(favorite, memberId);
+
+		List<FavoriteRestaurantsResponse.FavoriteRestaurantInfo> restaurantInfos = favorite.getFavoriteRestaurants()
+			.stream()
+			.map(favoriteRestaurant -> new FavoriteRestaurantsResponse.FavoriteRestaurantInfo(
+				favoriteRestaurant.getRestaurant().getId(),
+				favoriteRestaurant.getRestaurant().getName(),
+				favoriteRestaurant.getRestaurant().getAddress(),
+				favoriteRestaurant.getRestaurant().getRestaurantCategory().name(),
+				favoriteRestaurant.getRestaurant().getAverageRate(),
+				favoriteRestaurant.getRestaurant().getImageUrl()
+			))
+			.toList();
+
+		return new FavoriteRestaurantsResponse(restaurantInfos, restaurantInfos.size());
+	}
+
+	private void validateFavoriteOwnership(Favorite favorite, Long memberId) {
+		if (!favorite.getMember().getId().equals(memberId)) {
+			throw new CustomException(ErrorCode.FAVORITE_NOT_UNAUTHORIZED);
+		}
 	}
 
 	// public FavoriteDto.FavoriteInfo toFavoriteInfo(Favorite favorite) {

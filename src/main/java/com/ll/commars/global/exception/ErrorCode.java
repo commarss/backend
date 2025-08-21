@@ -38,6 +38,10 @@ public enum ErrorCode {
 	BUSINESS_HOUR_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 영업시간을 찾을 수 없습니다."),
 	REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 리뷰를 찾을 수 없습니다."),
 	REVIEW_NOT_UNAUTHORIZED(HttpStatus.FORBIDDEN.value(), "해당 리뷰에 대한 권한이 없습니다."),
+
+	// Favorite
+	FAVORITE_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 찜 리스트를 찾을 수 없습니다."),
+	FAVORITE_NOT_UNAUTHORIZED(HttpStatus.FORBIDDEN.value(), "해당 찜 리스트에 대한 권한이 없습니다."),
 	;
 
 	private final int code;
