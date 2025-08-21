@@ -1,4 +1,4 @@
-package com.ll.commars.domain.favorite.favorite.entity;
+package com.ll.commars.domain.favorite.entity;
 
 import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
 

@@ -1,8 +1,8 @@
-package com.ll.commars.domain.favorite.favorite.dto;
+package com.ll.commars.domain.favorite.dto;
 
 import java.util.List;
 
-import com.ll.commars.domain.favorite.favorite.entity.FavoriteRestaurant;
+import com.ll.commars.domain.favorite.entity.FavoriteRestaurant;
 
 public record FavoriteRestaurantsResponse(
 	List<FavoriteRestaurantInfo> restaurants,

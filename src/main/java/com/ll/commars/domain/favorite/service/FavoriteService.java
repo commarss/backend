@@ -1,18 +1,18 @@
-package com.ll.commars.domain.favorite.favorite.service;
+package com.ll.commars.domain.favorite.service;
 
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ll.commars.domain.favorite.favorite.dto.FavoriteCreateRequest;
-import com.ll.commars.domain.favorite.favorite.dto.FavoriteCreateResponse;
-import com.ll.commars.domain.favorite.favorite.dto.FavoriteFindListResponse;
-import com.ll.commars.domain.favorite.favorite.dto.FavoriteRestaurantsResponse;
-import com.ll.commars.domain.favorite.favorite.entity.Favorite;
-import com.ll.commars.domain.favorite.favorite.entity.FavoriteRestaurant;
-import com.ll.commars.domain.favorite.favorite.repository.jpa.FavoriteRepository;
-import com.ll.commars.domain.favorite.favorite.repository.jpa.FavoriteRestaurantRepository;
+import com.ll.commars.domain.favorite.dto.FavoriteCreateRequest;
+import com.ll.commars.domain.favorite.dto.FavoriteFindListResponse;
+import com.ll.commars.domain.favorite.dto.FavoriteCreateResponse;
+import com.ll.commars.domain.favorite.dto.FavoriteRestaurantsResponse;
+import com.ll.commars.domain.favorite.entity.Favorite;
+import com.ll.commars.domain.favorite.entity.FavoriteRestaurant;
+import com.ll.commars.domain.favorite.repository.jpa.FavoriteRepository;
+import com.ll.commars.domain.favorite.repository.jpa.FavoriteRestaurantRepository;
 import com.ll.commars.domain.member.entity.Member;
 import com.ll.commars.domain.member.repository.jpa.MemberRepository;
 import com.ll.commars.global.exception.CustomException;

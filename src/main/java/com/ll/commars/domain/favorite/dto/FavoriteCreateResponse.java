@@ -1,6 +1,6 @@
-package com.ll.commars.domain.favorite.favorite.dto;
+package com.ll.commars.domain.favorite.dto;
 
-import com.ll.commars.domain.favorite.favorite.entity.Favorite;
+import com.ll.commars.domain.favorite.entity.Favorite;
 
 public record FavoriteCreateResponse(
 	Long id,

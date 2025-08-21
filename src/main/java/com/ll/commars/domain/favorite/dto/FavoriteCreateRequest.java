@@ -1,4 +1,4 @@
-package com.ll.commars.domain.favorite.favorite.dto;
+package com.ll.commars.domain.favorite.dto;
 
 import jakarta.validation.constraints.NotBlank;
 

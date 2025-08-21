@@ -6,7 +6,7 @@ import java.util.List;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.ColumnDefault;
 
-import com.ll.commars.domain.favorite.favorite.entity.FavoriteRestaurant;
+import com.ll.commars.domain.favorite.entity.FavoriteRestaurant;
 import com.ll.commars.domain.restaurant.businessHour.entity.BusinessHour;
 import com.ll.commars.domain.restaurant.menu.entity.Menu;
 import com.ll.commars.domain.review.entity.Review;

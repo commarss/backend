@@ -1,4 +1,4 @@
-package com.ll.commars.domain.favorite.favorite.controller;
+package com.ll.commars.domain.favorite.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ll.commars.domain.favorite.favorite.dto.FavoriteCreateRequest;
-import com.ll.commars.domain.favorite.favorite.dto.FavoriteCreateResponse;
-import com.ll.commars.domain.favorite.favorite.dto.FavoriteFindListResponse;
-import com.ll.commars.domain.favorite.favorite.dto.FavoriteRestaurantsResponse;
-import com.ll.commars.domain.favorite.favorite.service.FavoriteService;
+import com.ll.commars.domain.favorite.dto.FavoriteFindListResponse;
+import com.ll.commars.domain.favorite.dto.FavoriteCreateRequest;
+import com.ll.commars.domain.favorite.dto.FavoriteCreateResponse;
+import com.ll.commars.domain.favorite.dto.FavoriteRestaurantsResponse;
+import com.ll.commars.domain.favorite.service.FavoriteService;
 import com.ll.commars.global.security.annotation.AuthMemberId;
 
 import jakarta.validation.Valid;
@@ -27,7 +27,7 @@ public class FavoriteController {
 	private final FavoriteService favoriteService;
 
 	@PostMapping
-	public ResponseEntity<FavoriteCreateResponse> createEmptyFavorite(
+	public ResponseEntity<FavoriteCreateResponse> createFavorite(
 		@Valid @RequestBody FavoriteCreateRequest request,
 		@AuthMemberId Long memberId
 	) {
