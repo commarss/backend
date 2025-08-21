@@ -56,9 +56,6 @@ class AuthServiceTest {
 	private PasswordEncoder passwordEncoder;
 
 	@Autowired
-	private MemberFixture memberFixture;
-
-	@Autowired
 	private FixtureMonkey fixtureMonkey;
 
 	private Member member;
@@ -68,7 +65,7 @@ class AuthServiceTest {
 
 	@BeforeEach
 	void setUp() {
-		memberFixture = new MemberFixture(fixtureMonkey, memberRepository);
+		MemberFixture memberFixture = new MemberFixture(fixtureMonkey, memberRepository);
 
 		String encodedPassword = passwordEncoder.encode(RAW_PASSWORD);
 		member = memberFixture.이메일_사용자(USER_EMAIL, encodedPassword);

@@ -43,7 +43,6 @@ public class RestaurantDocServiceTest {
 	@Autowired
 	private RestaurantDocRepository restaurantDocRepository;
 
-	@Autowired
 	private RestaurantDocFixture restaurantDocFixture;
 
 	@Autowired

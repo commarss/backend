@@ -38,9 +38,6 @@ public class RestaurantQueryServiceTest {
 	private RestaurantRepository restaurantRepository;
 
 	@Autowired
-	private RestaurantFixture restaurantFixture;
-
-	@Autowired
 	private FixtureMonkey fixtureMonkey;
 
 	private static final long INVALID_RESTAURANT_ID = 99999L;
@@ -51,7 +48,7 @@ public class RestaurantQueryServiceTest {
 
 	@BeforeEach
 	void setUp() {
-		restaurantFixture = new RestaurantFixture(fixtureMonkey, restaurantRepository);
+		RestaurantFixture restaurantFixture = new RestaurantFixture(fixtureMonkey, restaurantRepository);
 
 		koreanRestaurant = restaurantFixture.한식_식당();
 		chineseRestaurant = restaurantFixture.중식_식당();

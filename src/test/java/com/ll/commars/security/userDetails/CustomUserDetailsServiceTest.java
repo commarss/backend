@@ -32,7 +32,6 @@ class CustomUserDetailsServiceTest {
 	@Autowired
 	private MemberRepository memberRepository;
 
-	private MemberFixture memberFixture;
 	private Member member;
 
 	private final FixtureMonkey fixtureMonkey = FixtureMonkey.builder()
@@ -41,7 +40,7 @@ class CustomUserDetailsServiceTest {
 
 	@BeforeEach
 	void setUp() {
-		memberFixture = new MemberFixture(fixtureMonkey, memberRepository);
+		MemberFixture memberFixture = new MemberFixture(fixtureMonkey, memberRepository);
 
 		member = memberFixture.사용자("test@email.com", "password", AuthType.EMAIL);
 	}
