@@ -6,8 +6,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
@@ -65,23 +63,6 @@ public class MemberController {
 	// 		.status(200)
 	// 		.body(response);
 	// }
-
-	@PostMapping("/favorite")
-	public ResponseEntity<String> addFavorite(
-		@RequestBody FavoriteDto.CreateFavoriteListRequest request,
-		HttpSession session) {
-		Member member = (Member)session.getAttribute("user");
-		if (member == null) {
-			return ResponseEntity
-				.status(401)
-				.body("로그인이 필요합니다.");
-		}
-
-		memberService.createFavoriteList(member, request);
-		return ResponseEntity
-			.status(201)
-			.body("찜 리스트가 생성되었습니다.");
-	}
 
 	@GetMapping("/reviews")
 	public ResponseEntity<?> getReviews(HttpSession session) {

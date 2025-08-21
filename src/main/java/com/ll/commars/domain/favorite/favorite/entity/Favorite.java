@@ -44,4 +44,11 @@ public class Favorite extends BaseEntity {
 
 	@OneToMany(mappedBy = "favorite", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	private List<FavoriteRestaurant> favoriteRestaurants = new ArrayList<>();
+
+	public Favorite(String name, boolean isPublic, Member member) {
+		this.name = name;
+		this.isPublic = isPublic;
+		this.member = member;
+		this.favoriteRestaurants = new ArrayList<>();
+	}
 }

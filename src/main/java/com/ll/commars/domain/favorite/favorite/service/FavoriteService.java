@@ -1,11 +1,12 @@
 package com.ll.commars.domain.favorite.favorite.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ll.commars.domain.favorite.favorite.dto.FavoriteCreateRequest;
+import com.ll.commars.domain.favorite.favorite.dto.FavoriteCreateResponse;
 import com.ll.commars.domain.favorite.favorite.dto.FavoriteFindListResponse;
 import com.ll.commars.domain.favorite.favorite.dto.FavoriteRestaurantsResponse;
 import com.ll.commars.domain.favorite.favorite.entity.Favorite;
@@ -13,6 +14,7 @@ import com.ll.commars.domain.favorite.favorite.entity.FavoriteRestaurant;
 import com.ll.commars.domain.favorite.favorite.repository.jpa.FavoriteRepository;
 import com.ll.commars.domain.favorite.favorite.repository.jpa.FavoriteRestaurantRepository;
 import com.ll.commars.domain.member.entity.Member;
+import com.ll.commars.domain.member.repository.jpa.MemberRepository;
 import com.ll.commars.global.exception.CustomException;
 import com.ll.commars.global.exception.ErrorCode;
 
@@ -24,6 +26,18 @@ public class FavoriteService {
 
 	private final FavoriteRepository favoriteRepository;
 	private final FavoriteRestaurantRepository favoriteRestaurantRepository;
+	private final MemberRepository memberRepository;
+
+	public FavoriteCreateResponse createFavorite(FavoriteCreateRequest request, Long memberId) {
+		Member member = memberRepository.findById(memberId)
+			.orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+		Favorite favorite = new Favorite(request.name(), request.isPublic(), member);
+
+		Favorite savedFavorite = favoriteRepository.save(favorite);
+
+		return FavoriteCreateResponse.from(savedFavorite);
+	}
 
 	@Transactional(readOnly = true)
 	public FavoriteFindListResponse getFavorites(Long memberId) {
@@ -89,18 +103,5 @@ public class FavoriteService {
 		if (!favorite.getMember().getId().equals(memberId)) {
 			throw new CustomException(ErrorCode.FAVORITE_NOT_UNAUTHORIZED);
 		}
-	}
-
-	@Transactional
-	public Optional<Favorite> isFavorite(Member member, Long restaurantId) {
-		return favoriteRepository.findByMemberAndFavoriteRestaurantsRestaurantId(member, restaurantId);
-	}
-
-	public Favorite saveFavorite(Favorite favorite) {
-		return favoriteRepository.save(favorite);
-	}
-
-	public Optional<Favorite> findByUserAndName(Member member, String name) {
-		return favoriteRepository.findByMemberAndName(member, name);
 	}
 }
