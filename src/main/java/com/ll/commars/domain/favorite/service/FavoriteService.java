@@ -112,13 +112,10 @@ public class FavoriteService {
 
 	@Transactional
 	public void deleteFavoriteRestaurant(Long restaurantId, Long memberId) {
-		FavoriteRestaurant favoriteRestaurant = favoriteRestaurantRepository.findById(restaurantId)
-			.orElseThrow(() -> new CustomException(ErrorCode.FAVORITE_RESTAURANT_NOT_FOUND));
+		restaurantRepository.findById(restaurantId)
+			.orElseThrow(() -> new CustomException(ErrorCode.RESTAURANT_NOT_FOUND));
 
-		Favorite favorite = favoriteRestaurant.getFavorite();
-		validateFavoriteOwnership(favorite, memberId);
-
-		favoriteRestaurantRepository.delete(favoriteRestaurant);
+		favoriteRestaurantRepository.deleteAllByRestaurantIdAndMemberId(restaurantId, memberId);
 	}
 
 	private void validateFavoriteOwnership(Favorite favorite, Long memberId) {
