@@ -168,7 +168,7 @@ class AuthServiceTest {
 
 			// then
 			String storedValue = redisTemplate.opsForValue().get(accessTokenValue.value());
-			Long expire = redisTemplate.getExpire(accessTokenValue.value(), TimeUnit.SECONDS);
+			Long expire = redisTemplate.getExpire(accessTokenValue.value(), TimeUnit.MILLISECONDS);
 
 			assertAll(
 				() -> assertThat(storedValue).isEqualTo("logout"),

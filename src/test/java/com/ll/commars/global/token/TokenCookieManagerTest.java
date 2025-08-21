@@ -27,7 +27,7 @@ class TokenCookieManagerTest {
 	@Mock
 	private JwtProperties jwtProperties;
 
-	private static final long REFRESH_TOKEN_EXPIRATION = Duration.ofDays(7).getSeconds();
+	private static final long REFRESH_TOKEN_EXPIRATION = Duration.ofDays(7).toMillis();
 
 	@Nested
 	class RefreshToken_쿠키_생성_테스트 {
@@ -39,7 +39,7 @@ class TokenCookieManagerTest {
 
 			String refreshToken = UUID.randomUUID().toString();
 
-			long expectedMaxAgeInSeconds = Duration.ofDays(7).getSeconds();
+			long expectedMaxAge = Duration.ofDays(7).toMillis();
 
 			// when
 			ResponseCookie cookie = tokenCookieManager.createRefreshTokenCookie(refreshToken);
@@ -52,7 +52,7 @@ class TokenCookieManagerTest {
 				() -> assertThat(cookie.isSecure()).isTrue(),
 				() -> assertThat(cookie.getSameSite()).isEqualTo("Strict"),
 				() -> assertThat(cookie.getPath()).isEqualTo("/"),
-				() -> assertThat(cookie.getMaxAge().getSeconds()).isEqualTo(expectedMaxAgeInSeconds)
+				() -> assertThat(cookie.getMaxAge().getSeconds()).isEqualTo(expectedMaxAge)
 			);
 		}
 	}

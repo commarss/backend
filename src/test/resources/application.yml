@@ -17,8 +17,8 @@ spring:
 
 jwt:
   key: 98f7ab82179c24428675525f612c1a11ea33bed7ada65202f1487a770ce15498dfcacb44e0101ebb8edf35f7d9f4ad4f2bea2e2d7ab2bf68f0c5200cbbede2c0
-  access-token-expiration: 3600
-  refresh-token-expiration: 604800
+  access-token-expiration: 3600000
+  refresh-token-expiration: 604800000
 
 logging:
   level:
