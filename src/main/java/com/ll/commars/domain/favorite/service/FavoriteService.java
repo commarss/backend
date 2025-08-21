@@ -100,14 +100,18 @@ public class FavoriteService {
 		Restaurant restaurant = restaurantRepository.findById(restaurantId)
 			.orElseThrow(() -> new CustomException(ErrorCode.RESTAURANT_NOT_FOUND));
 
-		if (favoriteRestaurantRepository.existsByFavoriteAndRestaurant(favorite, restaurant)) {
-			throw new CustomException(ErrorCode.FAVORITE_RESTAURANT_ALREADY_EXISTS);
-		}
+		validateFavoriteRestaurantExists(favorite, restaurant);
 
 		FavoriteRestaurant favoriteRestaurant = new FavoriteRestaurant(favorite, restaurant);
 		FavoriteRestaurant savedFavoriteRestaurant = favoriteRestaurantRepository.save(favoriteRestaurant);
 
 		return FavoriteRestaurantCreateResponse.from(savedFavoriteRestaurant);
+	}
+
+	private void validateFavoriteRestaurantExists(Favorite favorite, Restaurant restaurant) {
+		if (favoriteRestaurantRepository.existsByFavoriteAndRestaurant(favorite, restaurant)) {
+			throw new CustomException(ErrorCode.FAVORITE_RESTAURANT_ALREADY_EXISTS);
+		}
 	}
 
 	@Transactional
