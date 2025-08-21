@@ -110,6 +110,17 @@ public class FavoriteService {
 		return FavoriteRestaurantCreateResponse.from(savedFavoriteRestaurant);
 	}
 
+	@Transactional
+	public void deleteFavoriteRestaurant(Long restaurantId, Long memberId) {
+		FavoriteRestaurant favoriteRestaurant = favoriteRestaurantRepository.findById(restaurantId)
+			.orElseThrow(() -> new CustomException(ErrorCode.FAVORITE_RESTAURANT_NOT_FOUND));
+
+		Favorite favorite = favoriteRestaurant.getFavorite();
+		validateFavoriteOwnership(favorite, memberId);
+
+		favoriteRestaurantRepository.delete(favoriteRestaurant);
+	}
+
 	private void validateFavoriteOwnership(Favorite favorite, Long memberId) {
 		if (!favorite.getMember().getId().equals(memberId)) {
 			throw new CustomException(ErrorCode.FAVORITE_NOT_UNAUTHORIZED);

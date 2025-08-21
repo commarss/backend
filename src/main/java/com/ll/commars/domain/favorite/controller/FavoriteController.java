@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ll.commars.domain.favorite.dto.FavoriteFindListResponse;
 import com.ll.commars.domain.favorite.dto.FavoriteCreateRequest;
 import com.ll.commars.domain.favorite.dto.FavoriteCreateResponse;
+import com.ll.commars.domain.favorite.dto.FavoriteRestaurantCreateRequest;
+import com.ll.commars.domain.favorite.dto.FavoriteRestaurantCreateResponse;
 import com.ll.commars.domain.favorite.dto.FavoriteRestaurantsResponse;
 import com.ll.commars.domain.favorite.service.FavoriteService;
 import com.ll.commars.global.security.annotation.AuthMemberId;
@@ -60,6 +62,27 @@ public class FavoriteController {
 		@AuthMemberId Long memberId
 	) {
 		favoriteService.deleteFavorite(favoriteId, memberId);
+
+		return ResponseEntity.ok().build();
+	}
+
+	@PostMapping("/restaurant/{restaurant-id}")
+	public ResponseEntity<FavoriteRestaurantCreateResponse> createFavoriteRestaurant(
+		@PathVariable("restaurant-id") Long restaurantId,
+		@AuthMemberId Long memberId,
+		@RequestBody @Valid FavoriteRestaurantCreateRequest request
+	) {
+		FavoriteRestaurantCreateResponse response = favoriteService.createFavoriteRestaurant(restaurantId, memberId, request);
+
+		return ResponseEntity.ok().body(response);
+	}
+
+	@DeleteMapping("/restaurant/{restaurant-id}")
+	public ResponseEntity<Void> deleteFavoriteRestaurant(
+		@PathVariable("restaurant-id") Long restaurantId,
+		@AuthMemberId Long memberId
+	) {
+		favoriteService.deleteFavoriteRestaurant(restaurantId, memberId);
 
 		return ResponseEntity.ok().build();
 	}
