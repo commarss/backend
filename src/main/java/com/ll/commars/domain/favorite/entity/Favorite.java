@@ -6,12 +6,12 @@ import java.util.List;
 import org.hibernate.annotations.ColumnDefault;
 
 import com.ll.commars.domain.member.entity.Member;
+import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
 import com.ll.commars.global.BaseEntity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -42,7 +42,7 @@ public class Favorite extends BaseEntity {
 	@JoinColumn(name = "member_id", nullable = false)
 	private Member member;
 
-	@OneToMany(mappedBy = "favorite", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "favorite", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<FavoriteRestaurant> favoriteRestaurants = new ArrayList<>();
 
 	public Favorite(String name, boolean isPublic, Member member) {
@@ -50,5 +50,20 @@ public class Favorite extends BaseEntity {
 		this.isPublic = isPublic;
 		this.member = member;
 		this.favoriteRestaurants = new ArrayList<>();
+	}
+
+	public void addRestaurant(Restaurant restaurant) {
+		boolean alreadyExists = favoriteRestaurants.stream()
+			.anyMatch(fr -> fr.getRestaurant().getId().equals(restaurant.getId()));
+
+		if (!alreadyExists) {
+			FavoriteRestaurant favoriteRestaurant = new FavoriteRestaurant(this, restaurant);
+			favoriteRestaurants.add(favoriteRestaurant);
+		}
+	}
+
+	public void removeRestaurant(Restaurant restaurant) {
+		favoriteRestaurants.removeIf(fr ->
+			fr.getRestaurant().getId().equals(restaurant.getId()));
 	}
 }

@@ -6,8 +6,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ll.commars.domain.favorite.dto.FavoriteCreateRequest;
-import com.ll.commars.domain.favorite.dto.FavoriteFindListResponse;
 import com.ll.commars.domain.favorite.dto.FavoriteCreateResponse;
+import com.ll.commars.domain.favorite.dto.FavoriteFindListResponse;
+import com.ll.commars.domain.favorite.dto.FavoriteRestaurantCreateRequest;
+import com.ll.commars.domain.favorite.dto.FavoriteRestaurantCreateResponse;
 import com.ll.commars.domain.favorite.dto.FavoriteRestaurantsResponse;
 import com.ll.commars.domain.favorite.entity.Favorite;
 import com.ll.commars.domain.favorite.entity.FavoriteRestaurant;
@@ -15,6 +17,8 @@ import com.ll.commars.domain.favorite.repository.jpa.FavoriteRepository;
 import com.ll.commars.domain.favorite.repository.jpa.FavoriteRestaurantRepository;
 import com.ll.commars.domain.member.entity.Member;
 import com.ll.commars.domain.member.repository.jpa.MemberRepository;
+import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
+import com.ll.commars.domain.restaurant.restaurant.repository.jpa.RestaurantRepository;
 import com.ll.commars.global.exception.CustomException;
 import com.ll.commars.global.exception.ErrorCode;
 
@@ -27,7 +31,9 @@ public class FavoriteService {
 	private final FavoriteRepository favoriteRepository;
 	private final FavoriteRestaurantRepository favoriteRestaurantRepository;
 	private final MemberRepository memberRepository;
+	private final RestaurantRepository restaurantRepository;
 
+	@Transactional
 	public FavoriteCreateResponse createFavorite(FavoriteCreateRequest request, Long memberId) {
 		Member member = memberRepository.findById(memberId)
 			.orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
@@ -84,19 +90,24 @@ public class FavoriteService {
 	}
 
 	@Transactional
-	public void deleteFavoriteRestaurant(Long favoriteId, Long restaurantId, Long memberId) {
-		Favorite favorite = favoriteRepository.findById(favoriteId)
+	public FavoriteRestaurantCreateResponse createFavoriteRestaurant(Long restaurantId, Long memberId,
+		FavoriteRestaurantCreateRequest request) {
+		Favorite favorite = favoriteRepository.findById(request.favoriteId())
 			.orElseThrow(() -> new CustomException(ErrorCode.FAVORITE_NOT_FOUND));
 
 		validateFavoriteOwnership(favorite, memberId);
 
-		FavoriteRestaurant favoriteRestaurant = favorite.getFavoriteRestaurants().stream()
-			.filter(fr -> fr.getRestaurant().getId().equals(restaurantId))
-			.findFirst()
-			.orElseThrow(() -> new CustomException(ErrorCode.FAVORITE_RESTAURANT_NOT_FOUND));
+		Restaurant restaurant = restaurantRepository.findById(restaurantId)
+			.orElseThrow(() -> new CustomException(ErrorCode.RESTAURANT_NOT_FOUND));
 
-		favorite.getFavoriteRestaurants().remove(favoriteRestaurant);
-		favoriteRestaurantRepository.delete(favoriteRestaurant);
+		if (favoriteRestaurantRepository.existsByFavoriteAndRestaurant(favorite, restaurant)) {
+			throw new CustomException(ErrorCode.FAVORITE_RESTAURANT_ALREADY_EXISTS);
+		}
+
+		FavoriteRestaurant favoriteRestaurant = new FavoriteRestaurant(favorite, restaurant);
+		FavoriteRestaurant savedFavoriteRestaurant = favoriteRestaurantRepository.save(favoriteRestaurant);
+
+		return FavoriteRestaurantCreateResponse.from(savedFavoriteRestaurant);
 	}
 
 	private void validateFavoriteOwnership(Favorite favorite, Long memberId) {

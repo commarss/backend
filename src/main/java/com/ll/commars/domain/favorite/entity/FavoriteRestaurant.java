@@ -39,4 +39,9 @@ public class FavoriteRestaurant {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "restaurant_id")
 	private Restaurant restaurant;
+
+	public FavoriteRestaurant(Favorite favorite, Restaurant restaurant) {
+		this.favorite = favorite;
+		this.restaurant = restaurant;
+	}
 }

@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ll.commars.domain.favorite.dto.FavoriteRestaurantCreateRequest;
+import com.ll.commars.domain.favorite.dto.FavoriteRestaurantCreateResponse;
+import com.ll.commars.domain.favorite.service.FavoriteService;
 import com.ll.commars.domain.restaurant.restaurant.dto.CategoryFindListResponse;
 import com.ll.commars.domain.restaurant.restaurant.dto.CategoryFindResponse;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantCreateRequest;
@@ -28,6 +31,7 @@ import com.ll.commars.domain.restaurant.restaurant.service.RestaurantQueryServic
 import com.ll.commars.domain.review.dto.ReviewCreateRequest;
 import com.ll.commars.domain.review.dto.ReviewCreateResponse;
 import com.ll.commars.domain.review.dto.ReviewFindListResponse;
+import com.ll.commars.global.security.annotation.AuthMemberId;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +41,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/restaurants")
 public class RestaurantController {
 
+	private final FavoriteService favoriteService;
 	private final RestaurantCommandService restaurantCommandService;
 	private final RestaurantQueryService restaurantQueryService;
 	private final RestaurantDocService restaurantDocService;
@@ -107,6 +112,17 @@ public class RestaurantController {
 	@GetMapping("/category")
 	public ResponseEntity<CategoryFindListResponse> getAllCategories() {
 		CategoryFindListResponse response = restaurantQueryService.getAllCategories();
+
+		return ResponseEntity.ok().body(response);
+	}
+
+	@PostMapping("/{restaurant-id}/favorite")
+	public ResponseEntity<FavoriteRestaurantCreateResponse> createFavoriteRestaurant(
+		@PathVariable("restaurant-id") Long restaurantId,
+		@AuthMemberId Long memberId,
+		@RequestBody @Valid FavoriteRestaurantCreateRequest request
+	) {
+		FavoriteRestaurantCreateResponse response = favoriteService.createFavoriteRestaurant(restaurantId, memberId, request);
 
 		return ResponseEntity.ok().body(response);
 	}
