@@ -18,6 +18,7 @@ import com.ll.commars.domain.favorite.dto.FavoriteFindListResponse;
 import com.ll.commars.domain.favorite.dto.FavoriteRestaurantCreateRequest;
 import com.ll.commars.domain.favorite.dto.FavoriteRestaurantsResponse;
 import com.ll.commars.domain.favorite.entity.Favorite;
+import com.ll.commars.domain.favorite.entity.FavoriteRestaurant;
 import com.ll.commars.domain.favorite.fixture.FavoriteFixture;
 import com.ll.commars.domain.favorite.repository.jpa.FavoriteRepository;
 import com.ll.commars.domain.favorite.repository.jpa.FavoriteRestaurantRepository;
@@ -227,7 +228,7 @@ class FavoriteServiceTest {
 		@Test
 		void 이미_추가된_식당을_다시_추가하면_예외가_발생한다() {
 			// given
-			favorite.addRestaurant(restaurant1);
+			favoriteRestaurantRepository.save(new FavoriteRestaurant(favorite, restaurant1));
 			FavoriteRestaurantCreateRequest request = new FavoriteRestaurantCreateRequest(favorite.getId());
 
 			// when & then
@@ -281,7 +282,7 @@ class FavoriteServiceTest {
 		void 다른_사용자의_찜_리스트에_있는_식당은_삭제되지_않는다() {
 			// given
 			Favorite otherMemberFavorite = favoriteFixture.찜_리스트(member2, "남의 맛집", true);
-			otherMemberFavorite.addRestaurant(restaurant1);
+			favoriteRestaurantRepository.save(new FavoriteRestaurant(otherMemberFavorite, restaurant1));
 
 			// when
 			favoriteService.deleteFavoriteRestaurant(restaurant1.getId(), member1.getId());
