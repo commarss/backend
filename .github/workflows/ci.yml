@@ -28,10 +28,18 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build with Gradle Wrapper
-        run: ./gradlew build
+        run: ./gradlew build jacocoTestReport
 
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v5
         if: success() || failure()
         with:
           report_paths: '**/build/test-results/test/TEST-*.xml'
+
+      - name: JaCoCo Code Coverage Summary
+        uses: cicirello/jacoco-badge-generator@v2
+        if: success() || failure()
+        with:
+          jacoco-csv-file: build/reports/jacoco/test/jacocoTestReport.csv
+          generate-workflow-summary: true
+          workflow-summary-heading: "📊 Code Coverage Summary"
