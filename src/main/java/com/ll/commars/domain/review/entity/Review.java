@@ -58,8 +58,4 @@ public class Review extends BaseEntity {
 		this.body = body;
 		this.rate = rate;
 	}
-
-	public void addRestaurant(Restaurant restaurant) {
-		this.restaurant = restaurant;
-	}
 }

@@ -28,8 +28,6 @@ public class ReviewFixture {
 			.set("rate", rate)
 			.sample();
 
-		restaurant.addReviewAndUpdateAverageRate(review);
-
 		return reviewRepository.save(review);
 	}
 }
