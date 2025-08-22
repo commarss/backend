@@ -116,6 +116,23 @@ public class RestaurantDocServiceTest {
 			// then
 			assertThat(response.restaurants()).isEmpty();
 		}
+
+		@Test
+		void 거리가_null이면_기본값을_적용하여_검색한다() {
+			// given
+			RestaurantSearchRequest request = new RestaurantSearchRequest(
+				"교자", SINNONHYEON_LAT, SINNONHYEON_LON, null
+			);
+
+			// when
+			RestaurantSearchResponse response = restaurantDocService.searchRestaurants(request);
+
+			// then
+			assertAll(
+				() -> assertThat(response.restaurants()).isNotEmpty(),
+				() -> assertThat(response.restaurants().get(0).name()).isEqualTo("강남 교자")
+			);
+		}
 	}
 
 	@Nested
@@ -215,6 +232,22 @@ public class RestaurantDocServiceTest {
 
 			// then
 			assertThat(response.restaurants()).isEmpty();
+		}
+
+		@Test
+		void 거리가가_null이면_기본값을_적용하여_검색한다() {
+			// given
+			RestaurantNearByRequest request = new RestaurantNearByRequest(GANGNAM_LAT, GANGNAM_LON, null);
+
+			// when
+			RestaurantSearchResponse response = restaurantDocService.getNearbyRestaurants(request);
+
+			// then
+			assertAll(
+				() -> assertThat(response.restaurants()).isNotEmpty(),
+				() -> assertThat(response.restaurants()).extracting("name")
+					.containsExactlyInAnyOrder("가까운 식당", "중간 식당", "먼 식당")
+			);
 		}
 	}
 }
