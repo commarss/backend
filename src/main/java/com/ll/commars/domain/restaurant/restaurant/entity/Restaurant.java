@@ -129,14 +129,16 @@ public class Restaurant extends BaseEntity {
 		this.lon = lon;
 	}
 
-	public void addReviewAndUpdateAverageRate(int newRate) {
-		this.totalRateSum += newRate;
+	public void addReviewAndUpdateAverageRate(Review review) {
+		this.reviews.add(review);
+		this.totalRateSum += review.getRate();
 		this.reviewCount++;
 		updateAverageRate();
 	}
 
-	public void removeReviewAndUpdateAverageRate(int deletedRate) {
-		this.totalRateSum -= deletedRate;
+	public void removeReviewAndUpdateAverageRate(Review review) {
+		this.reviews.remove(review);
+		this.totalRateSum -= review.getRate();
 		this.reviewCount--;
 		updateAverageRate();
 	}

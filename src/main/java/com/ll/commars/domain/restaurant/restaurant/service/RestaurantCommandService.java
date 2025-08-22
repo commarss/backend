@@ -75,7 +75,8 @@ public class RestaurantCommandService {
 			member
 		);
 
-		restaurant.addReviewAndUpdateAverageRate(review.getRate());
+		restaurant.addReviewAndUpdateAverageRate(review);
+		review.addRestaurant(restaurant);
 
 		return ReviewCreateResponse.from(reviewRepository.save(review));
 	}

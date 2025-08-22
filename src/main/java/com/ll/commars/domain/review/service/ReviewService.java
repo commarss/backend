@@ -45,7 +45,7 @@ public class ReviewService {
 		int oldRate = review.getRate();
 
 		reviewRepository.delete(review);
-		restaurant.removeReviewAndUpdateAverageRate(oldRate);
+		restaurant.removeReviewAndUpdateAverageRate(review);
 	}
 
 	private void validateReviewOwnership(Review review, long memberId) {
