@@ -6,7 +6,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ll.commars.domain.community.comment.entity.Comment;
 import com.ll.commars.domain.community.post.entity.Post;
-import com.ll.commars.domain.favorite.favorite.entity.Favorite;
+import com.ll.commars.domain.favorite.entity.Favorite;
 import com.ll.commars.domain.review.entity.Review;
 import com.ll.commars.global.BaseEntity;
 

@@ -4,13 +4,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ll.commars.domain.favorite.favorite.dto.FavoriteDto;
-import com.ll.commars.domain.favorite.favorite.entity.Favorite;
-import com.ll.commars.domain.favorite.favorite.service.FavoriteService;
+import com.ll.commars.domain.favorite.service.FavoriteService;
 import com.ll.commars.domain.member.entity.Member;
 import com.ll.commars.domain.member.repository.jpa.MemberRepository;
 import com.ll.commars.domain.review.dto.ReviewDto;
@@ -67,16 +64,6 @@ public class MemberService {
 	// 		.build();
 	// }
 
-	public void createFavoriteList(Member member, FavoriteDto.CreateFavoriteListRequest request) {
-		FavoriteDto.CreateFavoriteListRequest createFavoriteListRequest = FavoriteDto.CreateFavoriteListRequest.builder()
-			.name(request.getName())
-			.isPublic(request.getIsPublic())
-			.build();
-
-		// 찜 리스트 저장
-		favoriteService.saveFavoriteList(member, createFavoriteListRequest);
-	}
-
 	public ReviewDto.ShowAllReviewsResponse getReviews(Long userId) {
 		List<ReviewDto.ReviewInfo> reviews = memberRepository.findById(userId)
 			.orElseThrow(() -> new IllegalArgumentException("User not found"))
@@ -103,25 +90,5 @@ public class MemberService {
 
 	public Member findByEmailOrNull(String email) {
 		return memberRepository.findByEmail(email).orElse(null);
-	}
-
-	public ResponseEntity<?> createFavoriteList(String favoriteName, String userId) {
-		Optional<Member> user = memberRepository.findById(Long.parseLong(userId));
-		if (user.isEmpty()) {
-			throw new IllegalArgumentException("User not found");
-		}
-
-		Optional<Favorite> favorite = favoriteService.findByUserAndName(user.get(), favoriteName);
-		if (favorite.isPresent()) {
-			return ResponseEntity.badRequest().body("Favorite already exists");
-		}
-
-		favoriteService.saveFavorite(Favorite.builder()
-			.name(favoriteName)
-			.isPublic(false)
-			.member(user.get())
-			.build());
-
-		return ResponseEntity.ok().build();
 	}
 }

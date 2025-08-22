@@ -1,4 +1,4 @@
-package com.ll.commars.domain.favorite.favorite.entity;
+package com.ll.commars.domain.favorite.entity;
 
 import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
 
@@ -10,33 +10,38 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
-@Table(name = "favorites_restaurants")
+@Table(
+	uniqueConstraints = {
+		@UniqueConstraint(
+			name = "uk_favorite_restaurant",
+			columnNames = {"favorite_id", "restaurant_id"}
+		)
+	}
+)
 @Getter
-@Setter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class FavoriteRestaurant {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	// FavoriteRestaurant와 Favorite: 다대일
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "favorite_id")
 	private Favorite favorite;
 
-	// FavoriteRestaurant와 Restaurant: 다대일
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "restaurant_id")
 	private Restaurant restaurant;
+
+	public FavoriteRestaurant(Favorite favorite, Restaurant restaurant) {
+		this.favorite = favorite;
+		this.restaurant = restaurant;
+	}
 }

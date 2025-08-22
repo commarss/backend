@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ll.commars.domain.favorite.favorite.repository.jpa.FavoriteRepository;
-import com.ll.commars.domain.favorite.favorite.repository.jpa.FavoriteRestaurantRepository;
+import com.ll.commars.domain.favorite.repository.jpa.FavoriteRepository;
+import com.ll.commars.domain.favorite.repository.jpa.FavoriteRestaurantRepository;
 import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
 import com.ll.commars.domain.restaurant.restaurant.repository.jpa.RestaurantRepository;
 import com.ll.commars.domain.review.dto.RestaurantReviewAnalysisDTO;

@@ -50,7 +50,7 @@ public class ReviewService {
 
 	private void validateReviewOwnership(Review review, long memberId) {
 		if (!review.getMember().getId().equals(memberId)) {
-			throw new CustomException(REVIEW_NOT_UNAUTHORIZED);
+			throw new CustomException(REVIEW_FORBIDDEN);
 		}
 	}
 }
