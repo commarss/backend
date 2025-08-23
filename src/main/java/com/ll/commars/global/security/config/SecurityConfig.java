@@ -1,6 +1,5 @@
 package com.ll.commars.global.security.config;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.context.annotation.Bean;
@@ -23,8 +22,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import com.ll.commars.global.security.exception.CustomAccessDeniedHandler;
 import com.ll.commars.global.security.exception.CustomAuthenticationEntryPoint;
 import com.ll.commars.global.security.userDetails.CustomUserDetailsService;
-import com.ll.commars.global.token.provider.JwtAuthenticationProvider;
 import com.ll.commars.global.token.component.JwtAuthenticationFilter;
+import com.ll.commars.global.token.provider.JwtAuthenticationProvider;
 
 import lombok.RequiredArgsConstructor;
 
@@ -37,6 +36,7 @@ public class SecurityConfig {
 	private final CustomAccessDeniedHandler customAccessDeniedHandler;
 	private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 	private final CustomUserDetailsService customUserDetailsService;
+	private final CorsProperties corsProperties;
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(
@@ -67,11 +67,7 @@ public class SecurityConfig {
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(Arrays.asList(
-			"http://localhost:5173", "http://localhost:5174", "http://localhost:5175",
-			"https://accounts.google.com", "https://nid.naver.com",
-			"https://commars.whqtker.site"
-		));
+		configuration.setAllowedOrigins(corsProperties.allowedOrigins());
 		configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 		configuration.setAllowedHeaders(List.of("*"));
 		configuration.setExposedHeaders(List.of("Authorization", "Content-Type", "refreshToken", "accessToken"));
