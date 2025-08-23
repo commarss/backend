@@ -1,0 +1,21 @@
+{
+  "properties": {
+    "id": {
+      "type": "keyword"
+    },
+    "memberId": {
+      "type": "long"
+    },
+    "title": {
+      "type": "text",
+      "analyzer": "korean"
+    },
+    "body": {
+      "type": "text",
+      "analyzer": "korean"
+    },
+    "rate": {
+      "type": "integer"
+    }
+  }
+}

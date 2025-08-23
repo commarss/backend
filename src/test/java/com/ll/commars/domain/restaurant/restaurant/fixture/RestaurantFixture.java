@@ -2,6 +2,8 @@ package com.ll.commars.domain.restaurant.restaurant.fixture;
 
 import static com.ll.commars.domain.restaurant.restaurant.entity.RestaurantCategory.*;
 
+import java.util.ArrayList;
+
 import org.springframework.boot.test.context.TestComponent;
 
 import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
@@ -27,10 +29,13 @@ public class RestaurantFixture {
 			.set("restaurantCategory", 한식)
 			.set("imageUrl", "https://example.com/image.jpg")
 			.set("contact", "02-123-4567")
-			.setNull("reviews")
-			.setNull("menus")
-			.setNull("favoriteRestaurants")
-			.setNull("businessHours")
+			.set("averageRate", 0.0)
+			.set("reviewCount", 0)
+			.set("totalRateSum", 0L)
+			.set("reviews", new ArrayList<>())
+			.set("menus", new ArrayList<>())
+			.set("favoriteRestaurants", new ArrayList<>())
+			.set("businessHours", new ArrayList<>())
 			.sample();
 
 		return restaurantRepository.save(restaurant);
@@ -45,10 +50,13 @@ public class RestaurantFixture {
 			.set("restaurantCategory", 중식)
 			.set("imageUrl", "https://example.com/image.jpg")
 			.set("contact", "02-123-4567")
-			.setNull("reviews")
-			.setNull("menus")
-			.setNull("favoriteRestaurants")
-			.setNull("businessHours")
+			.set("averageRate", 0.0)
+			.set("reviewCount", 0)
+			.set("totalRateSum", 0L)
+			.set("reviews", new ArrayList<>())
+			.set("menus", new ArrayList<>())
+			.set("favoriteRestaurants", new ArrayList<>())
+			.set("businessHours", new ArrayList<>())
 			.sample();
 
 		return restaurantRepository.save(restaurant);
@@ -63,10 +71,13 @@ public class RestaurantFixture {
 			.set("restaurantCategory", 양식)
 			.set("imageUrl", "https://example.com/image.jpg")
 			.set("contact", "02-123-4567")
-			.setNull("reviews")
-			.setNull("menus")
-			.setNull("favoriteRestaurants")
-			.setNull("businessHours")
+			.set("averageRate", 0.0)
+			.set("reviewCount", 0)
+			.set("totalRateSum", 0L)
+			.set("reviews", new ArrayList<>())
+			.set("menus", new ArrayList<>())
+			.set("favoriteRestaurants", new ArrayList<>())
+			.set("businessHours", new ArrayList<>())
 			.sample();
 
 		return restaurantRepository.save(restaurant);
@@ -81,10 +92,13 @@ public class RestaurantFixture {
 			.set("restaurantCategory", 일식)
 			.set("imageUrl", "https://example.com/image.jpg")
 			.set("contact", "02-123-4567")
-			.setNull("reviews")
-			.setNull("menus")
-			.setNull("favoriteRestaurants")
-			.setNull("businessHours")
+			.set("averageRate", 0.0)
+			.set("reviewCount", 0)
+			.set("totalRateSum", 0L)
+			.set("reviews", new ArrayList<>())
+			.set("menus", new ArrayList<>())
+			.set("favoriteRestaurants", new ArrayList<>())
+			.set("businessHours", new ArrayList<>())
 			.sample();
 
 		return restaurantRepository.save(restaurant);

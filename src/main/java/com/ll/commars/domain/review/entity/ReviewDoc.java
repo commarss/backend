@@ -4,12 +4,19 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
+import org.springframework.data.elasticsearch.annotations.Mapping;
+import org.springframework.data.elasticsearch.annotations.Setting;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Document(indexName = "es_reviews", createIndex = true)
+@JsonIgnoreProperties(ignoreUnknown = true)
+@Document(indexName = "es_reviews")
+@Setting(settingPath = "elasticsearch/review/settings.json")
+@Mapping(mappingPath = "elasticsearch/review/mappings.json")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ReviewDoc {
@@ -28,4 +35,12 @@ public class ReviewDoc {
 
 	@Field(type = FieldType.Integer)
 	private Integer rate;
+
+	public ReviewDoc(String id, Long memberId, String title, String body, Integer rate) {
+		this.id = id;
+		this.memberId = memberId;
+		this.title = title;
+		this.body = body;
+		this.rate = rate;
+	}
 }

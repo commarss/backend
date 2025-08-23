@@ -29,7 +29,6 @@ public class ReviewService {
 		int oldRate = review.getRate();
 
 		review.update(request.title(), request.body(), request.rate());
-
 		Restaurant restaurant = review.getRestaurant();
 		restaurant.updateReviewAndUpdateAverageRate(oldRate, review.getRate());
 	}
@@ -42,10 +41,7 @@ public class ReviewService {
 		validateReviewOwnership(review, memberId);
 
 		Restaurant restaurant = review.getRestaurant();
-		int oldRate = review.getRate();
-
-		reviewRepository.delete(review);
-		restaurant.removeReviewAndUpdateAverageRate(oldRate);
+		restaurant.removeReviewAndUpdateAverageRate(review);
 	}
 
 	private void validateReviewOwnership(Review review, long memberId) {

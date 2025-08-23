@@ -12,7 +12,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.ll.commars.domain.member.entity.Member;
+import com.ll.commars.domain.member.fixture.MemberFixture;
+import com.ll.commars.domain.member.repository.jpa.MemberRepository;
 import com.ll.commars.domain.restaurant.restaurant.dto.CategoryFindListResponse;
 import com.ll.commars.domain.restaurant.restaurant.dto.CategoryFindResponse;
 import com.ll.commars.domain.restaurant.restaurant.dto.RestaurantFindListResponse;
@@ -22,6 +26,10 @@ import com.ll.commars.domain.restaurant.restaurant.entity.Restaurant;
 import com.ll.commars.domain.restaurant.restaurant.entity.RestaurantCategory;
 import com.ll.commars.domain.restaurant.restaurant.fixture.RestaurantFixture;
 import com.ll.commars.domain.restaurant.restaurant.repository.jpa.RestaurantRepository;
+import com.ll.commars.domain.review.dto.ReviewFindListResponse;
+import com.ll.commars.domain.review.entity.Review;
+import com.ll.commars.domain.review.fixture.ReviewFixture;
+import com.ll.commars.domain.review.repository.jpa.ReviewRepository;
 import com.ll.commars.global.annotation.IntegrationTest;
 import com.ll.commars.global.exception.CustomException;
 
@@ -36,6 +44,15 @@ public class RestaurantQueryServiceTest {
 
 	@Autowired
 	private RestaurantRepository restaurantRepository;
+
+	@Autowired
+	private MemberRepository memberRepository;
+
+	@Autowired
+	private ReviewRepository reviewRepository;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	@Autowired
 	private FixtureMonkey fixtureMonkey;
@@ -204,6 +221,64 @@ public class RestaurantQueryServiceTest {
 
 			// then
 			assertThat(response.categories()).hasSize(RestaurantCategory.values().length);
+		}
+	}
+
+	@Nested
+	class 식당_리뷰_조회_테스트 {
+
+		private Member member;
+		private Review review1;
+		private Review review2;
+
+		@BeforeEach
+		void setUp() {
+			MemberFixture memberFixture = new MemberFixture(fixtureMonkey, memberRepository);
+			ReviewFixture reviewFixture = new ReviewFixture(fixtureMonkey, reviewRepository);
+
+			String encodedPassword = passwordEncoder.encode("password");
+			member = memberFixture.이메일_사용자("review_user@test.com", encodedPassword);
+
+			review1 = reviewFixture.리뷰(member, koreanRestaurant, "한식당 리뷰 1", "정말 맛있어요.", 5);
+			review2 = reviewFixture.리뷰(member, koreanRestaurant, "한식당 리뷰 2", "분위기가 좋아요.", 4);
+
+			reviewFixture.리뷰(member, chineseRestaurant, "중식당 리뷰 1", "짜장면이 최고", 5);
+		}
+
+		@Test
+		void 특정_식당의_모든_리뷰를_성공적으로_조회한다() {
+			// when
+			ReviewFindListResponse response = restaurantQueryService.getReviews(koreanRestaurant.getId());
+
+			// then
+			assertAll(
+				() -> assertThat(response).isNotNull(),
+				() -> assertThat(response.reviews()).hasSize(2),
+				() -> assertThat(response.reviews()).extracting("id")
+					.containsExactlyInAnyOrder(review1.getId(), review2.getId()),
+				() -> assertThat(response.reviews()).extracting("title")
+					.containsExactlyInAnyOrder("한식당 리뷰 1", "한식당 리뷰 2")
+			);
+		}
+
+		@Test
+		void 리뷰가_없는_식당을_조회하면_빈_목록을_반환한다() {
+			// when
+			ReviewFindListResponse response = restaurantQueryService.getReviews(westernRestaurant.getId());
+
+			// then
+			assertAll(
+				() -> assertThat(response).isNotNull(),
+				() -> assertThat(response.reviews()).isEmpty()
+			);
+		}
+
+		@Test
+		void 존재하지_않는_식당의_리뷰를_조회하면_예외가_발생한다() {
+			// when & then
+			assertThatThrownBy(() -> restaurantQueryService.getReviews(INVALID_RESTAURANT_ID))
+				.isInstanceOf(CustomException.class)
+				.hasMessage(RESTAURANT_NOT_FOUND.getMessage());
 		}
 	}
 }
