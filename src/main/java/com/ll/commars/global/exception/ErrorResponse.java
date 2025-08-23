@@ -7,4 +7,8 @@ public record ErrorResponse(
 	public ErrorResponse(CustomException e) {
 		this(e.getMessage());
 	}
+
+	public ErrorResponse(ErrorCode e, String detail) {
+		this(e.getMessage() + " : " + detail);
+	}
 }
