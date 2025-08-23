@@ -5,6 +5,8 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.data.elasticsearch.annotations.GeoPointField;
+import org.springframework.data.elasticsearch.annotations.Mapping;
+import org.springframework.data.elasticsearch.annotations.Setting;
 import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -15,6 +17,8 @@ import lombok.NoArgsConstructor;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Document(indexName = "es_restaurants")
+@Setting(settingPath = "elasticsearch/restaurant/settings.json")
+@Mapping(mappingPath = "elasticsearch/restaurant/mappings.json")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RestaurantDoc {

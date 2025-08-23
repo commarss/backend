@@ -1,19 +1,18 @@
 package com.ll.commars.domain.review.repository.elasticsearch;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import com.ll.commars.domain.review.entity.ReviewDoc;
 
-import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
-import co.elastic.clients.elasticsearch._types.query_dsl.FieldValueFactorModifier;
-import co.elastic.clients.elasticsearch._types.query_dsl.FunctionBoostMode;
-import co.elastic.clients.elasticsearch._types.query_dsl.MultiMatchQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.Operator;
 import lombok.RequiredArgsConstructor;
 
@@ -25,31 +24,16 @@ public class ReviewDocRepositoryCustomImpl implements ReviewDocRepositoryCustom 
 
 	@Override
 	public List<ReviewDoc> searchByKeyword(String keyword) {
-		// 키워드 검색 쿼리
-		MultiMatchQuery textQuery = MultiMatchQuery.of(m -> m
-			.query(keyword)
-			.fields("title^2", "body")
-			.operator(Operator.Or)
-			.fuzziness("AUTO")
-		);
-
-		BoolQuery boolQuery = BoolQuery.of(b -> b
-			.should(textQuery._toQuery())
-		);
+		if (!StringUtils.hasText(keyword)) {
+			return Collections.emptyList();
+		}
 
 		Query query = NativeQuery.builder()
 			.withQuery(q -> q
-				.functionScore(fs -> fs
-					.query(boolQuery._toQuery())
-					.functions(f -> f
-						.fieldValueFactor(fv -> fv
-							.field("rate")
-							.factor(1.5)
-							.modifier(FieldValueFactorModifier.Sqrt)
-							.missing(0.0)
-						)
-					)
-					.boostMode(FunctionBoostMode.Multiply)
+				.multiMatch(mm -> mm
+					.query(keyword)
+					.fields("title", "body")
+					.operator(Operator.And)
 				)
 			)
 			.build();
@@ -57,6 +41,7 @@ public class ReviewDocRepositoryCustomImpl implements ReviewDocRepositoryCustom 
 		return elasticsearchOperations.search(query, ReviewDoc.class)
 			.stream()
 			.map(SearchHit::getContent)
-			.toList();
+			.sorted((a, b) -> Integer.compare(b.getRate(), a.getRate()))
+			.collect(Collectors.toList());
 	}
 }

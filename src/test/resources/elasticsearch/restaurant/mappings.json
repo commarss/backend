@@ -1,0 +1,28 @@
+{
+  "properties": {
+    "id": {
+      "type": "keyword"
+    },
+    "name": {
+      "type": "text",
+      "analyzer": "korean"
+    },
+    "details": {
+      "type": "text",
+      "analyzer": "korean"
+    },
+    "average_rate": {
+      "type": "double"
+    },
+    "location": {
+      "type": "geo_point"
+    },
+    "address": {
+      "type": "text",
+      "analyzer": "korean"
+    },
+    "restaurant_category": {
+      "type": "keyword"
+    }
+  }
+}
