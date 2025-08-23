@@ -11,7 +11,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 
 import com.ll.commars.domain.review.dto.ReviewSearchResponse;
 import com.ll.commars.domain.review.entity.ReviewDoc;
@@ -33,9 +32,6 @@ class ReviewDocServiceTest {
 
 	@Autowired
 	private FixtureMonkey fixtureMonkey;
-
-	@Autowired
-	private ElasticsearchOperations elasticsearchOperations;
 
 	private ReviewDocFixture reviewDocFixture;
 

@@ -36,12 +36,17 @@ public class ReviewDocRepositoryCustomImpl implements ReviewDocRepositoryCustom 
 					.operator(Operator.And)
 				)
 			)
+			.withSort(s -> s
+				.field(f -> f
+					.field("rate")
+					.order(co.elastic.clients.elasticsearch._types.SortOrder.Desc)
+				)
+			)
 			.build();
 
 		return elasticsearchOperations.search(query, ReviewDoc.class)
 			.stream()
 			.map(SearchHit::getContent)
-			.sorted((a, b) -> Integer.compare(b.getRate(), a.getRate()))
 			.collect(Collectors.toList());
 	}
 }
