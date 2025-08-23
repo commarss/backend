@@ -9,6 +9,10 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ErrorCode {
 
+	// Global
+	INVALID_INPUT(HttpStatus.BAD_REQUEST.value(), "유효하지 않은 입력입니다."),
+	ERROR_NOT_DEFINED(HttpStatus.INTERNAL_SERVER_ERROR.value(), "서버 내부 오류가 발생했습니다."),
+
 	// Token
 	INVALID_TOKEN(HttpStatus.UNAUTHORIZED.value(), "유효하지 않은 토큰입니다."),
 
